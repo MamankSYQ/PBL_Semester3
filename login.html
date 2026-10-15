@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Login WASHUP - Sistem Informasi Car Wash" />
+    <title>Login | WASHUP</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="login-page">
+    <main class="login-layout">
+      <section class="login-intro" aria-labelledby="login-brand-title">
+        <a class="brand login-brand" href="index.html" aria-label="Kembali ke halaman awal WASHUP">
+          <span class="brand-mark">W</span>
+          <span>
+            <strong>WASHUP</strong>
+            <small>Sistem Informasi Car Wash</small>
+          </span>
+        </a>
+      </section>
+
+      <section class="login-card" aria-labelledby="login-title">
+        <div class="login-card-heading">
+          <p class="eyebrow">WASHUP</p>
+          <h2 id="login-title">Selamat Datang</h2>
+          <p id="login-brand-title">Silakan masuk ke akun Anda.</p>
+        </div>
+
+        <form id="login-form" novalidate>
+          <div class="form-field">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" autocomplete="username" placeholder="Masukkan username" required />
+            <p class="field-error" id="username-error" aria-live="polite"></p>
+          </div>
+
+          <div class="form-field">
+            <label for="password">Password</label>
+            <div class="password-field">
+              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Masukkan password" required />
+              <button class="password-toggle" id="password-toggle" type="button" aria-label="Tampilkan password" aria-pressed="false">Lihat</button>
+            </div>
+            <p class="field-error" id="password-error" aria-live="polite"></p>
+          </div>
+
+          <p class="form-error" id="login-error" role="alert" aria-live="polite"></p>
+          <button class="primary-button login-button" type="submit">LOGIN</button>
+        </form>
+
+        <p class="login-footer">Sistem Informasi WASHUP</p>
+      </section>
+    </main>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>

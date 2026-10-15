@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Dashboard Kasir WASHUP" />
+    <title>Dashboard Kasir | WASHUP</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="dashboard-page">
+    <div class="dashboard-shell">
+      <aside class="dashboard-sidebar" aria-label="Navigasi Kasir">
+        <a class="dashboard-brand" href="dashboard-kasir.html" aria-label="WASHUP Dashboard Kasir">
+          <span class="brand-mark">W</span>
+          <span>
+            <strong>WASHUP</strong>
+            <small>Sistem Car Wash</small>
+          </span>
+        </a>
+
+        <nav class="dashboard-nav" aria-label="Menu utama">
+          <p class="nav-label">MENU KASIR</p>
+          <a class="nav-item active" href="dashboard-kasir.html" aria-current="page">
+            <span class="nav-icon" aria-hidden="true">⌂</span>
+            Dashboard
+          </a>
+          <a class="nav-item" href="transaksi-baru.html">
+            <span class="nav-icon" aria-hidden="true">+</span>
+            Transaksi Baru
+          </a>
+          <a class="nav-item" href="antrean.html">
+            <span class="nav-icon" aria-hidden="true">≡</span>
+            Antrean
+          </a>
+          <a class="nav-item" href="pembayaran.html">
+            <span class="nav-icon" aria-hidden="true">Rp</span>
+            Pembayaran
+          </a>
+          <a class="nav-item" href="riwayat-transaksi.html">
+            <span class="nav-icon" aria-hidden="true">↺</span>
+            Riwayat Transaksi
+          </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <p class="sidebar-note">Area kerja Kasir</p>
+          <button class="sidebar-logout" id="dashboard-logout" type="button">
+            <span class="nav-icon" aria-hidden="true">↪</span>
+            Logout
+          </button>
+        </div>
+      </aside>
+
+      <div class="dashboard-content">
+        <header class="dashboard-topbar">
+          <div>
+            <p class="eyebrow">WASHUP / KASIR</p>
+            <h1>Dashboard Kasir</h1>
+          </div>
+          <div class="user-summary" aria-label="Informasi pengguna">
+            <span class="user-avatar" aria-hidden="true">K</span>
+            <span>
+              <strong>Kasir</strong>
+              <small>Role: Kasir</small>
+            </span>
+          </div>
+        </header>
+
+        <main class="dashboard-main">
+          <section class="dashboard-welcome" aria-labelledby="welcome-title">
+            <div>
+              <p class="eyebrow">RINGKASAN HARI INI</p>
+              <h2 id="welcome-title">Selamat datang, Kasir</h2>
+              <p>Kelola pelayanan dan transaksi pelanggan hari ini.</p>
+            </div>
+            <span class="date-chip">16 September 2026</span>
+          </section>
+
+          <section class="summary-grid" aria-label="Ringkasan operasional hari ini">
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <span class="summary-icon" aria-hidden="true">▣</span>
+                <span class="summary-trend">Hari ini</span>
+              </div>
+              <p>Kendaraan Hari Ini</p>
+              <strong id="vehicle-count">45</strong>
+            </article>
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <span class="summary-icon" aria-hidden="true">✓</span>
+                <span class="summary-trend">Hari ini</span>
+              </div>
+              <p>Transaksi Hari Ini</p>
+              <strong id="transaction-count">38</strong>
+            </article>
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <span class="summary-icon" aria-hidden="true">≡</span>
+                <span class="summary-trend">Berjalan</span>
+              </div>
+              <p>Antrean Saat Ini</p>
+              <strong id="queue-count">7</strong>
+            </article>
+            <article class="summary-card summary-card-accent">
+              <div class="summary-card-top">
+                <span class="summary-icon" aria-hidden="true">Rp</span>
+                <span class="summary-trend">Hari ini</span>
+              </div>
+              <p>Pendapatan Hari Ini</p>
+              <strong id="revenue-total">Rp 2.850.000</strong>
+            </article>
+          </section>
+
+          <section class="dashboard-section" id="antrean-section" aria-labelledby="queue-title">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">PELAYANAN BERJALAN</p>
+                <h2 id="queue-title">Antrean Saat Ini</h2>
+              </div>
+              <span class="badge badge-blue" id="queue-badge">0 kendaraan aktif</span>
+            </div>
+            <div class="table-wrap">
+              <table class="queue-table">
+                <caption class="sr-only">Daftar antrean kendaraan saat ini</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Plat</th>
+                    <th scope="col">Kendaraan</th>
+                    <th scope="col">Layanan</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="queue-table-body">
+                  
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="quick-action-section" id="aksi-cepat" aria-labelledby="quick-action-title">
+            <div>
+              <p class="eyebrow">AKSES CEPAT</p>
+              <h2 id="quick-action-title">Aksi Cepat</h2>
+              <p id="dashboard-notice">Buat transaksi baru untuk menambahkan pelanggan ke antrean.</p>
+            </div>
+            <div class="quick-actions">
+              <a class="primary-button dashboard-action" href="transaksi-baru.html">
+                <span aria-hidden="true">+</span>
+                Transaksi Baru
+              </a>
+              <a class="secondary-dashboard-button" href="antrean.html">Lihat Antrean</a>
+            </div>
+          </section>
+        </main>
+
+        <footer class="dashboard-footer">
+          <span>WASHUP · Dashboard Kasir</span>
+          <span id="current-year"></span>
+        </footer>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>

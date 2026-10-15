@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Antrean Kendaraan WASHUP" />
+    <title>Antrean | WASHUP</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="queue-page">
+    <div class="dashboard-shell">
+      <aside class="dashboard-sidebar" aria-label="Navigasi Kasir">
+        <a class="dashboard-brand" href="dashboard-kasir.html" aria-label="WASHUP Dashboard Kasir">
+          <span class="brand-mark">W</span>
+          <span>
+            <strong>WASHUP</strong>
+            <small>Sistem Car Wash</small>
+          </span>
+        </a>
+
+        <nav class="dashboard-nav" aria-label="Menu utama">
+          <p class="nav-label">MENU KASIR</p>
+          <a class="nav-item" href="dashboard-kasir.html">
+            <span class="nav-icon" aria-hidden="true">⌂</span>
+            Dashboard
+          </a>
+          <a class="nav-item" href="transaksi-baru.html">
+            <span class="nav-icon" aria-hidden="true">+</span>
+            Transaksi Baru
+          </a>
+          <a class="nav-item active" href="antrean.html" aria-current="page">
+            <span class="nav-icon" aria-hidden="true">≡</span>
+            Antrean
+          </a>
+          <a class="nav-item" href="pembayaran.html">
+            <span class="nav-icon" aria-hidden="true">Rp</span>
+            Pembayaran
+          </a>
+          <a class="nav-item" href="riwayat-transaksi.html">
+            <span class="nav-icon" aria-hidden="true">↺</span>
+            Riwayat Transaksi
+          </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <p class="sidebar-note">Area kerja Kasir</p>
+          <button class="sidebar-logout" id="queue-logout" type="button">
+            <span class="nav-icon" aria-hidden="true">↪</span>
+            Logout
+          </button>
+        </div>
+      </aside>
+
+      <div class="dashboard-content">
+        <header class="dashboard-topbar">
+          <div>
+            <p class="eyebrow">WASHUP / KASIR</p>
+            <h1>Antrean</h1>
+          </div>
+          <div class="user-summary" aria-label="Informasi pengguna">
+            <span class="user-avatar" aria-hidden="true">K</span>
+            <span>
+              <strong>Kasir</strong>
+              <small>Role: Kasir</small>
+            </span>
+          </div>
+        </header>
+
+        <main class="dashboard-main queue-main">
+          <section class="queue-heading" aria-labelledby="queue-page-title">
+            <div>
+              <p class="eyebrow">PELAYANAN BERJALAN</p>
+              <h2 id="queue-page-title">Antrean Kendaraan</h2>
+              <p>Kelola antrean kendaraan yang sedang diproses.</p>
+            </div>
+            <div class="active-queue-count">
+              <span>Antrean Aktif</span>
+              <strong id="active-queue-count">0 kendaraan</strong>
+            </div>
+          </section>
+
+          <section class="queue-toolbar" aria-label="Pencarian dan filter antrean">
+            <div class="queue-search-field">
+              <label for="queue-search">Cari antrean</label>
+              <input id="queue-search" type="search" placeholder="Cari nomor plat atau nama pelanggan..." />
+            </div>
+            <div class="queue-filter-field">
+              <label for="queue-filter">Filter Status Pengerjaan</label>
+              <select id="queue-filter">
+                <option value="Semua">Semua</option>
+                <option value="Menunggu">Menunggu</option>
+                <option value="Sedang Dicuci">Sedang Dicuci</option>
+                <option value="Selesai">Selesai</option>
+              </select>
+            </div>
+          </section>
+
+          <section class="queue-panel" aria-labelledby="queue-table-title">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">DATA TRANSAKSI</p>
+                <h2 id="queue-table-title">Daftar Antrean</h2>
+              </div>
+              <span class="badge badge-blue" id="queue-result-count">0 data</span>
+            </div>
+            <div class="queue-table-wrap">
+              <table class="queue-full-table">
+                <caption class="sr-only">Daftar transaksi sebagai antrean kendaraan</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">No. Antrean</th>
+                    <th scope="col">No. Plat</th>
+                    <th scope="col">Pelanggan</th>
+                    <th scope="col">Kendaraan</th>
+                    <th scope="col">Layanan</th>
+                    <th scope="col">Status Pengerjaan</th>
+                    <th scope="col">Status Pembayaran</th>
+                    <th scope="col">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="queue-page-body"></tbody>
+              </table>
+            </div>
+            <div class="queue-empty" id="queue-empty" hidden>
+              <span class="queue-empty-icon" aria-hidden="true">≡</span>
+              <h3>Belum ada antrean</h3>
+              <p>Buat transaksi baru untuk menambahkan kendaraan ke antrean.</p>
+              <a class="primary-button dashboard-action" href="transaksi-baru.html">+ Transaksi Baru</a>
+            </div>
+          </section>
+        </main>
+
+        <footer class="dashboard-footer">
+          <span>WASHUP · Antrean Kendaraan</span>
+          <span id="current-year"></span>
+        </footer>
+      </div>
+    </div>
+
+    <dialog class="queue-dialog" id="queue-dialog" aria-labelledby="detail-title">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">DETAIL ANTREAN</p>
+          <h2 id="detail-title">Detail Transaksi</h2>
+        </div>
+        <button class="dialog-close" id="dialog-close" type="button" aria-label="Tutup detail">×</button>
+      </div>
+      <div class="detail-grid">
+        <div><span>Nomor Antrean</span><strong id="detail-queue">-</strong></div>
+        <div><span>Nomor Transaksi</span><strong id="detail-transaction">-</strong></div>
+        <div><span>Pelanggan</span><strong id="detail-customer">-</strong></div>
+        <div><span>Nomor Telepon</span><strong id="detail-phone">-</strong></div>
+        <div><span>Kendaraan</span><strong id="detail-vehicle">-</strong></div>
+        <div><span>Nomor Plat</span><strong id="detail-plate">-</strong></div>
+        <div><span>Layanan</span><strong id="detail-service">-</strong></div>
+        <div><span>Harga</span><strong id="detail-price">-</strong></div>
+        <div><span>Status Pengerjaan</span><strong id="detail-service-status">-</strong></div>
+        <div><span>Status Pembayaran</span><strong id="detail-payment-status">-</strong></div>
+      </div>
+      <div class="dialog-actions">
+        <label for="detail-status">Update Status Pengerjaan</label>
+        <select id="detail-status">
+          <option value="Menunggu">Menunggu</option>
+          <option value="Sedang Dicuci">Sedang Dicuci</option>
+          <option value="Selesai">Selesai</option>
+        </select>
+        <button class="primary-button dashboard-action" id="update-status" type="button">Update Status</button>
+      </div>
+      <p class="dialog-notice" id="dialog-notice" role="status" aria-live="polite"></p>
+    </dialog>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
