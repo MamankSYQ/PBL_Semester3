@@ -1,0 +1,754 @@
+/* =========================================================
+   WASHUP — Dashboard Kasir Stylesheet
+   File: css/kasir.css
+   Fokus: Penyelarasan visual frame Figma 1440 × 1024 px
+   ========================================================= */
+
+body.kasir-dashboard-page {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #0C2B38;
+  background-color: #E0EFF7;
+  overflow-x: hidden;
+}
+
+/* Shell Layout */
+.kasir-dashboard-page .dashboard-shell {
+  display: flex !important;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #E0EFF7;
+}
+
+/* =========================================================
+   A. SIDEBAR KASIR (Sesuai Screenshot Figma)
+   ========================================================= */
+
+/* Matikan pseudo-element warisan dari style.css agar tidak menimbulkan tumpukan garis ganda */
+.kasir-dashboard-page .dashboard-sidebar::before,
+.kasir-dashboard-page .dashboard-sidebar::after,
+.kasir-dashboard-page .dashboard-topbar::before,
+.kasir-dashboard-page .dashboard-topbar::after {
+  content: none !important;
+  display: none !important;
+  background-image: none !important;
+}
+
+.kasir-dashboard-page .dashboard-sidebar {
+  width: 266px !important;
+  flex: 0 0 266px !important;
+  min-width: 266px !important;
+  max-width: 266px !important;
+  min-height: 100vh;
+  padding: 30px 20px 32px !important;
+  box-sizing: border-box !important;
+  background-color: #09191F !important;
+  /* Pola wireframe SVG 280x245px identik dengan Admin, Landing & Login + gradasi vertikal navy ke teal */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='245' viewBox='0 0 280 245'%3E%3Cg fill='none' stroke='%2338BFC0' stroke-opacity='.20' stroke-width='1.2'%3E%3Cpath d='M0 0 L140 122.5 L280 0 M0 245 L140 122.5 L280 245 M0 0 L0 245 M140 0 L140 245 M280 0 L280 245 M0 122.5 L280 122.5 M0 0 L280 245 M280 0 L0 245'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(180deg, #09191F 0%, #043D52 100%) !important;
+  background-repeat: repeat, no-repeat !important;
+  background-size: 280px 245px, cover !important;
+  background-position: center top, center !important;
+  color: #D9EEF7;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  border-right: 1px solid rgba(136, 175, 192, 0.16) !important;
+  z-index: 10;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Brand Logo di Sidebar */
+.kasir-dashboard-page .dashboard-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  text-decoration: none !important;
+  margin: 0 0 36px 4px !important;
+}
+
+.kasir-dashboard-page .dashboard-brand .brand-logo-img {
+  width: 46px;
+  height: 35px;
+  object-fit: contain;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.kasir-dashboard-page .dashboard-brand .brand-text {
+  font-family: 'Playfair Display', 'Stencil', serif !important;
+  font-size: 1.45rem !important;
+  font-weight: 900 !important;
+  font-style: italic !important;
+  letter-spacing: 2px !important;
+  color: #FFFFFF !important;
+  line-height: 1;
+}
+
+/* Navigasi Sidebar */
+.kasir-dashboard-page .dashboard-nav {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  flex: 1 0 auto;
+}
+
+.kasir-dashboard-page .nav-label {
+  margin: 0 0 10px 4px !important;
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.5px !important;
+  color: #88AFC7 !important;
+  text-transform: uppercase !important;
+}
+
+/* Item Menu Kotak/Pill Berborder dengan Frosted Backdrop */
+.kasir-dashboard-page .nav-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 40px !important;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  color: #C2E2EE !important;
+  text-decoration: none !important;
+  font-size: 0.84rem !important;
+  font-weight: 600 !important;
+  background-color: rgba(9, 25, 31, 0.65) !important;
+  border: 1px solid rgba(136, 175, 192, 0.28) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  box-sizing: border-box;
+  transition: all 0.18s ease !important;
+}
+
+.kasir-dashboard-page .nav-item:hover {
+  background-color: rgba(14, 46, 58, 0.8) !important;
+  border-color: rgba(142, 216, 238, 0.6) !important;
+  color: #FFFFFF !important;
+  transform: translateX(2px);
+}
+
+.kasir-dashboard-page .nav-item.active {
+  background-color: rgba(16, 52, 66, 0.9) !important;
+  border-color: rgba(142, 216, 238, 0.85) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.28), inset 0 0 14px rgba(110, 227, 255, 0.12) !important;
+}
+
+.kasir-dashboard-page .nav-icon-svg {
+  width: 17px !important;
+  height: 17px !important;
+  flex: 0 0 17px !important;
+  opacity: 0.9;
+}
+
+.kasir-dashboard-page .nav-icon-rp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1;
+  width: 17px;
+  flex: 0 0 17px;
+}
+
+/* Bagian Bawah Sidebar */
+.kasir-dashboard-page .sidebar-bottom {
+  margin-top: auto !important;
+  padding-top: 24px !important;
+}
+
+.kasir-dashboard-page .sidebar-note {
+  margin: 0 0 12px 2px !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  color: #88AFC7 !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* Tombol Logout Merah Marun Sesuai Figma */
+.kasir-dashboard-page .sidebar-logout {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 36px !important;
+  padding: 7px 24px !important;
+  background: #801424 !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 120, 130, 0.25) !important;
+  border-radius: 20px !important;
+  font-family: inherit !important;
+  font-size: 0.84rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+.kasir-dashboard-page .sidebar-logout:hover {
+  background: #991D2C !important;
+  border-color: rgba(255, 150, 160, 0.4) !important;
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   B. HEADER / TOPBAR KASIR
+   ========================================================= */
+.kasir-dashboard-page .dashboard-content {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background-color: #E0EFF7 !important;
+}
+
+.kasir-dashboard-page .dashboard-topbar {
+  min-height: 100px !important;
+  height: 100px !important;
+  padding: 0 44px !important;
+  background-color: #09191F !important;
+  /* Header bersih tanpa pola terpotong: gradasi navy-teal halus selaras dengan Admin & Figma */
+  background-image: linear-gradient(90deg, #09191F 0%, #082B37 45%, #053648 100%) !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+  border-bottom: 1px solid rgba(136, 175, 192, 0.14) !important;
+  width: 100% !important;
+}
+
+.kasir-dashboard-page .dashboard-topbar .topbar-title-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto !important;
+}
+
+.kasir-dashboard-page .dashboard-topbar h1 {
+  margin: 0 !important;
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  color: #D6F0FF !important;
+  letter-spacing: 0.5px !important;
+  line-height: 1.2 !important;
+}
+
+/* User Summary (Avatar & Role Info di Kanan) */
+.kasir-dashboard-page .user-summary {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  flex: 0 0 auto !important;
+}
+
+.kasir-dashboard-page .user-avatar-circle {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  background-color: #D3EEF7 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #07222C !important;
+  flex: 0 0 44px !important;
+}
+
+.kasir-dashboard-page .user-avatar-circle svg {
+  width: 26px;
+  height: 26px;
+  fill: currentColor;
+}
+
+.kasir-dashboard-page .user-summary .user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.kasir-dashboard-page .user-summary strong {
+  color: #FFFFFF !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+}
+
+.kasir-dashboard-page .user-summary small {
+  color: #88AFC7 !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+}
+
+/* =========================================================
+   C. AREA KONTEN UTAMA
+   ========================================================= */
+.kasir-dashboard-page .dashboard-main.kasir-main {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 36px 119px 30px 123px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 0 auto !important;
+}
+
+/* Banner Welcome */
+.kasir-dashboard-page .dashboard-welcome {
+  margin-bottom: 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+}
+
+.kasir-dashboard-page .eyebrow {
+  margin: 0 0 6px 0 !important;
+  font-size: 0.78rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.5px !important;
+  color: #238EB6 !important;
+  text-transform: uppercase !important;
+}
+
+.kasir-dashboard-page .dashboard-welcome h2 {
+  margin: 0 !important;
+  font-size: 1.55rem !important;
+  font-weight: 700 !important;
+  color: #1D4A5A !important;
+  line-height: 1.3 !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* Badge Tanggal Kuning-Oranye Sesuai Figma (#FFC068) */
+.kasir-dashboard-page .admin-date-chip,
+.kasir-dashboard-page .date-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 137px !important;
+  height: 29px !important;
+  padding: 0 16px !important;
+  box-sizing: border-box !important;
+  background-color: #FFC068 !important;
+  border-radius: 40px !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 16px !important;
+  letter-spacing: 0.05em !important;
+  color: #815303 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* =========================================================
+   D. EMPAT KARTU STATISTIK (SEJAJAR DI DESKTOP)
+   ========================================================= */
+.kasir-dashboard-page .summary-grid {
+  display: flex !important;
+  gap: 12px !important;
+  flex-wrap: nowrap !important;
+  margin-bottom: 24px !important;
+  max-width: 932px !important;
+  width: 100% !important;
+}
+
+.kasir-dashboard-page .summary-card {
+  width: 224px !important;
+  height: 134px !important;
+  min-height: 134px !important;
+  max-height: 134px !important;
+  flex: 0 0 224px !important;
+  background-color: #FFFFFF !important;
+  border-radius: 15px !important;
+  padding: 13px 18px 14px !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 2px 10px rgba(13, 107, 164, 0.05) !important;
+  border: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+.kasir-dashboard-page .summary-card-top {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  margin-bottom: 6px !important;
+}
+
+/* Ikon Kotak Biru Muda */
+.kasir-dashboard-page .summary-icon-box {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 8px !important;
+  background-color: #E0EFF7 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #0D6BA4 !important;
+  flex: 0 0 36px !important;
+}
+
+.kasir-dashboard-page .summary-icon-box svg {
+  width: 20px !important;
+  height: 20px !important;
+  display: block;
+}
+
+.kasir-dashboard-page .summary-icon-box .rp-icon-text {
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  color: #0D6BA4 !important;
+}
+
+/* Label Kategori Kecil di Atas */
+.kasir-dashboard-page .summary-trend {
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  color: #88AFC7 !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* Nama Statistik */
+.kasir-dashboard-page .summary-card p {
+  margin: 0 !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  color: #88AFC7 !important;
+}
+
+/* Angka Besar Statistik */
+.kasir-dashboard-page .summary-card strong {
+  font-size: 1.85rem !important;
+  font-weight: 700 !important;
+  color: #4E93AB !important;
+  line-height: 1.1 !important;
+}
+
+/* Format mata uang sedikit disesuaikan agar tidak pecah di kartu ke-4 */
+.kasir-dashboard-page .summary-card strong#revenue-total {
+  font-size: 1.55rem !important;
+  color: #4E93AB !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+
+/* =========================================================
+   E. PANEL ANTREAN SAAT INI (Tabel Putih Bersudut Membulat)
+   ========================================================= */
+.kasir-dashboard-page .dashboard-section {
+  background-color: #FFFFFF !important;
+  border-radius: 15px !important;
+  padding: 28px 32px 34px !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 2px 10px rgba(13, 107, 164, 0.05) !important;
+  border: none !important;
+  margin-bottom: 20px !important;
+  max-width: 932px !important;
+  min-height: 233px !important;
+  width: 100% !important;
+}
+
+.kasir-dashboard-page .section-heading {
+  margin-bottom: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.kasir-dashboard-page .section-heading h2 {
+  margin: 4px 0 0 0 !important;
+  font-size: 1.45rem !important;
+  font-weight: 700 !important;
+  color: #1D4A5A !important;
+  letter-spacing: 0.2px !important;
+}
+
+/* Badge kendaraan aktif disembunyikan visualnya sesuai Figma tanpa merusak JS */
+.kasir-dashboard-page #queue-badge[hidden],
+.kasir-dashboard-page .hide-visual {
+  display: none !important;
+}
+
+/* Tabel Antrean */
+.kasir-dashboard-page .table-wrap {
+  width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.kasir-dashboard-page .queue-table {
+  width: 100% !important;
+  min-width: 600px;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+/* Header Kolom Abu-Biru Muda */
+.kasir-dashboard-page .queue-table thead tr {
+  background-color: #F1F5F7 !important;
+}
+
+.kasir-dashboard-page .queue-table th {
+  padding: 12px 16px !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px !important;
+  color: #1D4A5A !important;
+  text-transform: uppercase !important;
+  text-align: left !important;
+  border: none !important;
+}
+
+.kasir-dashboard-page .queue-table th:first-child {
+  border-top-left-radius: 8px !important;
+  border-bottom-left-radius: 8px !important;
+}
+
+.kasir-dashboard-page .queue-table th:last-child {
+  border-top-right-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+}
+
+/* Baris Isi Tabel Antrean */
+.kasir-dashboard-page .queue-table td {
+  padding: 14px 16px !important;
+  font-size: 0.84rem !important;
+  color: #1D4A5A !important;
+  border-bottom: 1px solid #EDF3F7 !important;
+}
+
+/* Badge Status Pengerjaan Antrean */
+.kasir-dashboard-page .status-badge {
+  display: inline-block !important;
+  padding: 4px 12px !important;
+  border-radius: 6px !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+}
+
+.kasir-dashboard-page .status-badge.status-done {
+  background-color: #E2F6ED !important;
+  color: #13774C !important;
+}
+
+.kasir-dashboard-page .status-badge.status-washing {
+  background-color: #DDF2F8 !important;
+  color: #116186 !important;
+}
+
+.kasir-dashboard-page .status-badge.status-waiting {
+  background-color: #FFF2DF !important;
+  color: #9E5B00 !important;
+}
+
+/* =========================================================
+   F. PANEL TINDAKAN ANTREAN (Card Putih Kedua Sesuai Figma)
+   ========================================================= */
+.kasir-dashboard-page .quick-action-panel {
+  background-color: #FFFFFF !important;
+  border-radius: 15px !important;
+  padding: 28px 32px !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 2px 10px rgba(13, 107, 164, 0.05) !important;
+  border: none !important;
+  margin-bottom: 24px !important;
+  max-width: 932px !important;
+  min-height: 171px !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 24px !important;
+}
+
+.kasir-dashboard-page .quick-action-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.kasir-dashboard-page .quick-action-info h2 {
+  margin: 4px 0 6px 0 !important;
+  font-size: 1.45rem !important;
+  font-weight: 700 !important;
+  color: #1D4A5A !important;
+  letter-spacing: 0.2px !important;
+}
+
+.kasir-dashboard-page .quick-action-info p {
+  margin: 0 !important;
+  font-size: 0.88rem !important;
+  color: #88AFC7 !important;
+  font-weight: 500;
+}
+
+.kasir-dashboard-page .quick-action-buttons {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  flex-shrink: 0;
+}
+
+/* Tombol Transaksi Baru (Solid Dark Teal #1D4A5A Sesuai Figma) */
+.kasir-dashboard-page .btn-transaksi-baru {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 42px !important;
+  padding: 10px 24px !important;
+  border-radius: 9px !important;
+  background-color: #1D4A5A !important;
+  color: #FFFFFF !important;
+  font-size: 0.88rem !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  letter-spacing: 0.3px !important;
+  transition: all 0.18s ease !important;
+  box-shadow: 0 2px 6px rgba(29, 74, 90, 0.25) !important;
+  border: none !important;
+}
+
+.kasir-dashboard-page .btn-transaksi-baru:hover {
+  background-color: #153947 !important;
+  transform: translateY(-1px);
+}
+
+/* Tombol Lihat Antrean (Outline Border Dark Teal #1D4A5A Sesuai Figma) */
+.kasir-dashboard-page .btn-lihat-antrean {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 42px !important;
+  padding: 9px 24px !important;
+  border-radius: 9px !important;
+  background-color: #FFFFFF !important;
+  color: #1D4A5A !important;
+  border: 1.8px solid #1D4A5A !important;
+  font-size: 0.88rem !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  letter-spacing: 0.3px !important;
+  transition: all 0.18s ease !important;
+}
+
+.kasir-dashboard-page .btn-lihat-antrean:hover {
+  background-color: #F0F6F9 !important;
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   G. FOOTER (Garis Tipis Pembatas + Informasi Lokasi)
+   ========================================================= */
+.kasir-dashboard-page .dashboard-footer {
+  width: 100% !important;
+  max-width: 932px !important;
+  margin: auto 0 0 0 !important;
+  padding: 20px 0 12px !important;
+  border-top: 1px solid #C4DFEE !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  color: #88AFC7 !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.3px !important;
+}
+
+.kasir-dashboard-page .footer-copy {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kasir-dashboard-page .c-icon-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #88AFC7;
+  border-radius: 50%;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #88AFC7;
+}
+
+/* =========================================================
+   RESPONSIVITAS BREAKPOINTS
+   ========================================================= */
+@media (max-width: 1320px) {
+  .kasir-dashboard-page .dashboard-main.kasir-main {
+    max-width: none !important;
+    padding: 24px 24px 20px !important;
+  }
+  .kasir-dashboard-page .summary-grid {
+    gap: 16px !important;
+    flex-wrap: wrap !important;
+    max-width: 100% !important;
+  }
+  .kasir-dashboard-page .summary-card {
+    flex: 1 1 calc(50% - 16px) !important;
+    width: auto !important;
+    min-width: 200px !important;
+  }
+  .kasir-dashboard-page .dashboard-section,
+  .kasir-dashboard-page .quick-action-panel,
+  .kasir-dashboard-page .dashboard-footer {
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .kasir-dashboard-page .dashboard-sidebar {
+    width: 230px !important;
+    min-width: 230px !important;
+    max-width: 230px !important;
+    flex-basis: 230px !important;
+    padding: 24px 16px 28px !important;
+  }
+  .kasir-dashboard-page .dashboard-topbar {
+    padding: 0 24px !important;
+  }
+  .kasir-dashboard-page .dashboard-main.kasir-main {
+    padding: 28px 24px 24px !important;
+  }
+  .kasir-dashboard-page .quick-action-panel {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .kasir-dashboard-page .dashboard-shell {
+    flex-direction: column !important;
+  }
+  .kasir-dashboard-page .dashboard-sidebar {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    flex: 0 0 auto !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(110, 165, 185, 0.2) !important;
+  }
+  .kasir-dashboard-page .summary-card {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+  }
+  .kasir-dashboard-page .dashboard-footer {
+    flex-direction: column !important;
+    gap: 8px !important;
+    text-align: center !important;
+  }
+}
+

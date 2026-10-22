@@ -144,6 +144,10 @@ function ensureMasterDefaults(type, definition) {
   return records;
 }
 
+function getUserAccounts() {
+  return ensureMasterDefaults("users", masterDefinitions.users);
+}
+
 function getActiveServiceOptions() {
   const definition = masterDefinitions.services;
   const records = readMasterRecords(definition);
@@ -182,6 +186,13 @@ function saveTransactions(transactions) {
   localStorage.setItem(transactionStorageKey, JSON.stringify(transactions));
 }
 
+function isValidServiceStatusTransition(currentStatus, nextStatus) {
+  const statusOrder = ["Menunggu", "Sedang Dicuci", "Selesai"];
+  const currentIndex = statusOrder.indexOf(String(currentStatus || "").trim());
+  const nextIndex = statusOrder.indexOf(String(nextStatus || "").trim());
+  return currentIndex >= 0 && nextIndex >= currentIndex && nextIndex <= currentIndex + 1;
+}
+
 function formatCurrency(value) {
   return `Rp ${Number(value).toLocaleString("id-ID")}`;
 }
@@ -218,18 +229,58 @@ function getTodayLabel() {
   return new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
 }
 
-function getAttendance() {
+function getAttendanceRecords() {
   try {
-    const attendance = JSON.parse(localStorage.getItem(attendanceStorageKey) || "null");
-    return attendance && attendance.date === getTodayKey() ? attendance : null;
+    const value = JSON.parse(localStorage.getItem(attendanceStorageKey) || "[]");
+    if (Array.isArray(value)) {
+      return value.filter((item) => item && typeof item === "object");
+    }
+    return value && typeof value === "object" ? [value] : [];
   } catch {
-    return null;
+    return [];
   }
+}
+
+function getAttendance(employeeId = "petugas") {
+  const records = getAttendanceRecords();
+  const today = getTodayKey();
+  const exactMatch = records.find((attendance) => attendance && attendance.employeeId === employeeId && attendance.date === today);
+  if (exactMatch) return exactMatch;
+
+  if (employeeId === "petugas") {
+    const legacyMatch = records.find((attendance) => attendance && !attendance.employeeId && attendance.employeeName === "Petugas" && attendance.date === today);
+    if (legacyMatch) {
+      legacyMatch.employeeId = "petugas";
+      return legacyMatch;
+    }
+  }
+
+  return null;
 }
 
 function saveAttendance(attendance) {
   try {
-    localStorage.setItem(attendanceStorageKey, JSON.stringify(attendance));
+    const records = getAttendanceRecords();
+    if (!attendance.employeeId && attendance.employeeName === "Petugas") {
+      attendance.employeeId = "petugas";
+    }
+    const existingIndex = records.findIndex((record) => {
+      if (!record || record.date !== attendance.date) return false;
+      if (record.employeeId && attendance.employeeId) {
+        return record.employeeId === attendance.employeeId;
+      }
+      if (!record.employeeId && (attendance.employeeId === "petugas" || attendance.employeeName === "Petugas") && record.employeeName === "Petugas") {
+        return true;
+      }
+      return false;
+    });
+
+    if (existingIndex >= 0) {
+      records[existingIndex] = { ...records[existingIndex], ...attendance };
+    } else {
+      records.push(attendance);
+    }
+    localStorage.setItem(attendanceStorageKey, JSON.stringify(records));
     return true;
   } catch {
     return false;
@@ -282,6 +333,22 @@ if (passwordToggle && passwordInput) {
   });
 }
 
+
+const roleOptions = document.querySelectorAll(".role-option");
+const selectedRoleInput = document.querySelector("#selected-role");
+
+roleOptions.forEach((option) => {
+  option.addEventListener("click", () => {
+    roleOptions.forEach((item) => {
+      const active = item === option;
+      item.classList.toggle("is-active", active);
+      item.setAttribute("aria-pressed", String(active));
+    });
+    if (selectedRoleInput) selectedRoleInput.value = option.dataset.role || "Admin";
+    if (loginError) loginError.textContent = "";
+  });
+});
+
 if (loginForm) {
   loginForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -289,7 +356,8 @@ if (loginForm) {
     const formData = new FormData(loginForm);
     const username = String(formData.get("username")).trim().toLowerCase();
     const password = String(formData.get("password"));
-    const account = accounts[username];
+    const users = getUserAccounts();
+    const account = users.find((user) => String(user.username || "").trim().toLowerCase() === username);
 
     usernameError.textContent = username ? "" : "Username wajib diisi.";
     passwordError.textContent = password ? "" : "Password wajib diisi.";
@@ -304,7 +372,25 @@ if (loginForm) {
       return;
     }
 
+    if (account.status !== "Aktif") {
+      loginError.textContent = "Akun dinonaktifkan. Silakan hubungi Administrator.";
+      return;
+    }
+
+    const selectedRole = selectedRoleInput?.value || "Admin";
+    if (account.role !== selectedRole) {
+      loginError.textContent = `Akun ini bukan akun ${selectedRole}. Pilih jenis akun yang sesuai.`;
+      return;
+    }
+
+    const validRoles = ["Admin", "Kasir", "Petugas", "Owner"];
+    if (!validRoles.includes(account.role)) {
+      loginError.textContent = "Role akun tidak valid.";
+      return;
+    }
+
     sessionStorage.setItem("washupRole", account.role);
+    sessionStorage.setItem("washupUsername", username);
     window.location.href = account.role === "Kasir" ? "dashboard-kasir.html" : account.role === "Petugas" ? "dashboard-petugas.html" : account.role === "Owner" ? "dashboard-owner.html" : account.role === "Admin" ? "dashboard-admin.html" : "role.html";
   });
 }
@@ -423,6 +509,8 @@ function renderDashboardData() {
   const revenueTotal = document.querySelector("#revenue-total");
   const queueBadge = document.querySelector("#queue-badge");
   const queueTableBody = document.querySelector("#queue-table-body");
+  const kasirDate = document.querySelector("#kasir-date");
+  if (kasirDate) kasirDate.textContent = getTodayLabel();
 
   if (!vehicleCount || !transactionCount || !queueCount || !revenueTotal || !queueBadge || !queueTableBody) {
     return;
@@ -435,7 +523,7 @@ function renderDashboardData() {
     vehicles: baseDashboardData.vehicles + transactions.length,
     transactions: baseDashboardData.transactions + transactions.length,
     queue: activeQueue.length,
-    revenue: baseDashboardData.revenue + transactions.reduce((total, transaction) => total + Number(transaction.price || 0), 0),
+    revenue: baseDashboardData.revenue + transactions.filter((transaction) => transaction.paymentStatus === "Lunas").reduce((total, transaction) => total + Number(transaction.price || 0), 0),
   };
 
   vehicleCount.textContent = String(statistics.vehicles);
@@ -746,7 +834,16 @@ function setupQueuePage() {
     const transactions = getTransactions();
     const transaction = transactions.find((item) => item.id === selectedTransactionId);
     if (!transaction) return;
-    transaction.serviceStatus = detailStatus.value;
+    if (transaction.paymentStatus === "Lunas") {
+      dialogNotice.textContent = "Status pengerjaan tidak dapat diubah setelah transaksi Lunas.";
+      return;
+    }
+    const nextStatus = detailStatus.value;
+    if (!isValidServiceStatusTransition(transaction.serviceStatus, nextStatus)) {
+      dialogNotice.textContent = "Status harus mengikuti urutan Menunggu, Sedang Dicuci, lalu Selesai.";
+      return;
+    }
+    transaction.serviceStatus = nextStatus;
     saveTransactions(transactions);
     dialogNotice.textContent = "Status pengerjaan berhasil diperbarui.";
     document.querySelector("#detail-service-status").textContent = transaction.serviceStatus;
@@ -997,6 +1094,7 @@ function setupPaymentPage() {
     }
     transaction.paymentStatus = "Lunas";
     transaction.paymentMethod = paymentMethod.value;
+    transaction.paidAt = new Date().toISOString();
     saveTransactions(transactions);
     closeDialog();
     notice.textContent = "Pembayaran berhasil dikonfirmasi.";
@@ -1036,6 +1134,10 @@ function setupOwnerDashboard() {
     const createdAt = new Date(transaction.createdAt);
     return Number.isNaN(createdAt.getTime()) ? null : createdAt;
   };
+  const validPaidAt = (transaction) => {
+    const paidAt = new Date(transaction.paidAt);
+    return Number.isNaN(paidAt.getTime()) ? null : paidAt;
+  };
   const sumPaid = (transactions) => transactions
     .filter((transaction) => transaction.paymentStatus === "Lunas")
     .reduce((total, transaction) => total + Number(transaction.price || 0), 0);
@@ -1052,23 +1154,27 @@ function setupOwnerDashboard() {
       const createdAt = validCreatedAt(transaction);
       return createdAt && formatDateKey(createdAt) === todayKey;
     });
-    const weekTransactions = transactions.filter((transaction) => {
-      const createdAt = validCreatedAt(transaction);
-      return createdAt && createdAt >= weekStart && createdAt <= today;
+    const todayPaidTransactions = transactions.filter((transaction) => {
+      const paidAt = validPaidAt(transaction);
+      return transaction.paymentStatus === "Lunas" && paidAt && formatDateKey(paidAt) === todayKey;
     });
-    const monthTransactions = transactions.filter((transaction) => {
-      const createdAt = validCreatedAt(transaction);
-      return createdAt && createdAt.getFullYear() === year && createdAt.getMonth() === month;
+    const weekPaidTransactions = transactions.filter((transaction) => {
+      const paidAt = validPaidAt(transaction);
+      return transaction.paymentStatus === "Lunas" && paidAt && paidAt >= weekStart && paidAt <= today;
+    });
+    const monthPaidTransactions = transactions.filter((transaction) => {
+      const paidAt = validPaidAt(transaction);
+      return transaction.paymentStatus === "Lunas" && paidAt && paidAt.getFullYear() === year && paidAt.getMonth() === month;
     });
 
     vehicleCount.textContent = String(todayTransactions.length);
     transactionCount.textContent = String(todayTransactions.length);
-    revenueTotal.textContent = formatCurrency(sumPaid(todayTransactions));
+    revenueTotal.textContent = formatCurrency(sumPaid(todayPaidTransactions));
     unpaidCount.textContent = String(transactions.filter((transaction) => transaction.paymentStatus === "Belum Dibayar").length);
     paidCount.textContent = String(transactions.filter((transaction) => transaction.paymentStatus === "Lunas").length);
-    revenueToday.textContent = formatCurrency(sumPaid(todayTransactions));
-    revenueWeek.textContent = formatCurrency(sumPaid(weekTransactions));
-    revenueMonth.textContent = formatCurrency(sumPaid(monthTransactions));
+    revenueToday.textContent = formatCurrency(sumPaid(todayPaidTransactions));
+    revenueWeek.textContent = formatCurrency(sumPaid(weekPaidTransactions));
+    revenueMonth.textContent = formatCurrency(sumPaid(monthPaidTransactions));
 
     const recentTransactions = [...transactions].sort((first, second) => {
       const firstTime = validCreatedAt(first)?.getTime() || 0;
@@ -1122,14 +1228,14 @@ function setupOwnerTransactionReport() {
   const weekStart = new Date(now);
   weekStart.setHours(0, 0, 0, 0);
   weekStart.setDate(now.getDate() - ((now.getDay() + 6) % 7));
-  const inPeriod = (transaction) => {
+  const isDateInSelectedPeriod = (date) => {
     if (period.value === "Semua") return true;
-    const createdAt = new Date(transaction.createdAt);
-    if (Number.isNaN(createdAt.getTime())) return false;
-    if (period.value === "Hari Ini") return formatDateKey(createdAt) === todayKey;
-    if (period.value === "Minggu Ini") return createdAt >= weekStart && createdAt <= now;
-    return createdAt.getFullYear() === now.getFullYear() && createdAt.getMonth() === now.getMonth();
+    if (Number.isNaN(date.getTime())) return false;
+    if (period.value === "Hari Ini") return formatDateKey(date) === todayKey;
+    if (period.value === "Minggu Ini") return date >= weekStart && date <= now;
+    return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
   };
+  const inPeriod = (transaction) => isDateInSelectedPeriod(new Date(transaction.createdAt));
   const formatDateTime = (value) => {
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? "-" : date.toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" });
@@ -1256,7 +1362,7 @@ function setupAdminDashboard() {
 if (document.querySelector(".admin-dashboard-page")) setupAdminDashboard();
 
 function statusClassForPetugas(status) {
-  if (status === "Selesai") return "status-done";
+  if (status === "Selesai" || status === "Lunas") return "status-done";
   if (status === "Sedang Dicuci") return "status-washing";
   return "status-waiting";
 }
@@ -1273,40 +1379,70 @@ function setupPetugasDashboard() {
   const empty = document.querySelector("#petugas-dashboard-empty");
   if (!body || !empty) return;
 
+  const search = document.querySelector("#petugas-search");
+  const filter = document.querySelector("#petugas-filter");
+
   const transactions = getTransactions();
   const counts = {
     waiting: transactions.filter((transaction) => transaction.serviceStatus === "Menunggu").length,
     washing: transactions.filter((transaction) => transaction.serviceStatus === "Sedang Dicuci").length,
     done: transactions.filter((transaction) => transaction.serviceStatus === "Selesai").length,
   };
-  document.querySelector("#waiting-count").textContent = counts.waiting;
-  document.querySelector("#washing-count").textContent = counts.washing;
-  document.querySelector("#done-count").textContent = counts.done;
-  document.querySelector("#petugas-vehicle-count").textContent = transactions.length;
-  document.querySelector("#petugas-queue-badge").textContent = `${transactions.filter((transaction) => transaction.serviceStatus !== "Selesai").length} kendaraan aktif`;
-  document.querySelector("#petugas-date").textContent = getTodayLabel();
-  body.replaceChildren();
-  empty.hidden = transactions.length > 0;
+  const waitingCount = document.querySelector("#waiting-count");
+  const washingCount = document.querySelector("#washing-count");
+  const doneCount = document.querySelector("#done-count");
+  const vehicleCount = document.querySelector("#petugas-vehicle-count");
+  const queueBadge = document.querySelector("#petugas-queue-badge");
+  const dateEl = document.querySelector("#petugas-date");
 
-  transactions.forEach((transaction) => {
-    const row = document.createElement("tr");
-    [transaction.queueNumber, transaction.plateNumber, transaction.vehicleType, transaction.service].forEach((value) => {
-      const cell = document.createElement("td");
-      cell.textContent = value;
-      row.append(cell);
+  if (waitingCount) waitingCount.textContent = counts.waiting;
+  if (washingCount) washingCount.textContent = counts.washing;
+  if (doneCount) doneCount.textContent = counts.done;
+  if (vehicleCount) vehicleCount.textContent = transactions.length;
+  if (queueBadge) queueBadge.textContent = `${transactions.filter((transaction) => transaction.serviceStatus !== "Selesai").length} kendaraan aktif`;
+  if (dateEl) dateEl.textContent = getTodayLabel();
+
+  const render = () => {
+    const query = search && search.value ? search.value.trim().toLowerCase() : "";
+    const selectedFilter = filter && filter.value ? filter.value : "Semua";
+    const filtered = transactions.filter((transaction) => {
+      const matchesQuery = [transaction.plateNumber, transaction.queueNumber, transaction.customerName].some((value) => String(value || "").toLowerCase().includes(query));
+      return matchesQuery && (selectedFilter === "Semua" || transaction.serviceStatus === selectedFilter);
     });
-    const statusCell = document.createElement("td");
-    statusCell.append(makePetugasStatusBadge(transaction.serviceStatus));
-    row.append(statusCell);
-    const actionCell = document.createElement("td");
-    const link = document.createElement("a");
-    link.className = "table-action table-action-link";
-    link.href = "antrean-petugas.html";
-    link.textContent = "Detail";
-    actionCell.append(link);
-    row.append(actionCell);
-    body.append(row);
-  });
+
+    body.replaceChildren();
+    empty.hidden = filtered.length > 0;
+
+    filtered.forEach((transaction) => {
+      const row = document.createElement("tr");
+      [transaction.queueNumber, transaction.plateNumber, transaction.customerName || "-", transaction.vehicleType, transaction.service].forEach((value) => {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.append(cell);
+      });
+      const serviceCell = document.createElement("td");
+      serviceCell.append(makePetugasStatusBadge(transaction.serviceStatus));
+      row.append(serviceCell);
+
+      const paymentCell = document.createElement("td");
+      paymentCell.append(makePetugasStatusBadge(transaction.paymentStatus));
+      row.append(paymentCell);
+
+      const actionCell = document.createElement("td");
+      const link = document.createElement("a");
+      link.className = "table-action table-action-link";
+      link.href = "antrean-petugas.html";
+      link.textContent = "Detail";
+      actionCell.append(link);
+      row.append(actionCell);
+
+      body.append(row);
+    });
+  };
+
+  if (search) search.addEventListener("input", render);
+  if (filter) filter.addEventListener("change", render);
+  render();
 }
 
 function setupPetugasQueue() {
@@ -1384,11 +1520,12 @@ function setupPetugasQueue() {
     const transactions = getTransactions();
     const transaction = transactions.find((item) => item.id === selectedId);
     if (!transaction) return;
+    if (transaction.paymentStatus === "Lunas") {
+      document.querySelector("#petugas-dialog-notice").textContent = "Status pengerjaan tidak dapat diubah setelah transaksi Lunas.";
+      return;
+    }
     const nextStatus = document.querySelector("#petugas-detail-status").value;
-    const statusOrder = ["Menunggu", "Sedang Dicuci", "Selesai"];
-    const currentIndex = statusOrder.indexOf(transaction.serviceStatus);
-    const nextIndex = statusOrder.indexOf(nextStatus);
-    if (nextIndex > currentIndex + 1) {
+    if (!isValidServiceStatusTransition(transaction.serviceStatus, nextStatus)) {
       document.querySelector("#petugas-dialog-notice").textContent = "Status harus mengikuti urutan Menunggu, Sedang Dicuci, lalu Selesai.";
       return;
     }
@@ -1424,11 +1561,13 @@ function setupPetugasAttendance() {
   const checkOutPhotoCard = document.querySelector("#check-out-photo-card");
   const checkInPhoto = document.querySelector("#check-in-photo");
   const checkOutPhoto = document.querySelector("#check-out-photo");
+  const employeeId = sessionStorage.getItem("washupUsername") || "petugas";
+  const employeeName = employeeId === "petugas" ? "Petugas" : employeeId;
   let selectedPhoto = null;
   let selectedPhotoName = "";
   let confirmedPhoto = null;
   const render = () => {
-    const attendance = getAttendance();
+    const attendance = getAttendance(employeeId);
     date.textContent = getTodayLabel();
     checkIn.textContent = attendance?.checkIn || "--";
     checkOut.textContent = attendance?.checkOut || "--";
@@ -1502,13 +1641,15 @@ function setupPetugasAttendance() {
     }
 
     confirmedPhoto = selectedPhoto;
-    const attendance = getAttendance();
+    const attendance = getAttendance(employeeId);
     notice.textContent = `Foto sudah dikonfirmasi. Anda dapat melakukan ${attendance?.checkIn ? "Absen Keluar" : "Absen Masuk"}.`;
     render();
   });
 
   action.addEventListener("click", () => {
-    const attendance = getAttendance() || { employeeName: "Petugas", date: getTodayKey(), shift: "Shift Pagi", checkIn: null, checkInPhoto: null, checkOut: null, checkOutPhoto: null, status: "Belum Absen" };
+    const attendance = getAttendance(employeeId) || { employeeId, employeeName, date: getTodayKey(), shift: "Shift Pagi", checkIn: null, checkInPhoto: null, checkOut: null, checkOutPhoto: null, status: "Belum Absen" };
+    if (!attendance.employeeId) attendance.employeeId = employeeId;
+    if (!attendance.employeeName) attendance.employeeName = employeeName;
     if (attendance.checkOut) {
       notice.textContent = "Absensi hari ini sudah selesai.";
       return;
@@ -1538,7 +1679,7 @@ function setupPetugasAttendance() {
     notice.textContent = attendance.checkOut ? "Absensi hari ini sudah selesai." : "Absen masuk berhasil disimpan.";
     render();
   });
-  document.querySelector("#attendance-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = "login.html"; });
+  document.querySelector("#attendance-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); sessionStorage.removeItem("washupUsername"); window.location.href = "login.html"; });
   render();
 }
 
@@ -1702,7 +1843,7 @@ function setupMasterPage() {
     const requiredField = definition.fields.find((field) => field.required && !String(record[field.key] || "").trim());
     if (requiredField) return `${requiredField.label} wajib diisi.`;
     if (type === "services" && (!Number.isFinite(Number(record.price)) || Number(record.price) <= 0)) return "Harga harus lebih besar dari 0.";
-    if (type === "shifts" && record.startTime >= record.endTime) return "Jam selesai harus setelah jam mulai.";
+    if (type === "shifts" && record.start >= record.end) return "Jam selesai harus setelah jam mulai.";
     const duplicate = records.some((existing) => existing.id !== editingId && (
       (type === "customers" && existing.phone === record.phone) ||
       (type === "vehicles" && existing.plateNumber === record.plateNumber) ||

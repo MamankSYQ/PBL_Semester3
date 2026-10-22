@@ -1,85 +1,88 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="WASHUP - Sistem Informasi Car Wash" />
-    <title>WASHUP | Sistem Informasi Car Wash</title>
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <a class="brand" href="index.html" aria-label="WASHUP Beranda">
-          <span class="brand-mark">W</span>
-          <span>
-            <strong>WASHUP</strong>
-            <small>Sistem Informasi Car Wash</small>
-          </span>
-        </a>
-        <div class="topbar-status">
-          <span class="status-dot" aria-hidden="true"></span>
-          Sistem siap dikembangkan
-        </div>
-      </header>
-
-      <main class="main-content">
-        <section class="intro-section" aria-labelledby="page-title">
-          <p class="eyebrow">WASHUP / PERSIAPAN PROJECT</p>
-          <h1 id="page-title">Pusat operasional car wash yang lebih teratur.</h1>
-          <p class="intro-copy">
-            WASHUP akan membantu menghubungkan pelayanan pelanggan, antrean
-            pencucian, dan pemantauan usaha dalam satu sistem.
-          </p>
-          <a class="primary-button intro-button" href="login.html">Masuk ke WASHUP</a>
-        </section>
-
-        <section class="setup-panel" aria-labelledby="setup-title">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow">TAHAP 1</p>
-              <h2 id="setup-title">Fondasi aplikasi</h2>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASHUP - Sistem Administrasi</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/landing.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header & Logo -->
+        <header class="top-header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <img
+                        src="assets/logo-washup.png"
+                        alt="Logo mobil cuci WASHUP"
+                        width="64"
+                        height="48"
+                        style="display:block; width:64px; height:48px; object-fit:contain;"
+                    >
+                </div>
+                <div class="logo-text">
+                    <h1>WASHUP</h1>
+                    <p>Web Administrasi Sistem Hasil Usaha Pelayanan</p>
+                </div>
             </div>
-            <span class="badge badge-blue">Sedang disiapkan</span>
-          </div>
+        </header>
 
-          <div class="setup-grid">
-            <article class="info-card">
-              <span class="card-number">01</span>
-              <h3>Struktur sederhana</h3>
-              <p>File dipisahkan berdasarkan halaman, gaya tampilan, dan logika dasar.</p>
-            </article>
-            <article class="info-card">
-              <span class="card-number">02</span>
-              <h3>Siap untuk bertahap</h3>
-              <p>Fitur akan ditambahkan sesuai alur bisnis WASHUP pada tahap berikutnya.</p>
-            </article>
-            <article class="info-card">
-              <span class="card-number">03</span>
-              <h3>Berjalan di browser</h3>
-              <p>Halaman awal ini dapat dibuka langsung tanpa database atau server.</p>
-            </article>
-          </div>
+        <!-- Hero Section -->
+        <section class="hero">
+            <h2>Pusat Operasional Maju Bersama Car Wash 2</h2>
+            <p>WASHUP akan membantu menghubungkan pelayanan pelanggan, antrean<br>pencucian, dan pemantauan usaha dalam sistem</p>
+            <a href="login.html" class="btn-login">Login WASHUP</a>
         </section>
 
-        <section class="next-section" aria-labelledby="next-title">
-          <div>
-            <p class="eyebrow">STATUS PEMBANGUNAN</p>
-            <h2 id="next-title">Area kerja siap digunakan</h2>
-          </div>
-          <p class="next-copy">
-            Login dan pembagian role pengguna tersedia sebagai pintu masuk
-            awal menuju pengembangan sistem WASHUP.
-          </p>
-        </section>
-      </main>
+        <!-- Main Card -->
+        <section class="main-white-card">
+            <h3 class="card-main-title">Maju Bersama Car Wash 2</h3>
 
-      <footer class="footer">
-        <span>WASHUP</span>
-        <span id="current-year"></span>
-      </footer>
+            <div class="card-grid">
+                <div class="grid-item">
+                    <span class="grid-num">01</span>
+                    <h4>Tentang Mitra</h4>
+                    <p>Usaha jasa pencucian kendaraan<br>yang berlokasi di Kota Malang.</p>
+                </div>
+
+                <div class="grid-item">
+                    <span class="grid-num">02</span>
+                    <h4>Layanan</h4>
+                    <p>Melayani jasa pencucian kendaraan untuk<br>mobil dan sepeda motor dengan beberapa<br>pilihan layanan.</p>
+                </div>
+
+                <div class="grid-item">
+                    <span class="grid-num">03</span>
+                    <h4>WASHUP</h4>
+                    <p>Sistem untuk membantu pengelolaan<br>operasional secara lebih terstruktur.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Status & Footer Info -->
+        <section class="footer-info">
+            <div class="info-left">
+                <span class="status-label">STATUS SISTEM</span>
+                <p>WASHUP siap mendukung operasional<br>Maju Bersama Car Wash 2</p>
+            </div>
+            <div class="info-right">
+                <p>Akses sistem tersedia sesuai peran pengguna untuk membantu pengelolaan<br>operasional, mulai dari pelayanan, antrean, transaksi, hingga pemantauan usaha.</p>
+            </div>
+        </section>
+
+        <!-- Bottom Footer -->
+        <footer class="bottom-footer">
+            <div class="copyright">
+                <span class="c-icon">C</span> <span id="current-year">2026</span> WASHUP
+            </div>
+            <div class="location">
+                Maju Bersama Car Wash 2 &middot; Kota Malang
+            </div>
+        </footer>
     </div>
 
     <script src="js/app.js"></script>
-  </body>
+</body>
 </html>

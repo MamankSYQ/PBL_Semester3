@@ -3,34 +3,231 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Dashboard Petugas WASHUP" />
+    <meta name="description" content="Dashboard Petugas WASHUP - Sistem Informasi Car Wash" />
     <title>Dashboard Petugas | WASHUP</title>
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/petugas.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet" />
   </head>
   <body class="petugas-dashboard-page">
     <div class="dashboard-shell">
+      <!-- A. SIDEBAR PETUGAS -->
       <aside class="dashboard-sidebar" aria-label="Navigasi Petugas">
         <a class="dashboard-brand" href="dashboard-petugas.html" aria-label="WASHUP Dashboard Petugas">
-          <span class="brand-mark">W</span><span><strong>WASHUP</strong><small>Sistem Car Wash</small></span>
+          <img class="brand-logo-img" src="assets/logo-washup.png" alt="Logo mobil cuci WASHUP" />
+          <span class="brand-text">WASHUP</span>
         </a>
+
         <nav class="dashboard-nav" aria-label="Menu utama">
           <p class="nav-label">MENU PETUGAS</p>
-          <a class="nav-item active" href="dashboard-petugas.html" aria-current="page"><span class="nav-icon" aria-hidden="true">⌂</span>Dashboard</a>
-          <a class="nav-item" href="antrean-petugas.html"><span class="nav-icon" aria-hidden="true">≡</span>Antrean</a>
-          <a class="nav-item" href="absensi-petugas.html"><span class="nav-icon" aria-hidden="true">✓</span>Absensi</a>
+          <a class="nav-item active" href="dashboard-petugas.html" aria-current="page">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m3 10 9-7 9 7v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
+              <path d="M9 21V12h6v9" />
+            </svg>
+            Dashboard
+          </a>
+          <a class="nav-item" href="absensi-petugas.html">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+              <polyline points="10 17 15 12 10 7" />
+              <line x1="15" y1="12" x2="3" y2="12" />
+            </svg>
+            Absensi Masuk
+          </a>
+          <a class="nav-item" href="absensi-petugas.html">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Absensi Keluar
+          </a>
         </nav>
-        <div class="sidebar-bottom"><p class="sidebar-note">Area kerja Petugas</p><button class="sidebar-logout" id="petugas-dashboard-logout" type="button"><span class="nav-icon" aria-hidden="true">↪</span>Logout</button></div>
+
+        <div class="sidebar-bottom">
+          <p class="sidebar-note">Area Monitoring Petugas</p>
+          <button class="sidebar-logout" id="petugas-dashboard-logout" type="button">Logout</button>
+        </div>
       </aside>
+
+      <!-- B. HEADER & MAIN CONTENT -->
       <div class="dashboard-content">
-        <header class="dashboard-topbar"><div><p class="eyebrow">WASHUP / PETUGAS</p><h1>Dashboard Petugas</h1></div><div class="user-summary" aria-label="Informasi pengguna"><span class="user-avatar" aria-hidden="true">P</span><span><strong>Petugas</strong><small>Role: Petugas</small></span></div></header>
+        <header class="dashboard-topbar">
+          <div class="topbar-title-wrap">
+            <h1>Dashboard Petugas</h1>
+          </div>
+          <div class="user-summary" aria-label="Informasi pengguna">
+            <div class="user-avatar-circle" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+              </svg>
+            </div>
+            <div class="user-info">
+              <strong>Petugas</strong>
+              <small>Role: Petugas</small>
+            </div>
+          </div>
+        </header>
+
         <main class="dashboard-main petugas-main">
-          <section class="dashboard-welcome" aria-labelledby="petugas-welcome-title"><div><p class="eyebrow">RINGKASAN PENGERJAAN</p><h2 id="petugas-welcome-title">Selamat datang, Petugas</h2><p>Pantau dan kelola pengerjaan kendaraan hari ini.</p></div><span class="date-chip" id="petugas-date"></span></section>
-          <section class="summary-grid petugas-summary-grid" aria-label="Ringkasan pengerjaan"><article class="summary-card"><div class="summary-card-top"><span class="summary-icon" aria-hidden="true">≡</span><span class="summary-trend">Perlu dikerjakan</span></div><p>Antrean Menunggu</p><strong id="waiting-count">0</strong></article><article class="summary-card"><div class="summary-card-top"><span class="summary-icon" aria-hidden="true">◌</span><span class="summary-trend">Berjalan</span></div><p>Sedang Dicuci</p><strong id="washing-count">0</strong></article><article class="summary-card summary-card-accent"><div class="summary-card-top"><span class="summary-icon" aria-hidden="true">✓</span><span class="summary-trend">Hari ini</span></div><p>Selesai Hari Ini</p><strong id="done-count">0</strong></article><article class="summary-card"><div class="summary-card-top"><span class="summary-icon" aria-hidden="true">▣</span><span class="summary-trend">Hari ini</span></div><p>Total Kendaraan Hari Ini</p><strong id="petugas-vehicle-count">0</strong></article></section>
-          <section class="dashboard-section" aria-labelledby="petugas-queue-title"><div class="section-heading"><div><p class="eyebrow">DATA TRANSAKSI</p><h2 id="petugas-queue-title">Antrean Saat Ini</h2></div><span class="badge badge-blue" id="petugas-queue-badge">0 kendaraan</span></div><div class="table-wrap"><table class="queue-table"><caption class="sr-only">Antrean kendaraan untuk Petugas</caption><thead><tr><th scope="col">No. Antrean</th><th scope="col">Plat</th><th scope="col">Kendaraan</th><th scope="col">Layanan</th><th scope="col">Status</th><th scope="col">Aksi</th></tr></thead><tbody id="petugas-dashboard-body"></tbody></table></div><div class="queue-empty" id="petugas-dashboard-empty" hidden><span class="queue-empty-icon" aria-hidden="true">≡</span><h3>Belum ada antrean kendaraan.</h3><p>Antrean dari transaksi Kasir akan tampil di sini.</p><a class="primary-button dashboard-action" href="antrean-petugas.html">Lihat Antrean</a></div></section>
+          <!-- C. AREA SAMBUTAN -->
+          <section class="dashboard-welcome" aria-labelledby="petugas-welcome-title">
+            <div>
+              <p class="eyebrow">RINGKASAN PENGERJAAN</p>
+              <h2 id="petugas-welcome-title">Selamat Datang, Petugas!</h2>
+            </div>
+            <span class="admin-date-chip date-chip" id="petugas-date">17 Agustus 2026</span>
+          </section>
+
+          <!-- D. EMPAT KARTU STATISTIK -->
+          <section class="summary-grid" aria-label="Ringkasan pengerjaan">
+            <!-- Kartu 1: Antrean Menunggu -->
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <line x1="4" y1="6" x2="20" y2="6" />
+                    <line x1="4" y1="12" x2="20" y2="12" />
+                    <line x1="4" y1="18" x2="20" y2="18" />
+                  </svg>
+                </div>
+                <span class="summary-trend">Perlu dikerjakan</span>
+              </div>
+              <div>
+                <p>Antrean Menunggu</p>
+                <strong id="waiting-count">0</strong>
+              </div>
+            </article>
+
+            <!-- Kartu 2: Sedang Dicuci -->
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" />
+                    <polyline points="12 7 12 12 15 15" />
+                  </svg>
+                </div>
+                <span class="summary-trend">Proses</span>
+              </div>
+              <div>
+                <p>Sedang Dicuci</p>
+                <strong id="washing-count">0</strong>
+              </div>
+            </article>
+
+            <!-- Kartu 3: Selesai Hari Ini -->
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="4" />
+                    <polyline points="9 12 11 14 15 10" />
+                  </svg>
+                </div>
+                <span class="summary-trend">Hari ini</span>
+              </div>
+              <div>
+                <p>Selesai Hari Ini</p>
+                <strong id="done-count">0</strong>
+              </div>
+            </article>
+
+            <!-- Kartu 4: Total Kendaraan Hari Ini -->
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 11l2-5h12l2 5v6H4v-6z" />
+                    <circle cx="7.5" cy="16.5" r="1.5" />
+                    <circle cx="16.5" cy="16.5" r="1.5" />
+                  </svg>
+                </div>
+                <span class="summary-trend">Hari ini</span>
+              </div>
+              <div>
+                <p>Total Kendaraan Hari Ini</p>
+                <strong id="petugas-vehicle-count">0</strong>
+              </div>
+            </article>
+          </section>
+
+          <!-- E. PANEL PENCARIAN & FILTER -->
+          <section class="petugas-filter-panel" aria-label="Pencarian dan Filter Antrean">
+            <div class="filter-field-group">
+              <label class="filter-field-label" for="petugas-search">Cari Antrean</label>
+              <div class="filter-input-wrap">
+                <input id="petugas-search" type="search" placeholder="Cari Plat Nomor Atau Nama Pelanggan" />
+              </div>
+            </div>
+            <div class="filter-field-group">
+              <label class="filter-field-label" for="petugas-filter">Filter Status Pengerjaan</label>
+              <div class="filter-select-wrap">
+                <select id="petugas-filter">
+                  <option value="Semua">Semua</option>
+                  <option value="Menunggu">Menunggu</option>
+                  <option value="Sedang Dicuci">Sedang Dicuci</option>
+                  <option value="Selesai">Selesai</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <!-- F. PANEL DAFTAR ANTREAN (TABEL BESAR) -->
+          <section class="petugas-table-panel" aria-labelledby="petugas-queue-title">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">DATA TRANSAKSI KASIR</p>
+                <h2 id="petugas-queue-title">Daftar Antrean</h2>
+              </div>
+              <span class="badge badge-blue hide-visual" id="petugas-queue-badge" hidden>0 kendaraan</span>
+            </div>
+
+            <div class="table-wrap">
+              <table class="queue-table">
+                <caption class="sr-only">Daftar Antrean Kendaraan Petugas</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">NO. ANTRIAN</th>
+                    <th scope="col">PLAT</th>
+                    <th scope="col">PELANGGAN</th>
+                    <th scope="col">KENDARAAN</th>
+                    <th scope="col">LAYANAN</th>
+                    <th scope="col">STATUS PENGERJAAN</th>
+                    <th scope="col">STATUS PEMBAYARAN</th>
+                    <th scope="col">AKSI</th>
+                  </tr>
+                </thead>
+                <tbody id="petugas-dashboard-body"></tbody>
+              </table>
+            </div>
+
+            <!-- Empty State Sesuai Figma -->
+            <div class="queue-empty" id="petugas-dashboard-empty">
+              <div class="queue-empty-box">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                  <polyline points="22 13 18 13 16 16 8 16 6 13 2 13" />
+                </svg>
+              </div>
+              <h3>Belum ada antrean.</h3>
+              <p>Transaksi Kasir akan tampil setelah dibuat.</p>
+            </div>
+          </section>
+
+          <!-- G. FOOTER -->
+          <footer class="dashboard-footer">
+            <div class="footer-copy">
+              <span class="c-icon-circle">&copy;</span>
+              <span id="current-year">2026</span> WASHUP - Dashboard Petugas
+            </div>
+            <span>Maju Bersama Car Wash 2 &middot; Kota Malang</span>
+          </footer>
         </main>
-        <footer class="dashboard-footer"><span>WASHUP · Dashboard Petugas</span><span id="current-year"></span></footer>
       </div>
     </div>
+
     <script src="js/app.js"></script>
   </body>
 </html>

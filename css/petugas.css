@@ -1,0 +1,749 @@
+/* =========================================================
+   WASHUP — Dashboard Petugas Stylesheet
+   File: css/petugas.css
+   Fokus: Penyelarasan visual frame Figma 1440 × 1024 px
+   ========================================================= */
+
+body.petugas-dashboard-page {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #0C2B38;
+  background-color: #E0EFF7;
+  overflow-x: hidden;
+}
+
+/* Shell Layout */
+.petugas-dashboard-page .dashboard-shell {
+  display: flex !important;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #E0EFF7;
+}
+
+/* =========================================================
+   A. SIDEBAR PETUGAS (Sesuai Screenshot Figma)
+   ========================================================= */
+
+/* Matikan pseudo-element warisan dari style.css agar tidak menimbulkan tumpukan garis ganda */
+.petugas-dashboard-page .dashboard-sidebar::before,
+.petugas-dashboard-page .dashboard-sidebar::after,
+.petugas-dashboard-page .dashboard-topbar::before,
+.petugas-dashboard-page .dashboard-topbar::after {
+  content: none !important;
+  display: none !important;
+  background-image: none !important;
+}
+
+.petugas-dashboard-page .dashboard-sidebar {
+  width: 270px !important;
+  flex: 0 0 270px !important;
+  min-height: 100vh;
+  padding: 30px 22px 32px !important;
+  box-sizing: border-box;
+  background-color: #09191F !important;
+  /* Pola wireframe SVG 280x245px identik dengan Admin & Kasir + gradasi vertikal navy ke teal */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='245' viewBox='0 0 280 245'%3E%3Cg fill='none' stroke='%2388AFC0' stroke-opacity='.20' stroke-width='1.2'%3E%3Cpath d='M0 0 L140 122.5 L280 0 M0 245 L140 122.5 L280 245 M0 0 L0 245 M140 0 L140 245 M280 0 L280 245 M0 122.5 L280 122.5 M0 0 L280 245 M280 0 L0 245'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(180deg, #09191F 0%, #043D52 100%) !important;
+  background-repeat: repeat, no-repeat !important;
+  background-size: 280px 245px, cover !important;
+  background-position: center top, center !important;
+  color: #D9EEF7;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  border-right: 1px solid rgba(136, 175, 192, 0.16) !important;
+  z-index: 10;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Brand Logo di Sidebar */
+.petugas-dashboard-page .dashboard-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  text-decoration: none !important;
+  margin: 0 0 36px 4px !important;
+}
+
+.petugas-dashboard-page .dashboard-brand .brand-logo-img {
+  width: 46px;
+  height: 35px;
+  object-fit: contain;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.petugas-dashboard-page .dashboard-brand .brand-text {
+  font-family: 'Playfair Display', 'Stencil', serif !important;
+  font-size: 1.45rem !important;
+  font-weight: 900 !important;
+  font-style: italic !important;
+  letter-spacing: 2px !important;
+  color: #FFFFFF !important;
+  line-height: 1;
+}
+
+/* Navigasi Sidebar */
+.petugas-dashboard-page .dashboard-nav {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  flex: 1 0 auto;
+}
+
+.petugas-dashboard-page .nav-label {
+  margin: 0 0 10px 4px !important;
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.5px !important;
+  color: #7EB2C7 !important;
+  text-transform: uppercase !important;
+}
+
+/* Item Menu Kotak/Pill Berborder dengan Frosted Backdrop */
+.petugas-dashboard-page .nav-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 42px !important;
+  padding: 8px 14px !important;
+  border-radius: 9px !important;
+  color: #C2E2EE !important;
+  text-decoration: none !important;
+  font-size: 0.86rem !important;
+  font-weight: 600 !important;
+  background-color: rgba(9, 25, 31, 0.65) !important;
+  border: 1px solid rgba(136, 175, 192, 0.28) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  box-sizing: border-box;
+  transition: all 0.18s ease !important;
+}
+
+.petugas-dashboard-page .nav-item:hover {
+  background-color: rgba(14, 46, 58, 0.8) !important;
+  border-color: rgba(142, 216, 238, 0.6) !important;
+  color: #FFFFFF !important;
+  transform: translateX(2px);
+}
+
+.petugas-dashboard-page .nav-item.active {
+  background-color: rgba(14, 46, 58, 0.95) !important;
+  border-color: #55B4D4 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 14px rgba(85, 180, 212, 0.25) !important;
+}
+
+.petugas-dashboard-page .nav-icon-svg {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  flex: 0 0 17px;
+}
+
+/* Bagian Bawah Sidebar */
+.petugas-dashboard-page .sidebar-bottom {
+  margin-top: auto !important;
+  padding-top: 24px !important;
+}
+
+.petugas-dashboard-page .sidebar-note {
+  margin: 0 0 12px 2px !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  color: #6D9DB2 !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* Tombol Logout Merah Marun */
+.petugas-dashboard-page .sidebar-logout {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 36px !important;
+  padding: 7px 22px !important;
+  background: #7D1522 !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 120, 130, 0.22) !important;
+  border-radius: 9px !important;
+  font-family: inherit !important;
+  font-size: 0.84rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+.petugas-dashboard-page .sidebar-logout:hover {
+  background: #991D2C !important;
+  border-color: rgba(255, 150, 160, 0.4) !important;
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   B. HEADER / TOPBAR PETUGAS
+   ========================================================= */
+.petugas-dashboard-page .dashboard-content {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background-color: #E0EFF7 !important;
+}
+
+.petugas-dashboard-page .dashboard-topbar {
+  min-height: 82px !important;
+  padding: 0 44px !important;
+  background-color: #09191F !important;
+  /* Header bersih tanpa pola terpotong: gradasi navy-teal halus selaras dengan Figma */
+  background-image: linear-gradient(90deg, #09191F 0%, #082B37 45%, #053648 100%) !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(136, 175, 192, 0.14) !important;
+}
+
+.petugas-dashboard-page .dashboard-topbar .topbar-title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.petugas-dashboard-page .dashboard-topbar h1 {
+  margin: 0 !important;
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  color: #FFFFFF !important;
+  letter-spacing: 0.5px !important;
+  line-height: 1.2 !important;
+}
+
+/* User Summary (Avatar & Role Info di Kanan) */
+.petugas-dashboard-page .user-summary {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+}
+
+.petugas-dashboard-page .user-avatar-circle {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  background-color: #D3EEF7 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #07222C !important;
+  flex: 0 0 44px !important;
+}
+
+.petugas-dashboard-page .user-avatar-circle svg {
+  width: 26px;
+  height: 26px;
+  fill: currentColor;
+}
+
+.petugas-dashboard-page .user-summary .user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.petugas-dashboard-page .user-summary strong {
+  color: #FFFFFF !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+}
+
+.petugas-dashboard-page .user-summary small {
+  color: #84AEBF !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+}
+
+/* =========================================================
+   C. AREA KONTEN UTAMA
+   ========================================================= */
+.petugas-dashboard-page .dashboard-main.petugas-main {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 38px 44px 30px !important;
+  box-sizing: border-box;
+  flex: 1 0 auto;
+}
+
+/* Banner Welcome */
+.petugas-dashboard-page .dashboard-welcome {
+  margin-bottom: 26px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+}
+
+.petugas-dashboard-page .eyebrow {
+  margin: 0 0 6px 0 !important;
+  font-size: 0.78rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.5px !important;
+  color: #1A759F !important;
+  text-transform: uppercase !important;
+}
+
+.petugas-dashboard-page .dashboard-welcome h2 {
+  margin: 0 0 12px 0 !important;
+  font-size: 1.55rem !important;
+  font-weight: 700 !important;
+  color: #0C2B38 !important;
+  line-height: 1.3 !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* Badge Tanggal Kuning-Oranye Sesuai Figma */
+.petugas-dashboard-page .admin-date-chip,
+.petugas-dashboard-page .date-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 6px 16px !important;
+  border-radius: 20px !important;
+  background-color: #FDBA4E !important;
+  color: #3D2900 !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.4px !important;
+  box-shadow: 0 2px 6px rgba(253, 186, 78, 0.35) !important;
+}
+
+/* =========================================================
+   D. EMPAT KARTU STATISTIK (SEJAJAR DI DESKTOP)
+   ========================================================= */
+.petugas-dashboard-page .summary-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 18px !important;
+  margin-bottom: 24px !important;
+}
+
+.petugas-dashboard-page .summary-card {
+  background-color: #FFFFFF !important;
+  border-radius: 14px !important;
+  padding: 18px 20px !important;
+  box-sizing: border-box;
+  box-shadow: 0 4px 16px rgba(12, 43, 56, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  min-height: 138px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+.petugas-dashboard-page .summary-card-top {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  margin-bottom: 12px !important;
+}
+
+/* Ikon Kotak Biru Muda */
+.petugas-dashboard-page .summary-icon-box {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 10px !important;
+  background-color: #E0EFF7 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #156588 !important;
+  flex: 0 0 40px !important;
+}
+
+.petugas-dashboard-page .summary-icon-box svg {
+  width: 22px !important;
+  height: 22px !important;
+  stroke: currentColor !important;
+  stroke-width: 2 !important;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none !important;
+}
+
+/* Label Kategori Kecil di Atas */
+.petugas-dashboard-page .summary-trend {
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  color: #6C94A7 !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* Nama Statistik */
+.petugas-dashboard-page .summary-card p {
+  margin: 0 0 4px 0 !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  color: #6C94A7 !important;
+}
+
+/* Angka Besar Statistik */
+.petugas-dashboard-page .summary-card strong {
+  font-size: 2.1rem !important;
+  font-weight: 700 !important;
+  color: #0C2B38 !important;
+  line-height: 1.1 !important;
+}
+
+/* =========================================================
+   E. PANEL PENCARIAN & FILTER (Card Putih Bersudut Membulat)
+   ========================================================= */
+.petugas-dashboard-page .petugas-filter-panel {
+  background-color: #FFFFFF !important;
+  border-radius: 16px !important;
+  padding: 22px 28px !important;
+  box-sizing: border-box;
+  box-shadow: 0 4px 16px rgba(12, 43, 56, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  margin-bottom: 22px !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 28px !important;
+  align-items: flex-end !important;
+}
+
+.petugas-dashboard-page .filter-field-group {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.petugas-dashboard-page .filter-field-label {
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  color: #0C2B38 !important;
+  margin-bottom: 8px !important;
+  letter-spacing: 0.2px !important;
+}
+
+.petugas-dashboard-page .filter-input-wrap,
+.petugas-dashboard-page .filter-select-wrap {
+  width: 100% !important;
+  position: relative !important;
+}
+
+.petugas-dashboard-page .filter-input-wrap input {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 11px 16px !important;
+  font-family: inherit !important;
+  font-size: 0.88rem !important;
+  color: #0C2B38 !important;
+  background-color: #FFFFFF !important;
+  border: 1.2px solid #C8DCE6 !important;
+  border-radius: 8px !important;
+  outline: none !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease !important;
+}
+
+.petugas-dashboard-page .filter-input-wrap input::placeholder {
+  color: #8BA8B7 !important;
+  font-size: 0.86rem !important;
+}
+
+.petugas-dashboard-page .filter-input-wrap input:focus {
+  border-color: #174357 !important;
+  box-shadow: 0 0 0 3px rgba(23, 67, 87, 0.12) !important;
+}
+
+.petugas-dashboard-page .filter-select-wrap select {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 11px 36px 11px 16px !important;
+  font-family: inherit !important;
+  font-size: 0.88rem !important;
+  color: #0C2B38 !important;
+  background-color: #FFFFFF !important;
+  border: 1.2px solid #C8DCE6 !important;
+  border-radius: 8px !important;
+  outline: none !important;
+  cursor: pointer !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236C94A7' d='m1 1 5 5 5-5'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 14px center !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease !important;
+}
+
+.petugas-dashboard-page .filter-select-wrap select:focus {
+  border-color: #174357 !important;
+  box-shadow: 0 0 0 3px rgba(23, 67, 87, 0.12) !important;
+}
+
+/* =========================================================
+   F. PANEL DAFTAR ANTREAN (Card Putih Besar dengan Tabel)
+   ========================================================= */
+.petugas-dashboard-page .petugas-table-panel {
+  background-color: #FFFFFF !important;
+  border-radius: 16px !important;
+  padding: 28px 32px 34px !important;
+  box-sizing: border-box;
+  box-shadow: 0 4px 18px rgba(12, 43, 56, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  margin-bottom: 22px !important;
+}
+
+.petugas-dashboard-page .section-heading {
+  margin-bottom: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.petugas-dashboard-page .section-heading h2 {
+  margin: 4px 0 0 0 !important;
+  font-size: 1.45rem !important;
+  font-weight: 700 !important;
+  color: #0C2B38 !important;
+  letter-spacing: 0.2px !important;
+}
+
+/* Tabel Antrean Petugas (8 Kolom) */
+.petugas-dashboard-page .table-wrap {
+  width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.petugas-dashboard-page .queue-table {
+  width: 100% !important;
+  min-width: 860px;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+/* Header Kolom Abu-Biru Muda */
+.petugas-dashboard-page .queue-table thead tr {
+  background-color: #EFF5F8 !important;
+}
+
+.petugas-dashboard-page .queue-table th {
+  padding: 13px 14px !important;
+  font-size: 0.73rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.8px !important;
+  color: #174357 !important;
+  text-transform: uppercase !important;
+  text-align: left !important;
+  border: none !important;
+  white-space: nowrap !important;
+}
+
+.petugas-dashboard-page .queue-table th:first-child {
+  border-top-left-radius: 8px !important;
+  border-bottom-left-radius: 8px !important;
+}
+
+.petugas-dashboard-page .queue-table th:last-child {
+  border-top-right-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+}
+
+/* Baris Isi Tabel */
+.petugas-dashboard-page .queue-table td {
+  padding: 14px 14px !important;
+  font-size: 0.84rem !important;
+  color: #1C4456 !important;
+  border-bottom: 1px solid #EDF3F7 !important;
+  vertical-align: middle !important;
+}
+
+/* Badge Status Pengerjaan & Pembayaran */
+.petugas-dashboard-page .status-badge {
+  display: inline-block !important;
+  padding: 4px 11px !important;
+  border-radius: 6px !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+
+.petugas-dashboard-page .status-badge.status-done {
+  background-color: #E2F6ED !important;
+  color: #13774C !important;
+}
+
+.petugas-dashboard-page .status-badge.status-washing {
+  background-color: #DDF2F8 !important;
+  color: #116186 !important;
+}
+
+.petugas-dashboard-page .status-badge.status-waiting {
+  background-color: #FFF2DF !important;
+  color: #9E5B00 !important;
+}
+
+/* Tombol Aksi Detail */
+.petugas-dashboard-page .table-action-link,
+.petugas-dashboard-page .table-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 5px 14px !important;
+  border-radius: 7px !important;
+  background-color: #E0EFF7 !important;
+  color: #174357 !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  transition: all 0.18s ease !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.petugas-dashboard-page .table-action-link:hover,
+.petugas-dashboard-page .table-action:hover {
+  background-color: #174357 !important;
+  color: #FFFFFF !important;
+}
+
+/* Empty State Sesuai Screenshot Figma (Inbox Icon + Teks) */
+.petugas-dashboard-page .queue-empty:not([hidden]) {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 64px 20px 54px !important;
+  text-align: center !important;
+}
+
+.petugas-dashboard-page .queue-empty[hidden] {
+  display: none !important;
+}
+
+.petugas-dashboard-page .queue-empty-box {
+  width: 76px !important;
+  height: 66px !important;
+  border-radius: 14px !important;
+  background-color: #E0EFF7 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 20px !important;
+  color: #135470 !important;
+}
+
+.petugas-dashboard-page .queue-empty-box svg {
+  width: 40px !important;
+  height: 40px !important;
+  stroke: currentColor !important;
+  stroke-width: 2.2 !important;
+  fill: none !important;
+}
+
+.petugas-dashboard-page .queue-empty h3 {
+  margin: 0 0 8px 0 !important;
+  font-size: 1.3rem !important;
+  font-weight: 700 !important;
+  color: #0C2B38 !important;
+}
+
+.petugas-dashboard-page .queue-empty p {
+  margin: 0 !important;
+  font-size: 0.92rem !important;
+  color: #6C94A7 !important;
+}
+
+/* =========================================================
+   G. FOOTER (Garis Tipis Pembatas + Informasi Lokasi)
+   ========================================================= */
+.petugas-dashboard-page .dashboard-footer {
+  width: 100% !important;
+  max-width: none !important;
+  margin-top: auto !important;
+  padding: 24px 0 12px !important;
+  border-top: 1px solid #C4DFEE !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  color: #587F92 !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.3px !important;
+}
+
+.petugas-dashboard-page .footer-copy {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.petugas-dashboard-page .c-icon-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #587F92;
+  border-radius: 50%;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* =========================================================
+   RESPONSIVITAS BREAKPOINTS
+   ========================================================= */
+@media (max-width: 1200px) {
+  .petugas-dashboard-page .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .petugas-dashboard-page .dashboard-sidebar {
+    width: 230px !important;
+    flex-basis: 230px !important;
+    padding: 24px 16px 28px !important;
+  }
+  .petugas-dashboard-page .dashboard-topbar {
+    padding: 0 24px !important;
+  }
+  .petugas-dashboard-page .dashboard-main.petugas-main {
+    padding: 28px 24px 24px !important;
+  }
+  .petugas-dashboard-page .petugas-filter-panel {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .petugas-dashboard-page .dashboard-shell {
+    flex-direction: column !important;
+  }
+  .petugas-dashboard-page .dashboard-sidebar {
+    width: 100% !important;
+    min-height: auto !important;
+    flex: 0 0 auto !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(110, 165, 185, 0.2) !important;
+  }
+  .petugas-dashboard-page .summary-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .petugas-dashboard-page .dashboard-footer {
+    flex-direction: column !important;
+    gap: 8px !important;
+    text-align: center !important;
+  }
+}
+

@@ -1,0 +1,13 @@
+WASHUP — Revisi visual halaman Login
+
+- Background gradasi dan wireframe mengikuti halaman awal.
+- Logo Login menggunakan file assets/logo-washup.png yang sama dengan logo halaman awal.
+- Font WASHUP memakai Playfair Display; teks dan form memakai Inter.
+- CSS tambahan hanya ditujukan untuk halaman login, tidak mengubah fungsi JavaScript.
+
+Pemasangan:
+1. Buat cadangan folder proyek.
+2. Ekstrak isi ZIP ke folder WASHUP dan izinkan penggantian login.html.
+3. Pastikan css/login.css dan assets/logo-washup.png ikut diekstrak.
+4. Buka login.html melalui Live Server lalu tekan Ctrl+F5.
+5. Uji pemilihan role, tombol Lihat password, dan login sebelum commit/push.

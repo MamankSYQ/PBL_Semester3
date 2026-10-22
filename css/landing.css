@@ -1,0 +1,340 @@
+/* =========================================================
+   WASHUP — Landing Page
+   File: css/landing.css
+   Fokus: background gradasi teal + pola geometris wireframe
+   ========================================================= */
+
+/* Background: mengikuti frame Figma 1440 × 1109 px dengan overlay wireframe geometris */
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: #ffffff;
+    background-color: #2F6A8C;
+
+    /* Pola wireframe dibuat lebih renggang; gradasi vertikal 180deg mengikuti spesifikasi Figma */
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='245' viewBox='0 0 280 245'%3E%3Cg fill='none' stroke='%2388AFC0' stroke-opacity='.20' stroke-width='1.2'%3E%3Cpath d='M0 0 L140 122.5 L280 0 M0 245 L140 122.5 L280 245 M0 0 L0 245 M140 0 L140 245 M280 0 L280 245 M0 122.5 L280 122.5 M0 0 L280 245 M280 0 L0 245'/%3E%3C/g%3E%3C/svg%3E"),
+        linear-gradient(180deg, #09191F 0%, #043D52 100%);
+    background-repeat: repeat, no-repeat;
+    background-size: 280px 245px, cover;
+    background-position: center top, center;
+    background-attachment: fixed;
+}
+
+/* Wadah utama */
+.container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 60px 40px;
+}
+
+/* Header & Logo */
+.top-header {
+    margin-bottom: 60px;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-icon {
+    display: flex;
+    align-items: center;
+}
+
+.logo-text h1 {
+    margin: 0;
+    font-family: 'Playfair Display', 'Stencil', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 2px;
+    color: #ffffff;
+}
+
+.logo-text p {
+    margin: 5px 0 0 0;
+    font-size: 0.85rem;
+    color: #8db5c4;
+    font-weight: 500;
+}
+
+/* Hero Section */
+.hero {
+    margin-bottom: 50px;
+}
+
+.hero h2 {
+    font-size: 1.8rem;
+    margin: 0 0 20px 0;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #ffffff;
+}
+
+.hero p {
+    color: #b4d0da;
+    line-height: 1.6;
+    margin: 0 0 35px 0;
+    font-size: 0.95rem;
+}
+
+.btn-login {
+    display: inline-block;
+    background-color: #6ee3ff;
+    color: #032533;
+    padding: 12px 26px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-login:hover {
+    background-color: #91ebff;
+    transform: translateY(-1px);
+}
+
+/* Main White Card */
+.main-white-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 40px;
+    margin-bottom: 60px;
+}
+
+.card-main-title {
+    color: #2b556b;
+    margin: 0 0 30px 0;
+    font-size: 1.35rem;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.grid-item {
+    background-color: #f3f3f3;
+    border: 1px solid #c9c9c9;
+    border-radius: 8px;
+    padding: 30px;
+}
+
+.grid-num {
+    display: block;
+    color: #5d8a9e;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 1.5px;
+    margin-bottom: 15px;
+}
+
+.grid-item h4 {
+    color: #2b556b;
+    font-size: 1.25rem;
+    margin: 0 0 12px 0;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+.grid-item p {
+    color: #294e60;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Status & Footer Info */
+.footer-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 50px;
+    gap: 40px;
+}
+
+.info-left {
+    flex: 1;
+}
+
+.status-label {
+    display: block;
+    color: #8db5c4;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+}
+
+.info-left p {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #e2eff5;
+    letter-spacing: 1px;
+}
+
+.info-right {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    padding-top: 25px;
+}
+
+.info-right p {
+    margin: 0;
+    color: #b4d0da;
+    font-size: 0.85rem;
+    line-height: 1.8;
+}
+
+/* Bottom Footer */
+.bottom-footer {
+    border-top: 1px solid rgba(180, 215, 226, 0.6);
+    padding-top: 25px;
+    display: flex;
+    justify-content: space-between;
+    color: #a5c6d2;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.c-icon {
+    display: inline-block;
+    border: 1px solid #a5c6d2;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    text-align: center;
+    line-height: 18px;
+    font-size: 0.75rem;
+    margin-right: 8px;
+}
+
+/* Responsif untuk tablet */
+@media (max-width: 900px) {
+    .container {
+        padding: 44px 28px;
+    }
+
+    .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .footer-info {
+        gap: 24px;
+    }
+}
+
+/* Responsif untuk ponsel */
+@media (max-width: 640px) {
+    body {
+        background-attachment: scroll;
+        background-size: 260px 228px, cover;
+    }
+
+    .container {
+        padding: 30px 18px;
+    }
+
+    .top-header {
+        margin-bottom: 38px;
+    }
+
+    .logo-area {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .logo-icon svg {
+        width: 42px;
+        height: 42px;
+    }
+
+    .logo-text h1 {
+        font-size: 1.45rem;
+    }
+
+    .logo-text p {
+        font-size: 0.72rem;
+        line-height: 1.5;
+    }
+
+    .hero {
+        margin-bottom: 34px;
+    }
+
+    .hero h2 {
+        font-size: clamp(1.45rem, 6vw, 1.8rem);
+        line-height: 1.3;
+        letter-spacing: 0.4px;
+    }
+
+    .hero p br,
+    .grid-item p br,
+    .info-left p br,
+    .info-right p br {
+        display: none;
+    }
+
+    .hero p {
+        font-size: 0.92rem;
+    }
+
+    .btn-login {
+        padding: 12px 20px;
+        letter-spacing: 0.5px;
+    }
+
+    .main-white-card {
+        padding: 24px 18px;
+        margin-bottom: 36px;
+    }
+
+    .card-main-title {
+        font-size: 1.15rem;
+        line-height: 1.4;
+    }
+
+    .card-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+    }
+
+    .grid-item {
+        padding: 22px;
+    }
+
+    .footer-info {
+        flex-direction: column;
+        gap: 18px;
+        margin-bottom: 34px;
+    }
+
+    .info-right {
+        padding-top: 0;
+    }
+
+    .info-left p {
+        font-size: 1rem;
+    }
+
+    .bottom-footer {
+        flex-direction: column;
+        gap: 12px;
+        font-size: 0.76rem;
+        line-height: 1.6;
+    }
+}

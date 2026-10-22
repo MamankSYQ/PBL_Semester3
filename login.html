@@ -6,15 +6,17 @@
     <meta name="description" content="Login WASHUP - Sistem Informasi Car Wash" />
     <title>Login | WASHUP</title>
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/login.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet" />
   </head>
   <body class="login-page">
     <main class="login-layout">
       <section class="login-intro" aria-labelledby="login-brand-title">
         <a class="brand login-brand" href="index.html" aria-label="Kembali ke halaman awal WASHUP">
-          <span class="brand-mark">W</span>
-          <span>
+          <img class="washup-logo-icon" src="assets/logo-washup.png" alt="Logo mobil sedang dicuci WASHUP" />
+          <span class="login-brand-copy">
             <strong>WASHUP</strong>
-            <small>Sistem Informasi Car Wash</small>
+            <small>Web Administrasi Sistem Hasil Usaha Pelayanan</small>
           </span>
         </a>
       </section>
@@ -27,6 +29,13 @@
         </div>
 
         <form id="login-form" novalidate>
+          <div class="role-selector" role="group" aria-label="Pilih jenis akun">
+            <button class="role-option is-active" type="button" data-role="Admin" aria-pressed="true">Admin</button>
+            <button class="role-option" type="button" data-role="Kasir" aria-pressed="false">Kasir</button>
+            <button class="role-option" type="button" data-role="Petugas" aria-pressed="false">Petugas</button>
+            <button class="role-option" type="button" data-role="Owner" aria-pressed="false">Owner</button>
+          </div>
+          <input type="hidden" id="selected-role" name="selectedRole" value="Admin" />
           <div class="form-field">
             <label for="username">Username</label>
             <input id="username" name="username" type="text" autocomplete="username" placeholder="Masukkan username" required />
@@ -46,7 +55,7 @@
           <button class="primary-button login-button" type="submit">LOGIN</button>
         </form>
 
-        <p class="login-footer">Sistem Informasi WASHUP</p>
+        <p class="login-footer">Silakan gunakan akun yang telah diberikan oleh Admin WASHUP.</p>
       </section>
     </main>
 
