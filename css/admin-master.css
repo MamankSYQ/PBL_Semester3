@@ -595,3 +595,54 @@ body.master-page {
 .master-page .queue-empty-box { height: 70px !important; flex: 0 0 70px !important; }
 .master-page .queue-empty h3 { line-height: 30px !important; margin-bottom: 1px !important; }
 .master-page .dashboard-main.master-main + .dashboard-footer { margin-top: 91px !important; }
+
+/* ===== Dialog Tambah/Ubah Data (Figma: Data Pelanggan tambah data) ===== */
+.master-page .queue-dialog::backdrop { background: rgba(0, 0, 0, 0.33) !important; }
+.master-page .master-dialog {
+  width: 509px !important; max-width: calc(100vw - 32px) !important; padding: 30px 39px 33px !important;
+  background: #FFFFFF !important; border: 1px solid #4E93AB !important; border-radius: 20px !important;
+  box-shadow: none !important; box-sizing: border-box !important; color: #1D4A5A !important;
+  font-family: 'Open Sans', sans-serif !important;
+}
+.master-page .master-dialog .dialog-heading {
+  display: flex !important; align-items: flex-start !important; justify-content: space-between !important;
+  margin: 0 !important; padding: 0 0 10px 0 !important; border: none !important; border-bottom: 1px solid #4E93AB !important;
+}
+.master-page .master-dialog .dialog-heading .eyebrow {
+  margin: 0 0 2px 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 12px !important;
+  font-weight: 400 !important; line-height: 14px !important; letter-spacing: 0.05em !important; color: #238EB6 !important; text-transform: uppercase !important;
+}
+.master-page .master-dialog .dialog-heading h2 {
+  margin: 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 21px !important;
+  font-weight: 700 !important; line-height: 30px !important; letter-spacing: 0.05em !important; color: #1D4A5A !important;
+}
+.master-page .master-dialog .dialog-close {
+  width: auto !important; height: auto !important; min-width: 0 !important; margin: 4px 0 0 0 !important; padding: 0 4px !important;
+  background: none !important; border: none !important; box-shadow: none !important; border-radius: 0 !important;
+  font-size: 28px !important; font-weight: 700 !important; line-height: 1 !important; color: #1D4A5A !important; cursor: pointer;
+}
+.master-page .master-dialog .master-form-fields { display: flex !important; flex-direction: column !important; gap: 26px !important; margin: 21px 0 0 0 !important; }
+.master-page .master-dialog .form-field { display: flex !important; flex-direction: column !important; gap: 4px !important; margin: 0 !important; }
+.master-page .master-dialog .form-field label {
+  margin: 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 15px !important; font-weight: 600 !important;
+  line-height: 20px !important; letter-spacing: 0.05em !important; color: #1D4A5A !important; text-transform: capitalize !important;
+}
+.master-page .master-dialog .form-field input,
+.master-page .master-dialog .form-field select {
+  width: 100% !important; height: 47px !important; padding: 0 13px !important; box-sizing: border-box !important;
+  background: #FFFFFF !important; border: 1px solid #ACACAC !important; border-radius: 8px !important;
+  font-family: 'Open Sans', sans-serif !important; font-size: 15px !important; color: #1D4A5A !important;
+}
+.master-page .master-dialog .dialog-notice { margin: 12px 0 0 0 !important; font-size: 13px !important; color: #B3261E !important; }
+.master-page .master-dialog .dialog-notice:empty { display: none !important; }
+.master-page .master-dialog .dialog-actions {
+  display: flex !important; justify-content: center !important; align-items: center !important; gap: 52px !important;
+  margin: 46px 0 0 0 !important; padding: 30px 0 0 0 !important; border: none !important; border-top: 1px solid #4E93AB !important;
+}
+.master-page .master-dialog .dialog-actions button {
+  width: 159px !important; height: 40px !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important;
+  border-radius: 6px !important; box-shadow: none !important; box-sizing: border-box !important;
+  font-family: 'Open Sans', sans-serif !important; font-size: 18px !important; font-weight: 600 !important; letter-spacing: 0.05em !important; cursor: pointer;
+}
+.master-page .master-dialog .dialog-actions .secondary-dashboard-button { background: #FFFFFF !important; border: 1px solid #1D4A5A !important; color: #1D4A5A !important; }
+.master-page .master-dialog .dialog-actions .primary-button { background: #1D4A5A !important; border: 1px solid #1D4A5A !important; color: #D6F0FF !important; }
