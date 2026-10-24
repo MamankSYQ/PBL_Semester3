@@ -1872,6 +1872,52 @@ function setupMasterPage() {
     return duplicate ? "Data duplikat tidak diperbolehkan." : "";
   }
 
+  // Dialog konfirmasi hapus (Figma: Data Pelanggan Hapus). Dibuat lewat JS agar keenam halaman master tidak perlu diubah.
+  const deleteDialog = document.createElement("dialog");
+  deleteDialog.className = "queue-dialog master-delete-dialog";
+  deleteDialog.id = "master-delete-dialog";
+  deleteDialog.setAttribute("aria-labelledby", "master-delete-title");
+  deleteDialog.innerHTML = `
+    <div class="dialog-heading">
+      <h2 id="master-delete-title"></h2>
+      <button class="dialog-close" type="button" data-delete="cancel" aria-label="Tutup konfirmasi hapus">×</button>
+    </div>
+    <p class="master-delete-message" id="master-delete-message"></p>
+    <div class="dialog-actions">
+      <button class="master-delete-cancel" type="button" data-delete="cancel">Batal</button>
+      <button class="master-delete-confirm" type="button" data-delete="confirm">Hapus</button>
+    </div>`;
+  document.body.append(deleteDialog);
+  const deleteMessage = deleteDialog.querySelector("#master-delete-message");
+  const deleteConfirm = deleteDialog.querySelector('[data-delete="confirm"]');
+  let deletingId = null;
+
+  function openDeleteDialog(record) {
+    const protectedRecord = isProtectedRecord(record);
+    deletingId = protectedRecord ? null : record.id;
+    deleteDialog.querySelector("#master-delete-title").textContent = `Hapus ${definition.title}`;
+    deleteMessage.textContent = protectedRecord
+      ? "Data bawaan tidak dapat dihapus. Gunakan status Nonaktif jika tersedia."
+      : `Hapus ${definition.title} ini?`;
+    deleteConfirm.hidden = protectedRecord;
+    if (typeof deleteDialog.showModal === "function") deleteDialog.showModal(); else deleteDialog.setAttribute("open", "");
+  }
+
+  deleteDialog.addEventListener("click", (event) => {
+    const action = event.target.closest("[data-delete]")?.dataset.delete;
+    if (event.target === deleteDialog || action === "cancel") {
+      deletingId = null;
+      closeDialog(deleteDialog);
+      return;
+    }
+    if (action === "confirm" && deletingId) {
+      saveMasterRecords(definition, getRecords().filter((item) => item.id !== deletingId));
+      deletingId = null;
+      closeDialog(deleteDialog);
+      render();
+    }
+  });
+
   addButton.addEventListener("click", () => openForm());
   searchInput.addEventListener("input", render);
   document.querySelector("#master-dialog-close")?.addEventListener("click", () => closeDialog(dialog));
@@ -1884,16 +1930,7 @@ function setupMasterPage() {
     if (!record) return;
     if (button.dataset.action === "detail") openDetail(record);
     if (button.dataset.action === "edit") openForm(record);
-    if (button.dataset.action === "delete") {
-      if (isProtectedRecord(record)) {
-        notice.textContent = "Data bawaan tidak dapat dihapus. Gunakan status Nonaktif jika tersedia.";
-        return;
-      }
-      if (window.confirm(`Hapus ${definition.title.toLowerCase()} ini?`)) {
-        saveMasterRecords(definition, getRecords().filter((item) => item.id !== record.id));
-        render();
-      }
-    }
+    if (button.dataset.action === "delete") openDeleteDialog(record);
   });
   form.addEventListener("submit", (event) => {
     event.preventDefault();
