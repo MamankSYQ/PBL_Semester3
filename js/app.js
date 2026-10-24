@@ -50,6 +50,7 @@ const masterDefinitions = {
     columns: ["name", "phone", "address", "status"],
     labels: { name: "Nama", phone: "Telepon", address: "Alamat", status: "Status" },
     detailLabels: { name: "Nama", phone: "Nomor Telepon", address: "Alamat", status: "Status" },
+    detailTitle: "Detail Data Pelanggan",
   },
   vehicles: {
     key: "washupVehicles",
@@ -74,6 +75,8 @@ const masterDefinitions = {
     ],
     columns: ["name", "vehicleType", "price", "status"],
     labels: { name: "Layanan", vehicleType: "Jenis", price: "Harga", status: "Status" },
+    detailTitle: "Layanan dan Tarif",
+    deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?!",
   },
   employees: {
     key: "washupEmployees",
@@ -1952,8 +1955,9 @@ function setupMasterPage() {
   }
 
   function openDetail(record) {
-    const detailTitle = document.querySelector("#master-detail-title");
-    if (detailTitle) detailTitle.textContent = `Detail ${definition.title}`;
+    // Judul dialog Detail mengikuti Figma per halaman; halaman tanpa detailTitle memakai judul di HTML.
+    const detailTitle = detailDialog.querySelector(".dialog-heading h2");
+    if (detailTitle && definition.detailTitle) detailTitle.textContent = definition.detailTitle;
     detailContent.replaceChildren();
     definition.columns.forEach((column) => {
       const wrapper = document.createElement("div");
@@ -2009,7 +2013,7 @@ function setupMasterPage() {
     deleteDialog.querySelector("#master-delete-title").textContent = `Hapus ${definition.title}`;
     deleteMessage.textContent = protectedRecord
       ? "Data bawaan tidak dapat dihapus. Gunakan status Nonaktif jika tersedia."
-      : `Hapus ${definition.title} ini?`;
+      : definition.deleteMessage || `Hapus ${definition.title} ini?`;
     deleteConfirm.hidden = protectedRecord;
     if (typeof deleteDialog.showModal === "function") deleteDialog.showModal(); else deleteDialog.setAttribute("open", "");
   }

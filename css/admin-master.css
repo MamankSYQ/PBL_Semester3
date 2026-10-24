@@ -841,3 +841,15 @@ body.master-page {
 }
 /* Panel Layanan & Tarif berisi data berakhir di y = 901 seperti Figma. */
 .master-page[data-master="services"] .queue-panel:has(#master-empty[hidden]) { padding-bottom: 59px !important; }
+
+/* ===== Dialog Detail & Hapus Layanan dan Tarif (Figma: Layanan dan Tarif Detail / Hapus) ===== */
+.master-page[data-master="services"] .master-detail-dialog { padding: 23px 26px 14px 31px !important; }
+.master-page[data-master="services"] .master-detail-dialog .dialog-heading { padding-bottom: 10px !important; border-bottom-color: #76A8BA !important; }
+.master-page[data-master="services"] .master-detail-dialog .dialog-heading .eyebrow { margin-bottom: 0 !important; }
+.master-page[data-master="services"] .master-detail-dialog .dialog-close { margin: -21px -5px 0 0 !important; }
+.master-page[data-master="services"] .master-detail-grid { margin-top: 5px !important; }
+.master-page[data-master="services"] .master-detail-grid > div,
+.master-page[data-master="services"] .master-detail-grid span,
+.master-page[data-master="services"] .master-detail-grid strong { line-height: 26px !important; }
+.master-page[data-master="services"] .master-delete-message { margin-top: 22px !important; }
+.master-page[data-master="services"] .master-delete-dialog .dialog-actions { margin-top: 39px !important; }
