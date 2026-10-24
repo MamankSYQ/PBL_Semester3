@@ -646,3 +646,46 @@ body.master-page {
 }
 .master-page .master-dialog .dialog-actions .secondary-dashboard-button { background: #FFFFFF !important; border: 1px solid #1D4A5A !important; color: #1D4A5A !important; }
 .master-page .master-dialog .dialog-actions .primary-button { background: #1D4A5A !important; border: 1px solid #1D4A5A !important; color: #D6F0FF !important; }
+
+/* ===== Tabel berisi data (Figma: Data Pelanggan aksi) ===== */
+/* Baris data: tinggi 52px termasuk garis bawah abu-abu seperti garis header. */
+.master-page .master-table tbody td {
+  height: 51px !important; padding: 0 10px !important; vertical-align: middle !important;
+  border-bottom: 1px solid #ACACAC !important; letter-spacing: 0.05em !important;
+}
+.master-page .master-table tbody td:first-child { padding-left: 8px !important; }
+.master-page .master-table tbody tr:hover td { background: transparent !important; }
+
+/* Panel menyesuaikan isi saat ada data: jarak garis baris terakhir ke tepi bawah panel 70px.
+   Tinggi minimum 425px tetap dipakai untuk keadaan kosong. */
+.master-page .queue-panel:has(#master-empty[hidden]) { min-height: 0 !important; padding-bottom: 69px !important; }
+
+/* Tombol aksi berbentuk pil: 49 x 20, jarak 8px. */
+.master-page .master-table td:last-child { white-space: nowrap !important; }
+.master-page .master-table .table-action {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  width: 49px !important; height: 20px !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important;
+  border: none !important; border-radius: 10px !important; box-shadow: none !important; box-sizing: border-box !important;
+  font-family: 'Open Sans', sans-serif !important; font-size: 10px !important; font-weight: 400 !important;
+  line-height: 1 !important; letter-spacing: 0.03em !important; vertical-align: middle !important; cursor: pointer;
+}
+.master-page .master-table .table-action + .table-action { margin-left: 8px !important; }
+.master-page .master-table .table-action[data-action="detail"] { background: #A6CEE6 !important; color: #1D4A5A !important; }
+.master-page .master-table .table-action[data-action="edit"] { background: #ACE6A6 !important; color: #0B8121 !important; }
+.master-page .master-table .table-action[data-action="delete"] { background: #FF797C !important; color: #A10F11 !important; }
+.master-page .master-table .table-action:hover { filter: brightness(0.94); }
+.master-page .master-table .table-action:focus-visible { outline: 2px solid #1D4A5A !important; outline-offset: 2px !important; }
+
+/* Lebar kolom khusus Data Pelanggan (posisi teks Figma: 417 / 595 / 758 / 976 / 1113). */
+@media (min-width: 993px) {
+  .master-page[data-master="customers"] .master-table { table-layout: fixed !important; }
+  .master-page[data-master="customers"] .master-table th:nth-child(1) { width: 176px !important; }
+  .master-page[data-master="customers"] .master-table th:nth-child(2) { width: 163px !important; }
+  .master-page[data-master="customers"] .master-table th:nth-child(3) { width: 218px !important; }
+  .master-page[data-master="customers"] .master-table th:nth-child(4) { width: 137px !important; }
+}
+
+/* Footer menempel di bawah layar saat isi halaman pendek (garis footer Figma di y = 953).
+   Jarak minimum dari panel ke footer tetap 91px saat isi halaman panjang. */
+.master-page .dashboard-main.master-main { margin-bottom: 91px !important; }
+.master-page .dashboard-main.master-main + .dashboard-footer { margin-top: auto !important; margin-bottom: 33px !important; }
