@@ -1,0 +1,597 @@
+/* admin-master.css: kerangka Figma untuk halaman master admin (disalin dari admin.css dan dibatasi ke .master-page). */
+/* =========================================================
+   WASHUP — Dashboard Admin Stylesheet
+   File: css/admin.css
+   Fokus: Penyelarasan visual presisi frame Figma 1440 × 1024 px
+   ========================================================= */
+
+body.master-page {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #0C2B38;
+  background-color: #E0EFF7 !important;
+  overflow-x: hidden;
+}
+
+/* Shell Layout */
+.master-page .dashboard-shell {
+  display: flex !important;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #E0EFF7 !important;
+}
+
+/* Matikan pseudo-element warisan dari style.css agar tidak menimbulkan tumpukan garis ganda / simpul bertabrakan */
+.master-page .dashboard-sidebar::before,
+.master-page .dashboard-sidebar::after,
+.master-page .dashboard-topbar::before,
+.master-page .dashboard-topbar::after {
+  content: none !important;
+  display: none !important;
+  background-image: none !important;
+}
+
+/* =========================================================
+   A. SIDEBAR ADMIN (Sesuai Spesifikasi Figma: Frame 18)
+   width: 266px; height: 1024px;
+   background: linear-gradient(180deg, #09191F 0%, #043D52 100%);
+   ========================================================= */
+.master-page .dashboard-sidebar {
+  width: 266px !important;
+  flex: 0 0 266px !important;
+  min-height: 100vh;
+  padding: 24px 28px 32px !important;
+  box-sizing: border-box;
+  background-color: #09191F !important;
+  /* Pola wireframe SVG identik dengan Landing & Login + gradasi vertikal navy ke teal */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='245' viewBox='0 0 280 245'%3E%3Cg fill='none' stroke='%2388AFC0' stroke-opacity='.15' stroke-width='1.2'%3E%3Cpath d='M0 0 L140 122.5 L280 0 M0 245 L140 122.5 L280 245 M0 0 L0 245 M140 0 L140 245 M280 0 L280 245 M0 122.5 L280 122.5 M0 0 L280 245 M280 0 L0 245'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(180deg, #09191F 0%, #043D52 100%) !important;
+  background-repeat: repeat, no-repeat !important;
+  background-size: 280px 245px, cover !important;
+  background-position: center bottom, center !important;
+  color: #D6F0FF;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  border-right: 1px solid rgba(136, 175, 192, 0.16) !important;
+  z-index: 10;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Brand Logo di Sidebar (x: 21px, top: 23px, w: 207px, h: 56px) */
+.master-page .dashboard-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-decoration: none !important;
+  margin: 0 0 36px 0 !important;
+}
+
+.master-page .dashboard-brand .brand-logo-img {
+  width: 55px !important;
+  height: 42px !important;
+  object-fit: contain !important;
+  display: block !important;
+  flex: 0 0 55px !important;
+}
+
+.master-page .dashboard-brand .brand-text {
+  font-family: 'Emblema One', 'Playfair Display', cursive, serif !important;
+  font-size: 20px !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  line-height: 24px !important;
+  letter-spacing: 0.05em !important;
+  color: #FFFFFF !important;
+}
+
+/* Navigasi Sidebar */
+.master-page .dashboard-nav {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  flex: 1 0 auto;
+}
+
+/* MENU ADMIN: font-size 13px, 700, line-height 18px, letter-spacing 0.07em, color #A6CEE6 */
+.master-page .nav-label {
+  margin: 0 0 4px 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 18px !important;
+  letter-spacing: 0.07em !important;
+  color: #A6CEE6 !important;
+  text-transform: uppercase !important;
+}
+
+/* Item Menu: width 191px, height 40px, border-radius 8px */
+.master-page .nav-item {
+  width: 191px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 0 14px !important;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+  color: #D6F0FF !important;
+  text-decoration: none !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 23px !important;
+  letter-spacing: 0.03em !important;
+  background-color: rgba(78, 147, 171, 0.5) !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  transition: background-color 0.18s ease, transform 0.18s ease !important;
+}
+
+.master-page .nav-item:hover {
+  background-color: rgba(78, 147, 171, 0.8) !important;
+  transform: translateX(2px) !important;
+  color: #FFFFFF !important;
+}
+
+/* Active Item (Dashboard): background #1D4A5A 50%, border 2px solid #4E93AB */
+.master-page .nav-item.active {
+  background-color: rgba(29, 74, 90, 0.5) !important;
+  border: 2px solid #4E93AB !important;
+  color: #D6F0FF !important;
+  box-shadow: none !important;
+}
+
+.master-page .nav-icon-svg {
+  width: 15px !important;
+  height: 15px !important;
+  flex: 0 0 15px !important;
+  color: #A6CEE6 !important;
+}
+
+.master-page .nav-icon-rp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  width: 15px;
+  flex: 0 0 15px;
+  color: #A6CEE6;
+}
+
+/* Sidebar Bawah (Area Monitoring & Logout) */
+.master-page .sidebar-bottom {
+  margin-top: 32px !important;
+  padding-top: 8px !important;
+}
+
+.master-page .sidebar-note {
+  margin: 0 0 14px 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 18px !important;
+  letter-spacing: 0.07em !important;
+  color: #A6CEE6 !important;
+}
+
+/* Tombol Logout: width 96px, height 28px, background #B10000 60%, border 1px solid #FF7373, radius 8px */
+.master-page .sidebar-logout {
+  width: 96px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  background-color: rgba(177, 0, 0, 0.6) !important;
+  border: 1px solid #FF7373 !important;
+  border-radius: 8px !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  line-height: 23px !important;
+  letter-spacing: 0.03em !important;
+  color: #D6F0FF !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease, transform 0.2s ease !important;
+}
+
+.master-page .sidebar-logout:hover {
+  background-color: rgba(177, 0, 0, 0.85) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* =========================================================
+   B. HEADER / TOPBAR ADMIN (Frame 15)
+   width: 1174px; height: 100px;
+   background: linear-gradient(90deg, #09191F 0%, #043D52 100%);
+   ========================================================= */
+.master-page .dashboard-content {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background-color: #E0EFF7 !important;
+}
+
+.master-page .dashboard-topbar {
+  height: 100px !important;
+  min-height: 100px !important;
+  max-height: 100px !important;
+  padding: 0 24px 0 28px !important;
+  background-color: #09191F !important;
+  background-image: linear-gradient(90deg, #09191F 0%, #043D52 100%) !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+  border-bottom: none !important;
+}
+
+.master-page .dashboard-topbar .topbar-title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dashboard Admin: font-size 32px, 700, line-height 44px, letter-spacing 0.05em, color #D6F0FF */
+.master-page .dashboard-topbar h1 {
+  margin: 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  line-height: 44px !important;
+  letter-spacing: 0.05em !important;
+  color: #D6F0FF !important;
+}
+
+/* User Profile: avatar 55x55px, Admin 16px #88AFC7, Role: Admin 11px #88AFC7 */
+.master-page .user-summary {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.master-page .user-avatar-circle {
+  width: 55px !important;
+  height: 55px !important;
+  border-radius: 50% !important;
+  background-color: #BBBBBB !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #FFFFFF !important;
+  flex: 0 0 55px !important;
+}
+
+.master-page .user-avatar-circle svg {
+  width: 32px !important;
+  height: 32px !important;
+  fill: currentColor !important;
+}
+
+.master-page .user-summary .user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.master-page .user-summary strong {
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 22px !important;
+  letter-spacing: 0.05em !important;
+  color: #88AFC7 !important;
+}
+
+.master-page .user-summary small {
+  font-family: 'Roboto', 'Open Sans', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  line-height: 23px !important;
+  letter-spacing: 0.1em !important;
+  color: #88AFC7 !important;
+}
+
+.master-page .eyebrow {
+  margin: 0 0 6px 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 16px !important;
+  letter-spacing: 0.05em !important;
+  color: #238EB6 !important;
+  text-transform: uppercase !important;
+}
+
+.master-page .queue-heading h2 {
+  margin: 0 0 12px 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  line-height: 33px !important;
+  letter-spacing: 0.05em !important;
+  color: #1D4A5A !important;
+}
+
+.master-page .section-heading {
+  margin-bottom: 20px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+}
+
+.master-page .section-heading .eyebrow {
+  margin: 0 0 4px 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  line-height: 20px !important;
+  letter-spacing: 0.05em !important;
+  color: #238EB6 !important;
+}
+
+.master-page .section-heading h2 {
+  margin: 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  line-height: 33px !important;
+  letter-spacing: 0.05em !important;
+  color: #1D4A5A !important;
+}
+
+.master-page .queue-empty:not([hidden]) {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 44px 20px 36px !important;
+  text-align: center !important;
+}
+
+.master-page .queue-empty[hidden] {
+  display: none !important;
+}
+
+.master-page .queue-empty-box {
+  width: 75px !important;
+  height: 70px !important;
+  border-radius: 5px !important;
+  background-color: #E0EFF7 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 16px !important;
+  color: #0D6BA4 !important;
+  flex: 0 0 75px !important;
+}
+
+.master-page .queue-empty-box svg {
+  width: 47px !important;
+  height: 47px !important;
+  display: block;
+}
+
+.master-page .queue-empty h3 {
+  margin: 0 0 6px 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 600 !important;
+  line-height: 33px !important;
+  letter-spacing: 0.05em !important;
+  color: #1D4A5A !important;
+}
+
+.master-page .queue-empty p {
+  margin: 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 22px !important;
+  letter-spacing: 0.03em !important;
+  color: #88AFC7 !important;
+}
+
+.master-page .master-table thead tr {
+  background: rgba(232, 232, 232, 0.57) !important;
+  height: 42px !important;
+}
+
+.master-page .master-table th {
+  padding: 12px 10px !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 18px !important;
+  letter-spacing: 0.05em !important;
+  color: #1D4A5A !important;
+  text-transform: uppercase !important;
+  text-align: left !important;
+  border: none !important;
+  border-bottom: 1px solid #ACACAC !important;
+  box-sizing: border-box !important;
+}
+
+.master-page .master-table td {
+  padding: 14px 10px !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 13px !important;
+  color: #1D4A5A !important;
+  border-bottom: 1px solid #EDF3F7 !important;
+  box-sizing: border-box !important;
+}
+
+/* =========================================================
+   F. FOOTER (Frame 11: width 932px, border-top 1px solid #4E93AB, color #4E93AB)
+   ========================================================= */
+.master-page .dashboard-footer {
+  width: 100% !important;
+  max-width: 932px !important;
+  margin: 79px auto 24px auto !important;
+  padding: 14px 0 0 0 !important;
+  border-top: 1px solid #4E93AB !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  color: #4E93AB !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 23px !important;
+  letter-spacing: 0.1em !important;
+  box-sizing: border-box !important;
+}
+
+.master-page .footer-copy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #4E93AB !important;
+}
+
+.master-page .c-icon-circle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 21px !important;
+  height: 21px !important;
+  border: 1px solid #4E93AB !important;
+  border-radius: 50% !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  color: #4E93AB !important;
+  box-sizing: border-box !important;
+}
+
+.master-page .footer-location {
+  color: #4E93AB !important;
+}
+
+
+
+/* ===== Halaman master admin (Figma: Data Pelanggan) ===== */
+.master-page .dashboard-main.master-main {
+  width: 100% !important; max-width: 936px !important; margin: 0 auto !important;
+  padding: 57px 0 0 0 !important; box-sizing: border-box !important; flex: 0 0 auto !important;
+  display: flex !important; flex-direction: column !important; background: transparent !important;
+}
+.master-page .queue-heading {
+  display: flex !important; align-items: flex-start !important; justify-content: space-between !important;
+  margin: 0 0 53px 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important;
+}
+.master-page .queue-heading .eyebrow { margin: 0 0 6px 0 !important; }
+.master-page .queue-heading .primary-button {
+  width: 202px !important; height: 62px !important; padding: 0 !important; border: none !important; border-radius: 8px !important;
+  background: #1D4A5A !important; color: #D6F0FF !important; box-shadow: none !important;
+  font-family: 'Open Sans', sans-serif !important; font-size: 20px !important; font-weight: 600 !important; letter-spacing: 0.05em !important; cursor: pointer;
+}
+.master-page .queue-heading .primary-button:hover { background: #266078 !important; }
+.master-page .queue-toolbar {
+  display: block !important; margin: 0 0 35px 0 !important; padding: 24px 24px 32px !important;
+  background: #FFFFFF !important; border: none !important; border-radius: 20px !important; box-shadow: none !important; box-sizing: border-box !important;
+}
+.master-page .queue-toolbar > div { width: 100% !important; }
+.master-page .queue-toolbar label {
+  display: block !important; margin: 0 0 12px 0 !important; font-family: 'Open Sans', sans-serif !important;
+  font-size: 15px !important; font-weight: 600 !important; line-height: 20px !important; letter-spacing: 0.05em !important; color: #1D4A5A !important;
+}
+.master-page .queue-toolbar input {
+  width: 100% !important; height: 47px !important; padding: 0 13px !important; box-sizing: border-box !important;
+  background: #FFFFFF !important; border: 1px solid #ACACAC !important; border-radius: 8px !important;
+  font-family: 'Open Sans', sans-serif !important; font-size: 15px !important; color: #1D4A5A !important;
+}
+.master-page .queue-toolbar input::placeholder { color: #9AA7AE !important; }
+.master-page .queue-panel {
+  margin: 0 !important; padding: 24px 24px 32px !important; background: #FFFFFF !important; border: none !important;
+  border-radius: 20px !important; box-shadow: none !important; box-sizing: border-box !important;
+}
+.master-page #master-result-count { display: none !important; }
+.master-page .queue-table-wrap { width: 100% !important; overflow-x: auto !important; }
+.master-page .master-table { width: 100% !important; border-collapse: collapse !important; border-spacing: 0 !important; }
+.master-page .master-table th:first-child, .master-page .master-table td:first-child { padding-left: 8px !important; }
+.master-page .dashboard-main.master-main + .dashboard-footer { margin-top: 79px !important; }
+
+/* ===== Penyelarasan Figma 2009:8 (kerangka sidebar/topbar) ===== */
+.master-page .section-heading { margin-bottom: 16px !important; }
+.master-page .section-heading .eyebrow { margin-bottom: 14px !important; }
+.master-page .sidebar-note { margin-bottom: 36px !important; }
+@media (min-width: 993px) {
+  .master-page .dashboard-brand { margin-bottom: 50px !important; }
+  .master-page .dashboard-topbar { height: 95px !important; min-height: 95px !important; max-height: 95px !important; }
+  .master-page .dashboard-sidebar {
+    position: sticky !important; top: 0; height: 100vh !important; align-self: flex-start !important;
+    overflow-y: auto; padding-bottom: 41px !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .master-page .dashboard-sidebar {
+    width: 230px !important;
+    flex-basis: 230px !important;
+    padding: 24px 16px 28px !important;
+  }
+  .master-page .dashboard-topbar {
+    padding: 0 24px !important;
+  }
+  .master-page .dashboard-main.master-main {
+    padding: 28px 24px 24px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .master-page .dashboard-shell {
+    flex-direction: column !important;
+  }
+  .master-page .dashboard-sidebar {
+    width: 100% !important;
+    min-height: auto !important;
+    flex: 0 0 auto !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(110, 165, 185, 0.2) !important;
+  }
+  .master-page .dashboard-topbar {
+    height: auto !important;
+    min-height: 70px !important;
+    max-height: none !important;
+    padding: 16px 20px !important;
+  }
+  .master-page .dashboard-topbar h1 {
+    font-size: 24px !important;
+    line-height: 32px !important;
+  }
+  .master-page .summary-card {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+  }
+  .master-page .dashboard-footer {
+    flex-direction: column !important;
+    gap: 8px !important;
+    text-align: center !important;
+  }
+}
+
+/* ===== Koreksi setelah uji tampilan (Data Pelanggan) ===== */
+.master-page .queue-heading { margin-bottom: 48px !important; }
+.master-page .queue-toolbar { padding-top: 19px !important; }
+.master-page .queue-toolbar label { margin-bottom: 17px !important; }
+.master-page .master-table { min-width: 0 !important; table-layout: auto !important; }
+.master-page .master-table td { white-space: normal !important; }
+.master-page .queue-table-wrap { overflow-x: auto !important; }
+.master-page .queue-panel { min-height: 425px !important; }
+.master-page .queue-empty-box { height: 70px !important; flex: 0 0 70px !important; }
+.master-page .queue-empty h3 { line-height: 30px !important; margin-bottom: 1px !important; }
+.master-page .dashboard-main.master-main + .dashboard-footer { margin-top: 91px !important; }

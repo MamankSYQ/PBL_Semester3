@@ -783,3 +783,20 @@ body.admin-dashboard-page {
     text-align: center !important;
   }
 }
+/* ===== Penyelarasan Figma 2009:8 (Dashboard Admin) ===== */
+.admin-dashboard-page .section-heading { margin-bottom: 16px !important; }
+.admin-dashboard-page .section-heading .eyebrow { margin-bottom: 14px !important; }
+.admin-dashboard-page .sidebar-note { margin-bottom: 36px !important; }
+
+@media (min-width: 993px) {
+  .admin-dashboard-page .dashboard-brand { margin-bottom: 50px !important; }
+  .admin-dashboard-page .dashboard-topbar {
+    height: 95px !important; min-height: 95px !important; max-height: 95px !important;
+  }
+  .admin-dashboard-page .dashboard-main.admin-main { padding-top: 57px !important; }
+  .admin-dashboard-page .dashboard-sidebar {
+    position: sticky !important; top: 0;
+    height: 100vh !important; align-self: flex-start !important;
+    overflow-y: auto; padding-bottom: 41px !important;
+  }
+}
