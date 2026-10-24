@@ -49,6 +49,7 @@ const masterDefinitions = {
     ],
     columns: ["name", "phone", "address", "status"],
     labels: { name: "Nama", phone: "Telepon", address: "Alamat", status: "Status" },
+    detailLabels: { name: "Nama", phone: "Nomor Telepon", address: "Alamat", status: "Status" },
   },
   vehicles: {
     key: "washupVehicles",
@@ -1840,11 +1841,13 @@ function setupMasterPage() {
   }
 
   function openDetail(record) {
+    const detailTitle = document.querySelector("#master-detail-title");
+    if (detailTitle) detailTitle.textContent = `Detail ${definition.title}`;
     detailContent.replaceChildren();
     definition.columns.forEach((column) => {
       const wrapper = document.createElement("div");
       const label = document.createElement("span");
-      label.textContent = definition.labels[column];
+      label.textContent = (definition.detailLabels || definition.labels)[column];
       const value = document.createElement("strong");
       value.textContent = valueForDisplay(column, record[column]);
       wrapper.append(label, value);

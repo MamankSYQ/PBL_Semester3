@@ -689,3 +689,36 @@ body.master-page {
    Jarak minimum dari panel ke footer tetap 91px saat isi halaman panjang. */
 .master-page .dashboard-main.master-main { margin-bottom: 91px !important; }
 .master-page .dashboard-main.master-main + .dashboard-footer { margin-top: auto !important; margin-bottom: 33px !important; }
+
+/* ===== Dialog Detail Data (Figma: Data Pelanggan detail) ===== */
+.master-page .master-detail-dialog {
+  width: 542px !important; max-width: calc(100vw - 32px) !important; padding: 13px 24px 25px !important;
+  background: #FFFFFF !important; border: 1px solid #4E93AB !important; border-radius: 15px !important;
+  box-shadow: none !important; box-sizing: border-box !important; color: #1D4A5A !important;
+  font-family: 'Open Sans', sans-serif !important;
+}
+.master-page .master-detail-dialog .dialog-heading {
+  display: flex !important; align-items: center !important; justify-content: space-between !important;
+  margin: 0 !important; padding: 0 0 8px 0 !important; border: none !important; border-bottom: 1px solid #4E93AB !important;
+}
+.master-page .master-detail-dialog .dialog-heading .eyebrow {
+  margin: 0 0 5px 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 12px !important;
+  font-weight: 400 !important; line-height: 16px !important; letter-spacing: 0.05em !important; color: #238EB6 !important; text-transform: uppercase !important;
+}
+.master-page .master-detail-dialog .dialog-heading h2 {
+  margin: 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 21px !important;
+  font-weight: 700 !important; line-height: 29px !important; letter-spacing: 0.05em !important; color: #1D4A5A !important;
+}
+.master-page .master-detail-dialog .dialog-close {
+  width: auto !important; height: auto !important; min-width: 0 !important; margin: 0 !important; padding: 0 4px !important;
+  background: none !important; border: none !important; box-shadow: none !important; border-radius: 0 !important;
+  font-size: 28px !important; font-weight: 700 !important; line-height: 1 !important; color: #1D4A5A !important; cursor: pointer;
+}
+.master-page .master-detail-grid { display: block !important; margin: 9px 0 0 0 !important; padding: 0 !important; }
+.master-page .master-detail-grid > div { display: block !important; margin: 0 !important; padding: 0 !important; border: none !important; background: none !important; font-size: 13px !important; line-height: 21px !important; }
+.master-page .master-detail-grid span,
+.master-page .master-detail-grid strong {
+  display: inline !important; margin: 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 13px !important;
+  font-weight: 500 !important; line-height: 21px !important; letter-spacing: 0.05em !important; color: #1D4A5A !important; text-transform: none !important;
+}
+.master-page .master-detail-grid span::after { content: " "; }
