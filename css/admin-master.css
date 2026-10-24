@@ -770,3 +770,31 @@ body.master-page {
   .master-page[data-master="vehicles"] .master-table th:nth-child(3) { width: 214px !important; }
   .master-page[data-master="vehicles"] .master-table th:nth-child(4) { width: 160px !important; }
 }
+
+/* ===== Dialog Tambah/Edit Data Kendaraan (Figma: Data Kendaraan tambah 1) =====
+   Lebih ramping dari dialog Data Pelanggan: input 280 x 40, pilihan (select) kecil 110 x 22. */
+.master-page[data-master="vehicles"] .master-dialog {
+  width: 407px !important; padding: 30px 30px 22px !important; border-radius: 15px !important;
+}
+.master-page[data-master="vehicles"] .master-dialog .dialog-heading { align-items: flex-start !important; padding-bottom: 11px !important; border-bottom-color: #76A8BA !important; }
+.master-page[data-master="vehicles"] .master-dialog .dialog-heading .eyebrow { margin-bottom: 11px !important; }
+.master-page[data-master="vehicles"] .master-dialog .dialog-heading h2 { font-size: 20px !important; line-height: 22px !important; }
+.master-page[data-master="vehicles"] .master-dialog .dialog-close { margin: -8px -4px 0 0 !important; }
+.master-page[data-master="vehicles"] .master-dialog .master-form-fields { gap: 11px !important; margin-top: 13px !important; }
+.master-page[data-master="vehicles"] .master-dialog .form-field { gap: 11px !important; }
+.master-page[data-master="vehicles"] .master-dialog .form-field input {
+  width: 280px !important; height: 40px !important; min-height: 0 !important; padding: 0 13px !important;
+  border: 1px solid #B3B3B3 !important; border-radius: 8px !important; font-size: 13px !important; letter-spacing: 0.03em !important;
+}
+.master-page[data-master="vehicles"] .master-dialog .form-field select {
+  width: 110px !important; height: 22px !important; padding: 0 20px 0 6px !important;
+  border: 1px solid #1D4A5A !important; border-radius: 0 !important; background-color: #FFFFFF !important;
+  font-size: 11px !important; letter-spacing: 0.03em !important; color: #1D4A5A !important;
+  -webkit-appearance: none !important; appearance: none !important; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='3' viewBox='0 0 5 3'%3E%3Cpath d='M0 0h5L2.5 3z' fill='%231D4A5A'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important; background-position: right 9px center !important; background-size: 5px 3px !important;
+}
+.master-page[data-master="vehicles"] .master-dialog .dialog-actions {
+  justify-content: space-between !important; gap: 0 !important; margin-top: 33px !important; padding-top: 13px !important; border-top-color: #76A8BA !important;
+}
+.master-page[data-master="vehicles"] .master-dialog .dialog-actions button { width: 159px !important; height: 40px !important; }
