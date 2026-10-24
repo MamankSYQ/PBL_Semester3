@@ -761,3 +761,12 @@ body.master-page {
 .master-page .master-delete-confirm { background: #FF7373 !important; border: 1px solid #FF7373 !important; color: #FFFFFF !important; }
 .master-page .master-delete-dialog .dialog-actions button:hover { filter: brightness(0.95); }
 .master-page .master-delete-dialog .dialog-actions button[hidden] { display: none !important; }
+
+/* Lebar kolom khusus Data Kendaraan (posisi teks Figma: 418 / 594 / 750 / 964 / 1124). */
+@media (min-width: 993px) {
+  .master-page[data-master="vehicles"] .master-table { table-layout: fixed !important; }
+  .master-page[data-master="vehicles"] .master-table th:nth-child(1) { width: 174px !important; }
+  .master-page[data-master="vehicles"] .master-table th:nth-child(2) { width: 156px !important; }
+  .master-page[data-master="vehicles"] .master-table th:nth-child(3) { width: 214px !important; }
+  .master-page[data-master="vehicles"] .master-table th:nth-child(4) { width: 160px !important; }
+}
