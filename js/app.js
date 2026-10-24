@@ -1846,7 +1846,9 @@ function setupMasterPage() {
   const recordsWithDefaults = ensureMasterDefaults(type, definition);
 
   const isProtectedRecord = (record) => (type === "users" && (record.builtIn || record.protected)) || (type === "services" && masterDefaults.services.some((item) => item.id === record.id)) || (type === "shifts" && record.id === "shift-pagi");
-  const valueForDisplay = (key, value) => key === "price" ? formatCurrency(value) : String(value || "-");
+  const valueForDisplay = (key, value) => key === "price"
+    ? formatCurrency(value)
+    : (customSelectTypes.includes(type) && customSelectLabels[value]) || String(value || "-");
   const createId = () => `${type}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
   function getRecords() {

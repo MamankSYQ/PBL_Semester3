@@ -823,3 +823,10 @@ body.master-page {
   font-family: 'Open Sans', sans-serif !important; font-size: 11px !important; line-height: 20px !important; letter-spacing: 0.03em !important;
 }
 .master-page .custom-select-list li.is-active { background: #89A1A9 !important; color: #FFFFFF !important; }
+
+/* Data Kendaraan berisi data (Figma: Data Kendaraan data baru):
+   kolom Aksi mulai di 1113 seperti tombol pil, dan panel tetap setinggi keadaan kosong. */
+@media (min-width: 993px) {
+  .master-page[data-master="vehicles"] .queue-panel:has(#master-empty[hidden]) .master-table th:nth-child(4) { width: 150px !important; }
+}
+.master-page[data-master="vehicles"] .queue-panel:has(#master-empty[hidden]) { min-height: 425px !important; padding-bottom: 32px !important; }
