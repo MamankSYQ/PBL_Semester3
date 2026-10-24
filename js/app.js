@@ -1705,6 +1705,114 @@ if (document.querySelector(".petugas-dashboard-page")) setupPetugasDashboard();
 if (document.querySelector(".petugas-queue-page")) setupPetugasQueue();
 if (document.querySelector(".petugas-attendance-page")) setupPetugasAttendance();
 
+// Dropdown kustom untuk form data master (Figma: Data Kendaraan tambah 2).
+// <select> asli tetap ada tetapi disembunyikan, jadi nilai form dan validasi tetap bekerja seperti biasa.
+const customSelectTypes = ["vehicles"];
+const customSelectLabels = { Nonaktif: "Non Aktif" };
+
+function enhanceSelect(select) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "custom-select";
+  const trigger = document.createElement("button");
+  trigger.type = "button";
+  trigger.id = `${select.id}-button`;
+  trigger.className = "custom-select-trigger";
+  trigger.setAttribute("aria-haspopup", "listbox");
+  trigger.setAttribute("aria-expanded", "false");
+  const valueText = document.createElement("span");
+  valueText.id = `${select.id}-value`;
+  trigger.append(valueText);
+
+  const list = document.createElement("ul");
+  list.className = "custom-select-list";
+  list.id = `${select.id}-list`;
+  list.setAttribute("role", "listbox");
+  list.tabIndex = -1;
+  list.hidden = true;
+  trigger.setAttribute("aria-controls", list.id);
+
+  const label = document.querySelector(`label[for="${select.id}"]`);
+  if (label) {
+    label.id ||= `${select.id}-label`;
+    label.htmlFor = trigger.id;
+    trigger.setAttribute("aria-labelledby", `${label.id} ${valueText.id}`);
+    list.setAttribute("aria-labelledby", label.id);
+  }
+
+  const items = [...select.options].map((option, index) => {
+    const item = document.createElement("li");
+    item.id = `${list.id}-${index}`;
+    item.setAttribute("role", "option");
+    item.textContent = customSelectLabels[option.value] || option.textContent;
+    list.append(item);
+    return item;
+  });
+
+  let activeIndex = Math.max(0, select.selectedIndex);
+  const sync = () => {
+    valueText.textContent = items[select.selectedIndex]?.textContent || "";
+    items.forEach((item, index) => item.setAttribute("aria-selected", String(index === select.selectedIndex)));
+  };
+  const setActive = (index) => {
+    activeIndex = (index + items.length) % items.length;
+    items.forEach((item, itemIndex) => item.classList.toggle("is-active", itemIndex === activeIndex));
+    list.setAttribute("aria-activedescendant", items[activeIndex].id);
+  };
+  const open = () => {
+    list.hidden = false;
+    trigger.setAttribute("aria-expanded", "true");
+    setActive(Math.max(0, select.selectedIndex));
+    list.focus();
+  };
+  const close = (returnFocus = true) => {
+    if (list.hidden) return;
+    list.hidden = true;
+    trigger.setAttribute("aria-expanded", "false");
+    if (returnFocus) trigger.focus();
+  };
+  const choose = (index) => {
+    select.selectedIndex = index;
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+    sync();
+    close();
+  };
+
+  trigger.addEventListener("click", () => (list.hidden ? open() : close()));
+  trigger.addEventListener("keydown", (event) => {
+    if (["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key)) {
+      event.preventDefault();
+      open();
+    }
+  });
+  list.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowDown") { event.preventDefault(); setActive(activeIndex + 1); }
+    else if (event.key === "ArrowUp") { event.preventDefault(); setActive(activeIndex - 1); }
+    else if (event.key === "Home") { event.preventDefault(); setActive(0); }
+    else if (event.key === "End") { event.preventDefault(); setActive(items.length - 1); }
+    else if (event.key === "Enter" || event.key === " ") { event.preventDefault(); choose(activeIndex); }
+    else if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); close(); }
+    else if (event.key === "Tab") close(false);
+  });
+  list.addEventListener("mouseover", (event) => {
+    const item = event.target.closest("li");
+    if (item) setActive(items.indexOf(item));
+  });
+  list.addEventListener("click", (event) => {
+    const item = event.target.closest("li");
+    if (item) choose(items.indexOf(item));
+  });
+  wrapper.addEventListener("focusout", (event) => {
+    if (!wrapper.contains(event.relatedTarget)) close(false);
+  });
+
+  select.classList.add("custom-select-native");
+  select.tabIndex = -1;
+  select.setAttribute("aria-hidden", "true");
+  select.after(wrapper);
+  wrapper.append(select, trigger, list);
+  sync();
+}
+
 function setupMasterPage() {
   const page = document.querySelector(".master-page");
   if (!page) return;
@@ -1830,6 +1938,7 @@ function setupMasterPage() {
       wrapper.append(input);
       formFields.append(wrapper);
     });
+    if (customSelectTypes.includes(type)) formFields.querySelectorAll("select").forEach(enhanceSelect);
   }
 
   function openForm(record = null) {
