@@ -65,7 +65,7 @@ const masterDefinitions = {
   },
   services: {
     key: "washupServices",
-    title: "Layanan & Tarif",
+    title: "Layanan dan Tarif",
     fields: [
       { key: "name", label: "Nama layanan", type: "text", required: true },
       { key: "vehicleType", label: "Jenis kendaraan", type: "select", options: ["Mobil", "Motor"], required: true },
@@ -1707,7 +1707,7 @@ if (document.querySelector(".petugas-attendance-page")) setupPetugasAttendance()
 
 // Dropdown kustom untuk form data master (Figma: Data Kendaraan tambah 2).
 // <select> asli tetap ada tetapi disembunyikan, jadi nilai form dan validasi tetap bekerja seperti biasa.
-const customSelectTypes = ["vehicles"];
+const customSelectTypes = ["vehicles", "services"];
 const customSelectLabels = { Nonaktif: "Non Aktif" };
 
 function enhanceSelect(select) {
