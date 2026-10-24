@@ -686,8 +686,8 @@ body.master-page {
 }
 
 /* Footer menempel di bawah layar saat isi halaman pendek (garis footer Figma di y = 953).
-   Jarak minimum dari panel ke footer tetap 91px saat isi halaman panjang. */
-.master-page .dashboard-main.master-main { margin-bottom: 91px !important; }
+   Jarak minimum dari panel ke footer 52px saat isi halaman panjang (Figma: Layanan & Tarif). */
+.master-page .dashboard-main.master-main { margin-bottom: 52px !important; }
 .master-page .dashboard-main.master-main + .dashboard-footer { margin-top: auto !important; margin-bottom: 33px !important; }
 
 /* ===== Dialog Detail Data (Figma: Data Pelanggan detail) ===== */
@@ -830,3 +830,14 @@ body.master-page {
   .master-page[data-master="vehicles"] .queue-panel:has(#master-empty[hidden]) .master-table th:nth-child(4) { width: 150px !important; }
 }
 .master-page[data-master="vehicles"] .queue-panel:has(#master-empty[hidden]) { min-height: 425px !important; padding-bottom: 32px !important; }
+
+/* Lebar kolom khusus Layanan & Tarif (posisi teks Figma: 418 / 614 / 776 / 935 / 1090). */
+@media (min-width: 993px) {
+  .master-page[data-master="services"] .master-table { table-layout: fixed !important; }
+  .master-page[data-master="services"] .master-table th:nth-child(1) { width: 195px !important; }
+  .master-page[data-master="services"] .master-table th:nth-child(2) { width: 162px !important; }
+  .master-page[data-master="services"] .master-table th:nth-child(3) { width: 159px !important; }
+  .master-page[data-master="services"] .master-table th:nth-child(4) { width: 155px !important; }
+}
+/* Panel Layanan & Tarif berisi data berakhir di y = 901 seperti Figma. */
+.master-page[data-master="services"] .queue-panel:has(#master-empty[hidden]) { padding-bottom: 59px !important; }
