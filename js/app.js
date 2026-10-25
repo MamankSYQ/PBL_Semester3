@@ -106,6 +106,8 @@ const masterDefinitions = {
     ],
     columns: ["name", "start", "end", "status"],
     labels: { name: "Shift", start: "Mulai", end: "Selesai", status: "Status" },
+    detailTitle: "Detail Shift",
+    deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?",
   },
   users: {
     key: "washupUsers",
@@ -1724,7 +1726,7 @@ if (document.querySelector(".petugas-attendance-page")) setupPetugasAttendance()
 
 // Dropdown kustom untuk form data master (Figma: Data Kendaraan tambah 2).
 // <select> asli tetap ada tetapi disembunyikan, jadi nilai form dan validasi tetap bekerja seperti biasa.
-const customSelectTypes = ["vehicles", "services", "employees"];
+const customSelectTypes = ["vehicles", "services", "employees", "shifts"];
 const customSelectLabels = { Nonaktif: "Non Aktif" };
 
 function enhanceSelect(select) {
@@ -1863,9 +1865,13 @@ function setupMasterPage() {
   const recordsWithDefaults = ensureMasterDefaults(type, definition);
 
   const isProtectedRecord = (record) => (type === "users" && (record.builtIn || record.protected)) || (type === "services" && masterDefaults.services.some((item) => item.id === record.id)) || (type === "shifts" && record.id === "shift-pagi");
-  const valueForDisplay = (key, value) => key === "price"
-    ? formatCurrency(value)
-    : (customSelectTypes.includes(type) && customSelectLabels[value]) || String(value || "-");
+  // Jam shift ditampilkan dengan titik seperti Figma (08.00); jam selesai 00:00 berarti tengah malam (24.00).
+  const formatShiftTime = (key, value) => (key === "end" && value === "00:00" ? "24.00" : String(value).replace(":", "."));
+  const valueForDisplay = (key, value) => {
+    if (key === "price") return formatCurrency(value);
+    if (type === "shifts" && (key === "start" || key === "end") && value) return formatShiftTime(key, value);
+    return (customSelectTypes.includes(type) && customSelectLabels[value]) || String(value || "-");
+  };
   const createId = () => `${type}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
   function getRecords() {
@@ -1989,7 +1995,7 @@ function setupMasterPage() {
     const requiredField = definition.fields.find((field) => field.required && !String(record[field.key] || "").trim());
     if (requiredField) return `${requiredField.label} wajib diisi.`;
     if (type === "services" && (!Number.isFinite(Number(record.price)) || Number(record.price) <= 0)) return "Harga harus lebih besar dari 0.";
-    if (type === "shifts" && record.start >= record.end) return "Jam selesai harus setelah jam mulai.";
+    if (type === "shifts" && record.end !== "00:00" && record.start >= record.end) return "Jam selesai harus setelah jam mulai.";
     const duplicate = records.some((existing) => existing.id !== editingId && (
       (type === "customers" && existing.phone === record.phone) ||
       (type === "vehicles" && existing.plateNumber === record.plateNumber) ||
