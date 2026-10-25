@@ -26,15 +26,17 @@ const baseDashboardData = {
   revenue: 2850000,
 };
 
+// Tarif berdasarkan ukuran kendaraan (revisi kelompok, Oktober 2026), menggantikan sistem cuci paket.
 const serviceOptions = {
   Mobil: [
-    { name: "Cuci Mobil", price: 25000 },
-    { name: "Cuci + Vacuum", price: 35000 },
-    { name: "Cuci + Wax", price: 50000 },
+    { name: "Cuci Mobil Kecil", price: 30000 },
+    { name: "Cuci Mobil Sedang", price: 35000 },
+    { name: "Cuci Mobil Besar", price: 40000 },
   ],
   Motor: [
-    { name: "Cuci Motor", price: 15000 },
-    { name: "Cuci + Wax Motor", price: 25000 },
+    { name: "Cuci Motor Kecil", price: 12000 },
+    { name: "Cuci Motor Sedang", price: 15000 },
+    { name: "Cuci Motor Besar", price: 17000 },
   ],
 };
 
@@ -118,11 +120,12 @@ const masterDefinitions = {
 
 const masterDefaults = {
   services: [
-    { id: "service-mobil-1", name: "Cuci Mobil", vehicleType: "Mobil", price: 25000, status: "Aktif" },
-    { id: "service-mobil-2", name: "Cuci + Vacuum", vehicleType: "Mobil", price: 35000, status: "Aktif" },
-    { id: "service-mobil-3", name: "Cuci + Wax", vehicleType: "Mobil", price: 50000, status: "Aktif" },
-    { id: "service-motor-1", name: "Cuci Motor", vehicleType: "Motor", price: 15000, status: "Aktif" },
-    { id: "service-motor-2", name: "Cuci + Wax Motor", vehicleType: "Motor", price: 25000, status: "Aktif" },
+    { id: "service-mobil-kecil", name: "Cuci Mobil Kecil", vehicleType: "Mobil", price: 30000, status: "Aktif" },
+    { id: "service-mobil-sedang", name: "Cuci Mobil Sedang", vehicleType: "Mobil", price: 35000, status: "Aktif" },
+    { id: "service-mobil-besar", name: "Cuci Mobil Besar", vehicleType: "Mobil", price: 40000, status: "Aktif" },
+    { id: "service-motor-kecil", name: "Cuci Motor Kecil", vehicleType: "Motor", price: 12000, status: "Aktif" },
+    { id: "service-motor-sedang", name: "Cuci Motor Sedang", vehicleType: "Motor", price: 15000, status: "Aktif" },
+    { id: "service-motor-besar", name: "Cuci Motor Besar", vehicleType: "Motor", price: 17000, status: "Aktif" },
   ],
   shifts: [{ id: "shift-pagi", name: "Shift Pagi", start: "08:00", end: "16:00", status: "Aktif" }],
   users: Object.entries(accounts).map(([username, account]) => ({ id: `user-${username}`, username, password: account.password, role: account.role, status: "Aktif", protected: true })),
@@ -141,10 +144,18 @@ function saveMasterRecords(definition, records) {
   localStorage.setItem(definition.key, JSON.stringify(records));
 }
 
+// Layanan paket lama yang sudah tidak dipakai. Dihapus otomatis dari localStorage agar tidak muncul lagi
+// di Layanan & Tarif maupun Transaksi Baru. Transaksi lama tetap menyimpan nama dan harga aslinya.
+const retiredServiceIds = ["service-mobil-1", "service-mobil-2", "service-mobil-3", "service-motor-1", "service-motor-2"];
+
 function ensureMasterDefaults(type, definition) {
   const defaults = masterDefaults[type];
   if (!defaults) return readMasterRecords(definition);
-  const records = readMasterRecords(definition);
+  let records = readMasterRecords(definition);
+  if (type === "services" && records.some((record) => retiredServiceIds.includes(record.id))) {
+    records = records.filter((record) => !retiredServiceIds.includes(record.id));
+    saveMasterRecords(definition, records);
+  }
   const existingKeys = new Set(records.map((record) => type === "users" ? record.username : record.id));
   const missing = defaults.filter((record) => !existingKeys.has(type === "users" ? record.username : record.id));
   if (missing.length) {
@@ -160,7 +171,7 @@ function getUserAccounts() {
 
 function getActiveServiceOptions() {
   const definition = masterDefinitions.services;
-  const records = readMasterRecords(definition);
+  const records = ensureMasterDefaults("services", definition);
   if (!records.length) return serviceOptions;
   return records.reduce((grouped, service) => {
     if (service.status !== "Aktif" || !service.name || !service.vehicleType || Number(service.price) <= 0) return grouped;
