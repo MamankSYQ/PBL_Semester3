@@ -851,5 +851,24 @@ body.master-page {
 .master-page[data-master="services"] .master-detail-grid > div,
 .master-page[data-master="services"] .master-detail-grid span,
 .master-page[data-master="services"] .master-detail-grid strong { line-height: 26px !important; }
-.master-page[data-master="services"] .master-delete-message { margin-top: 22px !important; }
-.master-page[data-master="services"] .master-delete-dialog .dialog-actions { margin-top: 39px !important; }
+.master-page:is([data-master="services"], [data-master="employees"]) .master-delete-message { margin-top: 22px !important; }
+.master-page:is([data-master="services"], [data-master="employees"]) .master-delete-dialog .dialog-actions { margin-top: 39px !important; }
+
+/* ===== Data Karyawan (Figma: Data Karyawan awal / data baru) ===== */
+/* Posisi teks kolom Figma: 418 / 619 / 792 / 964 / 1124 (kosong) atau 1113 (berisi data). */
+@media (min-width: 993px) {
+  .master-page[data-master="employees"] .master-table { table-layout: fixed !important; }
+  .master-page[data-master="employees"] .master-table th:nth-child(1) { width: 199px !important; }
+  .master-page[data-master="employees"] .master-table th:nth-child(2) { width: 173px !important; }
+  .master-page[data-master="employees"] .master-table th:nth-child(3) { width: 172px !important; }
+  .master-page[data-master="employees"] .master-table th:nth-child(4) { width: 160px !important; }
+  .master-page[data-master="employees"] .queue-panel:has(#master-empty[hidden]) .master-table th:nth-child(4) { width: 150px !important; }
+}
+.master-page[data-master="employees"] .queue-panel:has(#master-empty[hidden]) { min-height: 425px !important; padding-bottom: 32px !important; }
+/* Dialog Tambah/Edit Karyawan (Figma: Data Karyawan tambah): 507px, input lebar penuh, Status dropdown kecil. */
+.master-page[data-master="employees"] .master-dialog { width: 509px !important; padding: 30px 43px 21px 38px !important; border-radius: 14px !important; }
+.master-page[data-master="employees"] .master-dialog .dialog-close { margin-top: 2px !important; }
+.master-page[data-master="employees"] .master-dialog .dialog-heading { padding-bottom: 2px !important; border-bottom-color: #76A8BA !important; }
+.master-page[data-master="employees"] .master-dialog .master-form-fields { gap: 13px !important; margin-top: 12px !important; }
+.master-page[data-master="employees"] .master-dialog .form-field { gap: 1px !important; }
+.master-page[data-master="employees"] .master-dialog .dialog-actions { gap: 41px !important; margin-top: 62px !important; padding: 18px 12px 0 0 !important; border-top-color: #76A8BA !important; }

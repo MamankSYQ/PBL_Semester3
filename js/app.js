@@ -91,6 +91,9 @@ const masterDefinitions = {
     ],
     columns: ["name", "position", "phone", "status"],
     labels: { name: "Nama", position: "Jabatan", phone: "Telepon", status: "Status" },
+    detailLabels: { name: "Nama", position: "Jabatan", phone: "Nomor Telepon", status: "Status" },
+    detailTitle: "Detail Karyawan",
+    deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?",
   },
   shifts: {
     key: "washupShifts",
@@ -1721,7 +1724,7 @@ if (document.querySelector(".petugas-attendance-page")) setupPetugasAttendance()
 
 // Dropdown kustom untuk form data master (Figma: Data Kendaraan tambah 2).
 // <select> asli tetap ada tetapi disembunyikan, jadi nilai form dan validasi tetap bekerja seperti biasa.
-const customSelectTypes = ["vehicles", "services"];
+const customSelectTypes = ["vehicles", "services", "employees"];
 const customSelectLabels = { Nonaktif: "Non Aktif" };
 
 function enhanceSelect(select) {
