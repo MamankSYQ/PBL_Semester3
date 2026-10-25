@@ -866,12 +866,12 @@ body.master-page {
 }
 .master-page[data-master="employees"] .queue-panel:has(#master-empty[hidden]) { min-height: 425px !important; padding-bottom: 32px !important; }
 /* Dialog Tambah/Edit Karyawan dan Shift (Figma: Data Karyawan / Data Shift tambah): 507px, input lebar penuh, Status dropdown kecil. */
-.master-page:is([data-master="employees"], [data-master="shifts"]) .master-dialog { width: 509px !important; padding: 30px 43px 21px 38px !important; border-radius: 14px !important; }
-.master-page:is([data-master="employees"], [data-master="shifts"]) .master-dialog .dialog-close { margin-top: 2px !important; }
-.master-page:is([data-master="employees"], [data-master="shifts"]) .master-dialog .dialog-heading { padding-bottom: 2px !important; border-bottom-color: #76A8BA !important; }
-.master-page:is([data-master="employees"], [data-master="shifts"]) .master-dialog .master-form-fields { gap: 13px !important; margin-top: 12px !important; }
-.master-page:is([data-master="employees"], [data-master="shifts"]) .master-dialog .form-field { gap: 1px !important; }
-.master-page:is([data-master="employees"], [data-master="shifts"]) .master-dialog .dialog-actions { gap: 41px !important; margin-top: 62px !important; padding: 18px 12px 0 0 !important; border-top-color: #76A8BA !important; }
+.master-page:is([data-master="employees"], [data-master="shifts"], [data-master="attendance"]) .master-dialog { width: 509px !important; padding: 30px 43px 21px 38px !important; border-radius: 14px !important; }
+.master-page:is([data-master="employees"], [data-master="shifts"], [data-master="attendance"]) .master-dialog .dialog-close { margin-top: 2px !important; }
+.master-page:is([data-master="employees"], [data-master="shifts"], [data-master="attendance"]) .master-dialog .dialog-heading { padding-bottom: 2px !important; border-bottom-color: #76A8BA !important; }
+.master-page:is([data-master="employees"], [data-master="shifts"], [data-master="attendance"]) .master-dialog .master-form-fields { gap: 13px !important; margin-top: 12px !important; }
+.master-page:is([data-master="employees"], [data-master="shifts"], [data-master="attendance"]) .master-dialog .form-field { gap: 1px !important; }
+.master-page:is([data-master="employees"], [data-master="shifts"], [data-master="attendance"]) .master-dialog .dialog-actions { gap: 41px !important; margin-top: 62px !important; padding: 18px 12px 0 0 !important; border-top-color: #76A8BA !important; }
 
 /* ===== Data Shift (Figma: Data Shift awal / data baru) ===== */
 /* Posisi teks kolom sama dengan Layanan & Tarif: 418 / 615 / 776 / 935 / 1090. Baris lebih tinggi (63px). */
@@ -884,3 +884,34 @@ body.master-page {
 }
 .master-page[data-master="shifts"] .master-table tbody td { height: 63px !important; }
 .master-page[data-master="shifts"] .queue-panel:has(#master-empty[hidden]) { padding-bottom: 22px !important; }
+
+/* ===== Absensi & Lembur (Figma: Data Absensi awal / data baru / tambah) ===== */
+/* Enam kolom tanpa Aksi; posisi teks Figma: 418 / 599 / 750 / 882 / 1016 / 1131. */
+@media (min-width: 993px) {
+  .master-page[data-master="attendance"] .master-table { table-layout: fixed !important; }
+  .master-page[data-master="attendance"] .master-table th:nth-child(1) { width: 180px !important; }
+  .master-page[data-master="attendance"] .master-table th:nth-child(2) { width: 151px !important; }
+  .master-page[data-master="attendance"] .master-table th:nth-child(3) { width: 132px !important; }
+  .master-page[data-master="attendance"] .master-table th:nth-child(4) { width: 134px !important; }
+  .master-page[data-master="attendance"] .master-table th:nth-child(5) { width: 115px !important; }
+}
+.master-page[data-master="attendance"] .master-table tbody td { height: 63px !important; }
+.master-page[data-master="attendance"] .queue-panel:has(#master-empty[hidden]) { min-height: 425px !important; padding-bottom: 32px !important; }
+
+/* Dialog Tambah Absensi: lebih rapat dari Karyawan; Kehadiran dan Shift berdampingan agar tinggi dialog tetap seperti Figma. */
+.master-page[data-master="attendance"] .master-dialog .master-form-fields {
+  display: grid !important; grid-template-columns: 110px 110px 1fr !important; column-gap: 24px !important; row-gap: 8px !important;
+}
+.master-page[data-master="attendance"] .master-dialog .master-form-fields > .form-field { grid-column: 1 / -1 !important; }
+.master-page[data-master="attendance"] .master-dialog .master-form-fields > .form-field:nth-child(3) { grid-column: 1 !important; }
+.master-page[data-master="attendance"] .master-dialog .master-form-fields > .form-field:nth-child(4) { grid-column: 2 !important; }
+.master-page[data-master="attendance"] .master-dialog .master-form-fields > .form-field:nth-child(5) { margin-top: 28px !important; }
+.master-page[data-master="attendance"] .master-dialog .form-field input { font-size: 13px !important; }
+.master-page[data-master="attendance"] .master-dialog .form-field input::placeholder { color: #1D4A5A !important; opacity: 1; }
+.master-page[data-master="attendance"] .master-dialog .dialog-actions { margin-top: 22px !important; }
+.master-page[data-master="attendance"] .master-dialog { padding-top: 28px !important; }
+.master-page[data-master="attendance"] .master-dialog .master-form-fields { margin-top: 9px !important; }
+.master-page[data-master="attendance"] .master-dialog .form-field { gap: 3px !important; }
+.master-page[data-master="attendance"] .master-dialog .form-field input { height: 46px !important; min-height: 0 !important; }
+.master-page[data-master="attendance"] .master-dialog .master-form-fields > .form-field:nth-child(5) { margin-top: 24px !important; }
+.master-page[data-master="attendance"] .master-dialog .dialog-actions { padding-top: 13px !important; }

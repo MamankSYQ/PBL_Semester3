@@ -121,7 +121,32 @@ const masterDefinitions = {
     columns: ["username", "role", "status"],
     labels: { username: "Username", role: "Role", status: "Status" },
   },
+  // Absensi & Lembur yang dicatat Admin (Figma: Data Absensi). Terpisah dari absen foto Petugas (washupPetugasAttendance).
+  attendance: {
+    key: "washupAttendanceRecords",
+    title: "Data Absensi",
+    actions: false,
+    searchColumns: ["employeeName"],
+    fields: [
+      { key: "employeeName", label: "Nama karyawan", type: "text", required: true },
+      { key: "date", label: "Tanggal", type: "date", required: true },
+      { key: "presence", label: "Kehadiran", type: "select", options: ["Masuk", "Izin", "Tanpa Keterangan"], required: true },
+      // Pilihan shift diambil dari Data Shift yang berstatus Aktif.
+      { key: "shift", label: "Shift", type: "select", get options() { return getActiveShiftNames(); }, required: true },
+      { key: "overtimeHours", label: "Lembur", type: "number", min: 0, step: 0.5, placeholder: "-- Jam", required: false },
+      { key: "incentive", label: "Insentif", type: "number", min: 0, step: 1000, placeholder: "Rp", required: false },
+    ],
+    columns: ["employeeName", "date", "presence", "shift", "overtimeHours", "incentive"],
+    labels: { employeeName: "Karyawan", date: "Tanggal", presence: "Kehadiran", shift: "Shift", overtimeHours: "Lembur", incentive: "Insentif" },
+  },
 };
+
+function getActiveShiftNames() {
+  const names = ensureMasterDefaults("shifts", masterDefinitions.shifts)
+    .filter((shift) => shift.status === "Aktif" && shift.name)
+    .map((shift) => shift.name);
+  return names.length ? names : ["Shift Pagi"];
+}
 
 const masterDefaults = {
   services: [
@@ -1726,7 +1751,7 @@ if (document.querySelector(".petugas-attendance-page")) setupPetugasAttendance()
 
 // Dropdown kustom untuk form data master (Figma: Data Kendaraan tambah 2).
 // <select> asli tetap ada tetapi disembunyikan, jadi nilai form dan validasi tetap bekerja seperti biasa.
-const customSelectTypes = ["vehicles", "services", "employees", "shifts"];
+const customSelectTypes = ["vehicles", "services", "employees", "shifts", "attendance"];
 const customSelectLabels = { Nonaktif: "Non Aktif" };
 
 function enhanceSelect(select) {
@@ -1870,6 +1895,11 @@ function setupMasterPage() {
   const valueForDisplay = (key, value) => {
     if (key === "price") return formatCurrency(value);
     if (type === "shifts" && (key === "start" || key === "end") && value) return formatShiftTime(key, value);
+    if (type === "attendance") {
+      if (key === "date" && /^\d{4}-\d{2}-\d{2}$/.test(String(value))) return String(value).split("-").reverse().join(" / ");
+      if (key === "overtimeHours") return Number(value) > 0 ? `${String(Number(value)).replace(".", ",")} Jam` : "-";
+      if (key === "incentive") return Number(value) > 0 ? formatCurrency(value) : "-";
+    }
     return (customSelectTypes.includes(type) && customSelectLabels[value]) || String(value || "-");
   };
   const createId = () => `${type}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -1884,7 +1914,7 @@ function setupMasterPage() {
 
   function renderHeaders() {
     tableHead.replaceChildren();
-    [...definition.columns, "actions"].forEach((column) => {
+    [...definition.columns, ...(definition.actions === false ? [] : ["actions"])].forEach((column) => {
       const cell = document.createElement("th");
       cell.scope = "col";
       cell.textContent = column === "actions" ? "Aksi" : definition.labels[column];
@@ -1894,7 +1924,8 @@ function setupMasterPage() {
 
   function render() {
     const query = searchInput.value.trim().toLowerCase();
-    const records = getRecords().filter((record) => definition.columns.some((column) => String(record[column] || "").toLowerCase().includes(query)));
+    const searchColumns = definition.searchColumns || definition.columns;
+    const records = getRecords().filter((record) => searchColumns.some((column) => String(record[column] || "").toLowerCase().includes(query)));
     tableBody.replaceChildren();
     records.forEach((record) => {
       const row = document.createElement("tr");
@@ -1927,7 +1958,7 @@ function setupMasterPage() {
         deleteButton.textContent = "Hapus";
         actions.append(deleteButton);
       }
-      row.append(actions);
+      if (definition.actions !== false) row.append(actions);
       tableBody.append(row);
     });
     resultCount.textContent = `${records.length} data`;
@@ -1951,6 +1982,8 @@ function setupMasterPage() {
       input.type = field.type === "select" ? "text" : field.type;
       input.required = Boolean(field.required);
       if (field.min !== undefined) input.min = String(field.min);
+      if (field.step !== undefined) input.step = String(field.step);
+      if (field.placeholder) input.placeholder = field.placeholder;
       if (field.type === "select") {
         field.options.forEach((optionValue) => {
           const option = document.createElement("option");
@@ -1996,13 +2029,15 @@ function setupMasterPage() {
     if (requiredField) return `${requiredField.label} wajib diisi.`;
     if (type === "services" && (!Number.isFinite(Number(record.price)) || Number(record.price) <= 0)) return "Harga harus lebih besar dari 0.";
     if (type === "shifts" && record.end !== "00:00" && record.start >= record.end) return "Jam selesai harus setelah jam mulai.";
+    if (type === "attendance" && (Number(record.overtimeHours) < 0 || Number(record.incentive) < 0)) return "Lembur dan insentif tidak boleh bernilai negatif.";
     const duplicate = records.some((existing) => existing.id !== editingId && (
       (type === "customers" && existing.phone === record.phone) ||
       (type === "vehicles" && existing.plateNumber === record.plateNumber) ||
       (type === "services" && existing.name.toLowerCase() === record.name.toLowerCase() && existing.vehicleType === record.vehicleType) ||
       (type === "employees" && existing.phone === record.phone) ||
       (type === "shifts" && existing.name.toLowerCase() === record.name.toLowerCase()) ||
-      (type === "users" && existing.username.toLowerCase() === record.username.toLowerCase())
+      (type === "users" && existing.username.toLowerCase() === record.username.toLowerCase()) ||
+      (type === "attendance" && existing.date === record.date && String(existing.employeeName).trim().toLowerCase() === String(record.employeeName).trim().toLowerCase())
     ));
     return duplicate ? "Data duplikat tidak diperbolehkan." : "";
   }
@@ -2073,6 +2108,11 @@ function setupMasterPage() {
     if (type === "vehicles") record.plateNumber = record.plateNumber.trim().toUpperCase();
     if (type === "users") record.username = record.username.trim().toLowerCase();
     if (type === "services") record.price = Number(record.price);
+    if (type === "attendance") {
+      record.employeeName = record.employeeName.trim();
+      record.overtimeHours = record.overtimeHours === "" ? 0 : Number(record.overtimeHours);
+      record.incentive = record.incentive === "" ? 0 : Number(record.incentive);
+    }
     const records = getRecords();
     const error = validate(record, records);
     notice.textContent = error;
