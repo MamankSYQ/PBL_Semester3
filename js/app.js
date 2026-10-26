@@ -4,6 +4,11 @@ function appUrl(path) {
   return `${appRoot}${path}`;
 }
 
+// Semua tombol logout (id berakhiran "logout", serta #logout-button) juga menghapus username sesi, bukan hanya role.
+document.addEventListener("click", (event) => {
+  if (event.target.closest('[id$="logout"], #logout-button')) sessionStorage.removeItem("washupUsername");
+}, true);
+
 const currentYear = document.querySelector("#current-year");
 
 if (currentYear) {
@@ -26,15 +31,17 @@ const baseDashboardData = {
   revenue: 2850000,
 };
 
+// Tarif berdasarkan ukuran kendaraan (revisi kelompok, Oktober 2026), menggantikan sistem cuci paket.
 const serviceOptions = {
   Mobil: [
-    { name: "Cuci Mobil", price: 25000 },
-    { name: "Cuci + Vacuum", price: 35000 },
-    { name: "Cuci + Wax", price: 50000 },
+    { name: "Cuci Mobil Kecil", price: 30000 },
+    { name: "Cuci Mobil Sedang", price: 35000 },
+    { name: "Cuci Mobil Besar", price: 40000 },
   ],
   Motor: [
-    { name: "Cuci Motor", price: 15000 },
-    { name: "Cuci + Wax Motor", price: 25000 },
+    { name: "Cuci Motor Kecil", price: 12000 },
+    { name: "Cuci Motor Sedang", price: 15000 },
+    { name: "Cuci Motor Besar", price: 17000 },
   ],
 };
 
@@ -49,6 +56,8 @@ const masterDefinitions = {
     ],
     columns: ["name", "phone", "address", "status"],
     labels: { name: "Nama", phone: "Telepon", address: "Alamat", status: "Status" },
+    detailLabels: { name: "Nama", phone: "Nomor Telepon", address: "Alamat", status: "Status" },
+    detailTitle: "Detail Data Pelanggan",
   },
   vehicles: {
     key: "washupVehicles",
@@ -64,7 +73,7 @@ const masterDefinitions = {
   },
   services: {
     key: "washupServices",
-    title: "Layanan & Tarif",
+    title: "Layanan dan Tarif",
     fields: [
       { key: "name", label: "Nama layanan", type: "text", required: true },
       { key: "vehicleType", label: "Jenis kendaraan", type: "select", options: ["Mobil", "Motor"], required: true },
@@ -73,6 +82,8 @@ const masterDefinitions = {
     ],
     columns: ["name", "vehicleType", "price", "status"],
     labels: { name: "Layanan", vehicleType: "Jenis", price: "Harga", status: "Status" },
+    detailTitle: "Layanan dan Tarif",
+    deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?!",
   },
   employees: {
     key: "washupEmployees",
@@ -85,6 +96,9 @@ const masterDefinitions = {
     ],
     columns: ["name", "position", "phone", "status"],
     labels: { name: "Nama", position: "Jabatan", phone: "Telepon", status: "Status" },
+    detailLabels: { name: "Nama", position: "Jabatan", phone: "Nomor Telepon", status: "Status" },
+    detailTitle: "Detail Karyawan",
+    deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?",
   },
   shifts: {
     key: "washupShifts",
@@ -97,6 +111,8 @@ const masterDefinitions = {
     ],
     columns: ["name", "start", "end", "status"],
     labels: { name: "Shift", start: "Mulai", end: "Selesai", status: "Status" },
+    detailTitle: "Detail Shift",
+    deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?",
   },
   users: {
     key: "washupUsers",
@@ -109,16 +125,44 @@ const masterDefinitions = {
     ],
     columns: ["username", "role", "status"],
     labels: { username: "Username", role: "Role", status: "Status" },
+    detailTitle: "Detail Akun",
+    deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?",
+  },
+  // Absensi & Lembur yang dicatat Admin (Figma: Data Absensi). Terpisah dari absen foto Petugas (washupPetugasAttendance).
+  attendance: {
+    key: "washupAttendanceRecords",
+    title: "Data Absensi",
+    actions: false,
+    searchColumns: ["employeeName"],
+    fields: [
+      { key: "employeeName", label: "Nama karyawan", type: "text", required: true },
+      { key: "date", label: "Tanggal", type: "date", required: true },
+      { key: "presence", label: "Kehadiran", type: "select", options: ["Masuk", "Izin", "Tanpa Keterangan"], required: true },
+      // Pilihan shift diambil dari Data Shift yang berstatus Aktif.
+      { key: "shift", label: "Shift", type: "select", get options() { return getActiveShiftNames(); }, required: true },
+      { key: "overtimeHours", label: "Lembur", type: "number", min: 0, step: 0.5, placeholder: "-- Jam", required: false },
+      { key: "incentive", label: "Insentif", type: "number", min: 0, step: 1000, placeholder: "Rp", required: false },
+    ],
+    columns: ["employeeName", "date", "presence", "shift", "overtimeHours", "incentive"],
+    labels: { employeeName: "Karyawan", date: "Tanggal", presence: "Kehadiran", shift: "Shift", overtimeHours: "Lembur", incentive: "Insentif" },
   },
 };
 
+function getActiveShiftNames() {
+  const names = ensureMasterDefaults("shifts", masterDefinitions.shifts)
+    .filter((shift) => shift.status === "Aktif" && shift.name)
+    .map((shift) => shift.name);
+  return names;
+}
+
 const masterDefaults = {
   services: [
-    { id: "service-mobil-1", name: "Cuci Mobil", vehicleType: "Mobil", price: 25000, status: "Aktif" },
-    { id: "service-mobil-2", name: "Cuci + Vacuum", vehicleType: "Mobil", price: 35000, status: "Aktif" },
-    { id: "service-mobil-3", name: "Cuci + Wax", vehicleType: "Mobil", price: 50000, status: "Aktif" },
-    { id: "service-motor-1", name: "Cuci Motor", vehicleType: "Motor", price: 15000, status: "Aktif" },
-    { id: "service-motor-2", name: "Cuci + Wax Motor", vehicleType: "Motor", price: 25000, status: "Aktif" },
+    { id: "service-mobil-kecil", name: "Cuci Mobil Kecil", vehicleType: "Mobil", price: 30000, status: "Aktif" },
+    { id: "service-mobil-sedang", name: "Cuci Mobil Sedang", vehicleType: "Mobil", price: 35000, status: "Aktif" },
+    { id: "service-mobil-besar", name: "Cuci Mobil Besar", vehicleType: "Mobil", price: 40000, status: "Aktif" },
+    { id: "service-motor-kecil", name: "Cuci Motor Kecil", vehicleType: "Motor", price: 12000, status: "Aktif" },
+    { id: "service-motor-sedang", name: "Cuci Motor Sedang", vehicleType: "Motor", price: 15000, status: "Aktif" },
+    { id: "service-motor-besar", name: "Cuci Motor Besar", vehicleType: "Motor", price: 17000, status: "Aktif" },
   ],
   shifts: [{ id: "shift-pagi", name: "Shift Pagi", start: "08:00", end: "16:00", status: "Aktif" }],
   users: Object.entries(accounts).map(([username, account]) => ({ id: `user-${username}`, username, password: account.password, role: account.role, status: "Aktif", protected: true })),
@@ -137,10 +181,18 @@ function saveMasterRecords(definition, records) {
   localStorage.setItem(definition.key, JSON.stringify(records));
 }
 
+// Layanan paket lama yang sudah tidak dipakai. Dihapus otomatis dari localStorage agar tidak muncul lagi
+// di Layanan & Tarif maupun Transaksi Baru. Transaksi lama tetap menyimpan nama dan harga aslinya.
+const retiredServiceIds = ["service-mobil-1", "service-mobil-2", "service-mobil-3", "service-motor-1", "service-motor-2"];
+
 function ensureMasterDefaults(type, definition) {
   const defaults = masterDefaults[type];
   if (!defaults) return readMasterRecords(definition);
-  const records = readMasterRecords(definition);
+  let records = readMasterRecords(definition);
+  if (type === "services" && records.some((record) => retiredServiceIds.includes(record.id))) {
+    records = records.filter((record) => !retiredServiceIds.includes(record.id));
+    saveMasterRecords(definition, records);
+  }
   const existingKeys = new Set(records.map((record) => type === "users" ? record.username : record.id));
   const missing = defaults.filter((record) => !existingKeys.has(type === "users" ? record.username : record.id));
   if (missing.length) {
@@ -156,10 +208,10 @@ function getUserAccounts() {
 
 function getActiveServiceOptions() {
   const definition = masterDefinitions.services;
-  const records = readMasterRecords(definition);
+  const records = ensureMasterDefaults("services", definition);
   if (!records.length) return serviceOptions;
   return records.reduce((grouped, service) => {
-    if (service.status !== "Aktif" || !service.name || !service.vehicleType || Number(service.price) <= 0) return grouped;
+    if (service.status !== "Aktif" || !service.name || !service.vehicleType || !(Number(service.price) > 0)) return grouped;
     grouped[service.vehicleType] ||= [];
     grouped[service.vehicleType].push({ name: service.name, price: Number(service.price) });
     return grouped;
@@ -1330,11 +1382,17 @@ function setupAdminDashboard() {
 
   const render = () => {
     const transactions = getTransactions();
-    const customers = new Set(transactions.map((transaction) => String(transaction.customerName || "").trim()).filter(Boolean));
-    const vehicles = new Set(transactions.map((transaction) => String(transaction.plateNumber || "").trim().toUpperCase()).filter(Boolean));
-    const storedServices = readMasterRecords(masterDefinitions.services);
-    const services = storedServices.length || Object.values(serviceOptions).reduce((total, options) => total + options.length, 0);
-    const employees = Object.values(accounts).filter((account) => account.role === "Kasir" || account.role === "Petugas").length;
+    // Gabungan Data Pelanggan/Kendaraan (master Admin) dan data dari transaksi Kasir, dihitung unik.
+    const customers = new Set([
+      ...readMasterRecords(masterDefinitions.customers).map((customer) => String(customer.name || "").trim().toLowerCase()),
+      ...transactions.map((transaction) => String(transaction.customerName || "").trim().toLowerCase()),
+    ].filter(Boolean));
+    const vehicles = new Set([
+      ...readMasterRecords(masterDefinitions.vehicles).map((vehicle) => String(vehicle.plateNumber || "").replace(/\s+/g, "").toUpperCase()),
+      ...transactions.map((transaction) => String(transaction.plateNumber || "").replace(/\s+/g, "").toUpperCase()),
+    ].filter(Boolean));
+    const services = ensureMasterDefaults("services", masterDefinitions.services).length;
+    const employees = readMasterRecords(masterDefinitions.employees).filter((employee) => employee.status === "Aktif").length;
     const recentTransactions = [...transactions].sort((first, second) => {
       const firstTime = new Date(first.createdAt).getTime() || 0;
       const secondTime = new Date(second.createdAt).getTime() || 0;
@@ -1704,6 +1762,122 @@ if (document.querySelector(".petugas-dashboard-page")) setupPetugasDashboard();
 if (document.querySelector(".petugas-queue-page")) setupPetugasQueue();
 if (document.querySelector(".petugas-attendance-page")) setupPetugasAttendance();
 
+// Dropdown kustom untuk form data master (Figma: Data Kendaraan tambah 2).
+// <select> asli tetap ada tetapi disembunyikan, jadi nilai form dan validasi tetap bekerja seperti biasa.
+const customSelectTypes = ["vehicles", "services", "employees", "shifts", "attendance", "users"];
+const customSelectLabels = { Nonaktif: "Non Aktif" };
+
+function enhanceSelect(select) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "custom-select";
+  const trigger = document.createElement("button");
+  trigger.type = "button";
+  trigger.id = `${select.id}-button`;
+  trigger.className = "custom-select-trigger";
+  trigger.setAttribute("role", "combobox");
+  trigger.setAttribute("aria-haspopup", "listbox");
+  if (select.required) trigger.setAttribute("aria-required", "true");
+  trigger.setAttribute("aria-expanded", "false");
+  const valueText = document.createElement("span");
+  valueText.id = `${select.id}-value`;
+  trigger.append(valueText);
+
+  const list = document.createElement("ul");
+  list.className = "custom-select-list";
+  list.id = `${select.id}-list`;
+  list.setAttribute("role", "listbox");
+  list.tabIndex = -1;
+  list.hidden = true;
+  trigger.setAttribute("aria-controls", list.id);
+
+  const label = document.querySelector(`label[for="${select.id}"]`);
+  if (label) {
+    label.id ||= `${select.id}-label`;
+    label.htmlFor = trigger.id;
+    trigger.setAttribute("aria-labelledby", `${label.id} ${valueText.id}`);
+    list.setAttribute("aria-labelledby", label.id);
+  }
+
+  const items = [...select.options].map((option, index) => {
+    const item = document.createElement("li");
+    item.id = `${list.id}-${index}`;
+    item.setAttribute("role", "option");
+    item.textContent = customSelectLabels[option.value] || option.textContent;
+    list.append(item);
+    return item;
+  });
+
+  let activeIndex = Math.max(0, select.selectedIndex);
+  const sync = () => {
+    valueText.textContent = items[select.selectedIndex]?.textContent || (items.length ? "" : "Tidak ada pilihan");
+    items.forEach((item, index) => item.setAttribute("aria-selected", String(index === select.selectedIndex)));
+  };
+  const setActive = (index) => {
+    if (!items.length) return;
+    activeIndex = (index + items.length) % items.length;
+    items.forEach((item, itemIndex) => item.classList.toggle("is-active", itemIndex === activeIndex));
+    list.setAttribute("aria-activedescendant", items[activeIndex].id);
+  };
+  const open = () => {
+    if (!items.length) return;
+    list.hidden = false;
+    trigger.setAttribute("aria-expanded", "true");
+    setActive(Math.max(0, select.selectedIndex));
+    list.focus();
+  };
+  const close = (returnFocus = true) => {
+    if (list.hidden) return;
+    list.hidden = true;
+    trigger.setAttribute("aria-expanded", "false");
+    if (returnFocus) trigger.focus();
+  };
+  const choose = (index) => {
+    select.selectedIndex = index;
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+    sync();
+    close();
+  };
+
+  trigger.addEventListener("click", () => (list.hidden ? open() : close()));
+  trigger.addEventListener("keydown", (event) => {
+    if (["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key)) {
+      event.preventDefault();
+      open();
+    }
+  });
+  list.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowDown") { event.preventDefault(); setActive(activeIndex + 1); }
+    else if (event.key === "ArrowUp") { event.preventDefault(); setActive(activeIndex - 1); }
+    else if (event.key === "Home") { event.preventDefault(); setActive(0); }
+    else if (event.key === "End") { event.preventDefault(); setActive(items.length - 1); }
+    else if (event.key === "Enter" || event.key === " ") { event.preventDefault(); choose(activeIndex); }
+    else if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); close(); }
+    else if (event.key === "Tab") close(false);
+  });
+  list.addEventListener("mouseover", (event) => {
+    const item = event.target.closest("li");
+    if (item) setActive(items.indexOf(item));
+  });
+  list.addEventListener("click", (event) => {
+    const item = event.target.closest("li");
+    if (item) choose(items.indexOf(item));
+  });
+  wrapper.addEventListener("focusout", (event) => {
+    if (!wrapper.contains(event.relatedTarget)) close(false);
+  });
+
+  select.classList.add("custom-select-native");
+  select.tabIndex = -1;
+  select.setAttribute("aria-hidden", "true");
+  select.after(wrapper);
+  wrapper.append(select, trigger, list);
+  sync();
+}
+
+function normalizePhone(value) {
+  return String(value || "").replace(/[\s.-]/g, "");
+}
+
 function setupMasterPage() {
   const page = document.querySelector(".master-page");
   if (!page) return;
@@ -1734,10 +1908,23 @@ function setupMasterPage() {
 
   if (!tableHead || !tableBody || !resultCount || !emptyState || !searchInput || !addButton || !dialog || !detailDialog || !form || !formFields || !notice || !detailContent) return;
 
-  const recordsWithDefaults = ensureMasterDefaults(type, definition);
+  ensureMasterDefaults(type, definition);
+  // Validasi ditangani validate() agar pesan selalu tampil di dialog (termasuk untuk dropdown kustom yang <select>-nya tersembunyi).
+  if (form) form.noValidate = true;
 
   const isProtectedRecord = (record) => (type === "users" && (record.builtIn || record.protected)) || (type === "services" && masterDefaults.services.some((item) => item.id === record.id)) || (type === "shifts" && record.id === "shift-pagi");
-  const valueForDisplay = (key, value) => key === "price" ? formatCurrency(value) : String(value || "-");
+  // Jam shift ditampilkan dengan titik seperti Figma (08.00); jam selesai 00:00 berarti tengah malam (24.00).
+  const formatShiftTime = (key, value) => (key === "end" && value === "00:00" ? "24.00" : String(value).replace(":", "."));
+  const valueForDisplay = (key, value) => {
+    if (key === "price") return formatCurrency(value);
+    if (type === "shifts" && (key === "start" || key === "end") && value) return formatShiftTime(key, value);
+    if (type === "attendance") {
+      if (key === "date" && /^\d{4}-\d{2}-\d{2}$/.test(String(value))) return String(value).split("-").reverse().join(" / ");
+      if (key === "overtimeHours") return Number(value) > 0 ? `${String(Number(value)).replace(".", ",")} Jam` : "-";
+      if (key === "incentive") return Number(value) > 0 ? formatCurrency(value) : "-";
+    }
+    return (customSelectTypes.includes(type) && customSelectLabels[value]) || String(value || "-");
+  };
   const createId = () => `${type}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
   function getRecords() {
@@ -1750,7 +1937,7 @@ function setupMasterPage() {
 
   function renderHeaders() {
     tableHead.replaceChildren();
-    [...definition.columns, "actions"].forEach((column) => {
+    [...definition.columns, ...(definition.actions === false ? [] : ["actions"])].forEach((column) => {
       const cell = document.createElement("th");
       cell.scope = "col";
       cell.textContent = column === "actions" ? "Aksi" : definition.labels[column];
@@ -1760,7 +1947,8 @@ function setupMasterPage() {
 
   function render() {
     const query = searchInput.value.trim().toLowerCase();
-    const records = getRecords().filter((record) => definition.columns.some((column) => String(record[column] || "").toLowerCase().includes(query)));
+    const searchColumns = definition.searchColumns || definition.columns;
+    const records = getRecords().filter((record) => searchColumns.some((column) => String(record[column] || "").toLowerCase().includes(query)));
     tableBody.replaceChildren();
     records.forEach((record) => {
       const row = document.createElement("tr");
@@ -1793,7 +1981,7 @@ function setupMasterPage() {
         deleteButton.textContent = "Hapus";
         actions.append(deleteButton);
       }
-      row.append(actions);
+      if (definition.actions !== false) row.append(actions);
       tableBody.append(row);
     });
     resultCount.textContent = `${records.length} data`;
@@ -1817,6 +2005,8 @@ function setupMasterPage() {
       input.type = field.type === "select" ? "text" : field.type;
       input.required = Boolean(field.required);
       if (field.min !== undefined) input.min = String(field.min);
+      if (field.step !== undefined) input.step = String(field.step);
+      if (field.placeholder) input.placeholder = field.placeholder;
       if (field.type === "select") {
         field.options.forEach((optionValue) => {
           const option = document.createElement("option");
@@ -1825,10 +2015,17 @@ function setupMasterPage() {
           input.append(option);
         });
       }
-      input.value = record[field.key] ?? (field.type === "select" ? field.options[0] : "");
+      input.value = record[field.key] ?? (field.type === "select" ? (field.options[0] ?? "") : "");
+      // Password lama tidak diisikan kembali saat Edit; kosong berarti password tidak diubah.
+      if (field.type === "password" && record.id) {
+        input.value = "";
+        input.required = false;
+        input.placeholder = "Kosongkan jika tidak diubah";
+      }
       wrapper.append(input);
       formFields.append(wrapper);
     });
+    if (customSelectTypes.includes(type)) formFields.querySelectorAll("select").forEach(enhanceSelect);
   }
 
   function openForm(record = null) {
@@ -1840,11 +2037,14 @@ function setupMasterPage() {
   }
 
   function openDetail(record) {
+    // Judul dialog Detail mengikuti Figma per halaman; halaman tanpa detailTitle memakai judul di HTML.
+    const detailTitle = detailDialog.querySelector(".dialog-heading h2");
+    if (detailTitle && definition.detailTitle) detailTitle.textContent = definition.detailTitle;
     detailContent.replaceChildren();
     definition.columns.forEach((column) => {
       const wrapper = document.createElement("div");
       const label = document.createElement("span");
-      label.textContent = definition.labels[column];
+      label.textContent = (definition.detailLabels || definition.labels)[column];
       const value = document.createElement("strong");
       value.textContent = valueForDisplay(column, record[column]);
       wrapper.append(label, value);
@@ -1854,20 +2054,74 @@ function setupMasterPage() {
   }
 
   function validate(record, records) {
-    const requiredField = definition.fields.find((field) => field.required && !String(record[field.key] || "").trim());
-    if (requiredField) return `${requiredField.label} wajib diisi.`;
+    const requiredField = definition.fields.find((field) => field.required && !(field.type === "password" && editingId) && !String(record[field.key] || "").trim());
+    if (requiredField) {
+      if (type === "attendance" && requiredField.key === "shift") return "Belum ada shift aktif. Aktifkan shift di halaman Data Shift.";
+      return `${requiredField.label} wajib diisi.`;
+    }
+    const invalidPhone = definition.fields.find((field) => field.type === "tel" && record[field.key] && !/^\+?\d{8,15}$/.test(record[field.key]));
+    if (invalidPhone) return `${invalidPhone.label} hanya boleh berisi angka (8–15 digit).`;
+    if (type === "attendance" && !getActiveShiftNames().includes(record.shift)) return "Shift yang dipilih tidak aktif.";
     if (type === "services" && (!Number.isFinite(Number(record.price)) || Number(record.price) <= 0)) return "Harga harus lebih besar dari 0.";
-    if (type === "shifts" && record.start >= record.end) return "Jam selesai harus setelah jam mulai.";
+    if (type === "shifts" && record.end !== "00:00" && record.start >= record.end) return "Jam selesai harus setelah jam mulai.";
+    if (type === "attendance" && (Number(record.overtimeHours) < 0 || Number(record.incentive) < 0)) return "Lembur dan insentif tidak boleh bernilai negatif.";
     const duplicate = records.some((existing) => existing.id !== editingId && (
-      (type === "customers" && existing.phone === record.phone) ||
-      (type === "vehicles" && existing.plateNumber === record.plateNumber) ||
-      (type === "services" && existing.name.toLowerCase() === record.name.toLowerCase() && existing.vehicleType === record.vehicleType) ||
-      (type === "employees" && existing.phone === record.phone) ||
-      (type === "shifts" && existing.name.toLowerCase() === record.name.toLowerCase()) ||
-      (type === "users" && existing.username.toLowerCase() === record.username.toLowerCase())
+      (type === "customers" && normalizePhone(existing.phone) === record.phone) ||
+      (type === "vehicles" && String(existing.plateNumber).replace(/\s+/g, " ").trim().toUpperCase() === record.plateNumber) ||
+      (type === "services" && String(existing.name).trim().toLowerCase() === record.name.toLowerCase() && existing.vehicleType === record.vehicleType) ||
+      (type === "employees" && normalizePhone(existing.phone) === record.phone) ||
+      (type === "shifts" && String(existing.name).trim().toLowerCase() === record.name.toLowerCase()) ||
+      (type === "users" && existing.username.toLowerCase() === record.username.toLowerCase()) ||
+      (type === "attendance" && existing.date === record.date && String(existing.employeeName).trim().toLowerCase() === String(record.employeeName).trim().toLowerCase())
     ));
     return duplicate ? "Data duplikat tidak diperbolehkan." : "";
   }
+
+  // Dialog konfirmasi hapus (Figma: Data Pelanggan Hapus). Dibuat lewat JS agar keenam halaman master tidak perlu diubah.
+  const deleteDialog = document.createElement("dialog");
+  deleteDialog.className = "queue-dialog master-delete-dialog";
+  deleteDialog.id = "master-delete-dialog";
+  deleteDialog.setAttribute("aria-labelledby", "master-delete-title");
+  deleteDialog.innerHTML = `
+    <div class="dialog-heading">
+      <h2 id="master-delete-title"></h2>
+      <button class="dialog-close" type="button" data-delete="cancel" aria-label="Tutup konfirmasi hapus">×</button>
+    </div>
+    <p class="master-delete-message" id="master-delete-message"></p>
+    <div class="dialog-actions">
+      <button class="master-delete-cancel" type="button" data-delete="cancel">Batal</button>
+      <button class="master-delete-confirm" type="button" data-delete="confirm">Hapus</button>
+    </div>`;
+  document.body.append(deleteDialog);
+  const deleteMessage = deleteDialog.querySelector("#master-delete-message");
+  const deleteConfirm = deleteDialog.querySelector('[data-delete="confirm"]');
+  let deletingId = null;
+
+  function openDeleteDialog(record) {
+    const protectedRecord = isProtectedRecord(record);
+    deletingId = protectedRecord ? null : record.id;
+    deleteDialog.querySelector("#master-delete-title").textContent = `Hapus ${definition.title}`;
+    deleteMessage.textContent = protectedRecord
+      ? "Data bawaan tidak dapat dihapus. Gunakan status Nonaktif jika tersedia."
+      : definition.deleteMessage || `Hapus ${definition.title} ini?`;
+    deleteConfirm.hidden = protectedRecord;
+    if (typeof deleteDialog.showModal === "function") deleteDialog.showModal(); else deleteDialog.setAttribute("open", "");
+  }
+
+  deleteDialog.addEventListener("click", (event) => {
+    const action = event.target.closest("[data-delete]")?.dataset.delete;
+    if (event.target === deleteDialog || action === "cancel") {
+      deletingId = null;
+      closeDialog(deleteDialog);
+      return;
+    }
+    if (action === "confirm" && deletingId) {
+      saveMasterRecords(definition, getRecords().filter((item) => item.id !== deletingId));
+      deletingId = null;
+      closeDialog(deleteDialog);
+      render();
+    }
+  });
 
   addButton.addEventListener("click", () => openForm());
   searchInput.addEventListener("input", render);
@@ -1881,23 +2135,25 @@ function setupMasterPage() {
     if (!record) return;
     if (button.dataset.action === "detail") openDetail(record);
     if (button.dataset.action === "edit") openForm(record);
-    if (button.dataset.action === "delete") {
-      if (isProtectedRecord(record)) {
-        notice.textContent = "Data bawaan tidak dapat dihapus. Gunakan status Nonaktif jika tersedia.";
-        return;
-      }
-      if (window.confirm(`Hapus ${definition.title.toLowerCase()} ini?`)) {
-        saveMasterRecords(definition, getRecords().filter((item) => item.id !== record.id));
-        render();
-      }
-    }
+    if (button.dataset.action === "delete") openDeleteDialog(record);
   });
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     const record = Object.fromEntries(new FormData(form).entries());
+    // Rapikan isian: spasi di awal/akhir dibuang, spasi ganda dijadikan satu, nomor telepon tanpa spasi/tanda hubung.
+    definition.fields.forEach((field) => {
+      if (typeof record[field.key] !== "string" || field.type === "password") return;
+      record[field.key] = field.type === "tel" ? normalizePhone(record[field.key]) : record[field.key].replace(/\s+/g, " ").trim();
+    });
+    if (type === "users" && editingId && !record.password) delete record.password;
     if (type === "vehicles") record.plateNumber = record.plateNumber.trim().toUpperCase();
     if (type === "users") record.username = record.username.trim().toLowerCase();
     if (type === "services") record.price = Number(record.price);
+    if (type === "attendance") {
+      record.employeeName = record.employeeName.trim();
+      record.overtimeHours = record.overtimeHours === "" ? 0 : Number(record.overtimeHours);
+      record.incentive = record.incentive === "" ? 0 : Number(record.incentive);
+    }
     const records = getRecords();
     const error = validate(record, records);
     notice.textContent = error;
