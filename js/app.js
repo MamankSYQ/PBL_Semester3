@@ -4,6 +4,11 @@ function appUrl(path) {
   return `${appRoot}${path}`;
 }
 
+// Semua tombol logout (id berakhiran "logout", serta #logout-button) juga menghapus username sesi, bukan hanya role.
+document.addEventListener("click", (event) => {
+  if (event.target.closest('[id$="logout"], #logout-button')) sessionStorage.removeItem("washupUsername");
+}, true);
+
 const currentYear = document.querySelector("#current-year");
 
 if (currentYear) {
@@ -147,7 +152,7 @@ function getActiveShiftNames() {
   const names = ensureMasterDefaults("shifts", masterDefinitions.shifts)
     .filter((shift) => shift.status === "Aktif" && shift.name)
     .map((shift) => shift.name);
-  return names.length ? names : ["Shift Pagi"];
+  return names;
 }
 
 const masterDefaults = {
@@ -206,7 +211,7 @@ function getActiveServiceOptions() {
   const records = ensureMasterDefaults("services", definition);
   if (!records.length) return serviceOptions;
   return records.reduce((grouped, service) => {
-    if (service.status !== "Aktif" || !service.name || !service.vehicleType || Number(service.price) <= 0) return grouped;
+    if (service.status !== "Aktif" || !service.name || !service.vehicleType || !(Number(service.price) > 0)) return grouped;
     grouped[service.vehicleType] ||= [];
     grouped[service.vehicleType].push({ name: service.name, price: Number(service.price) });
     return grouped;
@@ -1377,11 +1382,17 @@ function setupAdminDashboard() {
 
   const render = () => {
     const transactions = getTransactions();
-    const customers = new Set(transactions.map((transaction) => String(transaction.customerName || "").trim()).filter(Boolean));
-    const vehicles = new Set(transactions.map((transaction) => String(transaction.plateNumber || "").trim().toUpperCase()).filter(Boolean));
-    const storedServices = readMasterRecords(masterDefinitions.services);
-    const services = storedServices.length || Object.values(serviceOptions).reduce((total, options) => total + options.length, 0);
-    const employees = Object.values(accounts).filter((account) => account.role === "Kasir" || account.role === "Petugas").length;
+    // Gabungan Data Pelanggan/Kendaraan (master Admin) dan data dari transaksi Kasir, dihitung unik.
+    const customers = new Set([
+      ...readMasterRecords(masterDefinitions.customers).map((customer) => String(customer.name || "").trim().toLowerCase()),
+      ...transactions.map((transaction) => String(transaction.customerName || "").trim().toLowerCase()),
+    ].filter(Boolean));
+    const vehicles = new Set([
+      ...readMasterRecords(masterDefinitions.vehicles).map((vehicle) => String(vehicle.plateNumber || "").replace(/\s+/g, "").toUpperCase()),
+      ...transactions.map((transaction) => String(transaction.plateNumber || "").replace(/\s+/g, "").toUpperCase()),
+    ].filter(Boolean));
+    const services = ensureMasterDefaults("services", masterDefinitions.services).length;
+    const employees = readMasterRecords(masterDefinitions.employees).filter((employee) => employee.status === "Aktif").length;
     const recentTransactions = [...transactions].sort((first, second) => {
       const firstTime = new Date(first.createdAt).getTime() || 0;
       const secondTime = new Date(second.createdAt).getTime() || 0;
@@ -1763,7 +1774,9 @@ function enhanceSelect(select) {
   trigger.type = "button";
   trigger.id = `${select.id}-button`;
   trigger.className = "custom-select-trigger";
+  trigger.setAttribute("role", "combobox");
   trigger.setAttribute("aria-haspopup", "listbox");
+  if (select.required) trigger.setAttribute("aria-required", "true");
   trigger.setAttribute("aria-expanded", "false");
   const valueText = document.createElement("span");
   valueText.id = `${select.id}-value`;
@@ -1796,15 +1809,17 @@ function enhanceSelect(select) {
 
   let activeIndex = Math.max(0, select.selectedIndex);
   const sync = () => {
-    valueText.textContent = items[select.selectedIndex]?.textContent || "";
+    valueText.textContent = items[select.selectedIndex]?.textContent || (items.length ? "" : "Tidak ada pilihan");
     items.forEach((item, index) => item.setAttribute("aria-selected", String(index === select.selectedIndex)));
   };
   const setActive = (index) => {
+    if (!items.length) return;
     activeIndex = (index + items.length) % items.length;
     items.forEach((item, itemIndex) => item.classList.toggle("is-active", itemIndex === activeIndex));
     list.setAttribute("aria-activedescendant", items[activeIndex].id);
   };
   const open = () => {
+    if (!items.length) return;
     list.hidden = false;
     trigger.setAttribute("aria-expanded", "true");
     setActive(Math.max(0, select.selectedIndex));
@@ -1859,6 +1874,10 @@ function enhanceSelect(select) {
   sync();
 }
 
+function normalizePhone(value) {
+  return String(value || "").replace(/[\s.-]/g, "");
+}
+
 function setupMasterPage() {
   const page = document.querySelector(".master-page");
   if (!page) return;
@@ -1889,7 +1908,9 @@ function setupMasterPage() {
 
   if (!tableHead || !tableBody || !resultCount || !emptyState || !searchInput || !addButton || !dialog || !detailDialog || !form || !formFields || !notice || !detailContent) return;
 
-  const recordsWithDefaults = ensureMasterDefaults(type, definition);
+  ensureMasterDefaults(type, definition);
+  // Validasi ditangani validate() agar pesan selalu tampil di dialog (termasuk untuk dropdown kustom yang <select>-nya tersembunyi).
+  if (form) form.noValidate = true;
 
   const isProtectedRecord = (record) => (type === "users" && (record.builtIn || record.protected)) || (type === "services" && masterDefaults.services.some((item) => item.id === record.id)) || (type === "shifts" && record.id === "shift-pagi");
   // Jam shift ditampilkan dengan titik seperti Figma (08.00); jam selesai 00:00 berarti tengah malam (24.00).
@@ -1994,7 +2015,13 @@ function setupMasterPage() {
           input.append(option);
         });
       }
-      input.value = record[field.key] ?? (field.type === "select" ? field.options[0] : "");
+      input.value = record[field.key] ?? (field.type === "select" ? (field.options[0] ?? "") : "");
+      // Password lama tidak diisikan kembali saat Edit; kosong berarti password tidak diubah.
+      if (field.type === "password" && record.id) {
+        input.value = "";
+        input.required = false;
+        input.placeholder = "Kosongkan jika tidak diubah";
+      }
       wrapper.append(input);
       formFields.append(wrapper);
     });
@@ -2027,17 +2054,23 @@ function setupMasterPage() {
   }
 
   function validate(record, records) {
-    const requiredField = definition.fields.find((field) => field.required && !String(record[field.key] || "").trim());
-    if (requiredField) return `${requiredField.label} wajib diisi.`;
+    const requiredField = definition.fields.find((field) => field.required && !(field.type === "password" && editingId) && !String(record[field.key] || "").trim());
+    if (requiredField) {
+      if (type === "attendance" && requiredField.key === "shift") return "Belum ada shift aktif. Aktifkan shift di halaman Data Shift.";
+      return `${requiredField.label} wajib diisi.`;
+    }
+    const invalidPhone = definition.fields.find((field) => field.type === "tel" && record[field.key] && !/^\+?\d{8,15}$/.test(record[field.key]));
+    if (invalidPhone) return `${invalidPhone.label} hanya boleh berisi angka (8–15 digit).`;
+    if (type === "attendance" && !getActiveShiftNames().includes(record.shift)) return "Shift yang dipilih tidak aktif.";
     if (type === "services" && (!Number.isFinite(Number(record.price)) || Number(record.price) <= 0)) return "Harga harus lebih besar dari 0.";
     if (type === "shifts" && record.end !== "00:00" && record.start >= record.end) return "Jam selesai harus setelah jam mulai.";
     if (type === "attendance" && (Number(record.overtimeHours) < 0 || Number(record.incentive) < 0)) return "Lembur dan insentif tidak boleh bernilai negatif.";
     const duplicate = records.some((existing) => existing.id !== editingId && (
-      (type === "customers" && existing.phone === record.phone) ||
-      (type === "vehicles" && existing.plateNumber === record.plateNumber) ||
-      (type === "services" && existing.name.toLowerCase() === record.name.toLowerCase() && existing.vehicleType === record.vehicleType) ||
-      (type === "employees" && existing.phone === record.phone) ||
-      (type === "shifts" && existing.name.toLowerCase() === record.name.toLowerCase()) ||
+      (type === "customers" && normalizePhone(existing.phone) === record.phone) ||
+      (type === "vehicles" && String(existing.plateNumber).replace(/\s+/g, " ").trim().toUpperCase() === record.plateNumber) ||
+      (type === "services" && String(existing.name).trim().toLowerCase() === record.name.toLowerCase() && existing.vehicleType === record.vehicleType) ||
+      (type === "employees" && normalizePhone(existing.phone) === record.phone) ||
+      (type === "shifts" && String(existing.name).trim().toLowerCase() === record.name.toLowerCase()) ||
       (type === "users" && existing.username.toLowerCase() === record.username.toLowerCase()) ||
       (type === "attendance" && existing.date === record.date && String(existing.employeeName).trim().toLowerCase() === String(record.employeeName).trim().toLowerCase())
     ));
@@ -2107,6 +2140,12 @@ function setupMasterPage() {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     const record = Object.fromEntries(new FormData(form).entries());
+    // Rapikan isian: spasi di awal/akhir dibuang, spasi ganda dijadikan satu, nomor telepon tanpa spasi/tanda hubung.
+    definition.fields.forEach((field) => {
+      if (typeof record[field.key] !== "string" || field.type === "password") return;
+      record[field.key] = field.type === "tel" ? normalizePhone(record[field.key]) : record[field.key].replace(/\s+/g, " ").trim();
+    });
+    if (type === "users" && editingId && !record.password) delete record.password;
     if (type === "vehicles") record.plateNumber = record.plateNumber.trim().toUpperCase();
     if (type === "users") record.username = record.username.trim().toLowerCase();
     if (type === "services") record.price = Number(record.price);

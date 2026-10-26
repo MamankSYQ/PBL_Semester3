@@ -523,7 +523,6 @@ body.master-page {
 .master-page .queue-table-wrap { width: 100% !important; overflow-x: auto !important; }
 .master-page .master-table { width: 100% !important; border-collapse: collapse !important; border-spacing: 0 !important; }
 .master-page .master-table th:first-child, .master-page .master-table td:first-child { padding-left: 8px !important; }
-.master-page .dashboard-main.master-main + .dashboard-footer { margin-top: 79px !important; }
 
 /* ===== Penyelarasan Figma 2009:8 (kerangka sidebar/topbar) ===== */
 .master-page .section-heading { margin-bottom: 16px !important; }
@@ -573,10 +572,6 @@ body.master-page {
     font-size: 24px !important;
     line-height: 32px !important;
   }
-  .master-page .summary-card {
-    flex: 1 1 100% !important;
-    width: 100% !important;
-  }
   .master-page .dashboard-footer {
     flex-direction: column !important;
     gap: 8px !important;
@@ -594,7 +589,6 @@ body.master-page {
 .master-page .queue-panel { min-height: 425px !important; }
 .master-page .queue-empty-box { height: 70px !important; flex: 0 0 70px !important; }
 .master-page .queue-empty h3 { line-height: 30px !important; margin-bottom: 1px !important; }
-.master-page .dashboard-main.master-main + .dashboard-footer { margin-top: 91px !important; }
 
 /* ===== Dialog Tambah/Ubah Data (Figma: Data Pelanggan tambah data) ===== */
 .master-page .queue-dialog::backdrop { background: rgba(0, 0, 0, 0.33) !important; }
@@ -899,22 +893,18 @@ body.master-page {
 .master-page[data-master="attendance"] .queue-panel:has(#master-empty[hidden]) { min-height: 425px !important; padding-bottom: 32px !important; }
 
 /* Dialog Tambah Absensi: lebih rapat dari Karyawan; Kehadiran dan Shift berdampingan agar tinggi dialog tetap seperti Figma. */
+.master-page[data-master="attendance"] .master-dialog { padding-top: 28px !important; }
 .master-page[data-master="attendance"] .master-dialog .master-form-fields {
-  display: grid !important; grid-template-columns: 110px 110px 1fr !important; column-gap: 24px !important; row-gap: 8px !important;
+  display: grid !important; grid-template-columns: 110px 110px 1fr !important; column-gap: 24px !important; row-gap: 8px !important; margin-top: 9px !important;
 }
 .master-page[data-master="attendance"] .master-dialog .master-form-fields > .form-field { grid-column: 1 / -1 !important; }
 .master-page[data-master="attendance"] .master-dialog .master-form-fields > .form-field:nth-child(3) { grid-column: 1 !important; }
 .master-page[data-master="attendance"] .master-dialog .master-form-fields > .form-field:nth-child(4) { grid-column: 2 !important; }
-.master-page[data-master="attendance"] .master-dialog .master-form-fields > .form-field:nth-child(5) { margin-top: 28px !important; }
-.master-page[data-master="attendance"] .master-dialog .form-field input { font-size: 13px !important; }
-.master-page[data-master="attendance"] .master-dialog .form-field input::placeholder { color: #1D4A5A !important; opacity: 1; }
-.master-page[data-master="attendance"] .master-dialog .dialog-actions { margin-top: 22px !important; }
-.master-page[data-master="attendance"] .master-dialog { padding-top: 28px !important; }
-.master-page[data-master="attendance"] .master-dialog .master-form-fields { margin-top: 9px !important; }
-.master-page[data-master="attendance"] .master-dialog .form-field { gap: 3px !important; }
-.master-page[data-master="attendance"] .master-dialog .form-field input { height: 46px !important; min-height: 0 !important; }
 .master-page[data-master="attendance"] .master-dialog .master-form-fields > .form-field:nth-child(5) { margin-top: 24px !important; }
-.master-page[data-master="attendance"] .master-dialog .dialog-actions { padding-top: 13px !important; }
+.master-page[data-master="attendance"] .master-dialog .form-field { gap: 3px !important; }
+.master-page[data-master="attendance"] .master-dialog .form-field input { height: 46px !important; min-height: 0 !important; font-size: 13px !important; }
+.master-page[data-master="attendance"] .master-dialog .form-field input::placeholder { color: #1D4A5A !important; opacity: 1; }
+.master-page[data-master="attendance"] .master-dialog .dialog-actions { margin-top: 22px !important; padding-top: 13px !important; }
 
 /* ===== Akun Pengguna (Figma: Akun Pengguna awal / data baru / tambah / detail) ===== */
 /* Posisi teks kolom Figma: 418 / 683 / 908 / 1150; baris 63px. */
@@ -935,14 +925,24 @@ body.master-page {
 /* Dialog Tambah/Edit Akun: label lebih rapat ke kotak; jarak Role -> Status memberi ruang daftar pilihan seperti Figma. */
 .master-page[data-master="users"] .master-dialog .master-form-fields { gap: 6px !important; margin-top: 10px !important; }
 .master-page[data-master="users"] .master-dialog .form-field { gap: 0 !important; }
-.master-page[data-master="users"] .master-dialog .master-form-fields > .form-field:nth-child(4) { margin-top: 53px !important; }
-.master-page[data-master="users"] .master-dialog .dialog-actions { margin-top: 44px !important; }
+.master-page[data-master="users"] .master-dialog { padding-top: 26px !important; padding-bottom: 18px !important; }
+.master-page[data-master="users"] .master-dialog .master-form-fields > .form-field:nth-child(4) { margin-top: 51px !important; }
+.master-page[data-master="users"] .master-dialog .dialog-actions { margin-top: 45px !important; }
 /* Dialog Detail Akun: tiga baris berjarak 31px. */
 .master-page[data-master="users"] .master-detail-grid { margin-top: 4px !important; }
 .master-page[data-master="users"] .master-detail-grid > div,
 .master-page[data-master="users"] .master-detail-grid span,
 .master-page[data-master="users"] .master-detail-grid strong { line-height: 31.5px !important; }
-.master-page[data-master="users"] .master-dialog { padding-top: 26px !important; padding-bottom: 18px !important; }
-.master-page[data-master="users"] .master-dialog .master-form-fields > .form-field:nth-child(4) { margin-top: 51px !important; }
-.master-page[data-master="users"] .master-dialog .dialog-actions { margin-top: 45px !important; }
 .master-page[data-master="users"] .master-detail-dialog { padding-bottom: 18px !important; }
+
+/* Layar sangat sempit (<= 360px): kotak input dialog mengikuti lebar dialog agar tidak meluber. */
+@media (max-width: 360px) {
+  .master-page .master-dialog { padding-left: 20px !important; padding-right: 20px !important; }
+  .master-page .master-dialog .form-field input,
+  .master-page:is([data-master="vehicles"], [data-master="services"], [data-master="users"]) .master-dialog .form-field input { width: 100% !important; max-width: 280px !important; }
+  .master-page[data-master="attendance"] .master-dialog .master-form-fields { grid-template-columns: 1fr 1fr !important; column-gap: 12px !important; }
+  .master-page[data-master="attendance"] .master-dialog .form-field input { max-width: none !important; }
+  .master-page .custom-select, .master-page .custom-select-trigger, .master-page .custom-select-list { max-width: 100% !important; }
+  .master-page .master-dialog .dialog-actions { gap: 12px !important; }
+  .master-page .master-dialog .dialog-actions button { width: auto !important; flex: 1 1 0 !important; }
+}
