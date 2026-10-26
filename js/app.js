@@ -120,6 +120,8 @@ const masterDefinitions = {
     ],
     columns: ["username", "role", "status"],
     labels: { username: "Username", role: "Role", status: "Status" },
+    detailTitle: "Detail Akun",
+    deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?",
   },
   // Absensi & Lembur yang dicatat Admin (Figma: Data Absensi). Terpisah dari absen foto Petugas (washupPetugasAttendance).
   attendance: {
@@ -1751,7 +1753,7 @@ if (document.querySelector(".petugas-attendance-page")) setupPetugasAttendance()
 
 // Dropdown kustom untuk form data master (Figma: Data Kendaraan tambah 2).
 // <select> asli tetap ada tetapi disembunyikan, jadi nilai form dan validasi tetap bekerja seperti biasa.
-const customSelectTypes = ["vehicles", "services", "employees", "shifts", "attendance"];
+const customSelectTypes = ["vehicles", "services", "employees", "shifts", "attendance", "users"];
 const customSelectLabels = { Nonaktif: "Non Aktif" };
 
 function enhanceSelect(select) {
