@@ -19,6 +19,10 @@
   --wu-sidebar-w: 266px;
 }
 
+.owner-page .dashboard-shell {
+  --wu-sidebar-w: 266px;
+}
+
 /* ---------- Tombol panah bulat di batas sidebar ---------- */
 .sidebar-collapse-toggle {
   /* Menempel di layar agar tetap terlihat saat halaman digulir. */
@@ -149,29 +153,6 @@
 
   .dashboard-shell.sidebar-collapsed .nav-item:hover {
     transform: none !important;
-  }
-
-  /* Halaman Owner belum punya latar tombol menu, jadi diberi kotak di sini
-     agar ikon tetap tampil sebagai tombol seperti di halaman Admin. */
-  .owner-dashboard-page .dashboard-shell.sidebar-collapsed .nav-item,
-  .owner-report-page .dashboard-shell.sidebar-collapsed .nav-item {
-    border: 1px solid rgba(117, 185, 205, 0.28);
-    background: rgba(48, 99, 117, 0.62);
-    color: #C7E4EE;
-  }
-
-  .owner-dashboard-page .dashboard-shell.sidebar-collapsed .nav-item:hover,
-  .owner-report-page .dashboard-shell.sidebar-collapsed .nav-item:hover {
-    border-color: rgba(113, 197, 219, 0.68);
-    background: rgba(58, 116, 136, 0.78);
-    color: #FFFFFF;
-  }
-
-  .owner-dashboard-page .dashboard-shell.sidebar-collapsed .nav-item.active,
-  .owner-report-page .dashboard-shell.sidebar-collapsed .nav-item.active {
-    border-color: #238EB6;
-    background: rgba(17, 57, 72, 0.96);
-    color: #E5F6FC;
   }
 
   .dashboard-shell.sidebar-collapsed .nav-icon-svg,

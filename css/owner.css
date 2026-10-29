@@ -1,0 +1,1596 @@
+/* =========================================================
+   WASHUP — Dashboard Admin Stylesheet
+   File: css/admin.css
+   Fokus: Penyelarasan visual presisi frame Figma 1440 × 1024 px
+   ========================================================= */
+
+body.owner-page {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #0C2B38;
+  background-color: #E0EFF7 !important;
+  overflow-x: hidden;
+}
+
+/* Shell Layout */
+.owner-page .dashboard-shell {
+  display: flex !important;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #E0EFF7 !important;
+}
+
+/* Matikan pseudo-element warisan dari style.css agar tidak menimbulkan tumpukan garis ganda / simpul bertabrakan */
+.owner-page .dashboard-sidebar::before,
+.owner-page .dashboard-sidebar::after,
+.owner-page .dashboard-topbar::before,
+.owner-page .dashboard-topbar::after {
+  content: none !important;
+  display: none !important;
+  background-image: none !important;
+}
+
+/* =========================================================
+   A. SIDEBAR ADMIN (Sesuai Spesifikasi Figma: Frame 18)
+   width: 266px; height: 1024px;
+   background: linear-gradient(180deg, #09191F 0%, #043D52 100%);
+   ========================================================= */
+.owner-page .dashboard-sidebar {
+  width: 266px !important;
+  flex: 0 0 266px !important;
+  min-height: 100vh;
+  padding: 24px 28px 32px !important;
+  box-sizing: border-box;
+  background-color: #09191F !important;
+  /* Pola wireframe SVG identik dengan Landing & Login + gradasi vertikal navy ke teal */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='245' viewBox='0 0 280 245'%3E%3Cg fill='none' stroke='%2388AFC0' stroke-opacity='.15' stroke-width='1.2'%3E%3Cpath d='M0 0 L140 122.5 L280 0 M0 245 L140 122.5 L280 245 M0 0 L0 245 M140 0 L140 245 M280 0 L280 245 M0 122.5 L280 122.5 M0 0 L280 245 M280 0 L0 245'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(180deg, #09191F 0%, #043D52 100%) !important;
+  background-repeat: repeat, no-repeat !important;
+  background-size: 280px 245px, cover !important;
+  background-position: center bottom, center !important;
+  color: #D6F0FF;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  border-right: 1px solid rgba(136, 175, 192, 0.16) !important;
+  z-index: 10;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Brand Logo di Sidebar (x: 21px, top: 23px, w: 207px, h: 56px) */
+.owner-page .dashboard-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-decoration: none !important;
+  margin: 0 0 36px 0 !important;
+}
+
+.owner-page .dashboard-brand .brand-logo-img {
+  width: 55px !important;
+  height: 42px !important;
+  object-fit: contain !important;
+  display: block !important;
+  flex: 0 0 55px !important;
+}
+
+.owner-page .dashboard-brand .brand-text {
+  font-family: 'Emblema One', 'Playfair Display', cursive, serif !important;
+  font-size: 20px !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  line-height: 24px !important;
+  letter-spacing: 0.05em !important;
+  color: #FFFFFF !important;
+}
+
+/* Navigasi Sidebar */
+.owner-page .dashboard-nav {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  flex: 1 0 auto;
+}
+
+/* MENU ADMIN: font-size 13px, 700, line-height 18px, letter-spacing 0.07em, color #A6CEE6 */
+.owner-page .nav-label {
+  margin: 0 0 4px 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 18px !important;
+  letter-spacing: 0.07em !important;
+  color: #A6CEE6 !important;
+  text-transform: uppercase !important;
+}
+
+/* Item Menu: width 191px, height 40px, border-radius 8px */
+.owner-page .nav-item {
+  width: 191px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 0 14px !important;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+  color: #D6F0FF !important;
+  text-decoration: none !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 23px !important;
+  letter-spacing: 0.03em !important;
+  background-color: rgba(78, 147, 171, 0.5) !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  transition: background-color 0.18s ease, transform 0.18s ease !important;
+}
+
+.owner-page .nav-item:hover {
+  background-color: rgba(78, 147, 171, 0.8) !important;
+  transform: translateX(2px) !important;
+  color: #FFFFFF !important;
+}
+
+/* Active Item (Dashboard): background #1D4A5A 50%, border 2px solid #4E93AB */
+.owner-page .nav-item.active {
+  background-color: rgba(29, 74, 90, 0.5) !important;
+  border: 2px solid #4E93AB !important;
+  color: #D6F0FF !important;
+  box-shadow: none !important;
+}
+
+.owner-page .nav-icon-svg {
+  width: 15px !important;
+  height: 15px !important;
+  flex: 0 0 15px !important;
+  color: #A6CEE6 !important;
+}
+
+.owner-page .nav-icon-rp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  width: 15px;
+  flex: 0 0 15px;
+  color: #A6CEE6;
+}
+
+/* Sidebar Bawah (Area Monitoring & Logout) */
+.owner-page .sidebar-bottom {
+  margin-top: 32px !important;
+  padding-top: 8px !important;
+}
+
+.owner-page .sidebar-note {
+  margin: 0 0 14px 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 18px !important;
+  letter-spacing: 0.07em !important;
+  color: #A6CEE6 !important;
+}
+
+/* Tombol Logout: width 96px, height 28px, background #B10000 60%, border 1px solid #FF7373, radius 8px */
+.owner-page .sidebar-logout {
+  width: 96px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  background-color: rgba(177, 0, 0, 0.6) !important;
+  border: 1px solid #FF7373 !important;
+  border-radius: 8px !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  line-height: 23px !important;
+  letter-spacing: 0.03em !important;
+  color: #D6F0FF !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease, transform 0.2s ease !important;
+}
+
+.owner-page .sidebar-logout:hover {
+  background-color: rgba(177, 0, 0, 0.85) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* =========================================================
+   B. HEADER / TOPBAR ADMIN (Frame 15)
+   width: 1174px; height: 100px;
+   background: linear-gradient(90deg, #09191F 0%, #043D52 100%);
+   ========================================================= */
+.owner-page .dashboard-content {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background-color: #E0EFF7 !important;
+}
+
+.owner-page .dashboard-topbar {
+  height: 100px !important;
+  min-height: 100px !important;
+  max-height: 100px !important;
+  padding: 0 24px 0 28px !important;
+  background-color: #09191F !important;
+  background-image: linear-gradient(90deg, #09191F 0%, #043D52 100%) !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+  border-bottom: none !important;
+}
+
+.owner-page .dashboard-topbar .topbar-title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dashboard Admin: font-size 32px, 700, line-height 44px, letter-spacing 0.05em, color #D6F0FF */
+.owner-page .dashboard-topbar h1 {
+  margin: 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  line-height: 44px !important;
+  letter-spacing: 0.05em !important;
+  color: #D6F0FF !important;
+}
+
+/* User Profile: avatar 55x55px, Admin 16px #88AFC7, Role: Admin 11px #88AFC7 */
+.owner-page .user-summary {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.owner-page .user-avatar-circle {
+  width: 55px !important;
+  height: 55px !important;
+  border-radius: 50% !important;
+  background-color: #BBBBBB !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #FFFFFF !important;
+  flex: 0 0 55px !important;
+}
+
+.owner-page .user-avatar-circle svg {
+  width: 32px !important;
+  height: 32px !important;
+  fill: currentColor !important;
+}
+
+.owner-page .user-summary .user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.owner-page .user-summary strong {
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 22px !important;
+  letter-spacing: 0.05em !important;
+  color: #88AFC7 !important;
+}
+
+.owner-page .user-summary small {
+  font-family: 'Roboto', 'Open Sans', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  line-height: 23px !important;
+  letter-spacing: 0.1em !important;
+  color: #88AFC7 !important;
+}
+
+/* =========================================================
+   C. AREA KONTEN UTAMA
+   width: 936px; horizontally centered in 1174px area (x = 385px)
+   Y-coordinates Figma:
+   - Welcome: top 152px
+   - Cards: top 279px
+   - Table: top 437px
+   - Footer: top 941px
+   ========================================================= */
+.owner-page .dashboard-main.admin-main {
+  width: 100% !important;
+  max-width: 936px !important;
+  margin: 0 auto !important;
+  padding: 52px 0 0 0 !important;
+  box-sizing: border-box !important;
+  flex: 0 0 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Banner Welcome (Frame 15: top 152px, height 80px) */
+.owner-page .dashboard-welcome {
+  width: 100% !important;
+  max-width: 936px !important;
+  height: 80px !important;
+  margin-bottom: 47px !important;
+}
+
+/* RINGKASAN ADMINISTRASI: font-size 12px, 600, line-height 16px, letter-spacing 0.05em, color #238EB6 */
+.owner-page .eyebrow {
+  margin: 0 0 6px 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 16px !important;
+  letter-spacing: 0.05em !important;
+  color: #238EB6 !important;
+  text-transform: uppercase !important;
+}
+
+/* Monitoring data operasional WASHUP: font-size 24px, 700, line-height 33px, letter-spacing 0.05em, color #1D4A5A */
+.owner-page .dashboard-welcome h2 {
+  margin: 0 0 12px 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  line-height: 33px !important;
+  letter-spacing: 0.05em !important;
+  color: #1D4A5A !important;
+}
+
+/* Date Chip (Rectangle 46): width 137px, height 29px, background #FFC068, radius 40px, font 12px 600 color #815303 */
+.owner-page .admin-date-chip,
+.owner-page #admin-date,
+.owner-page #owner-date {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 137px !important;
+  height: 29px !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  background-color: #FFC068 !important;
+  border-radius: 40px !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 16px !important;
+  letter-spacing: 0.05em !important;
+  color: #815303 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* =========================================================
+   D. EMPAT KARTU STATISTIK (Frame 41: width 933px, height 134px)
+   4 cards: width 224px, height 134px, gap 12px
+   ========================================================= */
+.owner-page .summary-grid {
+  display: flex !important;
+  gap: 12px !important;
+  width: 100% !important;
+  max-width: 936px !important;
+  margin: 0 0 24px 0 !important;
+  flex-wrap: nowrap !important;
+}
+
+.owner-page .summary-card {
+  width: 224px !important;
+  height: 134px !important;
+  min-height: 134px !important;
+  max-height: 134px !important;
+  flex: 0 0 224px !important;
+  background-color: #FFFFFF !important;
+  border-radius: 15px !important;
+  padding: 13px 19px !important;
+  box-sizing: border-box !important;
+  border: none !important;
+  box-shadow: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+.owner-page .owner-summary-grid {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+.owner-page .owner-summary-grid .summary-card {
+  width: auto !important;
+  min-width: 0 !important;
+  flex: initial !important;
+}
+
+.owner-page .summary-card-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 0 !important;
+}
+
+/* Ikon Kotak Biru Muda: width 34px, height 31px, radius 5px, background #E0EFF7, icon #0D6BA4 */
+.owner-page .summary-icon-box {
+  width: 34px !important;
+  height: 31px !important;
+  border-radius: 5px !important;
+  background-color: #E0EFF7 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #0D6BA4 !important;
+  flex: 0 0 34px !important;
+}
+
+.owner-page .summary-icon-box svg {
+  width: 16px !important;
+  height: 16px !important;
+  display: block;
+}
+
+/* Subtitle/Trend Kecil di Atas: 10px, 700, color #88AFC7 */
+.owner-page .summary-trend {
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  line-height: 14px !important;
+  letter-spacing: 0.05em !important;
+  color: #88AFC7 !important;
+}
+
+/* Nama Statistik: 12px, 600, color #88AFC7 */
+.owner-page .summary-card p {
+  margin: 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 16px !important;
+  letter-spacing: 0.05em !important;
+  color: #88AFC7 !important;
+}
+
+/* Angka Besar: 24px, 700, line-height 33px, color #4E93AB */
+.owner-page .summary-card strong {
+  margin: 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  line-height: 33px !important;
+  letter-spacing: 0.05em !important;
+  color: #4E93AB !important;
+}
+
+/* =========================================================
+   E. PANEL TRANSAKSI TERBARU (Frame 31: width 936px, height 425px)
+   background: #FFFFFF; border-radius: 15px;
+   ========================================================= */
+.owner-page .dashboard-section {
+  width: 100% !important;
+  max-width: 936px !important;
+  min-height: 425px !important;
+  background-color: #FFFFFF !important;
+  border-radius: 15px !important;
+  padding: 25px 24px 28px !important;
+  box-sizing: border-box !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin-bottom: 24px !important;
+}
+
+.owner-page .section-heading {
+  margin-bottom: 20px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+}
+
+/* Eyebrow Tabel: MONITORING TRANSAKSI 15px, 400, color #238EB6 */
+.owner-page .section-heading .eyebrow {
+  margin: 0 0 4px 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  line-height: 20px !important;
+  letter-spacing: 0.05em !important;
+  color: #238EB6 !important;
+}
+
+/* Title Tabel: Transaksi Terbaru 24px, 700, color #1D4A5A */
+.owner-page .section-heading h2 {
+  margin: 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  line-height: 33px !important;
+  letter-spacing: 0.05em !important;
+  color: #1D4A5A !important;
+}
+
+/* Counter Badge JS */
+.owner-page #admin-recent-count {
+  display: none !important;
+}
+
+/* Tabel Transaksi */
+.owner-page .table-wrap {
+  width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.owner-page .queue-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+}
+
+/* Header Kolom (Rectangle 97): height 42px, background rgba(232, 232, 232, 0.57), border-bottom 1px solid #ACACAC */
+.owner-page .queue-table thead tr {
+  background: rgba(232, 232, 232, 0.57) !important;
+  height: 42px !important;
+}
+
+.owner-page .queue-table th {
+  padding: 12px 10px !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 18px !important;
+  letter-spacing: 0.05em !important;
+  color: #1D4A5A !important;
+  text-transform: uppercase !important;
+  text-align: left !important;
+  border: none !important;
+  border-bottom: 1px solid #ACACAC !important;
+  box-sizing: border-box !important;
+}
+
+.owner-page .queue-table th:first-child,
+.owner-page .queue-table td:first-child {
+  padding-left: 8px !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.owner-page .queue-table th:last-child,
+.owner-page .queue-table td:last-child {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+/* Proporsi Kolom Presisi Berdasarkan Koordinat Horizontal Figma */
+.owner-page .queue-table th:nth-child(1),
+.owner-page .queue-table td:nth-child(1) { width: 18% !important; }
+
+.owner-page .queue-table th:nth-child(2),
+.owner-page .queue-table td:nth-child(2) { width: 19.5% !important; }
+
+.owner-page .queue-table th:nth-child(3),
+.owner-page .queue-table td:nth-child(3) { width: 11% !important; }
+
+.owner-page .queue-table th:nth-child(4),
+.owner-page .queue-table td:nth-child(4) { width: 15.5% !important; }
+
+.owner-page .queue-table th:nth-child(5),
+.owner-page .queue-table td:nth-child(5) { width: 17% !important; }
+
+.owner-page .queue-table th:nth-child(6),
+.owner-page .queue-table td:nth-child(6) { width: 19% !important; }
+
+/* Baris Isi Tabel */
+.owner-page .queue-table td {
+  padding: 14px 10px !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 13px !important;
+  color: #1D4A5A !important;
+  border-bottom: 1px solid #EDF3F7 !important;
+  box-sizing: border-box !important;
+}
+
+/* Badge Status */
+.owner-page .status-badge {
+  display: inline-block !important;
+  padding: 4px 10px !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+.owner-page .status-badge.status-done {
+  background-color: #E2F6ED !important;
+  color: #13774C !important;
+}
+
+.owner-page .status-badge.status-waiting {
+  background-color: #FFF2DF !important;
+  color: #9E5B00 !important;
+}
+
+/* Empty State: box 75x70px, icon 47x47 #0D6BA4, h3 24px #1D4A5A, p 16px #88AFC7 */
+.owner-page .queue-empty:not([hidden]) {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 44px 20px 36px !important;
+  text-align: center !important;
+}
+
+.owner-page .queue-empty[hidden] {
+  display: none !important;
+}
+
+.owner-page .queue-empty-box {
+  width: 75px !important;
+  height: 70px !important;
+  border-radius: 5px !important;
+  background-color: #E0EFF7 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 16px !important;
+  color: #0D6BA4 !important;
+  flex: 0 0 75px !important;
+}
+
+.owner-page .queue-empty-box svg {
+  width: 47px !important;
+  height: 47px !important;
+  display: block;
+}
+
+.owner-page .queue-empty h3 {
+  margin: 0 0 6px 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 600 !important;
+  line-height: 33px !important;
+  letter-spacing: 0.05em !important;
+  color: #1D4A5A !important;
+}
+
+.owner-page .queue-empty p {
+  margin: 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 22px !important;
+  letter-spacing: 0.03em !important;
+  color: #88AFC7 !important;
+}
+
+.owner-page .admin-notice {
+  margin: 12px 0 0 0 !important;
+  font-size: 13px !important;
+  color: #238EB6 !important;
+}
+
+/* =========================================================
+   F. FOOTER (Frame 11: width 932px, border-top 1px solid #4E93AB, color #4E93AB)
+   ========================================================= */
+.owner-page .dashboard-footer {
+  width: 100% !important;
+  max-width: 932px !important;
+  margin: 79px auto 24px auto !important;
+  padding: 14px 0 0 0 !important;
+  border-top: 1px solid #4E93AB !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  color: #4E93AB !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 23px !important;
+  letter-spacing: 0.1em !important;
+  box-sizing: border-box !important;
+}
+
+.owner-page .footer-copy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #4E93AB !important;
+}
+
+.owner-page .c-icon-circle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 21px !important;
+  height: 21px !important;
+  border: 1px solid #4E93AB !important;
+  border-radius: 50% !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  color: #4E93AB !important;
+  box-sizing: border-box !important;
+}
+
+.owner-page .footer-location {
+  color: #4E93AB !important;
+}
+
+/* =========================================================
+   RESPONSIVITAS BREAKPOINTS
+   ========================================================= */
+@media (max-width: 1250px) {
+  .owner-page .dashboard-main.admin-main,
+  .owner-page .dashboard-footer {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .owner-page .summary-grid {
+    gap: 16px !important;
+    flex-wrap: wrap !important;
+  }
+  .owner-page .summary-card {
+    flex: 1 1 calc(50% - 16px) !important;
+  }
+
+  .owner-page .owner-summary-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .owner-page .dashboard-sidebar {
+    width: 230px !important;
+    flex-basis: 230px !important;
+    padding: 24px 16px 28px !important;
+  }
+  .owner-page .dashboard-topbar {
+    padding: 0 24px !important;
+  }
+  .owner-page .dashboard-main.admin-main {
+    padding: 28px 24px 24px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .owner-page .dashboard-shell {
+    flex-direction: column !important;
+  }
+  .owner-page .dashboard-sidebar {
+    width: 100% !important;
+    min-height: auto !important;
+    flex: 0 0 auto !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(110, 165, 185, 0.2) !important;
+  }
+  .owner-page .dashboard-topbar {
+    height: auto !important;
+    min-height: 70px !important;
+    max-height: none !important;
+    padding: 16px 20px !important;
+  }
+  .owner-page .dashboard-topbar h1 {
+    font-size: 24px !important;
+    line-height: 32px !important;
+  }
+  .owner-page .summary-card {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+  }
+
+  .owner-page .owner-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  .owner-page .dashboard-footer {
+    flex-direction: column !important;
+    gap: 8px !important;
+    text-align: center !important;
+  }
+}
+/* ===== Penyelarasan Figma 2009:8 (Dashboard Admin) ===== */
+.owner-page .section-heading { margin-bottom: 16px !important; }
+.owner-page .section-heading .eyebrow { margin-bottom: 14px !important; }
+.owner-page .sidebar-note { margin-bottom: 36px !important; }
+
+@media (min-width: 993px) {
+  .owner-page .dashboard-brand { margin-bottom: 50px !important; }
+  .owner-page .dashboard-topbar {
+    height: 95px !important; min-height: 95px !important; max-height: 95px !important;
+  }
+  .owner-page .dashboard-main.admin-main { padding-top: 57px !important; }
+  .owner-page .dashboard-sidebar {
+    position: sticky !important; top: 0;
+    height: 100vh !important; align-self: flex-start !important;
+    overflow-y: auto; padding-bottom: 41px !important;
+  }
+}
+
+.owner-page .dashboard-topbar {
+  height: 95px !important;
+  min-height: 95px !important;
+  max-height: 95px !important;
+}
+
+.owner-page .owner-summary-grid {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+@media (max-width: 768px) {
+  .owner-page .dashboard-topbar {
+    height: auto !important;
+    min-height: 70px !important;
+    max-height: none !important;
+  }
+
+  .owner-page .owner-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (min-width: 993px) {
+  .owner-dashboard-page .dashboard-main.admin-main {
+    padding-top: 37px !important;
+  }
+}
+
+.owner-dashboard-page .owner-summary-grid {
+  margin-bottom: 18px !important;
+}
+
+.owner-dashboard-page .summary-icon-box span {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+.owner-dashboard-page .owner-revenue-section {
+  min-height: 183px !important;
+  padding: 18px 24px 12px !important;
+  margin-bottom: 15px !important;
+}
+
+.owner-dashboard-page .owner-revenue-section .section-heading {
+  margin-bottom: 12px !important;
+}
+
+.owner-dashboard-page .owner-revenue-section .section-heading .eyebrow {
+  margin-bottom: 4px !important;
+}
+
+.owner-dashboard-page .owner-revenue-grid div {
+  padding: 8px 12px !important;
+}
+
+.owner-dashboard-page .dashboard-section:not(.owner-revenue-section) {
+  min-height: 328px !important;
+  padding: 18px 24px 10px !important;
+  margin-bottom: 0 !important;
+}
+
+.owner-dashboard-page .dashboard-section:not(.owner-revenue-section) .section-heading {
+  margin-bottom: 12px !important;
+}
+
+.owner-dashboard-page .dashboard-section:not(.owner-revenue-section) .section-heading .eyebrow {
+  margin-bottom: 8px !important;
+}
+
+.owner-dashboard-page .queue-empty:not([hidden]) {
+  padding: 22px 20px 8px !important;
+}
+
+.owner-dashboard-page #owner-notice:empty {
+  display: none !important;
+}
+
+.owner-dashboard-page .dashboard-footer {
+  margin-top: 24px !important;
+}
+
+@media (min-width: 993px) {
+  .owner-report-page .dashboard-main.admin-main,
+  .owner-finance-page .dashboard-main.admin-main {
+    padding-top: 37px !important;
+  }
+}
+
+.owner-report-page .dashboard-welcome {
+  height: 43px !important;
+  margin-bottom: 31px !important;
+}
+
+.owner-report-page .dashboard-welcome h2,
+.owner-finance-page .dashboard-welcome h2 {
+  margin-bottom: 0 !important;
+}
+
+.owner-report-page .queue-toolbar {
+  grid-template-columns: minmax(0, 1fr) 260px !important;
+  gap: 16px !important;
+  padding: 21px 24px !important;
+  margin-bottom: 22px !important;
+  border: none !important;
+  border-radius: 15px !important;
+  box-shadow: none !important;
+}
+
+.owner-report-page .queue-toolbar label {
+  margin-bottom: 4px !important;
+  font-size: 13px !important;
+  line-height: 18px !important;
+  letter-spacing: 0.04em !important;
+}
+
+.owner-report-page .queue-toolbar input,
+.owner-report-page .queue-toolbar select {
+  min-height: 32px !important;
+  height: 32px !important;
+  padding: 4px 12px !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+}
+
+.owner-report-page .owner-report-summary-grid,
+.owner-finance-page .owner-finance-summary-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  margin-bottom: 18px !important;
+}
+
+.owner-report-page .owner-report-summary-grid .summary-card {
+  width: auto !important;
+  height: 116px !important;
+  min-height: 116px !important;
+  max-height: 116px !important;
+  padding: 12px 19px !important;
+  flex: initial !important;
+}
+
+.owner-report-page .summary-icon-box span,
+.owner-finance-page .summary-icon-box span {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+.owner-report-page .owner-report-methods {
+  min-height: 171px !important;
+  padding: 16px 21px 12px !important;
+  margin-bottom: 18px !important;
+}
+
+.owner-report-page .owner-report-methods .section-heading,
+.owner-report-page .owner-report-table-section .section-heading {
+  margin-bottom: 10px !important;
+}
+
+.owner-report-page .owner-report-methods .section-heading .eyebrow,
+.owner-report-page .owner-report-table-section .section-heading .eyebrow {
+  margin-bottom: 4px !important;
+}
+
+.owner-report-page .owner-report-methods .section-heading h2 {
+  font-size: 21px !important;
+  line-height: 28px !important;
+}
+
+.owner-payment-method-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  max-width: 600px;
+}
+
+.owner-payment-method-grid div {
+  min-height: 68px;
+  padding: 9px 16px;
+  border: 1px solid #B9D9E5;
+  border-radius: 8px;
+  background: #FAFDFE;
+}
+
+.owner-payment-method-grid span,
+.owner-payment-method-grid strong {
+  display: block;
+}
+
+.owner-payment-method-grid span {
+  margin-bottom: 3px;
+  color: #88AFC7;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.owner-payment-method-grid strong {
+  color: #1D4A5A;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.owner-report-page .owner-report-table-section {
+  min-height: 287px !important;
+  padding: 16px 19px 10px !important;
+  margin-bottom: 0 !important;
+}
+
+.owner-report-page .owner-report-table-wrap {
+  width: 100%;
+}
+
+.owner-report-page .owner-report-table {
+  min-width: 900px;
+  font-size: 12px;
+}
+
+.owner-report-page .owner-report-table th,
+.owner-report-page .owner-report-table td {
+  padding: 9px 9px;
+}
+
+.owner-report-page .owner-report-table th {
+  font-size: 10px;
+}
+
+.owner-report-page .owner-report-empty:not([hidden]) {
+  padding: 16px 20px 4px !important;
+}
+
+.owner-report-page .owner-report-empty .queue-empty-box {
+  margin-bottom: 6px !important;
+}
+
+.owner-report-page .owner-report-empty h3 {
+  margin-bottom: 0 !important;
+  font-size: 21px !important;
+  line-height: 29px !important;
+}
+
+.owner-report-page .owner-report-empty p {
+  font-size: 15px !important;
+}
+
+.owner-report-page #owner-report-notice:empty {
+  display: none !important;
+}
+
+.owner-report-page .dashboard-footer,
+.owner-finance-page .dashboard-footer {
+  margin-top: 24px !important;
+}
+
+.owner-finance-page .dashboard-welcome {
+  height: 57px !important;
+  margin-bottom: 47px !important;
+}
+
+.owner-finance-page .owner-finance-summary-grid {
+  margin-bottom: 17px !important;
+}
+
+.owner-finance-page .owner-finance-summary-grid .summary-card {
+  width: auto !important;
+  height: 134px !important;
+  min-height: 134px !important;
+  max-height: 134px !important;
+  flex: initial !important;
+}
+
+.owner-finance-page .owner-finance-section {
+  min-height: 261px !important;
+  padding: 16px 18px 10px !important;
+  margin-bottom: 15px !important;
+}
+
+.owner-finance-page .owner-finance-section:last-child {
+  min-height: 272px !important;
+  margin-bottom: 0 !important;
+}
+
+.owner-finance-page .owner-finance-section .section-heading {
+  margin-bottom: 8px !important;
+}
+
+.owner-finance-page .owner-finance-section .section-heading .eyebrow {
+  margin-bottom: 1px !important;
+  font-size: 10px !important;
+  line-height: 14px !important;
+}
+
+.owner-finance-page .owner-finance-section .section-heading h2 {
+  font-size: 17px !important;
+  line-height: 24px !important;
+}
+
+.owner-finance-page .owner-finance-table {
+  min-width: 600px;
+  font-size: 12px;
+}
+
+.owner-finance-page .owner-finance-table th,
+.owner-finance-page .owner-finance-table td {
+  padding: 8px 10px;
+}
+
+.owner-finance-page .owner-finance-table th {
+  font-size: 10px;
+}
+
+.owner-finance-page .owner-finance-empty:not([hidden]) {
+  padding: 14px 12px 0 !important;
+}
+
+.owner-finance-page .owner-finance-empty .queue-empty-box {
+  width: 70px !important;
+  height: 54px !important;
+  flex-basis: 54px !important;
+  margin-bottom: 6px !important;
+}
+
+.owner-finance-page .owner-finance-empty .queue-empty-box svg {
+  width: 42px !important;
+  height: 42px !important;
+}
+
+.owner-finance-page .owner-finance-empty h3 {
+  margin-bottom: 0 !important;
+  font-size: 17px !important;
+  line-height: 24px !important;
+}
+
+.owner-finance-page .owner-finance-empty p {
+  font-size: 14px !important;
+  line-height: 20px !important;
+}
+
+@media (max-width: 1200px) {
+  .owner-report-page .owner-report-summary-grid,
+  .owner-finance-page .owner-finance-summary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .owner-report-page .dashboard-welcome,
+  .owner-finance-page .dashboard-welcome {
+    height: auto !important;
+    margin-bottom: 24px !important;
+  }
+
+  .owner-report-page .queue-toolbar {
+    grid-template-columns: 1fr !important;
+  }
+
+  .owner-report-page .owner-report-summary-grid,
+  .owner-finance-page .owner-finance-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .owner-report-page .owner-report-summary-grid .summary-card,
+  .owner-finance-page .owner-finance-summary-grid .summary-card {
+    width: 100% !important;
+  }
+
+  .owner-payment-method-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 993px) {
+  .owner-employee-page .dashboard-main.admin-main,
+  .owner-service-stats-page .dashboard-main.admin-main {
+    padding-top: 37px !important;
+  }
+}
+
+.owner-employee-page .dashboard-welcome,
+.owner-service-stats-page .dashboard-welcome {
+  height: 57px !important;
+  margin-bottom: 47px !important;
+}
+
+.owner-employee-page .dashboard-welcome h2,
+.owner-service-stats-page .dashboard-welcome h2 {
+  margin-bottom: 0 !important;
+}
+
+.owner-employee-page .owner-employee-summary-grid,
+.owner-service-stats-page .owner-service-stats-summary-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  margin-bottom: 17px !important;
+}
+
+.owner-employee-page .owner-employee-summary-grid {
+  margin-bottom: 15px !important;
+}
+
+.owner-employee-page .owner-employee-summary-grid .summary-card,
+.owner-service-stats-page .owner-service-stats-summary-grid .summary-card {
+  width: auto !important;
+  height: 134px !important;
+  min-height: 134px !important;
+  max-height: 134px !important;
+  flex: initial !important;
+}
+
+.owner-employee-page .owner-employee-section {
+  min-height: 261px !important;
+  padding: 16px 18px 10px !important;
+  margin-bottom: 17px !important;
+}
+
+.owner-employee-page .owner-employee-section:last-child {
+  margin-bottom: 0 !important;
+}
+
+.owner-employee-page .owner-employee-section .section-heading {
+  margin-bottom: 8px !important;
+}
+
+.owner-employee-page .owner-employee-section .section-heading .eyebrow {
+  margin-bottom: 1px !important;
+  font-size: 10px !important;
+  line-height: 14px !important;
+}
+
+.owner-employee-page .owner-employee-section .section-heading h2 {
+  font-size: 17px !important;
+  line-height: 24px !important;
+}
+
+.owner-employee-page .owner-employee-table {
+  min-width: 600px;
+  font-size: 12px;
+}
+
+.owner-employee-page .owner-employee-table th,
+.owner-employee-page .owner-employee-table td {
+  padding: 8px 10px;
+}
+
+.owner-employee-page .owner-employee-table th {
+  font-size: 10px;
+}
+
+.owner-employee-page .owner-employee-empty:not([hidden]) {
+  padding: 14px 12px 0 !important;
+}
+
+.owner-employee-page .owner-employee-empty .queue-empty-box {
+  width: 70px !important;
+  height: 54px !important;
+  flex-basis: 54px !important;
+  margin-bottom: 6px !important;
+}
+
+.owner-employee-page .owner-employee-empty .queue-empty-box svg {
+  width: 42px !important;
+  height: 42px !important;
+}
+
+.owner-employee-page .owner-employee-empty h3 {
+  margin-bottom: 0 !important;
+  font-size: 17px !important;
+  line-height: 24px !important;
+}
+
+.owner-employee-page .owner-employee-empty p {
+  font-size: 14px !important;
+  line-height: 20px !important;
+}
+
+.owner-employee-page .dashboard-footer,
+.owner-service-stats-page .dashboard-footer {
+  margin-top: 37px !important;
+}
+
+.owner-service-stats-page .dashboard-welcome {
+  margin-bottom: 35px !important;
+}
+
+.owner-stats-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 116px;
+  align-items: end;
+  gap: 30px;
+  width: min(100%, 742px);
+  min-height: 96px;
+  padding: 14px 24px;
+  margin: 0 auto 20px;
+  border-radius: 15px;
+  background: #FFFFFF;
+}
+
+.owner-stats-filter label {
+  display: block;
+  margin-bottom: 4px;
+  color: #1D4A5A;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.owner-stats-filter select {
+  width: 100%;
+  height: 32px;
+  padding: 4px 10px;
+  border: 1px solid #B9B9B9;
+  border-radius: 8px;
+  color: #536773;
+  background: #FFFFFF;
+  font: inherit;
+  font-size: 12px;
+}
+
+.owner-stats-toolbar button {
+  height: 32px;
+  border: 0;
+  border-radius: 5px;
+  color: #FFFFFF;
+  background: #4E93AB;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.owner-stats-toolbar button:hover {
+  background: #367C95;
+}
+
+.owner-stats-toolbar button:focus-visible,
+.owner-stats-filter select:focus-visible {
+  outline: 3px solid #8FE1DB;
+  outline-offset: 3px;
+}
+
+.owner-service-stats-page .owner-service-stats-summary-grid {
+  margin-bottom: 22px !important;
+}
+
+.owner-service-stats-page .owner-service-stats-summary-grid .summary-card {
+  height: 134px !important;
+  min-height: 134px !important;
+  max-height: 134px !important;
+  padding: 12px 19px !important;
+}
+
+.owner-service-stats-page .owner-service-stats-summary-grid .summary-card strong {
+  overflow-wrap: anywhere;
+  font-size: 20px !important;
+}
+
+.owner-service-stats-page .owner-service-stats-summary-grid .summary-card p {
+  font-size: 11px !important;
+}
+
+.owner-service-stats-page .summary-icon-box span {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+.owner-service-stats-page .owner-service-stats-chart-section {
+  min-height: 424px !important;
+  padding: 16px 19px 12px !important;
+  margin-bottom: 0 !important;
+}
+
+.owner-service-stats-page .owner-service-stats-chart-section .section-heading {
+  margin-bottom: 8px !important;
+}
+
+.owner-service-stats-page .owner-service-stats-chart-section .section-heading .eyebrow {
+  margin-bottom: 1px !important;
+  font-size: 10px !important;
+  line-height: 14px !important;
+}
+
+.owner-service-stats-page .owner-service-stats-chart-section .section-heading h2 {
+  font-size: 17px !important;
+  line-height: 24px !important;
+}
+
+.owner-stats-chart {
+  width: 100%;
+}
+
+.owner-chart-plot {
+  position: relative;
+  display: grid;
+  /* Judul sumbu Y absolute (tidak ikut grid): kolom 1 = angka sumbu, kolom 2 = batang. */
+  grid-template-columns: 28px minmax(0, 1fr);
+  height: 350px;
+  padding: 28px 10px 0 30px;
+  background-color: #FCFDFE;
+}
+
+.owner-chart-axis-title {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  color: #88AFC7;
+  font-size: 10px;
+  transform: translate(-12%, -50%) rotate(-90deg);
+  transform-origin: left center;
+  white-space: nowrap;
+}
+
+.owner-chart-ticks {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* Sejajar dengan area batang: 18px baris angka di atas, 50px label di bawah. */
+  padding: 0 6px 44px 0;
+  color: #88AFC7;
+  font-size: 9px;
+  text-align: right;
+}
+
+.owner-chart-bars {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  align-items: stretch;
+  justify-content: space-around;
+  gap: 0;
+}
+
+.owner-chart-column {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) 50px;
+  min-width: 0;
+  flex: 1 1 0;
+  justify-items: center;
+}
+
+.owner-chart-value {
+  margin-bottom: 4px;
+  color: #238EB6;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 14px;
+}
+
+.owner-chart-bar-track {
+  display: flex;
+  width: 100%;
+  min-height: 0;
+  align-self: stretch;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: visible;
+  /* Garis bantu tiap 20% + garis dasar, menyambung antar kolom. */
+  border-bottom: 1px solid #9CC7DA;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    #E6EFF5 0,
+    #E6EFF5 1px,
+    transparent 1px,
+    transparent 20%
+  );
+}
+
+.owner-chart-bar {
+  width: min(70%, 84px);
+  min-height: 4px;
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(180deg, #287FC9 0%, #59A9E9 100%);
+}
+
+.owner-chart-label {
+  width: 100%;
+  padding: 5px 2px 0;
+  overflow: hidden;
+  color: #1D4A5A;
+  font-size: 10px;
+  line-height: 1.25;
+  text-align: center;
+  overflow-wrap: break-word;
+}
+
+.owner-service-stats-page .owner-stats-empty:not([hidden]) {
+  min-height: 300px;
+  padding: 70px 20px 20px !important;
+}
+
+.owner-service-stats-page .owner-stats-empty[hidden] {
+  display: none !important;
+}
+
+.owner-service-stats-page .dashboard-footer {
+  margin-top: 40px !important;
+}
+
+@media (max-width: 768px) {
+  .owner-employee-page .dashboard-welcome,
+  .owner-service-stats-page .dashboard-welcome {
+    height: auto !important;
+    margin-bottom: 24px !important;
+  }
+
+  .owner-employee-page .owner-employee-summary-grid,
+  .owner-service-stats-page .owner-service-stats-summary-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .owner-employee-page .owner-employee-summary-grid .summary-card,
+  .owner-service-stats-page .owner-service-stats-summary-grid .summary-card {
+    width: 100% !important;
+  }
+
+  .owner-employee-page .owner-employee-table-wrap {
+    overflow-x: auto !important;
+  }
+
+  .owner-employee-page .owner-employee-table {
+    min-width: 600px;
+  }
+
+  .owner-stats-toolbar {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    min-height: auto;
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+
+  .owner-stats-toolbar button {
+    width: 100%;
+  }
+
+  .owner-service-stats-page .owner-service-stats-chart-section {
+    padding-right: 12px !important;
+    padding-left: 12px !important;
+  }
+
+  .owner-chart-plot {
+    grid-template-columns: 24px minmax(0, 1fr);
+    height: 300px;
+    padding-right: 4px;
+    padding-left: 24px;
+  }
+
+  .owner-chart-bar {
+    width: 75%;
+  }
+
+  .owner-chart-label {
+    font-size: 9px;
+  }
+}
+/* Elemen bertanda hidden harus benar-benar tersembunyi (mis. badge jumlah data yang tidak ada di Figma). */
+.owner-page [hidden] {
+  display: none !important;
+}
+
+/* Laporan Transaksi: kartu tanpa ikon, angka langsung di bawah label (Figma). */
+.owner-report-summary-grid .summary-card {
+  justify-content: flex-start !important;
+}
+
+.owner-report-summary-grid .summary-card strong {
+  margin-top: 10px !important;
+}

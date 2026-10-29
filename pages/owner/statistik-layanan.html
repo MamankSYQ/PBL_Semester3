@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Statistik Layanan Owner WASHUP" />
+    <title>Statistik Layanan | WASHUP</title>
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/owner.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&family=Roboto:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
+  </head>
+  <body class="owner-page owner-service-stats-page">
+    <div class="dashboard-shell">
+      <aside class="dashboard-sidebar" aria-label="Navigasi Owner">
+        <a class="dashboard-brand" href="dashboard-owner.html" aria-label="WASHUP Dashboard Owner">
+          <img class="brand-logo-img" src="../../assets/logo-washup.png" alt="Logo mobil cuci WASHUP" />
+          <span class="brand-text">WASHUP</span>
+        </a>
+        <nav class="dashboard-nav" aria-label="Menu utama">
+          <p class="nav-label">MENU OWNER</p>
+          <a class="nav-item" href="dashboard-owner.html" title="Dashboard" aria-label="Dashboard">
+            <svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true">
+              <path fill="currentColor" d="M33 19a1 1 0 0 1-.71-.29L18 4.41L3.71 18.71A1 1 0 0 1 2.3 17.3l15-15a1 1 0 0 1 1.41 0l15 15A1 1 0 0 1 33 19Z" />
+              <path fill="currentColor" d="M18 7.79L6 19.79V32a2 2 0 0 0 2 2h7V22h6v12h7a2 2 0 0 0 2-2V19.79ZM28 32h-3V20H11v12H8V19.38l10-10l10 10Z" />
+            </svg>
+            <span class="nav-text">Dashboard</span>
+          </a>
+          <a class="nav-item" href="laporan-transaksi.html" title="Laporan Transaksi" aria-label="Laporan Transaksi">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 6h14M5 12h14M5 18h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span class="nav-text">Laporan Transaksi</span>
+          </a>
+          <a class="nav-item" href="laporan-keuangan.html" title="Laporan Keuangan" aria-label="Laporan Keuangan">
+            <span class="nav-icon-rp" aria-hidden="true">Rp</span>
+            <span class="nav-text">Laporan Keuangan</span>
+          </a>
+          <a class="nav-item" href="laporan-karyawan.html" title="Laporan Karyawan" aria-label="Laporan Karyawan">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zm7 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm-7 2c-3.1 0-7 1.6-7 4.5V20h14v-1.5c0-2.9-3.9-4.5-7-4.5zm7 1.5c.9.6 1.8 1.4 1.8 3V20H22v-1.5c0-2-3-3.2-5-3.5z" />
+            </svg>
+            <span class="nav-text">Laporan Karyawan</span>
+          </a>
+          <a class="nav-item active" href="statistik-layanan.html" title="Statistik Layanan" aria-label="Statistik Layanan" aria-current="page">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 19.5h18M4 17V5m0 12 5-5 4 3 7-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="nav-text">Statistik Layanan</span>
+          </a>
+        </nav>
+        <div class="sidebar-bottom">
+          <p class="sidebar-note">Area Monitoring Owner</p>
+          <button class="sidebar-logout" id="owner-logout" type="button">
+            <svg class="logout-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 17l5-5-5-5M15 12H3" />
+              <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" />
+            </svg>
+            <span class="logout-text">Logout</span>
+          </button>
+        </div>
+      </aside>
+      <button class="sidebar-collapse-toggle" id="sidebar-collapse-toggle" type="button" aria-expanded="true" aria-label="Ciutkan menu samping" title="Ciutkan menu samping">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7" /></svg>
+      </button>
+      <div class="dashboard-content">
+        <header class="dashboard-topbar">
+          <div class="topbar-title-wrap"><h1>Statistik Layanan</h1></div>
+          <div class="user-summary" aria-label="Informasi pengguna">
+            <div class="user-avatar-circle" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" /></svg>
+            </div>
+            <div class="user-info"><strong>Owner</strong><small>Role: Owner</small></div>
+          </div>
+        </header>
+        <main class="dashboard-main admin-main owner-service-stats-main">
+          <section class="dashboard-welcome" aria-labelledby="owner-service-stats-title">
+            <div>
+              <p class="eyebrow">RINGKASAN STATISTIK LAYANAN</p>
+              <h2 id="owner-service-stats-title">Performa Layanan WASHUP</h2>
+            </div>
+          </section>
+          <section class="owner-stats-toolbar" aria-label="Filter periode statistik">
+            <div class="owner-stats-filter">
+              <label for="owner-stats-month">Periode Bulan</label>
+              <select id="owner-stats-month" aria-label="Periode Bulan"></select>
+            </div>
+            <div class="owner-stats-filter">
+              <label for="owner-stats-year">Periode Tahun</label>
+              <select id="owner-stats-year" aria-label="Periode Tahun"></select>
+            </div>
+            <button id="owner-stats-apply" type="button">Terapkan</button>
+          </section>
+          <section class="summary-grid owner-service-stats-summary-grid" aria-label="Ringkasan statistik layanan">
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M4 13a8 8 0 0 1 16 0M6 13h12v5a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M9 16h.1m5.8 0h.1" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+                  </svg>
+                </div>
+              </div>
+              <p>Total Jenis Layanan</p>
+              <strong id="owner-stats-types">0</strong>
+            </article>
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <rect x="4" y="5" width="16" height="15" rx="1.5" stroke="currentColor" stroke-width="1.8" />
+                    <circle cx="12" cy="10" r="2" stroke="currentColor" stroke-width="1.6" />
+                    <path d="M8 16c.6-1.6 1.9-2.5 4-2.5s3.4.9 4 2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                  </svg>
+                </div>
+              </div>
+              <p>Total Penggunaan Layanan</p>
+              <strong id="owner-stats-usage">0</strong>
+            </article>
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M4 8h16l1 12H3L4 8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                    <path d="m8 8 4-5 4 5m-4 4v5m-2.5-2.5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </div>
+              </div>
+              <p>Layanan Terlaris</p>
+              <strong id="owner-stats-top">-</strong>
+            </article>
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" aria-hidden="true"><span>Rp</span></div>
+              </div>
+              <p>Pendapatan Layanan</p>
+              <strong id="owner-stats-revenue">Rp 0</strong>
+            </article>
+          </section>
+          <section class="dashboard-section owner-service-stats-chart-section" aria-labelledby="owner-stats-chart-title">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">GRAFIK BATANG</p>
+                <h2 id="owner-stats-chart-title">Popularitas Layanan</h2>
+              </div>
+            </div>
+            <div class="owner-stats-chart" id="owner-stats-chart"></div>
+            <div class="queue-empty owner-stats-empty" id="owner-stats-empty">
+              <div class="queue-empty-box" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M19 4H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 9.5h-4.2c-.4 1.5-1.7 2.5-3.3 2.5s-2.9-1-3.3-2.5H5V6h14v7.5z" />
+                </svg>
+              </div>
+              <h3>Belum ada data.</h3>
+              <p>Grafik popularitas layanan akan tampil di sini.</p>
+            </div>
+          </section>
+        </main>
+        <footer class="dashboard-footer">
+          <div class="footer-copy"><span class="c-icon-circle" aria-hidden="true">&copy;</span><span id="current-year"></span><span>WASHUP - Statistik Layanan</span></div>
+          <div class="footer-location">Maju Bersama Car Wash 2 · Kota Malang</div>
+        </footer>
+      </div>
+    </div>
+    <script src="../../js/app.js"></script>
+  </body>
+</html>

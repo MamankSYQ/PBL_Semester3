@@ -582,6 +582,18 @@ if (document.querySelector(".owner-report-page") && sessionStorage.getItem("wash
   window.location.replace(appUrl("login.html"));
 }
 
+if (document.querySelector(".owner-finance-page") && sessionStorage.getItem("washupRole") !== "Owner") {
+  window.location.replace(appUrl("login.html"));
+}
+
+if (document.querySelector(".owner-employee-page") && sessionStorage.getItem("washupRole") !== "Owner") {
+  window.location.replace(appUrl("login.html"));
+}
+
+if (document.querySelector(".owner-service-stats-page") && sessionStorage.getItem("washupRole") !== "Owner") {
+  window.location.replace(appUrl("login.html"));
+}
+
 if (document.querySelector(".admin-dashboard-page") && sessionStorage.getItem("washupRole") !== "Admin") {
   window.location.replace(appUrl("login.html"));
 }
@@ -1297,7 +1309,7 @@ function setupOwnerDashboard() {
     recentCount.textContent = `${recentTransactions.length} data`;
     recentTransactions.forEach((transaction) => {
       const row = document.createElement("tr");
-      [transaction.transactionNumber, transaction.customerName, transaction.plateNumber, transaction.service, formatCurrency(transaction.price)].forEach((value) => {
+      [transaction.queueNumber, transaction.customerName, transaction.plateNumber, transaction.service, formatCurrency(transaction.price)].forEach((value) => {
         const cell = document.createElement("td");
         cell.textContent = value;
         row.append(cell);
@@ -1331,8 +1343,11 @@ function setupOwnerTransactionReport() {
   const emptyMessage = document.querySelector("#owner-report-empty-message");
   const resultCount = document.querySelector("#owner-report-result-count");
   const dialog = document.querySelector("#owner-report-dialog");
-  const fields = ["total-count", "paid-count", "unpaid-count", "revenue", "cash", "qris"];
+  const morningShiftCount = document.querySelector("#owner-report-shift-morning");
+  const nightShiftCount = document.querySelector("#owner-report-shift-night");
+  const fields = ["total-count", "revenue", "cash", "qris"];
   if (!search || !period || !body || !empty || !emptyTitle || !emptyMessage || !resultCount || !dialog || fields.some((field) => !document.querySelector(`#owner-report-${field}`))) return;
+  if (!morningShiftCount || !nightShiftCount) return;
 
   const now = new Date();
   const todayKey = getTodayKey();
@@ -1350,6 +1365,34 @@ function setupOwnerTransactionReport() {
   const formatDateTime = (value) => {
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? "-" : date.toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" });
+  };
+  const readShifts = () => {
+    try {
+      const shifts = JSON.parse(localStorage.getItem("washupShifts") || "[]");
+      return Array.isArray(shifts) ? shifts : [];
+    } catch (error) {
+      console.error("Tidak dapat membaca data shift untuk laporan owner.", error);
+      return [];
+    }
+  };
+  const activeShifts = readShifts().filter((shift) => shift.status === "Aktif" && shift.name);
+  const timeToMinutes = (value) => {
+    const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(String(value || ""));
+    return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+  };
+  const isWithinShift = (date, shift) => {
+    const start = timeToMinutes(shift.start);
+    const end = shift.end === "00:00" ? 1440 : timeToMinutes(shift.end);
+    if (start === null || end === null) return false;
+    const time = date.getHours() * 60 + date.getMinutes();
+    return end > start ? time >= start && time < end : time >= start || time < end;
+  };
+  const countShiftTransactions = (transactions, shiftName) => {
+    const matchingShifts = activeShifts.filter((shift) => shift.name.toLowerCase().includes(shiftName.toLowerCase()));
+    return transactions.filter((transaction) => {
+      const createdAt = new Date(transaction.createdAt);
+      return !Number.isNaN(createdAt.getTime()) && matchingShifts.some((shift) => isWithinShift(createdAt, shift));
+    }).length;
   };
   const setDetail = (transaction) => {
     const detail = { "owner-report-detail-transaction": transaction.transactionNumber, "owner-report-detail-queue": transaction.queueNumber, "owner-report-detail-customer": transaction.customerName, "owner-report-detail-phone": transaction.customerPhone, "owner-report-detail-plate": transaction.plateNumber, "owner-report-detail-vehicle": transaction.vehicleType, "owner-report-detail-service": transaction.service, "owner-report-detail-price": formatCurrency(transaction.price), "owner-report-detail-service-status": transaction.serviceStatus, "owner-report-detail-payment-status": transaction.paymentStatus, "owner-report-detail-payment-method": transaction.paymentMethod || "-", "owner-report-detail-created-at": formatDateTime(transaction.createdAt) };
@@ -1369,19 +1412,21 @@ function setupOwnerTransactionReport() {
       return `${records.length} transaksi · ${formatCurrency(records.reduce((total, transaction) => total + Number(transaction.price || 0), 0))}`;
     };
     document.querySelector("#owner-report-total-count").textContent = String(periodTransactions.length);
-    document.querySelector("#owner-report-paid-count").textContent = String(paidTransactions.length);
-    document.querySelector("#owner-report-unpaid-count").textContent = String(periodTransactions.filter((transaction) => transaction.paymentStatus === "Belum Dibayar").length);
     document.querySelector("#owner-report-revenue").textContent = formatCurrency(totalPaid);
+    morningShiftCount.textContent = String(countShiftTransactions(periodTransactions, "Pagi"));
+    nightShiftCount.textContent = String(countShiftTransactions(periodTransactions, "Malam"));
     document.querySelector("#owner-report-cash").textContent = paymentSummary("Tunai");
     document.querySelector("#owner-report-qris").textContent = paymentSummary("QRIS");
     resultCount.textContent = `${transactions.length} data`;
     empty.hidden = transactions.length > 0;
     emptyTitle.textContent = allTransactions.length ? "Transaksi tidak ditemukan." : "Belum ada transaksi.";
-    emptyMessage.textContent = allTransactions.length ? "Ubah pencarian atau periode untuk melihat transaksi lain." : "Data transaksi akan tampil di sini.";
+    emptyMessage.textContent = allTransactions.length
+      ? "Ubah pencarian atau periode untuk melihat transaksi lain."
+      : "Data Transaksi Kasir Akan Tampil Disini";
     body.replaceChildren();
     transactions.forEach((transaction) => {
       const row = document.createElement("tr");
-      [transaction.transactionNumber, formatDateTime(transaction.createdAt), transaction.customerName, transaction.plateNumber, transaction.vehicleType, transaction.service, formatCurrency(transaction.price), transaction.serviceStatus, transaction.paymentStatus, transaction.paymentMethod || "-"].forEach((value) => { const cell = document.createElement("td"); cell.textContent = value || "-"; row.append(cell); });
+      [transaction.transactionNumber, formatDateTime(transaction.createdAt), transaction.customerName, transaction.plateNumber, transaction.vehicleType, transaction.service, formatCurrency(transaction.price), transaction.serviceStatus].forEach((value) => { const cell = document.createElement("td"); cell.textContent = value || "-"; row.append(cell); });
       const action = document.createElement("td");
       const detailButton = document.createElement("button");
       detailButton.className = "table-action";
@@ -1398,11 +1443,316 @@ function setupOwnerTransactionReport() {
   document.querySelector("#owner-report-dialog-close")?.addEventListener("click", closeDialog);
   dialog.addEventListener("click", (event) => { if (event.target === dialog) closeDialog(); });
   document.querySelectorAll("[data-owner-report-placeholder]").forEach((link) => link.addEventListener("click", (event) => { event.preventDefault(); document.querySelector("#owner-report-notice").textContent = "Menu laporan belum tersedia."; }));
-  document.querySelector("#owner-report-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = appUrl("login.html"); });
+  const logout = () => {
+    sessionStorage.removeItem("washupRole");
+    window.location.href = appUrl("login.html");
+  };
+  document.querySelector("#owner-report-logout")?.addEventListener("click", logout);
+  document.querySelector("#owner-logout")?.addEventListener("click", logout);
   render();
 }
 
 if (document.querySelector(".owner-report-page")) setupOwnerTransactionReport();
+
+function setupOwnerLogout() {
+  document.querySelector("#owner-logout")?.addEventListener("click", () => {
+    sessionStorage.removeItem("washupRole");
+    window.location.href = appUrl("login.html");
+  });
+}
+
+function setupOwnerFinanceReport() {
+  const incomeTotal = document.querySelector("#owner-finance-income");
+  const expenseTotal = document.querySelector("#owner-finance-expense");
+  const netBalance = document.querySelector("#owner-finance-balance");
+  const transactionCount = document.querySelector("#owner-finance-count");
+  const incomeBody = document.querySelector("#owner-income-body");
+  const incomeEmpty = document.querySelector("#owner-income-empty");
+  const expenseBody = document.querySelector("#owner-expense-body");
+  const expenseEmpty = document.querySelector("#owner-expense-empty");
+  if (!incomeTotal || !expenseTotal || !netBalance || !transactionCount || !incomeBody || !incomeEmpty || !expenseBody || !expenseEmpty) return;
+
+  const readExpenses = () => {
+    try {
+      const expenses = JSON.parse(localStorage.getItem("washupExpenses") || "[]");
+      return Array.isArray(expenses) ? expenses : [];
+    } catch (error) {
+      console.error("Tidak dapat membaca data pengeluaran WASHUP.", error);
+      return [];
+    }
+  };
+  const formatDate = (value) => {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(value || ""))) {
+      const [year, month, day] = value.split("-").map(Number);
+      return new Date(year, month - 1, day).toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric" });
+    }
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? "-" : date.toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric" });
+  };
+  const paidTransactions = getTransactions().filter((transaction) => transaction.paymentStatus === "Lunas");
+  const incomeGroups = new Map();
+  paidTransactions.forEach((transaction) => {
+    const date = new Date(transaction.createdAt);
+    const dateKey = Number.isNaN(date.getTime()) ? "-" : formatDateKey(date);
+    const service = String(transaction.service || "-");
+    const key = `${dateKey}\u0000${service}`;
+    const group = incomeGroups.get(key) || {
+      dateKey,
+      date: Number.isNaN(date.getTime()) ? "-" : formatDate(date),
+      service,
+      count: 0,
+      total: 0,
+    };
+    group.count += 1;
+    group.total += Number(transaction.price || 0);
+    incomeGroups.set(key, group);
+  });
+  const incomeRecords = [...incomeGroups.values()].sort((first, second) => second.dateKey.localeCompare(first.dateKey) || first.service.localeCompare(second.service));
+  const expenses = readExpenses().map((expense) => ({
+    date: formatDate(expense.date),
+    description: String(expense.description || "-"),
+    quantity: Number(expense.quantity || 0),
+    price: Number(expense.price || 0),
+  }));
+  const totalIncome = paidTransactions.reduce((total, transaction) => total + Number(transaction.price || 0), 0);
+  const totalExpenses = expenses.reduce((total, expense) => total + expense.quantity * expense.price, 0);
+  incomeTotal.textContent = formatCurrency(totalIncome);
+  expenseTotal.textContent = formatCurrency(totalExpenses);
+  netBalance.textContent = formatCurrency(totalIncome - totalExpenses);
+  transactionCount.textContent = String(paidTransactions.length);
+
+  const appendCell = (row, value) => {
+    const cell = document.createElement("td");
+    cell.textContent = String(value);
+    row.append(cell);
+  };
+  incomeBody.replaceChildren();
+  incomeEmpty.hidden = incomeRecords.length > 0;
+  incomeRecords.forEach((record) => {
+    const row = document.createElement("tr");
+    appendCell(row, record.date);
+    appendCell(row, record.service);
+    appendCell(row, record.count);
+    appendCell(row, formatCurrency(record.total / record.count));
+    appendCell(row, formatCurrency(record.total));
+    incomeBody.append(row);
+  });
+  expenseBody.replaceChildren();
+  expenseEmpty.hidden = expenses.length > 0;
+  expenses.forEach((expense) => {
+    const row = document.createElement("tr");
+    appendCell(row, expense.date);
+    appendCell(row, expense.description);
+    appendCell(row, expense.quantity);
+    appendCell(row, formatCurrency(expense.price));
+    appendCell(row, formatCurrency(expense.quantity * expense.price));
+    expenseBody.append(row);
+  });
+  setupOwnerLogout();
+}
+
+function setupOwnerEmployeeReport() {
+  const totalEmployees = document.querySelector("#owner-employee-total");
+  const presentTotal = document.querySelector("#owner-employee-present");
+  const absentTotal = document.querySelector("#owner-employee-absent");
+  const lateTotal = document.querySelector("#owner-employee-late");
+  const attendanceBody = document.querySelector("#owner-attendance-body");
+  const attendanceEmpty = document.querySelector("#owner-attendance-empty");
+  const overtimeBody = document.querySelector("#owner-overtime-body");
+  const overtimeEmpty = document.querySelector("#owner-overtime-empty");
+  if (!totalEmployees || !presentTotal || !absentTotal || !lateTotal || !attendanceBody || !attendanceEmpty || !overtimeBody || !overtimeEmpty) return;
+
+  const readRecords = (key) => {
+    try {
+      const records = JSON.parse(localStorage.getItem(key) || "[]");
+      return Array.isArray(records) ? records.filter((record) => record && typeof record === "object") : [];
+    } catch (error) {
+      console.error(`Tidak dapat membaca ${key} untuk laporan owner.`, error);
+      return [];
+    }
+  };
+  const now = new Date();
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const employees = readRecords("washupEmployees")
+    .filter((employee) => employee.status === "Aktif" && employee.name)
+    .sort((first, second) => first.name.localeCompare(second.name));
+  const attendance = readRecords("washupAttendanceRecords")
+    .filter((record) => String(record.date || "").startsWith(monthKey));
+  const shifts = readRecords("washupShifts");
+  const attendanceByEmployee = new Map();
+  attendance.forEach((record) => {
+    const name = String(record.employeeName || "").trim();
+    if (!name) return;
+    const summary = attendanceByEmployee.get(name) || { present: 0, absent: 0, late: 0, leave: 0 };
+    if (record.presence === "Masuk") summary.present += 1;
+    if (record.presence === "Tanpa Keterangan") summary.absent += 1;
+    if (record.presence === "Izin") summary.leave += 1;
+    attendanceByEmployee.set(name, summary);
+  });
+  const currentSummary = [...attendanceByEmployee.values()].reduce((total, summary) => ({
+    present: total.present + summary.present,
+    absent: total.absent + summary.absent,
+  }), { present: 0, absent: 0 });
+  totalEmployees.textContent = String(employees.length);
+  presentTotal.textContent = String(currentSummary.present);
+  absentTotal.textContent = String(currentSummary.absent);
+  lateTotal.textContent = "0";
+
+  const appendCell = (row, value) => {
+    const cell = document.createElement("td");
+    cell.textContent = String(value);
+    row.append(cell);
+  };
+  attendanceBody.replaceChildren();
+  attendanceEmpty.hidden = employees.length > 0;
+  employees.forEach((employee) => {
+    const summary = attendanceByEmployee.get(employee.name) || { present: 0, absent: 0, late: 0, leave: 0 };
+    const row = document.createElement("tr");
+    [employee.name, summary.present, summary.absent, summary.late, summary.leave].forEach((value) => appendCell(row, value));
+    attendanceBody.append(row);
+  });
+
+  const formatShiftTime = (time, isEnd = false) => {
+    if (!time) return "-";
+    if (isEnd && time === "00:00") return "24.00";
+    return String(time).replace(":", ".");
+  };
+  const overtimeRecords = attendance.filter((record) => Number(record.overtimeHours) > 0);
+  overtimeBody.replaceChildren();
+  overtimeEmpty.hidden = overtimeRecords.length > 0;
+  overtimeRecords.forEach((record) => {
+    const shift = shifts.find((item) => item.name === record.shift);
+    const workHours = shift
+      ? `${formatShiftTime(shift.start)} – ${formatShiftTime(shift.end, true)}`
+      : "-";
+    const hours = String(Number(record.overtimeHours)).replace(".", ",");
+    const row = document.createElement("tr");
+    [
+      record.employeeName || "-",
+      record.shift || "-",
+      workHours,
+      `${hours} Jam`,
+      formatCurrency(Number(record.incentive || 0)),
+    ].forEach((value) => appendCell(row, value));
+    overtimeBody.append(row);
+  });
+  setupOwnerLogout();
+}
+
+function setupOwnerServiceStats() {
+  const monthSelect = document.querySelector("#owner-stats-month");
+  const yearSelect = document.querySelector("#owner-stats-year");
+  const applyButton = document.querySelector("#owner-stats-apply");
+  const typesTotal = document.querySelector("#owner-stats-types");
+  const usageTotal = document.querySelector("#owner-stats-usage");
+  const topService = document.querySelector("#owner-stats-top");
+  const revenueTotal = document.querySelector("#owner-stats-revenue");
+  const chart = document.querySelector("#owner-stats-chart");
+  const empty = document.querySelector("#owner-stats-empty");
+  if (!monthSelect || !yearSelect || !applyButton || !typesTotal || !usageTotal || !topService || !revenueTotal || !chart || !empty) return;
+
+  const transactions = getTransactions();
+  const validTransactions = transactions.filter((transaction) => {
+    const date = new Date(transaction.createdAt);
+    return !Number.isNaN(date.getTime());
+  });
+  const now = new Date();
+  const years = new Set([now.getFullYear()]);
+  validTransactions.forEach((transaction) => years.add(new Date(transaction.createdAt).getFullYear()));
+  [...years].sort((first, second) => second - first).forEach((year) => {
+    const option = document.createElement("option");
+    option.value = String(year);
+    option.textContent = String(year);
+    yearSelect.append(option);
+  });
+  const monthNames = Array.from({ length: 12 }, (_, index) =>
+    new Date(2000, index, 1).toLocaleDateString("id-ID", { month: "long" }));
+  monthNames.forEach((month, index) => {
+    const option = document.createElement("option");
+    option.value = String(index + 1);
+    option.textContent = month.charAt(0).toUpperCase() + month.slice(1);
+    monthSelect.append(option);
+  });
+  monthSelect.value = String(now.getMonth() + 1);
+  yearSelect.value = String(now.getFullYear());
+
+  const render = () => {
+    const month = Number(monthSelect.value);
+    const year = Number(yearSelect.value);
+    const paidTransactions = getTransactions().filter((transaction) => {
+      if (transaction.paymentStatus !== "Lunas") return false;
+      const date = new Date(transaction.createdAt);
+      return !Number.isNaN(date.getTime()) && date.getMonth() + 1 === month && date.getFullYear() === year;
+    });
+    const services = new Map();
+    paidTransactions.forEach((transaction) => {
+      const name = String(transaction.service || "").trim();
+      if (!name) return;
+      const service = services.get(name) || { name, count: 0, revenue: 0 };
+      service.count += 1;
+      service.revenue += Number(transaction.price || 0);
+      services.set(name, service);
+    });
+    const popularServices = [...services.values()].sort((first, second) =>
+      second.count - first.count || first.name.localeCompare(second.name));
+    const totalRevenue = paidTransactions.reduce((total, transaction) => total + Number(transaction.price || 0), 0);
+    typesTotal.textContent = String(services.size);
+    usageTotal.textContent = String(paidTransactions.length);
+    topService.textContent = popularServices[0]?.name || "-";
+    revenueTotal.textContent = formatCurrency(totalRevenue);
+    chart.replaceChildren();
+    empty.hidden = popularServices.length > 0;
+    if (popularServices.length) {
+      const maxUsage = Math.max(...popularServices.map((service) => service.count));
+      const scale = Math.ceil(maxUsage / 5) * 5;
+      const plot = document.createElement("div");
+      plot.className = "owner-chart-plot";
+      plot.setAttribute("role", "img");
+      plot.setAttribute("aria-label", "Grafik jumlah penggunaan tiap layanan");
+      const axisTitle = document.createElement("span");
+      axisTitle.className = "owner-chart-axis-title";
+      axisTitle.textContent = "Jumlah Penggunaan";
+      const ticks = document.createElement("div");
+      ticks.className = "owner-chart-ticks";
+      for (let index = 5; index >= 0; index -= 1) {
+        const tick = document.createElement("span");
+        tick.textContent = String(Math.round((scale * index) / 5));
+        ticks.append(tick);
+      }
+      const bars = document.createElement("div");
+      bars.className = "owner-chart-bars";
+      popularServices.forEach((service) => {
+        const column = document.createElement("div");
+        column.className = "owner-chart-column";
+        const value = document.createElement("span");
+        value.className = "owner-chart-value";
+        value.textContent = String(service.count);
+        const barTrack = document.createElement("div");
+        barTrack.className = "owner-chart-bar-track";
+        const bar = document.createElement("div");
+        bar.className = "owner-chart-bar";
+        bar.style.height = `${Math.max((service.count / scale) * 100, 4)}%`;
+        // Angka diletakkan di dalam track tepat di atas batang.
+        barTrack.append(value, bar);
+        const label = document.createElement("span");
+        label.className = "owner-chart-label";
+        label.textContent = service.name;
+        label.title = service.name;
+        column.append(barTrack, label);
+        bars.append(column);
+      });
+      plot.append(axisTitle, ticks, bars);
+      chart.append(plot);
+    }
+  };
+  applyButton.addEventListener("click", render);
+  render();
+  setupOwnerLogout();
+}
+
+if (document.querySelector(".owner-finance-page")) setupOwnerFinanceReport();
+if (document.querySelector(".owner-employee-page")) setupOwnerEmployeeReport();
+if (document.querySelector(".owner-service-stats-page")) setupOwnerServiceStats();
 
 function setupAdminDashboard() {
   const customerCount = document.querySelector("#admin-customer-count");
