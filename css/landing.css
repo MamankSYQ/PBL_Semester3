@@ -1,21 +1,19 @@
-/* =========================================================
-   WASHUP — Landing Page
-   File: css/landing.css
-   Fokus: background gradasi teal + pola geometris wireframe
-   ========================================================= */
+* {
+    box-sizing: border-box;
+}
 
-/* Background: mengikuti frame Figma 1440 × 1109 px dengan overlay wireframe geometris */
+html,
+body {
+    min-height: 100%;
+}
+
 body {
     margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    font-family: 'Inter', sans-serif;
     color: #ffffff;
-    background-color: #2F6A8C;
-
-    /* Pola wireframe dibuat lebih renggang; gradasi vertikal 180deg mengikuti spesifikasi Figma */
+    font-family: 'Open Sans', sans-serif;
+    background-color: #09191F;
     background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='245' viewBox='0 0 280 245'%3E%3Cg fill='none' stroke='%2388AFC0' stroke-opacity='.20' stroke-width='1.2'%3E%3Cpath d='M0 0 L140 122.5 L280 0 M0 245 L140 122.5 L280 245 M0 0 L0 245 M140 0 L140 245 M280 0 L280 245 M0 122.5 L280 122.5 M0 0 L280 245 M280 0 L0 245'/%3E%3C/g%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='245' viewBox='0 0 280 245'%3E%3Cg fill='none' stroke='%2388AFC0' stroke-opacity='.15' stroke-width='1.2'%3E%3Cpath d='M0 0 L140 122.5 L280 0 M0 245 L140 122.5 L280 245 M0 0 L0 245 M140 0 L140 245 M280 0 L280 245 M0 122.5 L280 122.5 M0 0 L280 245 M280 0 L0 245'/%3E%3C/g%3E%3C/svg%3E"),
         linear-gradient(180deg, #09191F 0%, #043D52 100%);
     background-repeat: repeat, no-repeat;
     background-size: 280px 245px, cover;
@@ -23,289 +21,265 @@ body {
     background-attachment: fixed;
 }
 
-/* Wadah utama */
 .container {
-    max-width: 1080px;
+    width: 100%;
+    max-width: none;
     margin: 0 auto;
-    padding: 60px 40px;
+    padding: 42px 49px 0;
 }
 
-/* Header & Logo */
 .top-header {
-    margin-bottom: 60px;
+    margin: 0;
 }
 
 .logo-area {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 19px;
 }
 
 .logo-icon {
     display: flex;
+    flex: 0 0 55px;
     align-items: center;
+    margin-left: 6px;
+}
+
+.logo-icon img {
+    display: block;
+    width: 55px;
+    height: 45px;
+    object-fit: contain;
 }
 
 .logo-text h1 {
     margin: 0;
-    font-family: 'Playfair Display', 'Stencil', serif;
-    font-size: 1.8rem;
-    font-weight: 900;
-    font-style: italic;
-    letter-spacing: 2px;
     color: #ffffff;
+    font-family: 'Emblema One', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.2;
 }
 
 .logo-text p {
-    margin: 5px 0 0 0;
-    font-size: 0.85rem;
-    color: #8db5c4;
-    font-weight: 500;
+    margin: 3px 0 0;
+    color: #88AFC7;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
 }
 
-/* Hero Section */
 .hero {
-    margin-bottom: 50px;
+    margin: 42px 0 32px;
 }
 
 .hero h2 {
-    font-size: 1.8rem;
-    margin: 0 0 20px 0;
-    font-weight: 700;
-    letter-spacing: 1.5px;
+    margin: 0 0 15px;
     color: #ffffff;
+    font-size: 32px;
+    font-stretch: condensed;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
 }
 
 .hero p {
-    color: #b4d0da;
-    line-height: 1.6;
-    margin: 0 0 35px 0;
-    font-size: 0.95rem;
+    max-width: 600px;
+    margin: 0 0 16px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    line-height: 23px;
 }
 
 .btn-login {
-    display: inline-block;
-    background-color: #6ee3ff;
-    color: #032533;
-    padding: 12px 26px;
+    display: inline-flex;
+    min-width: 154px;
+    height: 39px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
     border-radius: 4px;
-    text-decoration: none;
+    background-color: #7FDBFF;
+    color: #09191F;
+    font-size: 15px;
     font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 1px;
+    letter-spacing: 0.05em;
+    text-decoration: none;
     transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .btn-login:hover {
-    background-color: #91ebff;
+    background-color: #a4eaff;
     transform: translateY(-1px);
 }
 
-/* Main White Card */
 .main-white-card {
+    min-height: 334px;
+    margin: 0 0 43px;
+    padding: 24px;
+    border-radius: 15px;
     background-color: #ffffff;
-    border-radius: 12px;
-    padding: 40px;
-    margin-bottom: 60px;
 }
 
 .card-main-title {
-    color: #2b556b;
-    margin: 0 0 30px 0;
-    font-size: 1.35rem;
-    letter-spacing: 1.5px;
+    margin: 0 0 24px;
+    color: #1D4A5A;
+    font-size: 26px;
     font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.25;
 }
 
 .card-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
+    gap: 25px;
 }
 
 .grid-item {
-    background-color: #f3f3f3;
-    border: 1px solid #c9c9c9;
+    min-height: 228px;
+    padding: 18px;
+    border: 1px solid #A0A0A0;
     border-radius: 8px;
-    padding: 30px;
+    background-color: #F2F2F2;
 }
 
 .grid-num {
     display: block;
-    color: #5d8a9e;
+    margin-bottom: 10px;
+    color: #4E7FA0;
+    font-size: 20px;
     font-weight: 700;
-    font-size: 1.05rem;
-    letter-spacing: 1.5px;
-    margin-bottom: 15px;
+    line-height: 1.3;
 }
 
 .grid-item h4 {
-    color: #2b556b;
-    font-size: 1.25rem;
-    margin: 0 0 12px 0;
-    letter-spacing: 1px;
+    margin: 0 0 8px;
+    color: #1D4A5A;
+    font-size: 26px;
     font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.3;
 }
 
 .grid-item p {
-    color: #294e60;
-    font-size: 0.9rem;
-    line-height: 1.6;
     margin: 0;
+    color: #1D4A5A;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    line-height: 23px;
 }
 
-/* Status & Footer Info */
 .footer-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 50px;
-    gap: 40px;
+    display: grid;
+    grid-template-columns: 0.99fr 1fr;
+    align-items: start;
+    gap: 36px;
+    margin: 0 0 24px;
 }
 
-.info-left {
-    flex: 1;
+.info-left,
+.info-right {
+    min-width: 0;
 }
 
 .status-label {
     display: block;
-    color: #8db5c4;
-    font-size: 0.75rem;
+    margin: 0 0 6px;
+    color: #A6CEE6;
+    font-size: 15px;
     font-weight: 700;
-    letter-spacing: 1.5px;
-    margin-bottom: 10px;
+    letter-spacing: 0.1em;
+    line-height: 1.4;
 }
 
 .info-left p {
     margin: 0;
-    font-size: 1.15rem;
-    font-weight: 600;
-    line-height: 1.5;
-    color: #e2eff5;
-    letter-spacing: 1px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    line-height: 27px;
 }
 
 .info-right {
-    flex: 1;
-    display: flex;
-    align-items: flex-end;
-    padding-top: 25px;
+    padding-top: 23px;
 }
 
 .info-right p {
     margin: 0;
-    color: #b4d0da;
-    font-size: 0.85rem;
-    line-height: 1.8;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    line-height: 27px;
 }
 
-/* Bottom Footer */
 .bottom-footer {
-    border-top: 1px solid rgba(180, 215, 226, 0.6);
-    padding-top: 25px;
-    display: flex;
-    justify-content: space-between;
-    color: #a5c6d2;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 1px;
+    min-height: 55px;
+    padding-top: 20px;
+    border-top: 1px solid #A6CEE6;
+    color: #88AFC7;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    line-height: 1.5;
 }
 
-.c-icon {
-    display: inline-block;
-    border: 1px solid #a5c6d2;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    text-align: center;
-    line-height: 18px;
-    font-size: 0.75rem;
-    margin-right: 8px;
+.copyright {
+    margin: 0;
 }
 
-/* Responsif untuk tablet */
-@media (max-width: 900px) {
-    .container {
-        padding: 44px 28px;
-    }
-
-    .card-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .footer-info {
-        gap: 24px;
-    }
-}
-
-/* Responsif untuk ponsel */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     body {
         background-attachment: scroll;
-        background-size: 260px 228px, cover;
+        background-size: 280px 245px, cover;
     }
 
     .container {
-        padding: 30px 18px;
-    }
-
-    .top-header {
-        margin-bottom: 38px;
+        padding: 24px 16px;
     }
 
     .logo-area {
-        align-items: flex-start;
-        gap: 10px;
+        gap: 12px;
     }
 
-    .logo-icon svg {
-        width: 42px;
-        height: 42px;
+    .logo-icon {
+        margin-left: 0;
     }
 
     .logo-text h1 {
-        font-size: 1.45rem;
+        font-size: 22px;
     }
 
     .logo-text p {
-        font-size: 0.72rem;
-        line-height: 1.5;
+        font-size: 12px;
     }
 
     .hero {
-        margin-bottom: 34px;
+        margin: 38px 0 28px;
     }
 
     .hero h2 {
-        font-size: clamp(1.45rem, 6vw, 1.8rem);
+        font-size: clamp(24px, 6vw, 32px);
         line-height: 1.3;
-        letter-spacing: 0.4px;
-    }
-
-    .hero p br,
-    .grid-item p br,
-    .info-left p br,
-    .info-right p br {
-        display: none;
     }
 
     .hero p {
-        font-size: 0.92rem;
-    }
-
-    .btn-login {
-        padding: 12px 20px;
-        letter-spacing: 0.5px;
+        font-size: 13px;
     }
 
     .main-white-card {
-        padding: 24px 18px;
-        margin-bottom: 36px;
+        min-height: 0;
+        margin-bottom: 32px;
+        padding: 22px 16px 16px;
     }
 
     .card-main-title {
-        font-size: 1.15rem;
-        line-height: 1.4;
+        font-size: 22px;
     }
 
     .card-grid {
@@ -314,27 +288,37 @@ body {
     }
 
     .grid-item {
-        padding: 22px;
+        min-height: 0;
+        padding: 18px;
+    }
+
+    .grid-item h4 {
+        font-size: 22px;
     }
 
     .footer-info {
-        flex-direction: column;
-        gap: 18px;
-        margin-bottom: 34px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .info-left p {
+        font-size: 18px;
     }
 
     .info-right {
         padding-top: 0;
     }
 
-    .info-left p {
-        font-size: 1rem;
+    .info-right p {
+        font-size: 13px;
+        line-height: 23px;
     }
 
     .bottom-footer {
-        flex-direction: column;
-        gap: 12px;
-        font-size: 0.76rem;
-        line-height: 1.6;
+        min-height: 0;
+        padding-top: 14px;
+        font-size: 12px;
+        line-height: 1.7;
     }
 }
