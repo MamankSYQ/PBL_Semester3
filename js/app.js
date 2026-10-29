@@ -9,6 +9,51 @@ document.addEventListener("click", (event) => {
   if (event.target.closest('[id$="logout"], #logout-button')) sessionStorage.removeItem("washupUsername");
 }, true);
 
+// Sidebar yang bisa diciutkan. Dipakai halaman yang memuat css/sidebar-collapse.css
+// dan menyediakan tombol #sidebar-collapse-toggle. Preferensi disimpan per peramban.
+function setupCollapsibleSidebar() {
+  const shell = document.querySelector(".dashboard-shell");
+  const toggle = document.querySelector("#sidebar-collapse-toggle");
+  if (!shell || !toggle) return;
+
+  const storageKey = "washupSidebarCollapsed";
+
+  function readPreference() {
+    try {
+      return localStorage.getItem(storageKey) === "true";
+    } catch {
+      return false;
+    }
+  }
+
+  function savePreference(collapsed) {
+    try {
+      localStorage.setItem(storageKey, String(collapsed));
+    } catch {
+      /* Penyimpanan boleh tidak tersedia, fitur tetap jalan untuk kunjungan ini. */
+    }
+  }
+
+  function syncToggleLabel() {
+    const collapsed = shell.classList.contains("sidebar-collapsed");
+    const label = collapsed ? "Perluas menu samping" : "Ciutkan menu samping";
+    toggle.setAttribute("aria-expanded", String(!collapsed));
+    toggle.setAttribute("aria-label", label);
+    toggle.title = label;
+  }
+
+  shell.classList.toggle("sidebar-collapsed", readPreference());
+  syncToggleLabel();
+
+  toggle.addEventListener("click", () => {
+    const collapsed = shell.classList.toggle("sidebar-collapsed");
+    savePreference(collapsed);
+    syncToggleLabel();
+  });
+}
+
+setupCollapsibleSidebar();
+
 const currentYear = document.querySelector("#current-year");
 
 if (currentYear) {

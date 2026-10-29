@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../../css/style.css" />
     <link rel="stylesheet" href="../../css/admin.css" />
     <link href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&family=Roboto:wght@500&display=swap" rel="stylesheet" />
+      <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
   </head>
   <body class="admin-dashboard-page">
     <div class="dashboard-shell">
@@ -20,66 +21,43 @@
 
         <nav class="dashboard-nav" aria-label="Menu utama">
           <p class="nav-label">MENU ADMIN</p>
-          <a class="nav-item active" href="dashboard-admin.html" aria-current="page">
-            <svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true">
+          <a class="nav-item active" href="dashboard-admin.html" aria-current="page" title="Dashboard" aria-label="Dashboard"><svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true">
               <path fill="currentColor" d="M33 19a1 1 0 0 1-.71-.29L18 4.41L3.71 18.71A1 1 0 0 1 2.3 17.3l15-15a1 1 0 0 1 1.41 0l15 15A1 1 0 0 1 33 19Z" />
               <path fill="currentColor" d="M18 7.79L6 19.79V32a2 2 0 0 0 2 2h7V22h6v12h7a2 2 0 0 0 2-2V19.79ZM28 32h-3V20H11v12H8V19.38l10-10l10 10Z" />
-            </svg>
-            Dashboard
-          </a>
-          <a class="nav-item" href="data-pelanggan.html">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+            </svg><span class="nav-text">Dashboard</span></a>
+          <a class="nav-item" href="data-pelanggan.html" title="Data Pelanggan" aria-label="Data Pelanggan"><svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="12" cy="7" r="4.2" fill="currentColor" />
               <path d="M4 20.5c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5v0.5H4v-0.5z" fill="currentColor" />
-            </svg>
-            Data Pelanggan
-          </a>
-          <a class="nav-item" href="data-kendaraan.html">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+            </svg><span class="nav-text">Data Pelanggan</span></a>
+          <a class="nav-item" href="data-kendaraan.html" title="Data Kendaraan" aria-label="Data Kendaraan"><svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
               <rect x="3.5" y="5.5" width="17" height="2.6" rx="1.3" fill="currentColor" />
               <rect x="3.5" y="10.7" width="17" height="2.6" rx="1.3" fill="currentColor" />
               <rect x="3.5" y="15.9" width="17" height="2.6" rx="1.3" fill="currentColor" />
-            </svg>
-            Data Kendaraan
-          </a>
-          <a class="nav-item" href="layanan-tarif.html">
-            <span class="nav-icon-rp" aria-hidden="true">Rp</span>
-            Layanan &amp; Tarif
-          </a>
-          <a class="nav-item" href="data-karyawan.html">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+            </svg><span class="nav-text">Data Kendaraan</span></a>
+          <a class="nav-item" href="layanan-tarif.html" title="Layanan & Tarif" aria-label="Layanan & Tarif"><span class="nav-icon-rp" aria-hidden="true">Rp</span><span class="nav-text">Layanan &amp; Tarif</span></a>
+          <a class="nav-item" href="data-karyawan.html" title="Data Karyawan" aria-label="Data Karyawan"><svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zm7 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm-7 2c-3.1 0-7 1.6-7 4.5V20h14v-1.5c0-2.9-3.9-4.5-7-4.5zm7 1.5c.9.6 1.8 1.4 1.8 3V20H22v-1.5c0-2-3-3.2-5-3.5z" fill="currentColor" />
-            </svg>
-            Data Karyawan
-          </a>
-          <a class="nav-item" href="data-shift.html">
-            <svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true">
+            </svg><span class="nav-text">Data Karyawan</span></a>
+          <a class="nav-item" href="data-shift.html" title="Data Shift" aria-label="Data Shift"><svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true">
               <path fill="currentColor" d="M32.25 6h-4v3a1 1 0 0 1-2 0V6h-7v3a1 1 0 0 1-2 0V6h-7v3a1 1 0 0 1-2 0V6h-4.5A2.76 2.76 0 0 0 1 8.75v21.5A2.76 2.76 0 0 0 3.75 33h28.5A2.76 2.76 0 0 0 35 30.25V8.75A2.76 2.76 0 0 0 32.25 6ZM33 30.25a.75.75 0 0 1-.75.75H3.75a.75.75 0 0 1-.75-.75V15h30ZM33 13H3V8.75a.75.75 0 0 1 .75-.75H8v2a1 1 0 0 0 2 0V8h7v2a1 1 0 0 0 2 0V8h7v2a1 1 0 0 0 2 0V8h4.25a.75.75 0 0 1 .75.75Z" />
-            </svg>
-            Data Shift
-          </a>
-          <a class="nav-item" href="absensi-lembur.html">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+            </svg><span class="nav-text">Data Shift</span></a>
+          <a class="nav-item" href="absensi-lembur.html" title="Absensi & Lembur" aria-label="Absensi & Lembur"><svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               <rect x="8" y="2" width="8" height="4" rx="1" fill="none" stroke="currentColor" stroke-width="2" />
               <path d="M9 14l2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            Absensi &amp; Lembur
-          </a>
-          <a class="nav-item" href="akun-pengguna.html">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+            </svg><span class="nav-text">Absensi &amp; Lembur</span></a>
+          <a class="nav-item" href="akun-pengguna.html" title="Akun Pengguna" aria-label="Akun Pengguna"><svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="12" cy="7" r="4.2" fill="currentColor" />
               <path d="M5 21v-1.5c0-3.3 3.1-6 7-6s7 2.7 7 6V21H5z" fill="currentColor" />
-            </svg>
-            Akun Pengguna
-          </a>
+            </svg><span class="nav-text">Akun Pengguna</span></a>
         </nav>
 
         <div class="sidebar-bottom">
           <p class="sidebar-note">Area Monitoring Admin</p>
-          <button class="sidebar-logout" id="admin-logout" type="button">Logout</button>
+          <button class="sidebar-logout" id="admin-logout" type="button"><svg class="logout-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3" /><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" /></svg><span class="logout-text">Logout</span></button>
         </div>
       </aside>
+      <button class="sidebar-collapse-toggle" id="sidebar-collapse-toggle" type="button" aria-expanded="true" aria-label="Ciutkan menu samping" title="Ciutkan menu samping"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7" /></svg></button>
 
       <!-- KONTEN DASHBOARD -->
       <div class="dashboard-content">
