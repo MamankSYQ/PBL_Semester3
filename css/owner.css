@@ -1629,3 +1629,18 @@ body.owner-page {
 .owner-page .table-action:hover {
   filter: brightness(0.95) !important;
 }
+
+@media (max-width: 360px) {
+  body.owner-page {
+    overflow-x: hidden;
+  }
+
+  .owner-page .dashboard-shell {
+    max-width: 100%;
+  }
+
+  .owner-page .summary-card strong {
+    font-size: clamp(18px, 6vw, 24px) !important;
+    overflow-wrap: anywhere;
+  }
+}

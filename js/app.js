@@ -1259,8 +1259,8 @@ function setupOwnerDashboard() {
     return Number.isNaN(createdAt.getTime()) ? null : createdAt;
   };
   const validPaidAt = (transaction) => {
-    const paidAt = new Date(transaction.paidAt);
-    return Number.isNaN(paidAt.getTime()) ? null : paidAt;
+    const paidAt = transaction.paidAt ? new Date(transaction.paidAt) : null;
+    return paidAt && !Number.isNaN(paidAt.getTime()) ? paidAt : validCreatedAt(transaction);
   };
   const sumPaid = (transactions) => transactions
     .filter((transaction) => transaction.paymentStatus === "Lunas")
@@ -1291,7 +1291,10 @@ function setupOwnerDashboard() {
       return transaction.paymentStatus === "Lunas" && paidAt && paidAt.getFullYear() === year && paidAt.getMonth() === month;
     });
 
-    vehicleCount.textContent = String(todayTransactions.length);
+    const uniqueVehiclesToday = new Set(todayTransactions
+      .map((transaction) => String(transaction.plateNumber || "").trim().replace(/\s+/g, " ").toUpperCase())
+      .filter(Boolean));
+    vehicleCount.textContent = String(uniqueVehiclesToday.size);
     transactionCount.textContent = String(todayTransactions.length);
     revenueTotal.textContent = formatCurrency(sumPaid(todayPaidTransactions));
     unpaidCount.textContent = String(transactions.filter((transaction) => transaction.paymentStatus === "Belum Dibayar").length);
@@ -1509,12 +1512,18 @@ function setupOwnerFinanceReport() {
     incomeGroups.set(key, group);
   });
   const incomeRecords = [...incomeGroups.values()].sort((first, second) => second.dateKey.localeCompare(first.dateKey) || first.service.localeCompare(second.service));
-  const expenses = readExpenses().map((expense) => ({
-    date: formatDate(expense.date),
-    description: String(expense.description || "-"),
-    quantity: Number(expense.quantity || 0),
-    price: Number(expense.price || 0),
-  }));
+  const expenses = readExpenses()
+    .filter((expense) => expense && typeof expense === "object" && !Array.isArray(expense))
+    .map((expense) => {
+      const quantity = Number(expense.quantity);
+      const price = Number(expense.price);
+      return {
+        date: formatDate(expense.date),
+        description: String(expense.description || "-"),
+        quantity: Number.isFinite(quantity) ? quantity : 0,
+        price: Number.isFinite(price) ? price : 0,
+      };
+    });
   const totalIncome = paidTransactions.reduce((total, transaction) => total + Number(transaction.price || 0), 0);
   const totalExpenses = expenses.reduce((total, expense) => total + expense.quantity * expense.price, 0);
   incomeTotal.textContent = formatCurrency(totalIncome);
