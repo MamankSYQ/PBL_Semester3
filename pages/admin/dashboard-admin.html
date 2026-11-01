@@ -89,9 +89,7 @@
             </div>
           </section>
 
-          <!-- D. EMPAT KARTU STATISTIK -->
-          <section class="summary-grid" aria-label="Ringkasan data WASHUP">
-            <!-- Kartu 1: Total Pelanggan (Siluet Orang Padat) -->
+          <section class="summary-grid admin-summary-grid" aria-label="Ringkasan data WASHUP">
             <article class="summary-card">
               <div class="summary-card-top">
                 <div class="summary-icon-box" aria-hidden="true">
@@ -100,13 +98,12 @@
                     <path d="M4 20.5c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5v0.5H4v-0.5z" fill="currentColor" />
                   </svg>
                 </div>
-                <span class="summary-trend">Data transaksi</span>
+                <span class="summary-trend">Data pelanggan</span>
               </div>
               <p>Total Pelanggan</p>
               <strong id="admin-customer-count">0</strong>
             </article>
 
-            <!-- Kartu 2: Total Kendaraan (3 Bilah Horizontal Membulat / Grille) -->
             <article class="summary-card">
               <div class="summary-card-top">
                 <div class="summary-icon-box" aria-hidden="true">
@@ -122,7 +119,6 @@
               <strong id="admin-vehicle-count">0</strong>
             </article>
 
-            <!-- Kartu 3: Total Layanan (Cloche / Service Bell Dome) -->
             <article class="summary-card">
               <div class="summary-card-top">
                 <div class="summary-icon-box" aria-hidden="true">
@@ -139,7 +135,6 @@
               <strong id="admin-service-count">0</strong>
             </article>
 
-            <!-- Kartu 4: Total Karyawan (Dua Orang / Team Users Siluet) -->
             <article class="summary-card">
               <div class="summary-card-top">
                 <div class="summary-icon-box" aria-hidden="true">
@@ -154,47 +149,102 @@
             </article>
           </section>
 
-          <!-- E. PANEL TRANSAKSI TERBARU -->
-          <section class="dashboard-section" aria-labelledby="admin-recent-title">
-            <div class="section-heading">
-              <div>
-                <p class="eyebrow">MONITORING TRANSAKSI</p>
-                <h2 id="admin-recent-title">Transaksi Terbaru</h2>
+          <section class="admin-overview-grid" aria-label="Ringkasan operasional">
+            <article class="admin-panel">
+              <div class="admin-panel-heading">
+                <h2>Ringkasan Operasional Hari Ini</h2>
+                <span class="admin-badge admin-badge-green" id="admin-active-badge">0 aktif</span>
               </div>
-              <!-- Counter badge dipertahankan untuk kebutuhan DOM JS -->
-              <span class="badge badge-blue" id="admin-recent-count" hidden>0 data</span>
-            </div>
-
-            <div class="table-wrap">
-              <table class="queue-table">
-                <caption class="sr-only">Daftar transaksi terbaru</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">NO. TRANSAKSI</th>
-                    <th scope="col">PELANGGAN</th>
-                    <th scope="col">PLAT</th>
-                    <th scope="col">LAYANAN</th>
-                    <th scope="col">TOTAL</th>
-                    <th scope="col">STATUS PEMBAYARAN</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-recent-body"></tbody>
-              </table>
-            </div>
-
-            <!-- Empty State Sesuai Screenshot -->
-            <div class="queue-empty" id="admin-recent-empty">
-              <div class="queue-empty-box" aria-hidden="true">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="currentColor" d="M19 4H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 9.5h-4.2c-.4 1.5-1.7 2.5-3.3 2.5s-2.9-1-3.3-2.5H5V6h14v7.5z" />
-                </svg>
+              <div class="admin-stat-columns">
+                <div><span>Transaksi</span><strong id="admin-today-transactions">0</strong></div>
+                <div><span>Pendapatan</span><strong id="admin-today-revenue">Rp 0</strong></div>
+                <div><span>Antrean</span><strong id="admin-active-queue">0</strong></div>
               </div>
-              <h3>Belum ada transaksi.</h3>
-              <p>Transaksi Kasir akan tampil di halaman ini.</p>
-            </div>
+            </article>
 
-            <p class="admin-notice" id="admin-notice" role="status" aria-live="polite"></p>
+            <article class="admin-panel">
+              <div class="admin-panel-heading">
+                <h2>Layanan Terpopuler</h2>
+                <span class="admin-badge admin-badge-blue">Hari ini</span>
+              </div>
+              <div class="admin-stat-columns admin-popular-services" id="admin-popular-services">
+                <div><span>-</span><strong>0</strong></div>
+                <div><span>-</span><strong>0</strong></div>
+                <div><span>-</span><strong>0</strong></div>
+              </div>
+            </article>
           </section>
+
+          <section class="admin-detail-grid" aria-label="Monitoring dan transaksi">
+            <article class="admin-panel admin-monitoring-panel">
+              <div class="admin-panel-heading">
+                <h2>Monitoring Operasional</h2>
+                <span class="admin-badge admin-badge-blue">Hari ini</span>
+              </div>
+
+              <div class="admin-monitoring-stats">
+                <div class="admin-monitoring-stat">
+                  <span>Antrean aktif</span>
+                  <strong id="admin-monitoring-queue">0</strong>
+                  <small><span id="admin-waiting-cashier">0</span> menunggu kasir</small>
+                </div>
+                <div class="admin-monitoring-stat">
+                  <span>Karyawan aktif</span>
+                  <strong id="admin-monitoring-employees">0</strong>
+                  <small><span id="admin-overtime-count">0</span> lembur</small>
+                </div>
+              </div>
+
+              <div class="admin-shift-row">
+                <strong id="admin-current-shift">Tidak ada shift berjalan</strong>
+                <span id="admin-current-shift-time">-</span>
+              </div>
+
+              <div class="admin-target">
+                <div class="admin-progress-track" role="progressbar" aria-label="Transaksi dibanding target harian" aria-valuemin="0" aria-valuemax="100">
+                  <span id="admin-target-progress"></span>
+                </div>
+                <div class="admin-target-labels">
+                  <span id="admin-target-percent">0% target tercapai</span>
+                  <strong id="admin-target-count">0 / 160</strong>
+                </div>
+              </div>
+
+              <div class="admin-activity">
+                <h3>Aktivitas terbaru</h3>
+                <div class="admin-activity-list" id="admin-activity-list">
+                  <p class="admin-activity-empty">Belum ada aktivitas hari ini.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="admin-panel admin-transactions-panel">
+              <div class="admin-panel-heading">
+                <h2 id="admin-recent-title">Transaksi Terbaru</h2>
+                <span class="admin-badge admin-badge-blue" id="admin-recent-count" hidden></span>
+              </div>
+              <div class="table-wrap">
+                <table class="queue-table">
+                  <caption class="sr-only">Daftar transaksi terbaru</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">NO. TRANSAKSI</th>
+                      <th scope="col">PELANGGAN</th>
+                      <th scope="col">PLAT</th>
+                      <th scope="col">LAYANAN</th>
+                      <th scope="col">TOTAL</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-recent-body"></tbody>
+                </table>
+              </div>
+              <div class="queue-empty" id="admin-recent-empty">
+                <p>Belum ada transaksi.</p>
+              </div>
+            </article>
+          </section>
+
+          <p class="admin-notice" id="admin-notice" role="status" aria-live="polite"></p>
         </main>
 
         <!-- F. FOOTER -->

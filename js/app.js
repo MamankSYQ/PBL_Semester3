@@ -1760,63 +1760,254 @@ function setupAdminDashboard() {
   const vehicleCount = document.querySelector("#admin-vehicle-count");
   const serviceCount = document.querySelector("#admin-service-count");
   const employeeCount = document.querySelector("#admin-employee-count");
+  const todayTransactionsCount = document.querySelector("#admin-today-transactions");
+  const todayRevenue = document.querySelector("#admin-today-revenue");
+  const activeQueueCount = document.querySelector("#admin-active-queue");
+  const activeBadge = document.querySelector("#admin-active-badge");
+  const popularServices = document.querySelector("#admin-popular-services");
+  const monitoringQueue = document.querySelector("#admin-monitoring-queue");
+  const waitingCashier = document.querySelector("#admin-waiting-cashier");
+  const monitoringEmployees = document.querySelector("#admin-monitoring-employees");
+  const overtimeCount = document.querySelector("#admin-overtime-count");
+  const currentShift = document.querySelector("#admin-current-shift");
+  const currentShiftTime = document.querySelector("#admin-current-shift-time");
+  const targetProgress = document.querySelector("#admin-target-progress");
+  const targetPercent = document.querySelector("#admin-target-percent");
+  const targetCount = document.querySelector("#admin-target-count");
+  const activityList = document.querySelector("#admin-activity-list");
   const recentBody = document.querySelector("#admin-recent-body");
   const recentEmpty = document.querySelector("#admin-recent-empty");
   const recentCount = document.querySelector("#admin-recent-count");
   const notice = document.querySelector("#admin-notice");
 
-  if (!customerCount || !vehicleCount || !serviceCount || !employeeCount || !recentBody || !recentEmpty || !recentCount || !notice) {
+  if (!customerCount || !vehicleCount || !serviceCount || !employeeCount || !todayTransactionsCount || !todayRevenue || !activeQueueCount || !activeBadge || !popularServices || !monitoringQueue || !waitingCashier || !monitoringEmployees || !overtimeCount || !currentShift || !currentShiftTime || !targetProgress || !targetPercent || !targetCount || !activityList || !recentBody || !recentEmpty || !recentCount || !notice) {
     return;
   }
 
-  const paymentBadge = (paymentStatus) => {
-    const badge = document.createElement("span");
-    badge.className = `status-badge ${paymentStatus === "Lunas" ? "status-done" : "status-waiting"}`;
-    badge.textContent = paymentStatus || "Belum Dibayar";
-    return badge;
+  const adminDailyTarget = 160; // target sementara, belum ada pengaturan target
+  const readDashboardRecords = (key, label) => {
+    try {
+      const value = JSON.parse(localStorage.getItem(key) || "[]");
+      if (!Array.isArray(value)) {
+        notice.textContent = `Format data ${label} tidak valid.`;
+        return [];
+      }
+      return value.filter((item) => item && typeof item === "object");
+    } catch {
+      notice.textContent = `Data ${label} tidak dapat dibaca.`;
+      return [];
+    }
+  };
+  const validDate = (value) => {
+    if (!value) return null;
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date;
+  };
+  const isToday = (value, todayKey) => {
+    const date = validDate(value);
+    return Boolean(date && formatDateKey(date) === todayKey);
+  };
+  const timeInWib = (value) => {
+    const date = validDate(value);
+    return date ? `${date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: "Asia/Jakarta" })} WIB` : "-";
+  };
+  const displayShortCurrency = (value) => {
+    const amount = Number(value);
+    if (!Number.isFinite(amount)) return formatCurrency(0);
+    if (amount >= 1000000) {
+      const shortAmount = new Intl.NumberFormat("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount / 1000000);
+      return `Rp ${shortAmount} jt`;
+    }
+    return formatCurrency(amount);
+  };
+  const dateMatchesToday = (value, todayKey) => String(value || "").replace(/\D/g, "").slice(0, 8) === todayKey;
+  const createActivity = (title, detail, iconType) => {
+    const item = document.createElement("div");
+    item.className = "admin-activity-item";
+    const icon = document.createElement("span");
+    icon.className = "admin-activity-icon";
+    icon.setAttribute("aria-hidden", "true");
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("fill", "none");
+    svg.setAttribute("stroke", "currentColor");
+    svg.setAttribute("stroke-width", "2");
+    svg.setAttribute("stroke-linecap", "round");
+    svg.setAttribute("stroke-linejoin", "round");
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const iconPaths = {
+      payment: "M5 4h14v16H5z M8 12l2.5 2.5L16 9",
+      transaction: "M4 5h2l2 11h10l2-8H7 M10 20h.01 M17 20h.01",
+      attendance: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M4 21c0-4 3.2-6 8-6s8 2 8 6",
+    };
+    path.setAttribute("d", iconPaths[iconType]);
+    svg.append(path);
+    icon.append(svg);
+    const copy = document.createElement("span");
+    copy.className = "admin-activity-copy";
+    const heading = document.createElement("strong");
+    heading.textContent = title;
+    const description = document.createElement("span");
+    description.textContent = detail;
+    copy.append(heading, description);
+    item.append(icon, copy);
+    return item;
   };
 
   const render = () => {
+    notice.textContent = "";
     const transactions = getTransactions();
+    const todayKey = getTodayKey();
+    const todayTransactions = transactions.filter((transaction) => isToday(transaction.createdAt, todayKey));
+    const activeEmployees = readMasterRecords(masterDefinitions.employees).filter((employee) => employee && employee.status === "Aktif");
+    const todayAttendance = readDashboardRecords("washupAttendanceRecords", "absensi").filter((record) => dateMatchesToday(record.date, todayKey));
+    const shifts = readDashboardRecords(masterDefinitions.shifts.key, "shift").filter((shift) => shift.status === "Aktif");
+
     // Gabungan Data Pelanggan/Kendaraan (master Admin) dan data dari transaksi Kasir, dihitung unik.
     const customers = new Set([
-      ...readMasterRecords(masterDefinitions.customers).map((customer) => String(customer.name || "").trim().toLowerCase()),
+      ...readMasterRecords(masterDefinitions.customers).map((customer) => String(customer?.name || "").trim().toLowerCase()),
       ...transactions.map((transaction) => String(transaction.customerName || "").trim().toLowerCase()),
     ].filter(Boolean));
     const vehicles = new Set([
-      ...readMasterRecords(masterDefinitions.vehicles).map((vehicle) => String(vehicle.plateNumber || "").replace(/\s+/g, "").toUpperCase()),
+      ...readMasterRecords(masterDefinitions.vehicles).map((vehicle) => String(vehicle?.plateNumber || "").replace(/\s+/g, "").toUpperCase()),
       ...transactions.map((transaction) => String(transaction.plateNumber || "").replace(/\s+/g, "").toUpperCase()),
     ].filter(Boolean));
-    const services = ensureMasterDefaults("services", masterDefinitions.services).length;
-    const employees = readMasterRecords(masterDefinitions.employees).filter((employee) => employee.status === "Aktif").length;
+    let services = [];
+    try {
+      services = ensureMasterDefaults("services", masterDefinitions.services);
+    } catch {
+      notice.textContent = "Data layanan tidak dapat diperbarui.";
+      services = readMasterRecords(masterDefinitions.services);
+    }
+    const employees = activeEmployees.length;
     const recentTransactions = [...transactions].sort((first, second) => {
-      const firstTime = new Date(first.createdAt).getTime() || 0;
-      const secondTime = new Date(second.createdAt).getTime() || 0;
+      const firstTime = validDate(first.createdAt)?.getTime() || 0;
+      const secondTime = validDate(second.createdAt)?.getTime() || 0;
       return secondTime - firstTime;
     }).slice(0, 5);
+    const activeQueue = transactions.filter((transaction) => transaction.serviceStatus === "Menunggu" || transaction.serviceStatus === "Sedang Dicuci").length;
+    const waitingForCashier = transactions.filter((transaction) => transaction.serviceStatus === "Selesai" && transaction.paymentStatus === "Belum Dibayar").length;
+    const overtimeEmployees = todayAttendance.filter((record) => Number(record.overtimeHours) > 0).length;
+    const totalRevenue = transactions.reduce((sum, transaction) => {
+      const paymentDate = transaction.paidAt || transaction.createdAt;
+      if (transaction.paymentStatus !== "Lunas" || !isToday(paymentDate, todayKey)) return sum;
+      const price = Number(transaction.price);
+      return Number.isFinite(price) ? sum + price : sum;
+    }, 0);
+    const serviceCounts = new Map();
+    todayTransactions.forEach((transaction) => {
+      const serviceName = String(transaction.service || "").trim();
+      if (serviceName) serviceCounts.set(serviceName, (serviceCounts.get(serviceName) || 0) + 1);
+    });
+    const topServices = [...serviceCounts.entries()].sort((first, second) => second[1] - first[1]).slice(0, 3);
 
     customerCount.textContent = String(customers.size);
     vehicleCount.textContent = String(vehicles.size);
-    serviceCount.textContent = String(services);
+    serviceCount.textContent = String(services.length);
     employeeCount.textContent = String(employees);
-    recentCount.textContent = `${recentTransactions.length} data`;
+    todayTransactionsCount.textContent = String(todayTransactions.length);
+    todayRevenue.textContent = displayShortCurrency(totalRevenue);
+    activeQueueCount.textContent = String(activeQueue);
+    activeBadge.textContent = `${employees} aktif`;
+    monitoringQueue.textContent = String(activeQueue);
+    waitingCashier.textContent = String(waitingForCashier);
+    monitoringEmployees.textContent = String(employees);
+    overtimeCount.textContent = String(overtimeEmployees);
+    popularServices.replaceChildren();
+    Array.from({ length: 3 }, (_, index) => topServices[index] || ["-", 0]).forEach(([name, count]) => {
+      const column = document.createElement("div");
+      const serviceName = document.createElement("span");
+      serviceName.textContent = name;
+      const serviceCount = document.createElement("strong");
+      serviceCount.textContent = String(count);
+      column.append(serviceName, serviceCount);
+      popularServices.append(column);
+    });
+
+    const currentTime = new Date();
+    const currentMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
+    const shiftMinute = (time) => {
+      const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(String(time || ""));
+      return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+    };
+    const runningShift = shifts.find((shift) => {
+      const start = shiftMinute(shift.start);
+      const end = shift.end === "00:00" ? 1440 : shiftMinute(shift.end);
+      if (start === null || end === null) return false;
+      if (start < end) return currentMinutes >= start && currentMinutes < end;
+      return currentMinutes >= start || currentMinutes < end;
+    });
+    currentShift.textContent = runningShift?.name || "Tidak ada shift berjalan";
+    currentShiftTime.textContent = runningShift
+      ? `${String(runningShift.start).replace(":", ".")}–${runningShift.end === "00:00" ? "24.00" : String(runningShift.end).replace(":", ".")}`
+      : "-";
+
+    const targetCompletion = Math.min(100, Math.round((todayTransactions.length / adminDailyTarget) * 100));
+    targetProgress.style.width = `${targetCompletion}%`;
+    targetProgress.parentElement.setAttribute("aria-valuenow", String(targetCompletion));
+    targetPercent.textContent = `${targetCompletion}% target tercapai`;
+    targetCount.textContent = `${todayTransactions.length} / ${adminDailyTarget}`;
+
+    activityList.replaceChildren();
+    const latestPayment = transactions
+      .filter((transaction) => transaction.paymentStatus === "Lunas" && isToday(transaction.paidAt || transaction.createdAt, todayKey))
+      .sort((first, second) => (validDate(second.paidAt || second.createdAt)?.getTime() || 0) - (validDate(first.paidAt || first.createdAt)?.getTime() || 0))[0];
+    if (latestPayment) {
+      activityList.append(createActivity(
+        `Pembayaran ${latestPayment.transactionNumber || "-"}`,
+        `Lunas · ${timeInWib(latestPayment.paidAt || latestPayment.createdAt)}`,
+        "payment",
+      ));
+    }
+    const latestTransaction = [...todayTransactions].sort((first, second) => (validDate(second.createdAt)?.getTime() || 0) - (validDate(first.createdAt)?.getTime() || 0))[0];
+    if (latestTransaction) {
+      activityList.append(createActivity(
+        `Transaksi baru ${latestTransaction.transactionNumber || "-"}`,
+        `${latestTransaction.customerName || "-"} · ${timeInWib(latestTransaction.createdAt)}`,
+        "transaction",
+      ));
+    }
+    if (todayAttendance.length) {
+      activityList.append(createActivity(
+        "Absensi karyawan tercatat",
+        `${todayAttendance.length} dari ${employees} karyawan`,
+        "attendance",
+      ));
+    }
+    if (!activityList.childElementCount) {
+      const emptyActivity = document.createElement("p");
+      emptyActivity.className = "admin-activity-empty";
+      emptyActivity.textContent = "Belum ada aktivitas hari ini.";
+      activityList.append(emptyActivity);
+    }
+
+    const latestTransactionDate = validDate(recentTransactions[0]?.createdAt);
+    if (latestTransactionDate) {
+      const minutesAgo = Math.max(0, Math.floor((Date.now() - latestTransactionDate.getTime()) / 60000));
+      recentCount.textContent = minutesAgo < 1 ? "baru saja" : `${minutesAgo} menit lalu`;
+      recentCount.hidden = false;
+    } else {
+      recentCount.textContent = "";
+      recentCount.hidden = true;
+    }
     recentEmpty.hidden = recentTransactions.length > 0;
     recentBody.replaceChildren();
     recentTransactions.forEach((transaction) => {
       const row = document.createElement("tr");
-      [transaction.transactionNumber, transaction.customerName, transaction.plateNumber, transaction.service, formatCurrency(transaction.price)].forEach((value) => {
+      const price = transaction.price;
+      const formattedPrice = price !== "" && price !== null && price !== undefined && Number.isFinite(Number(price)) ? formatCurrency(price) : "-";
+      [transaction.transactionNumber || "-", transaction.customerName || "-", transaction.plateNumber || "-", transaction.service || "-", formattedPrice].forEach((value) => {
         const cell = document.createElement("td");
         cell.textContent = value;
         row.append(cell);
       });
-      const paymentCell = document.createElement("td");
-      paymentCell.append(paymentBadge(transaction.paymentStatus));
-      row.append(paymentCell);
       recentBody.append(row);
     });
   };
 
   document.querySelector("#admin-date").textContent = getTodayLabel();
+  const currentYear = document.querySelector("#current-year");
+  if (currentYear) currentYear.textContent = String(new Date().getFullYear());
   document.querySelectorAll("[data-admin-placeholder]").forEach((link) => {
     link.addEventListener("click", (event) => {
       event.preventDefault();
