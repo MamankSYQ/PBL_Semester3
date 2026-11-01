@@ -489,6 +489,11 @@ body.master-page {
   padding: 57px 0 0 0 !important; box-sizing: border-box !important; flex: 0 0 auto !important;
   display: flex !important; flex-direction: column !important; background: transparent !important;
 }
+@media (min-width: 1400px) {
+  .master-page:is([data-master="customers"], [data-master="vehicles"], [data-master="services"], [data-master="employees"], [data-master="shifts"], [data-master="users"]) .dashboard-main.master-main {
+    max-width: 1040px !important;
+  }
+}
 .master-page .queue-heading {
   display: flex !important; align-items: flex-start !important; justify-content: space-between !important;
   margin: 0 0 53px 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important;
@@ -654,20 +659,20 @@ body.master-page {
    Tinggi minimum 425px tetap dipakai untuk keadaan kosong. */
 .master-page .queue-panel:has(#master-empty[hidden]) { min-height: 0 !important; padding-bottom: 69px !important; }
 
-/* Tombol aksi berbentuk pil: 49 x 20, jarak 8px. */
+/* Tombol aksi berbentuk pil: 72 x 30, jarak 12px. */
 .master-page .master-table td:last-child { white-space: nowrap !important; }
 .master-page .master-table .table-action {
   display: inline-flex !important; align-items: center !important; justify-content: center !important;
-  width: 49px !important; height: 20px !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important;
-  border: none !important; border-radius: 10px !important; box-shadow: none !important; box-sizing: border-box !important;
-  font-family: 'Open Sans', sans-serif !important; font-size: 10px !important; font-weight: 400 !important;
+  width: 72px !important; height: 30px !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important;
+  border: 1px solid !important; border-radius: 15px !important; box-shadow: none !important; box-sizing: border-box !important;
+  font-family: 'Open Sans', sans-serif !important; font-size: 14px !important; font-weight: 600 !important;
   line-height: 1 !important; letter-spacing: 0.03em !important; vertical-align: middle !important; cursor: pointer;
 }
-.master-page .master-table .table-action + .table-action { margin-left: 8px !important; }
-.master-page .master-table .table-action[data-action="detail"] { background: #A6CEE6 !important; color: #1D4A5A !important; }
-.master-page .master-table .table-action[data-action="edit"] { background: #ACE6A6 !important; color: #0B8121 !important; }
-.master-page .master-table .table-action[data-action="delete"] { background: #FF797C !important; color: #A10F11 !important; }
-.master-page .master-table .table-action:hover { filter: brightness(0.94); }
+.master-page .master-table .table-action + .table-action { margin-left: 12px !important; }
+.master-page .master-table .table-action[data-action="detail"] { background: #DBE9F3 !important; border-color: #A9C2D2 !important; color: #294958 !important; }
+.master-page .master-table .table-action[data-action="edit"] { background: #E0F3DA !important; border-color: #9FCF99 !important; color: #347829 !important; }
+.master-page .master-table .table-action[data-action="delete"] { background: #F6C6C6 !important; border-color: #DE8A89 !important; color: #861911 !important; }
+.master-page .master-table .table-action:hover { filter: brightness(0.95) !important; }
 .master-page .master-table .table-action:focus-visible { outline: 2px solid #1D4A5A !important; outline-offset: 2px !important; }
 
 /* Lebar kolom khusus Data Pelanggan (posisi teks Figma: 417 / 595 / 758 / 976 / 1113). */
@@ -677,6 +682,7 @@ body.master-page {
   .master-page[data-master="customers"] .master-table th:nth-child(2) { width: 163px !important; }
   .master-page[data-master="customers"] .master-table th:nth-child(3) { width: 218px !important; }
   .master-page[data-master="customers"] .master-table th:nth-child(4) { width: 137px !important; }
+  .master-page[data-master="customers"] .master-table th:last-child { width: 260px !important; }
 }
 
 /* Footer menempel di bawah layar saat isi halaman pendek (garis footer Figma di y = 953).
@@ -763,6 +769,7 @@ body.master-page {
   .master-page[data-master="vehicles"] .master-table th:nth-child(2) { width: 156px !important; }
   .master-page[data-master="vehicles"] .master-table th:nth-child(3) { width: 214px !important; }
   .master-page[data-master="vehicles"] .master-table th:nth-child(4) { width: 160px !important; }
+  .master-page[data-master="vehicles"] .master-table th:last-child { width: 260px !important; }
 }
 
 /* ===== Dialog Tambah/Edit Data Kendaraan dan Layanan & Tarif (Figma: Data Kendaraan tambah 1, Layanan tambah) =====
@@ -832,6 +839,7 @@ body.master-page {
   .master-page[data-master="services"] .master-table th:nth-child(2) { width: 162px !important; }
   .master-page[data-master="services"] .master-table th:nth-child(3) { width: 159px !important; }
   .master-page[data-master="services"] .master-table th:nth-child(4) { width: 155px !important; }
+  .master-page[data-master="services"] .master-table th:last-child { width: 260px !important; }
 }
 /* Panel Layanan & Tarif berisi data berakhir di y = 901 seperti Figma. */
 .master-page[data-master="services"] .queue-panel:has(#master-empty[hidden]) { padding-bottom: 59px !important; }
@@ -856,6 +864,7 @@ body.master-page {
   .master-page[data-master="employees"] .master-table th:nth-child(2) { width: 173px !important; }
   .master-page[data-master="employees"] .master-table th:nth-child(3) { width: 172px !important; }
   .master-page[data-master="employees"] .master-table th:nth-child(4) { width: 160px !important; }
+  .master-page[data-master="employees"] .master-table th:last-child { width: 260px !important; }
   .master-page[data-master="employees"] .queue-panel:has(#master-empty[hidden]) .master-table th:nth-child(4) { width: 150px !important; }
 }
 .master-page[data-master="employees"] .queue-panel:has(#master-empty[hidden]) { min-height: 425px !important; padding-bottom: 32px !important; }
@@ -875,6 +884,7 @@ body.master-page {
   .master-page[data-master="shifts"] .master-table th:nth-child(2) { width: 162px !important; }
   .master-page[data-master="shifts"] .master-table th:nth-child(3) { width: 159px !important; }
   .master-page[data-master="shifts"] .master-table th:nth-child(4) { width: 155px !important; }
+  .master-page[data-master="shifts"] .master-table th:last-child { width: 260px !important; }
 }
 .master-page[data-master="shifts"] .master-table tbody td { height: 63px !important; }
 .master-page[data-master="shifts"] .queue-panel:has(#master-empty[hidden]) { padding-bottom: 22px !important; }
@@ -913,15 +923,10 @@ body.master-page {
   .master-page[data-master="users"] .master-table th:nth-child(1) { width: 264px !important; }
   .master-page[data-master="users"] .master-table th:nth-child(2) { width: 225px !important; }
   .master-page[data-master="users"] .master-table th:nth-child(3) { width: 241px !important; }
+  .master-page[data-master="users"] .master-table th:last-child { width: 260px !important; }
 }
 .master-page[data-master="users"] .master-table tbody td { height: 63px !important; }
 .master-page[data-master="users"] .queue-panel:has(#master-empty[hidden]) { min-height: 425px !important; padding-bottom: 25px !important; }
-/* Tombol Detail berbingkai 67 x 29 (bukan pil) seperti Figma. */
-.master-page[data-master="users"] .master-table .table-action[data-action="detail"] {
-  width: 67px !important; height: 29px !important; border: 1px solid #4E93AB !important; border-radius: 4px !important;
-  background: #FFFFFF !important; color: #1D4A5A !important; font-size: 12px !important; letter-spacing: 0.05em !important;
-}
-.master-page[data-master="users"] .master-table .table-action[data-action="detail"]:hover { background: #D3E4EA !important; filter: none; }
 /* Dialog Tambah/Edit Akun: label lebih rapat ke kotak; jarak Role -> Status memberi ruang daftar pilihan seperti Figma. */
 .master-page[data-master="users"] .master-dialog .master-form-fields { gap: 6px !important; margin-top: 10px !important; }
 .master-page[data-master="users"] .master-dialog .form-field { gap: 0 !important; }
