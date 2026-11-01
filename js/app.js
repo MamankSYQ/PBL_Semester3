@@ -430,9 +430,10 @@ if (passwordToggle && passwordInput) {
   passwordToggle.addEventListener("click", () => {
     const shouldShowPassword = passwordInput.type === "password";
     passwordInput.type = shouldShowPassword ? "text" : "password";
-    passwordToggle.textContent = shouldShowPassword ? "Sembunyikan" : "Lihat";
-    passwordToggle.setAttribute("aria-label", `${shouldShowPassword ? "Sembunyikan" : "Tampilkan"} password`);
+    const label = `${shouldShowPassword ? "Sembunyikan" : "Tampilkan"} password`;
+    passwordToggle.setAttribute("aria-label", label);
     passwordToggle.setAttribute("aria-pressed", String(shouldShowPassword));
+    passwordToggle.setAttribute("title", label);
   });
 }
 

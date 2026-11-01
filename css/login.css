@@ -26,9 +26,13 @@
 .login-page .form-field label { display: block; margin-bottom: 10px; color: #2b556b; font-size: 1.25rem; font-weight: 600; letter-spacing: .3px; }
 .login-page .form-field input { width: 100%; min-height: 58px; padding: 13px 14px; border: 1px solid #b7b7b7; border-radius: 10px; color: #294e60; background: #fff; font-family: "Inter",sans-serif; font-size: 1rem; }
 .login-page .form-field input::placeholder { color: #aaa; }
-.login-page .password-field input { padding-right: 84px; }
-.login-page .password-toggle { right: 10px; min-height: 34px; padding: 5px 9px; border-radius: 7px; color: #1d4b5a; background: #edf4f5; font-size: .8rem; }
-.login-page .password-toggle:hover { background: #d8f1ef; }
+.login-page .password-field input { padding-right: 64px; }
+.login-page .password-toggle { right: 10px; display: inline-flex; width: 40px; height: 40px; min-height: 40px; align-items: center; justify-content: center; padding: 0; border-radius: 7px; color: #8A8A8A; background: transparent; }
+.login-page .password-toggle:hover { color: #1D4A5A; background: transparent; }
+.login-page .password-toggle .eye-icon { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.login-page .password-toggle .eye-closed,
+.login-page .password-toggle[aria-pressed="true"] .eye-open { display: none; }
+.login-page .password-toggle[aria-pressed="true"] .eye-closed { display: block; }
 .login-page .login-button { width: 100%; min-height: 58px; margin-top: 8px; border: 0; border-radius: 10px; color: #fff; background: #1d4b5a; font-family: "Inter",sans-serif; font-size: 1.7rem; font-weight: 600; letter-spacing: .8px; }
 .login-page .login-button:hover { background: #153e4b; }
 .login-page .login-footer { margin: 14px 0 0; color: #5d8a9e; font-size: .95rem; line-height: 1.6; letter-spacing: .8px; }
