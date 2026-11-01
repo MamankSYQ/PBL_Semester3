@@ -1594,3 +1594,38 @@ body.owner-page {
 .owner-report-summary-grid .summary-card strong {
   margin-top: 10px !important;
 }
+
+.owner-page .owner-report-table th:last-child,
+.owner-page .owner-report-table td:last-child {
+  width: 100px !important;
+  min-width: 100px !important;
+  white-space: nowrap !important;
+}
+
+.owner-page .table-action {
+  display: inline-flex !important;
+  width: 72px !important;
+  height: 30px !important;
+  min-height: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid #A9C2D2 !important;
+  border-radius: 15px !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+  color: #294958 !important;
+  background: #DBE9F3 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.03em !important;
+  vertical-align: middle !important;
+  cursor: pointer;
+}
+
+.owner-page .table-action:hover {
+  filter: brightness(0.95) !important;
+}
