@@ -105,21 +105,6 @@ const masterDefinitions = {
     detailTitle: "Layanan dan Tarif",
     deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?!",
   },
-  employees: {
-    key: "washupEmployees",
-    title: "Data Karyawan",
-    fields: [
-      { key: "name", label: "Nama karyawan", type: "text", required: true },
-      { key: "position", label: "Jabatan", type: "text", required: true },
-      { key: "phone", label: "Nomor telepon", type: "tel", required: true },
-      { key: "status", label: "Status", type: "select", options: ["Aktif", "Nonaktif"], required: true },
-    ],
-    columns: ["name", "position", "phone", "status"],
-    labels: { name: "Nama", position: "Jabatan", phone: "Telepon", status: "Status" },
-    detailLabels: { name: "Nama", position: "Jabatan", phone: "Nomor Telepon", status: "Status" },
-    detailTitle: "Detail Karyawan",
-    deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?",
-  },
   shifts: {
     key: "washupShifts",
     title: "Data Shift",
@@ -212,6 +197,13 @@ function ensureMasterDefaults(type, definition) {
 
 function getUserAccounts() {
   return ensureMasterDefaults("users", masterDefinitions.users);
+}
+
+function getActiveEmployees() {
+  return getUserAccounts()
+    .filter((account) => account && account.status === "Aktif" &&
+      (account.role === "Kasir" || account.role === "Petugas") && String(account.username || "").trim())
+    .map((account) => ({ name: String(account.username || "").trim(), role: account.role }));
 }
 
 function getActiveServiceOptions() {
@@ -1546,10 +1538,13 @@ function setupOwnerEmployeeReport() {
   const now = new Date();
   const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
   const normalizeName = (name) => String(name || "").trim().toLocaleLowerCase("id-ID");
-  const employees = readRecords("washupEmployees")
-    .filter((employee) => employee.status === "Aktif" && String(employee.name || "").trim());
+  const activeEmployees = getActiveEmployees();
+  const employeeKeys = new Set(activeEmployees.map((employee) => normalizeName(employee.name)));
   const shifts = readRecords("washupShifts");
   const attendance = getAttendanceRecords();
+  const attendanceEmployeeKey = (record) => [record.employeeName, record.employeeId]
+    .map(normalizeName)
+    .find((key) => employeeKeys.has(key));
   const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const shiftByName = new Map(shifts.map((shift) => [normalizeName(shift.name), shift]));
   const toMinutes = (time) => {
@@ -1567,14 +1562,14 @@ function setupOwnerEmployeeReport() {
     return checkInMinutes !== null && shiftStartMinutes !== null && checkInMinutes > shiftStartMinutes;
   };
   const todayAttendance = attendance.filter((record) => record.date === todayKey && record.checkIn);
-  const checkedInNames = new Set(todayAttendance.map((record) => normalizeName(record.employeeName)).filter(Boolean));
+  const checkedInNames = new Set(todayAttendance.map(attendanceEmployeeKey).filter(Boolean));
   const lateNamesToday = new Set(todayAttendance
     .filter(isLate)
-    .map((record) => normalizeName(record.employeeName))
+    .map(attendanceEmployeeKey)
     .filter(Boolean));
-  totalEmployees.textContent = String(employees.length);
+  totalEmployees.textContent = String(activeEmployees.length);
   presentTotal.textContent = String(checkedInNames.size);
-  absentTotal.textContent = String(employees.filter((employee) => !checkedInNames.has(normalizeName(employee.name))).length);
+  absentTotal.textContent = String(activeEmployees.filter((employee) => !checkedInNames.has(normalizeName(employee.name))).length);
   lateTotal.textContent = String(lateNamesToday.size);
 
   const appendCell = (row, value) => {
@@ -1584,18 +1579,13 @@ function setupOwnerEmployeeReport() {
   };
   const monthlyAttendance = attendance.filter((record) => String(record.date || "").startsWith(monthKey));
   const monthlySummaries = new Map();
-  const nameByKey = new Map();
-  employees.forEach((employee) => {
-    const name = String(employee.name).trim();
-    const key = normalizeName(name);
-    if (!nameByKey.has(key)) nameByKey.set(key, name);
+  activeEmployees.forEach((employee) => {
+    const key = normalizeName(employee.name);
     monthlySummaries.set(key, { presentDates: new Set(), lateDates: new Set() });
   });
   monthlyAttendance.forEach((record) => {
-    const name = String(record.employeeName || "").trim();
-    const key = normalizeName(name);
+    const key = attendanceEmployeeKey(record);
     if (!key) return;
-    if (!nameByKey.has(key)) nameByKey.set(key, name);
     if (!record.checkIn) return;
     const summary = monthlySummaries.get(key) || { presentDates: new Set(), lateDates: new Set() };
     summary.presentDates.add(String(record.date));
@@ -1603,15 +1593,15 @@ function setupOwnerEmployeeReport() {
     monthlySummaries.set(key, summary);
   });
   attendanceBody.replaceChildren();
-  const employeeNames = [...nameByKey.entries()]
-    .sort((first, second) => first[1].localeCompare(second[1], "id-ID"));
-  attendanceEmpty.hidden = employeeNames.length > 0;
-  attendanceTableWrap.hidden = employeeNames.length === 0;
-  employeeNames.forEach(([key, name]) => {
+  const sortedEmployees = [...activeEmployees].sort((first, second) => first.name.localeCompare(second.name, "id-ID"));
+  attendanceEmpty.hidden = sortedEmployees.length > 0;
+  attendanceTableWrap.hidden = sortedEmployees.length === 0;
+  sortedEmployees.forEach((employee) => {
+    const key = normalizeName(employee.name);
     const summary = monthlySummaries.get(key) || { presentDates: new Set(), lateDates: new Set() };
     const row = document.createElement("tr");
     // Izin dan insentif belum memiliki sumber data yang dapat dipercaya.
-    [name, summary.presentDates.size, summary.lateDates.size, "-", "-"].forEach((value) => appendCell(row, value));
+    [employee.name, summary.presentDates.size, summary.lateDates.size, "-", "-"].forEach((value) => appendCell(row, value));
     attendanceBody.append(row);
   });
   setupOwnerLogout();
@@ -1856,7 +1846,7 @@ function setupAdminDashboard() {
     const transactions = getTransactions();
     const todayKey = getTodayKey();
     const todayTransactions = transactions.filter((transaction) => isToday(transaction.createdAt, todayKey));
-    const activeEmployees = readMasterRecords(masterDefinitions.employees).filter((employee) => employee && employee.status === "Aktif");
+    const activeEmployees = getActiveEmployees();
     const todayAttendance = getAttendanceRecords().filter((record) => String(record.date || "").replace(/\D/g, "").slice(0, 8) === todayKey && record.checkIn);
     const shifts = readDashboardRecords(masterDefinitions.shifts.key, "shift").filter((shift) => shift.status === "Aktif");
 
@@ -1869,7 +1859,7 @@ function setupAdminDashboard() {
       notice.textContent = "Data layanan tidak dapat diperbarui.";
       services = readMasterRecords(masterDefinitions.services);
     }
-    const employees = activeEmployees.length;
+    const activeEmployeeCount = activeEmployees.length;
     const recentTransactions = [...transactions].sort((first, second) => {
       const firstTime = validDate(first.createdAt)?.getTime() || 0;
       const secondTime = validDate(second.createdAt)?.getTime() || 0;
@@ -1894,14 +1884,14 @@ function setupAdminDashboard() {
     customerCount.textContent = String(uniqueCustomerNames.size);
     vehicleCount.textContent = String(uniqueVehiclePlates.size);
     serviceCount.textContent = String(services.length);
-    employeeCount.textContent = String(employees);
+    employeeCount.textContent = String(activeEmployeeCount);
     todayTransactionsCount.textContent = String(todayTransactions.length);
     todayRevenue.textContent = displayShortCurrency(totalRevenue);
     activeQueueCount.textContent = String(activeQueue);
-    activeBadge.textContent = `${employees} aktif`;
+    activeBadge.textContent = `${activeEmployeeCount} aktif`;
     monitoringQueue.textContent = String(activeQueue);
     waitingCashier.textContent = String(waitingForCashier);
-    monitoringEmployees.textContent = String(employees);
+    monitoringEmployees.textContent = String(activeEmployeeCount);
     checkInCount.textContent = String(todayAttendance.length);
     popularServices.replaceChildren();
     Array.from({ length: 3 }, (_, index) => topServices[index] || ["-", 0]).forEach(([name, count]) => {
@@ -2580,7 +2570,7 @@ if (document.querySelector(".petugas-attendance-page")) setupPetugasAttendance()
 
 // Dropdown kustom untuk form data master.
 // <select> asli tetap ada tetapi disembunyikan, jadi nilai form dan validasi tetap bekerja seperti biasa.
-const customSelectTypes = ["services", "employees", "shifts", "users"];
+const customSelectTypes = ["services", "shifts", "users"];
 const customSelectLabels = { Nonaktif: "Non Aktif" };
 
 function enhanceSelect(select) {
@@ -2875,7 +2865,6 @@ function setupMasterPage() {
     if (type === "shifts" && record.end !== "00:00" && record.start >= record.end) return "Jam selesai harus setelah jam mulai.";
     const duplicate = records.some((existing) => existing.id !== editingId && (
       (type === "services" && String(existing.name).trim().toLowerCase() === record.name.toLowerCase() && existing.vehicleType === record.vehicleType) ||
-      (type === "employees" && normalizePhone(existing.phone) === record.phone) ||
       (type === "shifts" && String(existing.name).trim().toLowerCase() === record.name.toLowerCase()) ||
       (type === "users" && String(existing.username || "").trim().toLowerCase() === record.username.toLowerCase())
     ));

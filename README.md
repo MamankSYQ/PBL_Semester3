@@ -51,7 +51,6 @@ PBL_Semester3/
 │   ├── admin/
 │   │   ├── dashboard-admin.html
 │   │   ├── layanan-tarif.html
-│   │   ├── data-karyawan.html
 │   │   ├── data-shift.html
 │   │   ├── verifikasi-absensi.html
 │   │   └── akun-pengguna.html
@@ -74,7 +73,7 @@ PBL_Semester3/
 
 ## Fitur per Role
 
-- **Admin** — dashboard ringkasan; kelola Layanan & Tarif, Data Karyawan, Data Shift, Verifikasi Absensi, dan Akun Pengguna (tambah, edit, detail, hapus).
+- **Admin** — dashboard ringkasan; kelola Layanan & Tarif, Data Shift, Verifikasi Absensi, dan Akun Pengguna (tambah, edit, detail, hapus).
 - **Kasir** — dashboard, transaksi baru (nomor transaksi dan antrean otomatis), antrean, pembayaran (Tunai/QRIS), riwayat transaksi.
 - **Petugas** — dashboard pengerjaan, antrean dengan pembaruan status (Menunggu → Sedang Dicuci → Selesai), absensi masuk/keluar dengan bukti foto.
 - **Owner** — dashboard pendapatan dan laporan transaksi per periode.
@@ -100,7 +99,6 @@ Admin dapat menambah layanan lain di halaman **Layanan & Tarif**.
 | --- | --- |
 | `washupTransactions` | Transaksi, status pengerjaan, dan status pembayaran |
 | `washupServices` | Layanan & Tarif |
-| `washupEmployees` | Data Karyawan |
 | `washupShifts` | Data Shift |
 | `washupAttendanceRecords` | Data absensi lama yang digunakan pada laporan Owner |
 | `washupPetugasAttendance` | Absen masuk/keluar Petugas beserta foto dan status verifikasi Admin |
