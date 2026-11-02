@@ -79,18 +79,22 @@
         <main class="dashboard-main admin-main owner-service-stats-main">
           <section class="dashboard-welcome" aria-labelledby="owner-service-stats-title">
             <div>
-              <p class="eyebrow">RINGKASAN STATISTIK LAYANAN</p>
+              <p class="eyebrow">Ringkasan Statistik Layanan</p>
               <h2 id="owner-service-stats-title">Performa Layanan WASHUP</h2>
             </div>
           </section>
           <section class="owner-stats-toolbar" aria-label="Filter periode statistik">
             <div class="owner-stats-filter">
               <label for="owner-stats-month">Periode Bulan</label>
-              <select id="owner-stats-month" aria-label="Periode Bulan"></select>
+              <select id="owner-stats-month" aria-label="Periode Bulan">
+                <option value="">Pilih periode bulan</option>
+              </select>
             </div>
             <div class="owner-stats-filter">
               <label for="owner-stats-year">Periode Tahun</label>
-              <select id="owner-stats-year" aria-label="Periode Tahun"></select>
+              <select id="owner-stats-year" aria-label="Periode Tahun">
+                <option value="">Pilih periode tahun</option>
+              </select>
             </div>
             <button id="owner-stats-apply" type="button">Terapkan</button>
           </section>

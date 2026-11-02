@@ -91,31 +91,6 @@ const serviceOptions = {
 };
 
 const masterDefinitions = {
-  customers: {
-    key: "washupCustomers",
-    title: "Data Pelanggan",
-    fields: [
-      { key: "name", label: "Nama pelanggan", type: "text", required: true },
-      { key: "phone", label: "Nomor telepon", type: "tel", required: true },
-      { key: "address", label: "Alamat", type: "text", required: false },
-    ],
-    columns: ["name", "phone", "address", "status"],
-    labels: { name: "Nama", phone: "Telepon", address: "Alamat", status: "Status" },
-    detailLabels: { name: "Nama", phone: "Nomor Telepon", address: "Alamat", status: "Status" },
-    detailTitle: "Detail Data Pelanggan",
-  },
-  vehicles: {
-    key: "washupVehicles",
-    title: "Data Kendaraan",
-    fields: [
-      { key: "plateNumber", label: "Nomor plat", type: "text", required: true },
-      { key: "vehicleType", label: "Jenis kendaraan", type: "select", options: ["Mobil", "Motor"], required: true },
-      { key: "customerName", label: "Nama pelanggan", type: "text", required: true },
-      { key: "status", label: "Status", type: "select", options: ["Aktif", "Nonaktif"], required: true },
-    ],
-    columns: ["plateNumber", "vehicleType", "customerName", "status"],
-    labels: { plateNumber: "Plat", vehicleType: "Jenis", customerName: "Pelanggan", status: "Status" },
-  },
   services: {
     key: "washupServices",
     title: "Layanan dan Tarif",
@@ -173,32 +148,7 @@ const masterDefinitions = {
     detailTitle: "Detail Akun",
     deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?",
   },
-  // Absensi & Lembur yang dicatat Admin (Figma: Data Absensi). Terpisah dari absen foto Petugas (washupPetugasAttendance).
-  attendance: {
-    key: "washupAttendanceRecords",
-    title: "Data Absensi",
-    actions: false,
-    searchColumns: ["employeeName"],
-    fields: [
-      { key: "employeeName", label: "Nama karyawan", type: "text", required: true },
-      { key: "date", label: "Tanggal", type: "date", required: true },
-      { key: "presence", label: "Kehadiran", type: "select", options: ["Masuk", "Izin", "Tanpa Keterangan"], required: true },
-      // Pilihan shift diambil dari Data Shift yang berstatus Aktif.
-      { key: "shift", label: "Shift", type: "select", get options() { return getActiveShiftNames(); }, required: true },
-      { key: "overtimeHours", label: "Lembur", type: "number", min: 0, step: 0.5, placeholder: "-- Jam", required: false },
-      { key: "incentive", label: "Insentif", type: "number", min: 0, step: 1000, placeholder: "Rp", required: false },
-    ],
-    columns: ["employeeName", "date", "presence", "shift", "overtimeHours", "incentive"],
-    labels: { employeeName: "Karyawan", date: "Tanggal", presence: "Kehadiran", shift: "Shift", overtimeHours: "Lembur", incentive: "Insentif" },
-  },
 };
-
-function getActiveShiftNames() {
-  const names = ensureMasterDefaults("shifts", masterDefinitions.shifts)
-    .filter((shift) => shift.status === "Aktif" && shift.name)
-    .map((shift) => shift.name);
-  return names;
-}
 
 const masterDefaults = {
   services: [
@@ -210,7 +160,7 @@ const masterDefaults = {
     { id: "service-motor-besar", name: "Cuci Motor Besar", vehicleType: "Motor", price: 17000, status: "Aktif" },
   ],
   shifts: [{ id: "shift-pagi", name: "Shift Pagi", start: "08:00", end: "16:00", status: "Aktif" }],
-  users: Object.entries(accounts).map(([username, account]) => ({ id: `user-${username}`, username, password: account.password, role: account.role, status: "Aktif", protected: true })),
+  users: Object.entries(accounts).map(([username, account]) => ({ id: `user-${username}`, username, password: account.password, role: account.role, status: "Aktif" })),
 };
 
 function readMasterRecords(definition) {
@@ -238,8 +188,21 @@ function ensureMasterDefaults(type, definition) {
     records = records.filter((record) => !retiredServiceIds.includes(record.id));
     saveMasterRecords(definition, records);
   }
-  const existingKeys = new Set(records.map((record) => type === "users" ? record.username : record.id));
-  const missing = defaults.filter((record) => !existingKeys.has(type === "users" ? record.username : record.id));
+  if (type === "users") {
+    if (localStorage.getItem(definition.key) === null) {
+      records = defaults.map((record) => ({ ...record }));
+      saveMasterRecords(definition, records);
+    } else if (!records.some((record) => String(record?.username || "").trim().toLowerCase() === "admin")) {
+      const admin = defaults.find((record) => record.username === "admin");
+      if (admin) {
+        records.push({ ...admin });
+        saveMasterRecords(definition, records);
+      }
+    }
+    return records;
+  }
+  const existingKeys = new Set(records.map((record) => record.id));
+  const missing = defaults.filter((record) => !existingKeys.has(record.id));
   if (missing.length) {
     records.push(...missing.map((record) => ({ ...record })));
     saveMasterRecords(definition, records);
@@ -1568,9 +1531,8 @@ function setupOwnerEmployeeReport() {
   const lateTotal = document.querySelector("#owner-employee-late");
   const attendanceBody = document.querySelector("#owner-attendance-body");
   const attendanceEmpty = document.querySelector("#owner-attendance-empty");
-  const overtimeBody = document.querySelector("#owner-overtime-body");
-  const overtimeEmpty = document.querySelector("#owner-overtime-empty");
-  if (!totalEmployees || !presentTotal || !absentTotal || !lateTotal || !attendanceBody || !attendanceEmpty || !overtimeBody || !overtimeEmpty) return;
+  const attendanceTableWrap = document.querySelector(".owner-employee-table-wrap");
+  if (!totalEmployees || !presentTotal || !absentTotal || !lateTotal || !attendanceBody || !attendanceEmpty || !attendanceTableWrap) return;
 
   const readRecords = (key) => {
     try {
@@ -1583,68 +1545,74 @@ function setupOwnerEmployeeReport() {
   };
   const now = new Date();
   const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const normalizeName = (name) => String(name || "").trim().toLocaleLowerCase("id-ID");
   const employees = readRecords("washupEmployees")
-    .filter((employee) => employee.status === "Aktif" && employee.name)
-    .sort((first, second) => first.name.localeCompare(second.name));
-  const attendance = readRecords("washupAttendanceRecords")
-    .filter((record) => String(record.date || "").startsWith(monthKey));
+    .filter((employee) => employee.status === "Aktif" && String(employee.name || "").trim());
   const shifts = readRecords("washupShifts");
-  const attendanceByEmployee = new Map();
-  attendance.forEach((record) => {
-    const name = String(record.employeeName || "").trim();
-    if (!name) return;
-    const summary = attendanceByEmployee.get(name) || { present: 0, absent: 0, late: 0, leave: 0 };
-    if (record.presence === "Masuk") summary.present += 1;
-    if (record.presence === "Tanpa Keterangan") summary.absent += 1;
-    if (record.presence === "Izin") summary.leave += 1;
-    attendanceByEmployee.set(name, summary);
-  });
-  const currentSummary = [...attendanceByEmployee.values()].reduce((total, summary) => ({
-    present: total.present + summary.present,
-    absent: total.absent + summary.absent,
-  }), { present: 0, absent: 0 });
+  const attendance = getAttendanceRecords();
+  const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const shiftByName = new Map(shifts.map((shift) => [normalizeName(shift.name), shift]));
+  const toMinutes = (time) => {
+    const match = String(time || "").trim().match(/^(\d{1,2})[.:](\d{2})$/);
+    if (!match) return null;
+    const hours = Number(match[1]);
+    const minutes = Number(match[2]);
+    return hours <= 23 && minutes <= 59 ? hours * 60 + minutes : null;
+  };
+  const isLate = (record) => {
+    const shift = shiftByName.get(normalizeName(record.shift));
+    if (!shift) return false;
+    const checkInMinutes = toMinutes(record.checkIn);
+    const shiftStartMinutes = toMinutes(shift.start);
+    return checkInMinutes !== null && shiftStartMinutes !== null && checkInMinutes > shiftStartMinutes;
+  };
+  const todayAttendance = attendance.filter((record) => record.date === todayKey && record.checkIn);
+  const checkedInNames = new Set(todayAttendance.map((record) => normalizeName(record.employeeName)).filter(Boolean));
+  const lateNamesToday = new Set(todayAttendance
+    .filter(isLate)
+    .map((record) => normalizeName(record.employeeName))
+    .filter(Boolean));
   totalEmployees.textContent = String(employees.length);
-  presentTotal.textContent = String(currentSummary.present);
-  absentTotal.textContent = String(currentSummary.absent);
-  lateTotal.textContent = "0";
+  presentTotal.textContent = String(checkedInNames.size);
+  absentTotal.textContent = String(employees.filter((employee) => !checkedInNames.has(normalizeName(employee.name))).length);
+  lateTotal.textContent = String(lateNamesToday.size);
 
   const appendCell = (row, value) => {
     const cell = document.createElement("td");
     cell.textContent = String(value);
     row.append(cell);
   };
-  attendanceBody.replaceChildren();
-  attendanceEmpty.hidden = employees.length > 0;
+  const monthlyAttendance = attendance.filter((record) => String(record.date || "").startsWith(monthKey));
+  const monthlySummaries = new Map();
+  const nameByKey = new Map();
   employees.forEach((employee) => {
-    const summary = attendanceByEmployee.get(employee.name) || { present: 0, absent: 0, late: 0, leave: 0 };
-    const row = document.createElement("tr");
-    [employee.name, summary.present, summary.absent, summary.late, summary.leave].forEach((value) => appendCell(row, value));
-    attendanceBody.append(row);
+    const name = String(employee.name).trim();
+    const key = normalizeName(name);
+    if (!nameByKey.has(key)) nameByKey.set(key, name);
+    monthlySummaries.set(key, { presentDates: new Set(), lateDates: new Set() });
   });
-
-  const formatShiftTime = (time, isEnd = false) => {
-    if (!time) return "-";
-    if (isEnd && time === "00:00") return "24.00";
-    return String(time).replace(":", ".");
-  };
-  const overtimeRecords = attendance.filter((record) => Number(record.overtimeHours) > 0);
-  overtimeBody.replaceChildren();
-  overtimeEmpty.hidden = overtimeRecords.length > 0;
-  overtimeRecords.forEach((record) => {
-    const shift = shifts.find((item) => item.name === record.shift);
-    const workHours = shift
-      ? `${formatShiftTime(shift.start)} – ${formatShiftTime(shift.end, true)}`
-      : "-";
-    const hours = String(Number(record.overtimeHours)).replace(".", ",");
+  monthlyAttendance.forEach((record) => {
+    const name = String(record.employeeName || "").trim();
+    const key = normalizeName(name);
+    if (!key) return;
+    if (!nameByKey.has(key)) nameByKey.set(key, name);
+    if (!record.checkIn) return;
+    const summary = monthlySummaries.get(key) || { presentDates: new Set(), lateDates: new Set() };
+    summary.presentDates.add(String(record.date));
+    if (isLate(record)) summary.lateDates.add(String(record.date));
+    monthlySummaries.set(key, summary);
+  });
+  attendanceBody.replaceChildren();
+  const employeeNames = [...nameByKey.entries()]
+    .sort((first, second) => first[1].localeCompare(second[1], "id-ID"));
+  attendanceEmpty.hidden = employeeNames.length > 0;
+  attendanceTableWrap.hidden = employeeNames.length === 0;
+  employeeNames.forEach(([key, name]) => {
+    const summary = monthlySummaries.get(key) || { presentDates: new Set(), lateDates: new Set() };
     const row = document.createElement("tr");
-    [
-      record.employeeName || "-",
-      record.shift || "-",
-      workHours,
-      `${hours} Jam`,
-      formatCurrency(Number(record.incentive || 0)),
-    ].forEach((value) => appendCell(row, value));
-    overtimeBody.append(row);
+    // Izin dan insentif belum memiliki sumber data yang dapat dipercaya.
+    [name, summary.presentDates.size, summary.lateDates.size, "-", "-"].forEach((value) => appendCell(row, value));
+    attendanceBody.append(row);
   });
   setupOwnerLogout();
 }
@@ -1669,6 +1637,20 @@ function setupOwnerServiceStats() {
   const now = new Date();
   const years = new Set([now.getFullYear()]);
   validTransactions.forEach((transaction) => years.add(new Date(transaction.createdAt).getFullYear()));
+  const yearPlaceholder = yearSelect.querySelector('option[value=""]');
+  if (!yearPlaceholder) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "Pilih periode tahun";
+    yearSelect.prepend(option);
+  }
+  const monthPlaceholder = monthSelect.querySelector('option[value=""]');
+  if (!monthPlaceholder) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "Pilih periode bulan";
+    monthSelect.prepend(option);
+  }
   [...years].sort((first, second) => second - first).forEach((year) => {
     const option = document.createElement("option");
     option.value = String(year);
@@ -1683,12 +1665,10 @@ function setupOwnerServiceStats() {
     option.textContent = month.charAt(0).toUpperCase() + month.slice(1);
     monthSelect.append(option);
   });
-  monthSelect.value = String(now.getMonth() + 1);
-  yearSelect.value = String(now.getFullYear());
 
   const render = () => {
-    const month = Number(monthSelect.value);
-    const year = Number(yearSelect.value);
+    const month = Number(monthSelect.value) || now.getMonth() + 1;
+    const year = Number(yearSelect.value) || now.getFullYear();
     const paidTransactions = getTransactions().filter((transaction) => {
       if (transaction.paymentStatus !== "Lunas") return false;
       const date = new Date(transaction.createdAt);
@@ -1742,17 +1722,26 @@ function setupOwnerServiceStats() {
         const bar = document.createElement("div");
         bar.className = "owner-chart-bar";
         bar.style.height = `${Math.max((service.count / scale) * 100, 4)}%`;
-        // Angka diletakkan di dalam track tepat di atas batang.
         barTrack.append(value, bar);
+        const icon = document.createElement("span");
+        icon.className = "owner-chart-service-icon";
+        icon.setAttribute("aria-hidden", "true");
+        const isMotorcycle = service.name.toLocaleLowerCase("id-ID").includes("motor");
+        icon.innerHTML = isMotorcycle
+          ? '<svg viewBox="0 0 24 24" fill="none"><circle cx="6" cy="17" r="3" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="17" r="3" stroke="currentColor" stroke-width="1.6"/><path d="m6 17 4-7h4l4 7m-8-7-2-3H5m7 3 3 4H9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+          : '<svg viewBox="0 0 24 24" fill="none"><path d="m4 15 1.5-5h13L20 15v4h-2v-2H6v2H4v-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m7 10 1.5-4h7L17 10M7 14h.01M17 14h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
         const label = document.createElement("span");
         label.className = "owner-chart-label";
         label.textContent = service.name;
         label.title = service.name;
-        column.append(barTrack, label);
+        column.append(barTrack, icon, label);
         bars.append(column);
       });
       plot.append(axisTitle, ticks, bars);
-      chart.append(plot);
+      const scroller = document.createElement("div");
+      scroller.className = "owner-chart-scroll";
+      scroller.append(plot);
+      chart.append(scroller);
     }
   };
   applyButton.addEventListener("click", render);
@@ -1777,7 +1766,7 @@ function setupAdminDashboard() {
   const monitoringQueue = document.querySelector("#admin-monitoring-queue");
   const waitingCashier = document.querySelector("#admin-waiting-cashier");
   const monitoringEmployees = document.querySelector("#admin-monitoring-employees");
-  const overtimeCount = document.querySelector("#admin-overtime-count");
+  const checkInCount = document.querySelector("#admin-check-in-count");
   const currentShift = document.querySelector("#admin-current-shift");
   const currentShiftTime = document.querySelector("#admin-current-shift-time");
   const targetProgress = document.querySelector("#admin-target-progress");
@@ -1789,7 +1778,7 @@ function setupAdminDashboard() {
   const recentCount = document.querySelector("#admin-recent-count");
   const notice = document.querySelector("#admin-notice");
 
-  if (!customerCount || !vehicleCount || !serviceCount || !employeeCount || !todayTransactionsCount || !todayRevenue || !activeQueueCount || !activeBadge || !popularServices || !monitoringQueue || !waitingCashier || !monitoringEmployees || !overtimeCount || !currentShift || !currentShiftTime || !targetProgress || !targetPercent || !targetCount || !activityList || !recentBody || !recentEmpty || !recentCount || !notice) {
+  if (!customerCount || !vehicleCount || !serviceCount || !employeeCount || !todayTransactionsCount || !todayRevenue || !activeQueueCount || !activeBadge || !popularServices || !monitoringQueue || !waitingCashier || !monitoringEmployees || !checkInCount || !currentShift || !currentShiftTime || !targetProgress || !targetPercent || !targetCount || !activityList || !recentBody || !recentEmpty || !recentCount || !notice) {
     return;
   }
 
@@ -1829,7 +1818,6 @@ function setupAdminDashboard() {
     }
     return formatCurrency(amount);
   };
-  const dateMatchesToday = (value, todayKey) => String(value || "").replace(/\D/g, "").slice(0, 8) === todayKey;
   const createActivity = (title, detail, iconType) => {
     const item = document.createElement("div");
     item.className = "admin-activity-item";
@@ -1869,18 +1857,11 @@ function setupAdminDashboard() {
     const todayKey = getTodayKey();
     const todayTransactions = transactions.filter((transaction) => isToday(transaction.createdAt, todayKey));
     const activeEmployees = readMasterRecords(masterDefinitions.employees).filter((employee) => employee && employee.status === "Aktif");
-    const todayAttendance = readDashboardRecords("washupAttendanceRecords", "absensi").filter((record) => dateMatchesToday(record.date, todayKey));
+    const todayAttendance = getAttendanceRecords().filter((record) => String(record.date || "").replace(/\D/g, "").slice(0, 8) === todayKey && record.checkIn);
     const shifts = readDashboardRecords(masterDefinitions.shifts.key, "shift").filter((shift) => shift.status === "Aktif");
 
-    // Gabungan Data Pelanggan/Kendaraan (master Admin) dan data dari transaksi Kasir, dihitung unik.
-    const customers = new Set([
-      ...readMasterRecords(masterDefinitions.customers).map((customer) => String(customer?.name || "").trim().toLowerCase()),
-      ...transactions.map((transaction) => String(transaction.customerName || "").trim().toLowerCase()),
-    ].filter(Boolean));
-    const vehicles = new Set([
-      ...readMasterRecords(masterDefinitions.vehicles).map((vehicle) => String(vehicle?.plateNumber || "").replace(/\s+/g, "").toUpperCase()),
-      ...transactions.map((transaction) => String(transaction.plateNumber || "").replace(/\s+/g, "").toUpperCase()),
-    ].filter(Boolean));
+    const uniqueCustomerNames = new Set(transactions.map((transaction) => String(transaction.customerName || "").trim().toLowerCase()).filter(Boolean));
+    const uniqueVehiclePlates = new Set(transactions.map((transaction) => String(transaction.plateNumber || "").replace(/\s+/g, " ").trim().toUpperCase()).filter(Boolean));
     let services = [];
     try {
       services = ensureMasterDefaults("services", masterDefinitions.services);
@@ -1896,7 +1877,7 @@ function setupAdminDashboard() {
     }).slice(0, 5);
     const activeQueue = transactions.filter((transaction) => transaction.serviceStatus === "Menunggu" || transaction.serviceStatus === "Sedang Dicuci").length;
     const waitingForCashier = transactions.filter((transaction) => transaction.serviceStatus === "Selesai" && transaction.paymentStatus === "Belum Dibayar").length;
-    const overtimeEmployees = todayAttendance.filter((record) => Number(record.overtimeHours) > 0).length;
+    const verifiedCheckIns = todayAttendance.filter((record) => record.checkInVerified === true).length;
     const totalRevenue = transactions.reduce((sum, transaction) => {
       const paymentDate = transaction.paidAt || transaction.createdAt;
       if (transaction.paymentStatus !== "Lunas" || !isToday(paymentDate, todayKey)) return sum;
@@ -1910,8 +1891,8 @@ function setupAdminDashboard() {
     });
     const topServices = [...serviceCounts.entries()].sort((first, second) => second[1] - first[1]).slice(0, 3);
 
-    customerCount.textContent = String(customers.size);
-    vehicleCount.textContent = String(vehicles.size);
+    customerCount.textContent = String(uniqueCustomerNames.size);
+    vehicleCount.textContent = String(uniqueVehiclePlates.size);
     serviceCount.textContent = String(services.length);
     employeeCount.textContent = String(employees);
     todayTransactionsCount.textContent = String(todayTransactions.length);
@@ -1921,7 +1902,7 @@ function setupAdminDashboard() {
     monitoringQueue.textContent = String(activeQueue);
     waitingCashier.textContent = String(waitingForCashier);
     monitoringEmployees.textContent = String(employees);
-    overtimeCount.textContent = String(overtimeEmployees);
+    checkInCount.textContent = String(todayAttendance.length);
     popularServices.replaceChildren();
     Array.from({ length: 3 }, (_, index) => topServices[index] || ["-", 0]).forEach(([name, count]) => {
       const column = document.createElement("div");
@@ -1978,8 +1959,8 @@ function setupAdminDashboard() {
     }
     if (todayAttendance.length) {
       activityList.append(createActivity(
-        "Absensi karyawan tercatat",
-        `${todayAttendance.length} dari ${employees} karyawan`,
+        "Absensi karyawan terverifikasi",
+        `${verifiedCheckIns} dari ${todayAttendance.length}`,
         "attendance",
       ));
     }
@@ -2028,6 +2009,245 @@ function setupAdminDashboard() {
 }
 
 if (document.querySelector(".admin-dashboard-page")) setupAdminDashboard();
+
+function setupAdminVerificationPage() {
+  const page = document.querySelector(".admin-verification-page");
+  if (!page) return;
+
+  if (sessionStorage.getItem("washupRole") !== "Admin") {
+    window.location.replace(appUrl("login.html"));
+    return;
+  }
+
+  const search = document.querySelector("#verification-search");
+  const pendingCount = document.querySelector("#verification-pending-count");
+  const tableBody = document.querySelector("#verification-table-body");
+  const emptyState = document.querySelector("#verification-empty");
+  const review = document.querySelector("#verification-review");
+  const reviewTitle = document.querySelector("#verification-review-title");
+  const reviewInfo = document.querySelector("#verification-review-info");
+  const photoWrap = document.querySelector("#verification-photo-wrap");
+  const partnerStatus = document.querySelector("#verification-partner-status");
+  const confirmButton = document.querySelector("#verification-confirm");
+  const actionHint = document.querySelector("#verification-action-hint");
+  const notice = document.querySelector("#verification-notice");
+  if (!search || !pendingCount || !tableBody || !emptyState || !review || !reviewTitle || !reviewInfo || !photoWrap || !partnerStatus || !confirmButton || !actionHint || !notice) return;
+
+  const kindLabels = { checkIn: "Masuk", checkOut: "Keluar" };
+  const verificationFields = {
+    checkIn: { time: "checkIn", photo: "checkInPhoto", verified: "checkInVerified", verifiedAt: "checkInVerifiedAt" },
+    checkOut: { time: "checkOut", photo: "checkOutPhoto", verified: "checkOutVerified", verifiedAt: "checkOutVerifiedAt" },
+  };
+  let selected = null;
+  const setNotice = (message, isError = false) => {
+    notice.textContent = message;
+    notice.classList.toggle("is-error", isError);
+  };
+
+  const normalizedDate = (value) => String(value || "").replace(/\D/g, "").slice(0, 8);
+  const formatDate = (value) => {
+    const digits = normalizedDate(value);
+    if (digits.length !== 8) return "—";
+    const date = new Date(Number(digits.slice(0, 4)), Number(digits.slice(4, 6)) - 1, Number(digits.slice(6, 8)));
+    return Number.isNaN(date.getTime()) ? "—" : date.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+  };
+  const formatTime = (value) => {
+    const time = String(value || "").trim();
+    return time ? `${time.replace(":", ".")} WIB` : "—";
+  };
+  const formatShift = (value) => String(value || "").replace(/^Shift\s+/i, "").trim() || "—";
+  const statusFor = (record, kind) => {
+    const fields = verificationFields[kind];
+    if (!record[fields.time]) return "Belum diajukan";
+    return record[fields.verified] === true ? "Terverifikasi" : "Perlu verifikasi";
+  };
+  const shiftDetails = (record) => {
+    const shift = readMasterRecords(masterDefinitions.shifts).find((item) => item.name === record.shift);
+    if (!shift) return "";
+    const start = String(shift.start || "").replace(":", ".");
+    const end = shift.end === "00:00" ? "24.00" : String(shift.end || "").replace(":", ".");
+    return start && end ? `${start}–${end}` : "";
+  };
+  const currentSelectedRecord = (records) => selected && records[selected.recordIndex] ? records[selected.recordIndex] : null;
+
+  function renderReview(records) {
+    const record = currentSelectedRecord(records);
+    if (!record || !selected || !verificationFields[selected.kind]) {
+      review.hidden = true;
+      return;
+    }
+
+    const fields = verificationFields[selected.kind];
+    const kindLabel = kindLabels[selected.kind];
+    const time = record[fields.time];
+    const shift = formatShift(record.shift);
+    const schedule = shiftDetails(record);
+    const shiftInfo = [shift, schedule].filter(Boolean).join(" ");
+    const dateLabel = formatDate(record.date);
+    const employeeName = String(record.employeeName || "Petugas");
+    const partnerKind = selected.kind === "checkIn" ? "checkOut" : "checkIn";
+    const partnerFields = verificationFields[partnerKind];
+    const partnerLabel = kindLabels[partnerKind].toLowerCase();
+    const partnerTime = record[partnerFields.time];
+
+    review.hidden = false;
+    reviewTitle.textContent = `Tinjau absensi ${kindLabel.toLowerCase()} · ${employeeName}`;
+    reviewInfo.textContent = `${dateLabel} • ${shiftInfo} • ${kindLabel} ${formatTime(time)}`;
+    photoWrap.replaceChildren();
+    if (record[fields.photo]) {
+      const photo = document.createElement("img");
+      photo.src = record[fields.photo];
+      photo.alt = `Foto absen ${kindLabel.toLowerCase()} ${employeeName}`;
+      photoWrap.append(photo);
+    } else {
+      const missingPhoto = document.createElement("p");
+      missingPhoto.textContent = "Foto bukti tidak tersedia.";
+      photoWrap.append(missingPhoto);
+    }
+    partnerStatus.textContent = !partnerTime
+      ? `Absensi ${partnerLabel} belum diajukan.`
+      : `Absensi ${partnerLabel} ${formatTime(partnerTime)}${record[partnerFields.verified] === true ? " sudah terverifikasi." : " belum terverifikasi."}`;
+
+    const isVerified = record[fields.verified] === true;
+    const isAvailable = Boolean(time);
+    const checkoutBlocked = selected.kind === "checkOut" && record.checkInVerified !== true;
+    confirmButton.hidden = !isAvailable || isVerified;
+    confirmButton.disabled = checkoutBlocked;
+    confirmButton.textContent = `Verifikasi ${kindLabel}`;
+    actionHint.hidden = !checkoutBlocked;
+    actionHint.textContent = checkoutBlocked ? "Verifikasi absensi masuk terlebih dahulu sebelum memverifikasi absensi keluar." : "";
+  }
+
+  function render() {
+    const records = getAttendanceRecords();
+    const tableWrap = tableBody.closest(".verification-table-wrap");
+    const scrollLeft = tableWrap?.scrollLeft || 0;
+    const query = search.value.trim().toLowerCase();
+    const pending = records.reduce((total, record) => total + ["checkIn", "checkOut"].filter((kind) => record[verificationFields[kind].time] && record[verificationFields[kind].verified] !== true).length, 0);
+    pendingCount.textContent = `${pending} perlu verifikasi`;
+
+    const filteredRecords = records
+      .map((record, recordIndex) => ({ record, recordIndex }))
+      .filter(({ record }) => String(record.employeeName || "").toLowerCase().includes(query))
+      .sort((first, second) => normalizedDate(second.record.date).localeCompare(normalizedDate(first.record.date)));
+
+    tableBody.replaceChildren();
+    emptyState.hidden = filteredRecords.length > 0;
+    const emptyHeading = emptyState.querySelector("h3");
+    const emptyDescription = emptyState.querySelector("p");
+    if (!records.length) {
+      if (emptyHeading) emptyHeading.textContent = "Belum ada absensi petugas.";
+      if (emptyDescription) emptyDescription.textContent = "Data absensi akan muncul setelah petugas melakukan absen.";
+    } else if (!filteredRecords.length) {
+      if (emptyHeading) emptyHeading.textContent = "Absensi tidak ditemukan.";
+      if (emptyDescription) emptyDescription.textContent = "Coba kata kunci nama karyawan yang lain.";
+    }
+
+    filteredRecords.forEach(({ record, recordIndex }) => {
+      ["checkIn", "checkOut"].forEach((kind) => {
+        const status = statusFor(record, kind);
+        const row = document.createElement("tr");
+        if (selected?.recordIndex === recordIndex && selected.kind === kind) row.classList.add("is-selected");
+        const values = [
+          String(record.employeeName || "Petugas"),
+          formatDate(record.date),
+          formatShift(record.shift),
+          kindLabels[kind],
+          formatTime(record[verificationFields[kind].time]),
+        ];
+        values.forEach((value) => {
+          const cell = document.createElement("td");
+          cell.textContent = value;
+          row.append(cell);
+        });
+
+        const statusCell = document.createElement("td");
+        const statusBadge = document.createElement("span");
+        statusBadge.className = `verification-status verification-status-${status === "Terverifikasi" ? "verified" : status === "Perlu verifikasi" ? "pending" : "unsubmitted"}`;
+        statusBadge.textContent = status;
+        statusCell.append(statusBadge);
+        row.append(statusCell);
+
+        const actionCell = document.createElement("td");
+        if (status === "Belum diajukan") {
+          const unavailable = document.createElement("span");
+          unavailable.className = "verification-unavailable";
+          unavailable.textContent = "Tidak tersedia";
+          actionCell.append(unavailable);
+        } else {
+          const action = document.createElement("button");
+          action.type = "button";
+          action.className = "verification-row-action";
+          action.dataset.recordIndex = String(recordIndex);
+          action.dataset.kind = kind;
+          action.textContent = status === "Terverifikasi" ? "Detail" : "Tinjau";
+          if (selected?.recordIndex === recordIndex && selected.kind === kind) action.classList.add("is-selected");
+          actionCell.append(action);
+        }
+        row.append(actionCell);
+        tableBody.append(row);
+      });
+    });
+
+    renderReview(records);
+    if (tableWrap) tableWrap.scrollLeft = scrollLeft;
+  }
+
+  tableBody.addEventListener("click", (event) => {
+    const action = event.target.closest("button.verification-row-action");
+    if (!action) return;
+    selected = { recordIndex: Number(action.dataset.recordIndex), kind: action.dataset.kind };
+    setNotice("");
+    render();
+  });
+  search.addEventListener("input", () => {
+    selected = null;
+    setNotice("");
+    render();
+  });
+  confirmButton.addEventListener("click", () => {
+    if (!selected || !verificationFields[selected.kind]) return;
+    const records = getAttendanceRecords();
+    const record = records[selected.recordIndex];
+    if (!record) {
+      setNotice("Catatan absensi tidak ditemukan. Muat ulang halaman dan coba lagi.", true);
+      return;
+    }
+    const fields = verificationFields[selected.kind];
+    if (!record[fields.time]) {
+      setNotice("Absensi belum diajukan dan tidak dapat diverifikasi.", true);
+      return;
+    }
+    if (record[fields.verified] === true) {
+      setNotice("Absensi ini sudah terverifikasi.");
+      render();
+      return;
+    }
+    if (selected.kind === "checkOut" && record.checkInVerified !== true) {
+      setNotice("Verifikasi absensi masuk terlebih dahulu sebelum memverifikasi absensi keluar.", true);
+      render();
+      return;
+    }
+
+    records[selected.recordIndex] = { ...record, [fields.verified]: true, [fields.verifiedAt]: new Date().toISOString() };
+    try {
+      localStorage.setItem(attendanceStorageKey, JSON.stringify(records));
+      setNotice(`Absensi ${kindLabels[selected.kind].toLowerCase()} ${String(record.employeeName || "Petugas")} berhasil diverifikasi.`);
+      render();
+    } catch {
+      setNotice("Verifikasi tidak dapat disimpan. Periksa ruang penyimpanan browser dan coba lagi.", true);
+    }
+  });
+  document.querySelector("#verification-logout")?.addEventListener("click", () => {
+    sessionStorage.removeItem("washupRole");
+    sessionStorage.removeItem("washupUsername");
+    window.location.href = appUrl("login.html");
+  });
+
+  render();
+}
+
+if (document.querySelector(".admin-verification-page")) setupAdminVerificationPage();
 
 function statusClassForPetugas(status) {
   if (status === "Selesai" || status === "Lunas") return "status-done";
@@ -2358,9 +2578,9 @@ if (document.querySelector(".petugas-dashboard-page")) setupPetugasDashboard();
 if (document.querySelector(".petugas-queue-page")) setupPetugasQueue();
 if (document.querySelector(".petugas-attendance-page")) setupPetugasAttendance();
 
-// Dropdown kustom untuk form data master (Figma: Data Kendaraan tambah 2).
+// Dropdown kustom untuk form data master.
 // <select> asli tetap ada tetapi disembunyikan, jadi nilai form dan validasi tetap bekerja seperti biasa.
-const customSelectTypes = ["vehicles", "services", "employees", "shifts", "attendance", "users"];
+const customSelectTypes = ["services", "employees", "shifts", "users"];
 const customSelectLabels = { Nonaktif: "Non Aktif" };
 
 function enhanceSelect(select) {
@@ -2475,7 +2695,7 @@ function normalizePhone(value) {
 }
 
 function setupMasterPage() {
-  const page = document.querySelector(".master-page");
+  const page = document.querySelector(".master-page[data-master]");
   if (!page) return;
 
   if (sessionStorage.getItem("washupRole") !== "Admin") {
@@ -2508,17 +2728,12 @@ function setupMasterPage() {
   // Validasi ditangani validate() agar pesan selalu tampil di dialog (termasuk untuk dropdown kustom yang <select>-nya tersembunyi).
   if (form) form.noValidate = true;
 
-  const isProtectedRecord = (record) => (type === "users" && (record.builtIn || record.protected)) || (type === "services" && masterDefaults.services.some((item) => item.id === record.id)) || (type === "shifts" && record.id === "shift-pagi");
+  const isProtectedRecord = (record) => (type === "users" && String(record.username || "").trim().toLowerCase() === "admin") || (type === "services" && masterDefaults.services.some((item) => item.id === record.id)) || (type === "shifts" && record.id === "shift-pagi");
   // Jam shift ditampilkan dengan titik seperti Figma (08.00); jam selesai 00:00 berarti tengah malam (24.00).
   const formatShiftTime = (key, value) => (key === "end" && value === "00:00" ? "24.00" : String(value).replace(":", "."));
   const valueForDisplay = (key, value) => {
     if (key === "price") return formatCurrency(value);
     if (type === "shifts" && (key === "start" || key === "end") && value) return formatShiftTime(key, value);
-    if (type === "attendance") {
-      if (key === "date" && /^\d{4}-\d{2}-\d{2}$/.test(String(value))) return String(value).split("-").reverse().join(" / ");
-      if (key === "overtimeHours") return Number(value) > 0 ? `${String(Number(value)).replace(".", ",")} Jam` : "-";
-      if (key === "incentive") return Number(value) > 0 ? formatCurrency(value) : "-";
-    }
     return (customSelectTypes.includes(type) && customSelectLabels[value]) || String(value || "-");
   };
   const createId = () => `${type}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -2652,28 +2867,22 @@ function setupMasterPage() {
   function validate(record, records) {
     const requiredField = definition.fields.find((field) => field.required && !(field.type === "password" && editingId) && !String(record[field.key] || "").trim());
     if (requiredField) {
-      if (type === "attendance" && requiredField.key === "shift") return "Belum ada shift aktif. Aktifkan shift di halaman Data Shift.";
       return `${requiredField.label} wajib diisi.`;
     }
     const invalidPhone = definition.fields.find((field) => field.type === "tel" && record[field.key] && !/^\+?\d{8,15}$/.test(record[field.key]));
     if (invalidPhone) return `${invalidPhone.label} hanya boleh berisi angka (8–15 digit).`;
-    if (type === "attendance" && !getActiveShiftNames().includes(record.shift)) return "Shift yang dipilih tidak aktif.";
     if (type === "services" && (!Number.isFinite(Number(record.price)) || Number(record.price) <= 0)) return "Harga harus lebih besar dari 0.";
     if (type === "shifts" && record.end !== "00:00" && record.start >= record.end) return "Jam selesai harus setelah jam mulai.";
-    if (type === "attendance" && (Number(record.overtimeHours) < 0 || Number(record.incentive) < 0)) return "Lembur dan insentif tidak boleh bernilai negatif.";
     const duplicate = records.some((existing) => existing.id !== editingId && (
-      (type === "customers" && normalizePhone(existing.phone) === record.phone) ||
-      (type === "vehicles" && String(existing.plateNumber).replace(/\s+/g, " ").trim().toUpperCase() === record.plateNumber) ||
       (type === "services" && String(existing.name).trim().toLowerCase() === record.name.toLowerCase() && existing.vehicleType === record.vehicleType) ||
       (type === "employees" && normalizePhone(existing.phone) === record.phone) ||
       (type === "shifts" && String(existing.name).trim().toLowerCase() === record.name.toLowerCase()) ||
-      (type === "users" && existing.username.toLowerCase() === record.username.toLowerCase()) ||
-      (type === "attendance" && existing.date === record.date && String(existing.employeeName).trim().toLowerCase() === String(record.employeeName).trim().toLowerCase())
+      (type === "users" && String(existing.username || "").trim().toLowerCase() === record.username.toLowerCase())
     ));
     return duplicate ? "Data duplikat tidak diperbolehkan." : "";
   }
 
-  // Dialog konfirmasi hapus (Figma: Data Pelanggan Hapus). Dibuat lewat JS agar keenam halaman master tidak perlu diubah.
+  // Dialog konfirmasi hapus dibuat lewat JS agar halaman master tidak perlu diubah.
   const deleteDialog = document.createElement("dialog");
   deleteDialog.className = "queue-dialog master-delete-dialog";
   deleteDialog.id = "master-delete-dialog";
@@ -2742,14 +2951,8 @@ function setupMasterPage() {
       record[field.key] = field.type === "tel" ? normalizePhone(record[field.key]) : record[field.key].replace(/\s+/g, " ").trim();
     });
     if (type === "users" && editingId && !record.password) delete record.password;
-    if (type === "vehicles") record.plateNumber = record.plateNumber.trim().toUpperCase();
     if (type === "users") record.username = record.username.trim().toLowerCase();
     if (type === "services") record.price = Number(record.price);
-    if (type === "attendance") {
-      record.employeeName = record.employeeName.trim();
-      record.overtimeHours = record.overtimeHours === "" ? 0 : Number(record.overtimeHours);
-      record.incentive = record.incentive === "" ? 0 : Number(record.incentive);
-    }
     const records = getRecords();
     const error = validate(record, records);
     notice.textContent = error;

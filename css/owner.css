@@ -1644,3 +1644,124 @@ body.owner-page {
     overflow-wrap: anywhere;
   }
 }
+
+.owner-employee-page .owner-employee-section {
+  display: flex !important;
+  min-height: 320px !important;
+  flex-direction: column;
+}
+
+.owner-employee-page .owner-employee-table-wrap[hidden] {
+  display: none !important;
+}
+
+.owner-employee-page .owner-employee-empty:not([hidden]) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 12px !important;
+}
+
+.owner-stats-toolbar {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 117px;
+  gap: 24px;
+  width: min(100%, 930px);
+  min-height: 76px;
+  padding: 14px 24px;
+  border-radius: 8px;
+}
+
+.owner-service-stats-page .dashboard-welcome .eyebrow {
+  text-transform: none;
+}
+
+.owner-stats-filter label {
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+.owner-stats-filter select {
+  border-radius: 4px;
+}
+
+.owner-stats-toolbar button {
+  width: 117px;
+  height: 30px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.owner-chart-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.owner-chart-plot {
+  width: min(100%, 730px);
+  min-width: 730px;
+  height: 350px;
+  margin: 0 auto;
+  padding: 20px 10px 0 30px;
+  background-color: #F7FAFC;
+}
+
+.owner-chart-ticks {
+  padding-bottom: 74px;
+}
+
+.owner-chart-bars {
+  padding-bottom: 0;
+}
+
+.owner-chart-column {
+  grid-template-rows: minmax(0, 1fr) 36px 36px;
+}
+
+.owner-chart-service-icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 50%;
+  color: #2A7FA8;
+  background: #E5F3F8;
+}
+
+.owner-chart-service-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.owner-chart-label {
+  display: -webkit-box;
+  padding: 3px 4px 0;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .owner-employee-page .owner-employee-summary-grid,
+  .owner-service-stats-page .owner-service-stats-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .owner-stats-toolbar {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+    min-height: auto;
+    padding: 16px;
+  }
+
+  .owner-stats-toolbar button {
+    grid-column: 1 / -1;
+    justify-self: end;
+  }
+
+  .owner-chart-plot {
+    margin-left: 0;
+  }
+}

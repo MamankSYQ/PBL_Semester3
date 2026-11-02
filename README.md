@@ -26,7 +26,7 @@ Website ini masih berupa prototipe front-end: semua data disimpan di `localStora
 | Petugas | `petugas` | `petugas123` |
 | Owner | `owner` | `owner123` |
 
-Keempat akun bawaan dilindungi (tidak bisa diedit atau dihapus). Admin dapat menambah akun lain lewat halaman **Akun Pengguna**.
+Akun `admin` bawaan dilindungi (tidak bisa diedit atau dihapus). Akun bawaan lainnya dapat diedit atau dihapus, dan Admin dapat menambah akun lain lewat halaman **Akun Pengguna**.
 
 ## Struktur Folder
 
@@ -42,7 +42,7 @@ PBL_Semester3/
 │   ├── landing.css             Halaman awal
 │   ├── login.css               Halaman login
 │   ├── admin.css               Dashboard Admin
-│   ├── admin-master.css        Halaman data Admin (pelanggan s.d. akun pengguna)
+│   ├── admin-master.css        Halaman data master Admin
 │   ├── kasir.css               Dashboard Kasir
 │   └── petugas.css             Dashboard Petugas
 ├── js/
@@ -50,12 +50,10 @@ PBL_Semester3/
 ├── pages/
 │   ├── admin/
 │   │   ├── dashboard-admin.html
-│   │   ├── data-pelanggan.html
-│   │   ├── data-kendaraan.html
 │   │   ├── layanan-tarif.html
 │   │   ├── data-karyawan.html
 │   │   ├── data-shift.html
-│   │   ├── absensi-lembur.html
+│   │   ├── verifikasi-absensi.html
 │   │   └── akun-pengguna.html
 │   ├── kasir/
 │   │   ├── dashboard-kasir.html
@@ -76,7 +74,7 @@ PBL_Semester3/
 
 ## Fitur per Role
 
-- **Admin** — dashboard ringkasan; kelola Data Pelanggan, Data Kendaraan, Layanan & Tarif, Data Karyawan, Data Shift, Absensi & Lembur, dan Akun Pengguna (tambah, edit, detail, hapus).
+- **Admin** — dashboard ringkasan; kelola Layanan & Tarif, Data Karyawan, Data Shift, Verifikasi Absensi, dan Akun Pengguna (tambah, edit, detail, hapus).
 - **Kasir** — dashboard, transaksi baru (nomor transaksi dan antrean otomatis), antrean, pembayaran (Tunai/QRIS), riwayat transaksi.
 - **Petugas** — dashboard pengerjaan, antrean dengan pembaruan status (Menunggu → Sedang Dicuci → Selesai), absensi masuk/keluar dengan bukti foto.
 - **Owner** — dashboard pendapatan dan laporan transaksi per periode.
@@ -101,13 +99,11 @@ Admin dapat menambah layanan lain di halaman **Layanan & Tarif**.
 | Key | Isi |
 | --- | --- |
 | `washupTransactions` | Transaksi, status pengerjaan, dan status pembayaran |
-| `washupCustomers` | Data Pelanggan |
-| `washupVehicles` | Data Kendaraan |
 | `washupServices` | Layanan & Tarif |
 | `washupEmployees` | Data Karyawan |
 | `washupShifts` | Data Shift |
-| `washupAttendanceRecords` | Absensi & Lembur yang dicatat Admin |
-| `washupPetugasAttendance` | Absen masuk/keluar Petugas beserta foto |
+| `washupAttendanceRecords` | Data absensi lama yang digunakan pada laporan Owner |
+| `washupPetugasAttendance` | Absen masuk/keluar Petugas beserta foto dan status verifikasi Admin |
 | `washupUsers` | Akun Pengguna |
 
 Role dan username yang sedang login disimpan di `sessionStorage` (`washupRole`, `washupUsername`). Untuk mengosongkan data, hapus key di atas lewat DevTools browser (tab Application → Local Storage).
