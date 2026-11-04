@@ -3,86 +3,94 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Antrean Kendaraan WASHUP" />
+    <meta name="description" content="Antrean Kendaraan WASHUP - Sistem Informasi Car Wash" />
     <title>Antrean | WASHUP</title>
     <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/kasir.css?v=20261104-profile-footer" />
+    <link href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   </head>
-  <body class="queue-page">
+  <body class="dashboard-page kasir-dashboard-page queue-page kasir-queue-page">
     <div class="dashboard-shell">
-      <aside class="dashboard-sidebar" aria-label="Navigasi Kasir">
+      <aside class="dashboard-sidebar" id="kasir-sidebar" aria-label="Navigasi Kasir">
         <a class="dashboard-brand" href="dashboard-kasir.html" aria-label="WASHUP Dashboard Kasir">
-          <span class="brand-mark">W</span>
-          <span>
-            <strong>WASHUP</strong>
-            <small>Sistem Car Wash</small>
-          </span>
+          <img class="brand-logo-img" src="../../assets/logo-washup.png" alt="Logo mobil cuci WASHUP" />
+          <span class="brand-text">WASHUP</span>
         </a>
-
+        <button class="sidebar-toggle desktop-sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Perkecil sidebar" aria-expanded="true" title="Perkecil sidebar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 5.3a1 1 0 0 1 0 1.4L9.4 12l5.3 5.3a1 1 0 0 1-1.4 1.4l-6-6a1 1 0 0 1 0-1.4l6-6a1 1 0 0 1 1.4 0Z" /></svg>
+        </button>
         <nav class="dashboard-nav" aria-label="Menu utama">
           <p class="nav-label">MENU KASIR</p>
-          <a class="nav-item" href="dashboard-kasir.html">
-            <span class="nav-icon" aria-hidden="true">⌂</span>
-            Dashboard
+          <a class="nav-item" href="dashboard-kasir.html" aria-label="Dashboard" title="Dashboard">
+            <svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true">
+              <path fill="currentColor" d="M33 19a1 1 0 0 1-.71-.29L18 4.41L3.71 18.71A1 1 0 0 1 2.3 17.3l15-15a1 1 0 0 1 1.41 0l15 15A1 1 0 0 1 33 19Z" />
+              <path fill="currentColor" d="M18 7.79L6 19.79V32a2 2 0 0 0 2 2h7V22h6v12h7a2 2 0 0 0 2-2V19.79ZM28 32h-3V20H11v12H8V19.38l10-10l10 10Z" />
+            </svg>
+            <span class="nav-text">Dashboard</span>
           </a>
-          <a class="nav-item" href="transaksi-baru.html">
-            <span class="nav-icon" aria-hidden="true">+</span>
-            Transaksi Baru
+          <a class="nav-item" href="transaksi-baru.html" aria-label="Transaksi Baru" title="Transaksi Baru">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 20v-8m0 0V4m0 8h8m-8 0H4" /></svg>
+            <span class="nav-text">Transaksi Baru</span>
           </a>
-          <a class="nav-item active" href="antrean.html" aria-current="page">
-            <span class="nav-icon" aria-hidden="true">≡</span>
-            Antrean
+          <a class="nav-item active" href="antrean.html" aria-current="page" aria-label="Antrean" title="Antrean">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            <span class="nav-text">Antrean</span>
           </a>
-          <a class="nav-item" href="pembayaran.html">
-            <span class="nav-icon" aria-hidden="true">Rp</span>
-            Pembayaran
+          <a class="nav-item" href="pembayaran.html" aria-label="Pembayaran" title="Pembayaran">
+            <svg class="nav-icon-svg" viewBox="0 0 512 512" aria-hidden="true"><path fill="currentColor" d="M0 64c0-17.7 14.3-32 32-32h80c79.5 0 144 64.5 144 144c0 58.8-35.2 109.3-85.7 131.7l51.4 128.4c6.6 16.4-1.4 35-17.8 41.6s-35-1.4-41.6-17.8l-56-139.9H64v128c0 17.7-14.3 32-32 32S0 465.7 0 448zm64 192h48c44.2 0 80-35.8 80-80s-35.8-80-80-80H64zm256-96h80c61.9 0 112 50.1 112 112s-50.1 112-112 112h-48v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V192c0-17.7 14.3-32 32-32m80 160c26.5 0 48-21.5 48-48s-21.5-48-48-48h-48v96z" /></svg>
+            <span class="nav-text">Pembayaran</span>
           </a>
-          <a class="nav-item" href="riwayat-transaksi.html">
-            <span class="nav-icon" aria-hidden="true">↺</span>
-            Riwayat Transaksi
+          <a class="nav-item" href="riwayat-transaksi.html" aria-label="Riwayat Transaksi" title="Riwayat Transaksi">
+            <svg class="nav-icon-svg" viewBox="0 0 48 48" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6" d="M8.09 4.5H19a2.05 2.05 0 0 1 2.05 2.05V17.2c0 1.72-1.91 2.74-3 1.65l-3.48-3.5A12.82 12.82 0 1 0 36.83 24c0-3.46-1-6.06-4.93-10c-.84-.84-.1-1.55.38-2l2.28-2.27c.94-.94 1.27-1.12 2.1-.29c4.86 4.86 6.83 8.52 6.84 14.63A19.5 19.5 0 1 1 9.86 10.63C8.69 9.44 8.32 9.06 6.35 7.09c-.77-.76-.08-2.59 1.74-2.59" /></svg>
+            <span class="nav-text">Riwayat Transaksi</span>
+          </a>
+          <a class="nav-item" href="pengeluaran.html" aria-label="Pengeluaran" title="Pengeluaran">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M5 3.8h10l4 4V20H5z" />
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M14.5 3.8v4.5H19M8 12h8M8 15.5h8" />
+            </svg>
+            <span class="nav-text">Pengeluaran</span>
           </a>
         </nav>
-
         <div class="sidebar-bottom">
-          <p class="sidebar-note">Area kerja Kasir</p>
-          <button class="sidebar-logout" id="queue-logout" type="button">
-            <span class="nav-icon" aria-hidden="true">↪</span>
-            Logout
+          <p class="sidebar-note">Area Kerja Kasir</p>
+          <button class="sidebar-logout" id="kasir-dashboard-logout" type="button" aria-label="Logout" title="Logout">
+            <svg class="logout-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H10M14 8l4 4-4 4M8 12h10" /></svg>
+            <span class="logout-text">Logout</span>
           </button>
         </div>
       </aside>
+      <button class="sidebar-backdrop" id="sidebar-backdrop" type="button" aria-label="Tutup menu" hidden></button>
 
       <div class="dashboard-content">
         <header class="dashboard-topbar">
-          <div>
-            <p class="eyebrow">WASHUP / KASIR</p>
-            <h1>Antrean</h1>
-          </div>
-          <div class="user-summary" aria-label="Informasi pengguna">
-            <span class="user-avatar" aria-hidden="true">K</span>
-            <span>
-              <strong>Kasir</strong>
-              <small>Role: Kasir</small>
-            </span>
+          <button class="sidebar-toggle mobile-sidebar-toggle" id="mobile-sidebar-toggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="kasir-sidebar" title="Buka menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
+          </button>
+          <div class="topbar-title-wrap"><h1>Antrean</h1></div>
+          <div class="user-summary profile-trigger" id="profile-edit-trigger" role="button" tabindex="0" aria-label="Edit profil pengguna" aria-haspopup="dialog" aria-controls="profile-edit-dialog" title="Edit profil">
+            <div class="user-avatar-circle" aria-hidden="true">
+              <img class="profile-avatar-image" id="profile-avatar-image" alt="" hidden /><svg id="profile-avatar-placeholder" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" /></svg></div>
+            <div class="user-info"><strong id="profile-display-username">Kasir</strong><small>Role: Kasir</small></div>
           </div>
         </header>
 
         <main class="dashboard-main queue-main">
-          <section class="queue-heading" aria-labelledby="queue-page-title">
-            <div>
+          <section class="queue-page-heading" aria-labelledby="queue-page-title">
+            <div class="queue-heading-copy">
               <p class="eyebrow">PELAYANAN BERJALAN</p>
               <h2 id="queue-page-title">Antrean Kendaraan</h2>
-              <p>Kelola antrean kendaraan yang sedang diproses.</p>
             </div>
-            <div class="active-queue-count">
+            <div class="queue-active-card" aria-label="Jumlah antrean aktif">
               <span>Antrean Aktif</span>
               <strong id="active-queue-count">0 kendaraan</strong>
             </div>
           </section>
 
-          <section class="queue-toolbar" aria-label="Pencarian dan filter antrean">
+          <section class="queue-search-panel" aria-label="Pencarian dan filter antrean">
             <div class="queue-search-field">
-              <label for="queue-search">Cari antrean</label>
-              <input id="queue-search" type="search" placeholder="Cari nomor plat atau nama pelanggan..." />
+              <label for="queue-search">Cari Antrean</label>
+              <input id="queue-search" type="search" autocomplete="off" placeholder="Cari Plat Nomor Atau Nama Pelanggan" />
             </div>
             <div class="queue-filter-field">
               <label for="queue-filter">Filter Status Pengerjaan</label>
@@ -95,80 +103,161 @@
             </div>
           </section>
 
-          <section class="queue-panel" aria-labelledby="queue-table-title">
-            <div class="section-heading">
-              <div>
-                <p class="eyebrow">DATA TRANSAKSI</p>
-                <h2 id="queue-table-title">Daftar Antrean</h2>
-              </div>
-              <span class="badge badge-blue" id="queue-result-count">0 data</span>
+          <section class="queue-list-panel" aria-labelledby="queue-list-title">
+            <header class="queue-list-heading">
+              <p class="eyebrow">DATA TRANSAKSI</p>
+              <h2 id="queue-list-title">Daftar Antrean</h2>
+            </header>
+            <div class="queue-table-controls" id="queue-table-controls">
+              <label class="queue-show-entries" for="queue-page-size">
+                <span>Show</span>
+                <select id="queue-page-size" aria-label="Jumlah antrean per halaman">
+                  <option value="5" selected>5</option>
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+                <span>entries</span>
+              </label>
             </div>
             <div class="queue-table-wrap">
-              <table class="queue-full-table">
-                <caption class="sr-only">Daftar transaksi sebagai antrean kendaraan</caption>
+              <table class="queue-page-table">
+                <caption class="sr-only">Daftar antrean kendaraan beserta status pengerjaan</caption>
                 <thead>
                   <tr>
-                    <th scope="col">No. Antrean</th>
-                    <th scope="col">No. Plat</th>
-                    <th scope="col">Pelanggan</th>
-                    <th scope="col">Kendaraan</th>
-                    <th scope="col">Layanan</th>
-                    <th scope="col">Status Pengerjaan</th>
-                    <th scope="col">Status Pembayaran</th>
-                    <th scope="col">Aksi</th>
+                    <th scope="col">NO. ANTRIAN</th>
+                    <th scope="col">NO. PLAT</th>
+                    <th scope="col">PELANGGAN</th>
+                    <th scope="col">KENDARAAN</th>
+                    <th scope="col">LAYANAN</th>
+                    <th scope="col">STATUS PENGERJAAN</th>
+                    <th scope="col">AKSI</th>
                   </tr>
                 </thead>
                 <tbody id="queue-page-body"></tbody>
               </table>
             </div>
-            <div class="queue-empty" id="queue-empty" hidden>
-              <span class="queue-empty-icon" aria-hidden="true">≡</span>
-              <h3>Belum ada antrean</h3>
+            <div class="queue-empty-state" id="queue-empty" hidden>
+              <span class="queue-empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" focusable="false"><path d="M5 20.5 13 9h22l8 11.5v16H5z"></path><path d="M5 20.5h10l5 5h8l5-5h10"></path></svg>
+              </span>
+              <h3>Belum ada antrean.</h3>
               <p>Buat transaksi baru untuk menambahkan kendaraan ke antrean.</p>
-              <a class="primary-button dashboard-action" href="transaksi-baru.html">+ Transaksi Baru</a>
+              <a class="queue-new-transaction-button" href="transaksi-baru.html"><span aria-hidden="true">＋</span> Transaksi Baru</a>
             </div>
+            <div class="queue-table-footer" id="queue-table-footer" hidden>
+              <p class="queue-pagination-range" id="queue-pagination-range" aria-live="polite">Showing 0 to 0 of 0 entries</p>
+              <nav class="queue-pagination" aria-label="Navigasi halaman antrean">
+                <div class="queue-page-controls" role="group" aria-label="Kontrol halaman antrean">
+                  <button class="queue-page-arrow" id="queue-page-prev" type="button" disabled>Previous</button>
+                  <div class="queue-page-numbers" id="queue-page-numbers"></div>
+                  <button class="queue-page-arrow" id="queue-page-next" type="button" disabled>Next</button>
+                </div>
+              </nav>
+            </div>
+            <p class="queue-result-count" id="queue-result-count" aria-live="polite">0 data</p>
           </section>
-        </main>
 
-        <footer class="dashboard-footer">
-          <span>WASHUP · Antrean Kendaraan</span>
-          <span id="current-year"></span>
-        </footer>
+          <footer class="dashboard-footer queue-footer">
+            <div class="footer-copy"><span class="c-icon-circle">&copy;</span><span id="current-year">2026</span> WASHUP - Antrean Kendaraan</div>
+            <span>Maju Bersama Car Wash 2 · Kota Malang</span>
+          </footer>
+        </main>
       </div>
     </div>
 
-    <dialog class="queue-dialog" id="queue-dialog" aria-labelledby="detail-title">
-      <div class="dialog-heading">
-        <div>
-          <p class="eyebrow">DETAIL ANTREAN</p>
-          <h2 id="detail-title">Detail Transaksi</h2>
-        </div>
-        <button class="dialog-close" id="dialog-close" type="button" aria-label="Tutup detail">×</button>
-      </div>
-      <div class="detail-grid">
-        <div><span>Nomor Antrean</span><strong id="detail-queue">-</strong></div>
-        <div><span>Nomor Transaksi</span><strong id="detail-transaction">-</strong></div>
-        <div><span>Pelanggan</span><strong id="detail-customer">-</strong></div>
-        <div><span>Nomor Telepon</span><strong id="detail-phone">-</strong></div>
-        <div><span>Kendaraan</span><strong id="detail-vehicle">-</strong></div>
-        <div><span>Nomor Plat</span><strong id="detail-plate">-</strong></div>
-        <div><span>Layanan</span><strong id="detail-service">-</strong></div>
-        <div><span>Harga</span><strong id="detail-price">-</strong></div>
-        <div><span>Status Pengerjaan</span><strong id="detail-service-status">-</strong></div>
-        <div><span>Status Pembayaran</span><strong id="detail-payment-status">-</strong></div>
-      </div>
-      <div class="dialog-actions">
-        <label for="detail-status">Update Status Pengerjaan</label>
+    <dialog class="queue-detail-dialog" id="queue-dialog" aria-labelledby="queue-dialog-title">
+      <header class="queue-dialog-heading">
+        <div><p class="eyebrow">DETAIL TRANSAKSI</p><h2 id="queue-dialog-title">Detail Antrean</h2></div>
+        <button class="queue-dialog-close" id="dialog-close" type="button" aria-label="Tutup detail">×</button>
+      </header>
+      <dl class="queue-detail-grid">
+        <div><dt>Nomor Antrean</dt><dd id="detail-queue">-</dd></div>
+        <div><dt>Nomor Transaksi</dt><dd id="detail-transaction">-</dd></div>
+        <div><dt>Pelanggan</dt><dd id="detail-customer">-</dd></div>
+        <div><dt>Nomor Telepon</dt><dd id="detail-phone">-</dd></div>
+        <div><dt>Kendaraan</dt><dd id="detail-vehicle">-</dd></div>
+        <div><dt>Nomor Plat</dt><dd id="detail-plate">-</dd></div>
+        <div><dt>Layanan</dt><dd id="detail-service">-</dd></div>
+        <div><dt>Harga</dt><dd id="detail-price">Rp 0</dd></div>
+        <div><dt>Status Pengerjaan</dt><dd id="detail-service-status">Menunggu</dd></div>
+        <div><dt>Status Pembayaran</dt><dd id="detail-payment-status">Belum Dibayar</dd></div>
+      </dl>
+      <div class="queue-dialog-status-field">
+        <label for="detail-status">Perbarui Status Pengerjaan</label>
         <select id="detail-status">
           <option value="Menunggu">Menunggu</option>
           <option value="Sedang Dicuci">Sedang Dicuci</option>
           <option value="Selesai">Selesai</option>
         </select>
-        <button class="primary-button dashboard-action" id="update-status" type="button">Update Status</button>
       </div>
-      <p class="dialog-notice" id="dialog-notice" role="status" aria-live="polite"></p>
+      <p class="queue-dialog-notice" id="dialog-notice" role="status" aria-live="polite"></p>
+      <footer class="queue-dialog-actions">
+        <button type="button" class="queue-dialog-secondary" id="dialog-cancel">Tutup</button>
+        <button type="button" class="queue-dialog-primary" id="update-status">Simpan Status</button>
+      </footer>
     </dialog>
 
-    <script src="../../js/app.js"></script>
+    <dialog class="queue-detail-dialog queue-edit-dialog" id="queue-edit-dialog" aria-labelledby="queue-edit-title">
+      <header class="queue-dialog-heading">
+        <div><p class="eyebrow">EDIT TRANSAKSI</p><h2 id="queue-edit-title">Edit Data Antrean</h2></div>
+        <button class="queue-dialog-close" id="queue-edit-close" type="button" aria-label="Tutup edit">×</button>
+      </header>
+      <div class="queue-edit-grid">
+        <div class="queue-edit-field"><label for="edit-customer">Nama Pelanggan</label><input id="edit-customer" type="text" autocomplete="name" required /></div>
+        <div class="queue-edit-field"><label for="edit-phone">Nomor Telepon</label><input id="edit-phone" type="tel" autocomplete="tel" required /></div>
+        <div class="queue-edit-field"><label for="edit-plate">Nomor Plat</label><input id="edit-plate" type="text" autocapitalize="characters" required /></div>
+        <div class="queue-edit-field"><label for="edit-vehicle">Jenis Kendaraan</label><select id="edit-vehicle"><option value="Mobil">Mobil</option><option value="Motor">Motor</option></select></div>
+        <div class="queue-edit-field"><label for="edit-service">Layanan</label><select id="edit-service" required></select></div>
+        <div class="queue-edit-field"><label>Harga Layanan</label><output id="edit-price">Rp 0</output></div>
+      </div>
+      <p class="queue-dialog-notice" id="queue-edit-notice" role="status" aria-live="polite"></p>
+      <footer class="queue-dialog-actions">
+        <button type="button" class="queue-dialog-secondary" id="queue-edit-cancel">Batal</button>
+        <button type="button" class="queue-dialog-primary" id="queue-edit-save">Simpan Perubahan</button>
+      </footer>
+    </dialog>
+
+    
+
+    <dialog class="profile-edit-dialog" id="profile-edit-dialog" aria-labelledby="profile-edit-title">
+      <form class="profile-edit-form" id="profile-edit-form">
+        <header class="profile-edit-heading">
+          <div>
+            <p class="eyebrow">PENGATURAN AKUN</p>
+            <h2 id="profile-edit-title">Edit Profil</h2>
+            <p class="profile-edit-subtitle">Perbarui informasi akun Kasir kamu.</p>
+          </div>
+          <button class="profile-edit-close" id="profile-edit-close" type="button" aria-label="Tutup">×</button>
+        </header>
+
+        <section class="profile-photo-section" aria-label="Foto profil">
+          <div class="profile-photo-preview" id="profile-photo-preview">
+            <img id="profile-photo-preview-image" alt="Pratinjau foto profil" hidden />
+            <svg id="profile-photo-placeholder" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+          </div>
+          <div class="profile-photo-controls">
+            <label class="profile-photo-label" for="profile-photo-input">Foto Profil</label>
+            <input id="profile-photo-input" name="photo" type="file" accept="image/*" />
+            <small>Format gambar JPG, PNG, atau WebP. Maksimal 5 MB.</small>
+          </div>
+        </section>
+
+        <label class="profile-form-field" for="profile-username">Username
+          <input id="profile-username" name="username" type="text" maxlength="40" autocomplete="username" required placeholder="Masukkan username" />
+        </label>
+        <label class="profile-form-field" for="profile-password">Password Baru
+          <input id="profile-password" name="password" type="password" minlength="6" autocomplete="new-password" placeholder="Masukkan password baru" />
+          <small>Kosongkan jika tidak ingin mengubah password.</small>
+        </label>
+
+        <p class="profile-form-message" id="profile-form-message" role="status" aria-live="polite"></p>
+        <footer class="profile-edit-actions">
+          <button class="profile-button-secondary" id="profile-edit-cancel" type="button">Batal</button>
+          <button class="profile-button-primary" id="profile-edit-save" type="submit">Simpan Perubahan</button>
+        </footer>
+      </form>
+    </dialog>
+<script src="../../js/app.js?v=20261104-profile-footer"></script>
   </body>
 </html>

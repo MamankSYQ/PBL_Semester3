@@ -3,94 +3,119 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Transaksi Baru WASHUP" />
+    <meta name="description" content="Transaksi Baru WASHUP - Sistem Informasi Car Wash" />
     <title>Transaksi Baru | WASHUP</title>
     <link rel="stylesheet" href="../../css/style.css" />
-  </head>
-  <body class="transaction-page">
-    <div class="dashboard-shell">
-      <aside class="dashboard-sidebar" aria-label="Navigasi Kasir">
-        <a class="dashboard-brand" href="dashboard-kasir.html" aria-label="WASHUP Dashboard Kasir">
-          <span class="brand-mark">W</span>
-          <span>
-            <strong>WASHUP</strong>
-            <small>Sistem Car Wash</small>
-          </span>
-        </a>
+    <link rel="stylesheet" href="../../css/kasir.css?v=20261104-profile-footer" />
 
+    <link href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet" />
+  </head>
+  <body class="kasir-transaction-page kasir-dashboard-page">
+    <div class="dashboard-shell">
+      <aside class="dashboard-sidebar" id="kasir-sidebar" aria-label="Navigasi Kasir">
+        <a class="dashboard-brand" href="dashboard-kasir.html" aria-label="WASHUP Dashboard Kasir">
+          <img class="brand-logo-img" src="../../assets/logo-washup.png" alt="Logo mobil cuci WASHUP" />
+          <span class="brand-text">WASHUP</span>
+        </a>
+        <button class="sidebar-toggle desktop-sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Perkecil sidebar" aria-expanded="true" title="Perkecil sidebar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 5.3a1 1 0 0 1 0 1.4L9.4 12l5.3 5.3a1 1 0 0 1-1.4 1.4l-6-6a1 1 0 0 1 0-1.4l6-6a1 1 0 0 1 1.4 0Z"/></svg>
+        </button>
         <nav class="dashboard-nav" aria-label="Menu utama">
           <p class="nav-label">MENU KASIR</p>
-          <a class="nav-item" href="dashboard-kasir.html">
-            <span class="nav-icon" aria-hidden="true">⌂</span>
-            Dashboard
+          <a class="nav-item" href="dashboard-kasir.html" aria-label="Dashboard" title="Dashboard">
+            <svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true">
+              <path fill="currentColor" d="M33 19a1 1 0 0 1-.71-.29L18 4.41L3.71 18.71A1 1 0 0 1 2.3 17.3l15-15a1 1 0 0 1 1.41 0l15 15A1 1 0 0 1 33 19Z" />
+              <path fill="currentColor" d="M18 7.79L6 19.79V32a2 2 0 0 0 2 2h7V22h6v12h7a2 2 0 0 0 2-2V19.79ZM28 32h-3V20H11v12H8V19.38l10-10l10 10Z" />
+            </svg>
+            <span class="nav-text">Dashboard</span>
           </a>
-          <a class="nav-item active" href="transaksi-baru.html" aria-current="page">
-            <span class="nav-icon" aria-hidden="true">+</span>
-            Transaksi Baru
+          <a class="nav-item active" href="transaksi-baru.html" aria-current="page" aria-label="Transaksi Baru" title="Transaksi Baru">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 20v-8m0 0V4m0 8h8m-8 0H4" />
+            </svg>
+            <span class="nav-text">Transaksi Baru</span>
           </a>
-          <a class="nav-item" href="antrean.html">
-            <span class="nav-icon" aria-hidden="true">≡</span>
-            Antrean
+          <a class="nav-item" href="antrean.html" aria-label="Antrean" title="Antrean">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <span class="nav-text">Antrean</span>
           </a>
-          <a class="nav-item" href="pembayaran.html">
-            <span class="nav-icon" aria-hidden="true">Rp</span>
-            Pembayaran
+          <a class="nav-item" href="pembayaran.html" aria-label="Pembayaran" title="Pembayaran">
+            <svg class="nav-icon-svg" viewBox="0 0 512 512" aria-hidden="true">
+              <path fill="currentColor" d="M0 64c0-17.7 14.3-32 32-32h80c79.5 0 144 64.5 144 144c0 58.8-35.2 109.3-85.7 131.7l51.4 128.4c6.6 16.4-1.4 35-17.8 41.6s-35-1.4-41.6-17.8l-56-139.9H64v128c0 17.7-14.3 32-32 32S0 465.7 0 448zm64 192h48c44.2 0 80-35.8 80-80s-35.8-80-80-80H64zm256-96h80c61.9 0 112 50.1 112 112s-50.1 112-112 112h-48v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V192c0-17.7 14.3-32 32-32m80 160c26.5 0 48-21.5 48-48s-21.5-48-48-48h-48v96z" />
+            </svg>
+            <span class="nav-text">Pembayaran</span>
           </a>
-          <a class="nav-item" href="riwayat-transaksi.html">
-            <span class="nav-icon" aria-hidden="true">↺</span>
-            Riwayat Transaksi
+          <a class="nav-item" href="riwayat-transaksi.html" aria-label="Riwayat Transaksi" title="Riwayat Transaksi">
+            <svg class="nav-icon-svg" viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6" d="M8.09 4.5H19a2.05 2.05 0 0 1 2.05 2.05V17.2c0 1.72-1.91 2.74-3 1.65l-3.48-3.5A12.82 12.82 0 1 0 36.83 24c0-3.46-1-6.06-4.93-10c-.84-.84-.1-1.55.38-2l2.28-2.27c.94-.94 1.27-1.12 2.1-.29c4.86 4.86 6.83 8.52 6.84 14.63A19.5 19.5 0 1 1 9.86 10.63C8.69 9.44 8.32 9.06 6.35 7.09c-.77-.76-.08-2.59 1.74-2.59" />
+            </svg>
+            <span class="nav-text">Riwayat Transaksi</span>
+          </a>
+          <a class="nav-item" href="pengeluaran.html" aria-label="Pengeluaran" title="Pengeluaran">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M5 3.8h10l4 4V20H5z" />
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M14.5 3.8v4.5H19M8 12h8M8 15.5h8" />
+            </svg>
+            <span class="nav-text">Pengeluaran</span>
           </a>
         </nav>
-
         <div class="sidebar-bottom">
-          <p class="sidebar-note">Area kerja Kasir</p>
-          <button class="sidebar-logout" id="transaction-logout" type="button">
-            <span class="nav-icon" aria-hidden="true">↪</span>
-            Logout
+          <p class="sidebar-note">Area Kerja Kasir</p>
+          <button class="sidebar-logout" id="kasir-dashboard-logout" type="button" aria-label="Logout" title="Logout">
+            <svg class="logout-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H10M14 8l4 4-4 4M8 12h10"/></svg>
+            <span class="nav-text">Logout</span>
           </button>
         </div>
       </aside>
-
+      <button class="sidebar-backdrop" id="sidebar-backdrop" type="button" aria-label="Tutup menu" hidden></button>
       <div class="dashboard-content">
         <header class="dashboard-topbar">
-          <div>
-            <p class="eyebrow">WASHUP / KASIR</p>
-            <h1>Transaksi Baru</h1>
+          <button class="sidebar-toggle mobile-sidebar-toggle" id="mobile-sidebar-toggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="kasir-sidebar" title="Buka menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
+          <div class="topbar-title-wrap">
+            <h1>Transaksi Kasir</h1>
           </div>
-          <div class="user-summary" aria-label="Informasi pengguna">
-            <span class="user-avatar" aria-hidden="true">K</span>
-            <span>
-              <strong>Kasir</strong>
+          <div class="user-summary profile-trigger" id="profile-edit-trigger" role="button" tabindex="0" aria-label="Edit profil pengguna" aria-haspopup="dialog" aria-controls="profile-edit-dialog" title="Edit profil">
+            <div class="user-avatar-circle" aria-hidden="true">
+              <img class="profile-avatar-image" id="profile-avatar-image" alt="" hidden />
+              <svg id="profile-avatar-placeholder" viewBox="0 0 24 24">
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+              </svg>
+            </div>
+            <div class="user-info">
+              <strong id="profile-display-username">Kasir</strong>
               <small>Role: Kasir</small>
-            </span>
+            </div>
           </div>
         </header>
-
-        <main class="dashboard-main transaction-main">
+        <main class="dashboard-main kasir-main transaction-main">
           <section class="transaction-heading" aria-labelledby="transaction-title">
-            <p class="eyebrow">PELAYANAN PELANGGAN</p>
-            <h2 id="transaction-title">Masukkan data pelanggan, kendaraan, dan layanan.</h2>
+            <p class="eyebrow" id="transaction-eyebrow">RINGKASAN PENGERJAAN</p>
+            <h2 id="transaction-title">Data Transaksi</h2>
           </section>
 
-          <div class="transaction-layout">
+          <div class="transaction-layout" id="transaction-layout">
             <form class="transaction-form" id="transaction-form" novalidate>
               <section class="form-section" aria-labelledby="customer-title">
                 <div class="form-section-heading">
                   <span class="form-section-number">01</span>
                   <div>
                     <p class="eyebrow">DATA PELANGGAN</p>
-                    <h3 id="customer-title">Informasi pelanggan</h3>
+                    <h3 id="customer-title">Informasi Pelanggan</h3>
                   </div>
                 </div>
                 <div class="form-grid">
                   <div class="form-field">
                     <label for="customer-name">Nama Pelanggan</label>
-                    <input id="customer-name" name="customerName" type="text" placeholder="Masukkan nama pelanggan" autocomplete="name" />
+                    <input id="customer-name" name="customerName" type="text" placeholder="Masukkan Nama Pelanggan" autocomplete="name" />
                     <p class="field-error" id="customer-name-error" aria-live="polite"></p>
                   </div>
                   <div class="form-field">
                     <label for="customer-phone">Nomor Telepon</label>
-                    <input id="customer-phone" name="customerPhone" type="tel" placeholder="Masukkan nomor telepon" autocomplete="tel" />
+                    <input id="customer-phone" name="customerPhone" type="tel" placeholder="Masukkan Nomor Telepon" autocomplete="tel" />
                     <p class="field-error" id="customer-phone-error" aria-live="polite"></p>
                   </div>
                 </div>
@@ -101,19 +126,19 @@
                   <span class="form-section-number">02</span>
                   <div>
                     <p class="eyebrow">DATA KENDARAAN</p>
-                    <h3 id="vehicle-title">Informasi kendaraan</h3>
+                    <h3 id="vehicle-title">Informasi Kendaraan</h3>
                   </div>
                 </div>
                 <div class="form-grid">
                   <div class="form-field">
                     <label for="plate-number">Nomor Plat</label>
-                    <input id="plate-number" name="plateNumber" type="text" placeholder="Masukkan nomor plat" />
+                    <input id="plate-number" name="plateNumber" type="text" placeholder="Masukkan Nomor Plat" autocapitalize="characters" />
                     <p class="field-error" id="plate-number-error" aria-live="polite"></p>
                   </div>
                   <div class="form-field">
                     <label for="vehicle-type">Jenis Kendaraan</label>
                     <select id="vehicle-type" name="vehicleType">
-                      <option value="">Pilih kendaraan</option>
+                      <option value="">Pilih Jenis Kendaraan</option>
                       <option value="Mobil">Mobil</option>
                       <option value="Motor">Motor</option>
                     </select>
@@ -127,7 +152,7 @@
                   <span class="form-section-number">03</span>
                   <div>
                     <p class="eyebrow">LAYANAN</p>
-                    <h3 id="service-title">Pilih layanan pencucian</h3>
+                    <h3 id="service-title">Pilih Layanan Pencucian</h3>
                   </div>
                 </div>
                 <div class="form-field">
@@ -138,7 +163,7 @@
                   <p class="field-error" id="service-error" aria-live="polite"></p>
                 </div>
                 <div class="price-preview" aria-live="polite">
-                  <span>Harga layanan</span>
+                  <span>Harga Layanan</span>
                   <strong id="price-preview">Rp 0</strong>
                 </div>
               </section>
@@ -165,45 +190,124 @@
           </div>
 
           <section class="transaction-result" id="transaction-result" aria-live="polite" hidden>
-            <div class="result-icon" aria-hidden="true">✓</div>
-            <div>
-              <p class="eyebrow">TRANSAKSI TERSIMPAN</p>
-              <h2>Transaksi berhasil dibuat.</h2>
-              <div class="result-details">
-                <span>Nomor Transaksi <strong id="result-transaction-number">-</strong></span>
-                <span>Nomor Antrean <strong id="result-queue-number">-</strong></span>
-              </div>
-              <div class="result-statuses">
-                <div class="result-status result-status-service">
-                  <span>Status Pengerjaan</span>
-                  <strong id="result-service-status">Menunggu</strong>
+            <article class="receipt-card" aria-label="Struk transaksi WASHUP">
+              <header class="receipt-brand">
+                <span class="receipt-brand-name">WASHUP</span>
+                <p>Maju Bersama Car Wash 2 · Kota Malang</p>
+                <span class="receipt-caption">STRUK TRANSAKSI</span>
+              </header>
+
+              <div class="receipt-queue-box">
+                <div class="receipt-queue-meta">
+                  <span class="receipt-mini-label">NOMOR ANTREAN</span>
+                  <p><span class="receipt-clock" aria-hidden="true">◷</span> <span id="result-service-status">Menunggu</span></p>
                 </div>
-                <div class="result-status result-status-payment">
-                  <span>Status Pembayaran</span>
-                  <strong id="result-payment-status">Belum Dibayar</strong>
+                <strong class="receipt-queue-number" id="result-queue-number">01</strong>
+              </div>
+
+              <div class="receipt-details">
+                <div><span>No. transaksi</span><strong id="result-transaction-number">-</strong></div>
+                <div><span>Tanggal</span><strong id="receipt-date">-</strong></div>
+                <div><span>Kasir</span><strong id="receipt-cashier">Kasir</strong></div>
+              </div>
+
+              <div class="receipt-divider"></div>
+              <div class="receipt-details receipt-customer-details">
+                <div><span>Pelanggan</span><strong id="result-customer">-</strong></div>
+                <div><span>Nomor telepon</span><strong id="receipt-phone">-</strong></div>
+                <div><span>Nomor plat</span><strong id="receipt-plate">-</strong></div>
+                <div><span>Jenis kendaraan</span><strong id="result-vehicle">-</strong></div>
+              </div>
+
+              <div class="receipt-service-block">
+                <span class="receipt-mini-label">LAYANAN PENCUCIAN</span>
+                <div class="receipt-service-line">
+                  <strong id="result-service">-</strong>
+                  <span id="receipt-service-price">Rp 0</span>
                 </div>
+                <p id="receipt-service-detail">1 × Rp 0</p>
               </div>
-              <div class="result-details result-customer-details">
-                <span>Pelanggan <strong id="result-customer">-</strong></span>
-                <span>Kendaraan <strong id="result-vehicle">-</strong></span>
-                <span>Layanan <strong id="result-service">-</strong></span>
-                <span>Total <strong id="result-price">Rp 0</strong></span>
+
+              <div class="receipt-total-row">
+                <span>Total tagihan</span>
+                <strong id="result-price">Rp 0</strong>
               </div>
-              <div class="result-actions">
-                <a class="primary-button dashboard-action" href="dashboard-kasir.html">Kembali ke Dashboard</a>
-                <a class="secondary-dashboard-button" href="dashboard-kasir.html#antrean-section">Lihat Antrean</a>
+              <div class="receipt-payment-row">
+                <span>Status pembayaran</span>
+                <strong id="result-payment-status">Belum Dibayar</strong>
               </div>
-            </div>
+              <p class="receipt-note">Struk ini adalah bukti transaksi, bukan bukti pembayaran.</p>
+              <p class="receipt-thanks">Terima kasih telah memilih WASHUP.</p>
+            </article>
+
+            <aside class="receipt-action-card" aria-labelledby="receipt-action-title">
+              <div class="receipt-success-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="m5 12.5 4.2 4.2L19.5 6.7" /></svg>
+              </div>
+              <p class="eyebrow">TRANSAKSI BARU</p>
+              <h3 id="receipt-action-title">Transaksi berhasil disimpan</h3>
+              <p class="receipt-success-message" id="receipt-success-message">Transaksi masuk ke antrean dan belum dibayar.</p>
+              <div class="receipt-action-divider"></div>
+              <h4>Cetak struk transaksi ini?</h4>
+              <p class="receipt-action-description">Cetak untuk pelanggan, atau pilih Tidak untuk kembali ke dashboard.</p>
+              <div class="receipt-action-buttons">
+                <button class="primary-button dashboard-action" id="print-receipt-button" type="button">Cetak struk</button>
+                <button class="secondary-dashboard-button" id="no-print-receipt-button" type="button">Tidak</button>
+              </div>
+            </aside>
           </section>
-        </main>
 
         <footer class="dashboard-footer">
-          <span>WASHUP · Transaksi Baru</span>
-          <span id="current-year"></span>
+          <div class="footer-copy">
+            <span class="c-icon-circle">&copy;</span>
+            <span id="current-year">2026</span> WASHUP - Transaksi Baru
+          </div>
+          <span>Maju Bersama Car Wash 2 · Kota Malang</span>
         </footer>
+        </main>
       </div>
     </div>
+    
 
-    <script src="../../js/app.js"></script>
+    <dialog class="profile-edit-dialog" id="profile-edit-dialog" aria-labelledby="profile-edit-title">
+      <form class="profile-edit-form" id="profile-edit-form">
+        <header class="profile-edit-heading">
+          <div>
+            <p class="eyebrow">PENGATURAN AKUN</p>
+            <h2 id="profile-edit-title">Edit Profil</h2>
+            <p class="profile-edit-subtitle">Perbarui informasi akun Kasir kamu.</p>
+          </div>
+          <button class="profile-edit-close" id="profile-edit-close" type="button" aria-label="Tutup">×</button>
+        </header>
+
+        <section class="profile-photo-section" aria-label="Foto profil">
+          <div class="profile-photo-preview" id="profile-photo-preview">
+            <img id="profile-photo-preview-image" alt="Pratinjau foto profil" hidden />
+            <svg id="profile-photo-placeholder" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+          </div>
+          <div class="profile-photo-controls">
+            <label class="profile-photo-label" for="profile-photo-input">Foto Profil</label>
+            <input id="profile-photo-input" name="photo" type="file" accept="image/*" />
+            <small>Format gambar JPG, PNG, atau WebP. Maksimal 5 MB.</small>
+          </div>
+        </section>
+
+        <label class="profile-form-field" for="profile-username">Username
+          <input id="profile-username" name="username" type="text" maxlength="40" autocomplete="username" required placeholder="Masukkan username" />
+        </label>
+        <label class="profile-form-field" for="profile-password">Password Baru
+          <input id="profile-password" name="password" type="password" minlength="6" autocomplete="new-password" placeholder="Masukkan password baru" />
+          <small>Kosongkan jika tidak ingin mengubah password.</small>
+        </label>
+
+        <p class="profile-form-message" id="profile-form-message" role="status" aria-live="polite"></p>
+        <footer class="profile-edit-actions">
+          <button class="profile-button-secondary" id="profile-edit-cancel" type="button">Batal</button>
+          <button class="profile-button-primary" id="profile-edit-save" type="submit">Simpan Perubahan</button>
+        </footer>
+      </form>
+    </dialog>
+<script src="../../js/app.js?v=20261104-profile-footer"></script>
+
   </body>
 </html>

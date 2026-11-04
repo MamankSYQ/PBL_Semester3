@@ -1,9 +1,342 @@
 <!doctype html>
 <html lang="id">
-  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Riwayat Transaksi WASHUP" /><title>Riwayat Transaksi | WASHUP</title><link rel="stylesheet" href="../../css/style.css" /></head>
-  <body class="history-page">
-    <div class="dashboard-shell"><aside class="dashboard-sidebar" aria-label="Navigasi Kasir"><a class="dashboard-brand" href="dashboard-kasir.html" aria-label="WASHUP Dashboard Kasir"><span class="brand-mark">W</span><span><strong>WASHUP</strong><small>Sistem Car Wash</small></span></a><nav class="dashboard-nav" aria-label="Menu utama"><p class="nav-label">MENU KASIR</p><a class="nav-item" href="dashboard-kasir.html"><span class="nav-icon" aria-hidden="true">⌂</span>Dashboard</a><a class="nav-item" href="transaksi-baru.html"><span class="nav-icon" aria-hidden="true">+</span>Transaksi Baru</a><a class="nav-item" href="antrean.html"><span class="nav-icon" aria-hidden="true">≡</span>Antrean</a><a class="nav-item active" href="riwayat-transaksi.html" aria-current="page"><span class="nav-icon" aria-hidden="true">↺</span>Riwayat Transaksi</a><a class="nav-item" href="pembayaran.html"><span class="nav-icon" aria-hidden="true">Rp</span>Pembayaran</a></nav><div class="sidebar-bottom"><p class="sidebar-note">Area kerja Kasir</p><button class="sidebar-logout" id="history-logout" type="button">Logout</button></div></aside>
-      <div class="dashboard-content"><header class="dashboard-topbar"><div><p class="eyebrow">WASHUP / KASIR</p><h1>Riwayat Transaksi</h1></div><div class="user-summary" aria-label="Informasi pengguna"><span class="user-avatar" aria-hidden="true">K</span><span><strong>Kasir</strong><small>Role: Kasir</small></span></div></header><main class="dashboard-main queue-main"><section class="queue-heading"><div><p class="eyebrow">DATA TRANSAKSI</p><h2>Riwayat Transaksi</h2><p>Lihat seluruh transaksi yang telah dibuat.</p></div></section><section class="queue-toolbar history-toolbar" aria-label="Pencarian dan filter riwayat"><div><label for="history-search">Cari transaksi</label><input id="history-search" type="search" placeholder="Nomor transaksi, antrean, pelanggan, atau plat..." /></div><div><label for="history-service-filter">Status Pengerjaan</label><select id="history-service-filter"><option value="Semua">Semua</option><option value="Menunggu">Menunggu</option><option value="Sedang Dicuci">Sedang Dicuci</option><option value="Selesai">Selesai</option></select></div><div><label for="history-payment-filter">Status Pembayaran</label><select id="history-payment-filter"><option value="Semua">Semua</option><option value="Belum Dibayar">Belum Dibayar</option><option value="Lunas">Lunas</option></select></div><div><label for="history-date-filter">Tanggal Transaksi</label><input id="history-date-filter" type="date" /></div></section><section class="queue-panel"><div class="section-heading"><div><p class="eyebrow">ARSIP TRANSAKSI</p><h2>Daftar Transaksi</h2></div><span class="badge badge-blue" id="history-result-count">0 data</span></div><div class="queue-table-wrap"><table class="queue-full-table history-table"><caption class="sr-only">Riwayat transaksi Kasir</caption><thead><tr><th>No. Transaksi</th><th>No. Antrean</th><th>Tanggal/Waktu</th><th>Pelanggan</th><th>Plat</th><th>Kendaraan</th><th>Layanan</th><th>Harga</th><th>Status Pengerjaan</th><th>Status Pembayaran</th><th>Metode Pembayaran</th><th>Aksi</th></tr></thead><tbody id="history-table-body"></tbody></table></div><div class="queue-empty" id="history-empty" hidden><span class="queue-empty-icon" aria-hidden="true">↺</span><h3 id="history-empty-title">Belum ada riwayat transaksi.</h3><p id="history-empty-message">Transaksi yang dibuat Kasir akan tampil di sini.</p></div></section></main><footer class="dashboard-footer"><span>WASHUP · Riwayat Transaksi</span><span id="current-year"></span></footer></div>
-    </div><dialog class="queue-dialog" id="history-dialog" aria-labelledby="history-detail-title"><div class="dialog-heading"><div><p class="eyebrow">DETAIL TRANSAKSI</p><h2 id="history-detail-title">Detail Transaksi</h2></div><button class="dialog-close" id="history-dialog-close" type="button" aria-label="Tutup detail">×</button></div><div class="detail-grid"><div><span>Nomor Transaksi</span><strong id="history-detail-transaction">-</strong></div><div><span>Nomor Antrean</span><strong id="history-detail-queue">-</strong></div><div><span>Nama Pelanggan</span><strong id="history-detail-customer">-</strong></div><div><span>Nomor Telepon</span><strong id="history-detail-phone">-</strong></div><div><span>Nomor Plat</span><strong id="history-detail-plate">-</strong></div><div><span>Jenis Kendaraan</span><strong id="history-detail-vehicle">-</strong></div><div><span>Layanan</span><strong id="history-detail-service">-</strong></div><div><span>Harga</span><strong id="history-detail-price">-</strong></div><div><span>Status Pengerjaan</span><strong id="history-detail-service-status">-</strong></div><div><span>Status Pembayaran</span><strong id="history-detail-payment-status">-</strong></div><div><span>Metode Pembayaran</span><strong id="history-detail-payment-method">-</strong></div><div><span>Waktu Transaksi</span><strong id="history-detail-created-at">-</strong></div></div></dialog><script src="../../js/app.js"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Riwayat Transaksi WASHUP" />
+    <title>Riwayat Transaksi | WASHUP</title>
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/kasir.css?v=20261104-footer-gutter-final" />
+    <link href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet" />
+  </head>
+  <body class="history-page kasir-dashboard-page kasir-history-page">
+    <div class="dashboard-shell">
+      <aside class="dashboard-sidebar" id="kasir-sidebar" aria-label="Navigasi Kasir">
+        <a class="dashboard-brand" href="dashboard-kasir.html" aria-label="WASHUP Dashboard Kasir">
+          <img class="brand-logo-img" src="../../assets/logo-washup.png" alt="Logo mobil cuci WASHUP" />
+          <span class="brand-text">WASHUP</span>
+        </a>
+
+        <button class="sidebar-toggle desktop-sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Perkecil sidebar" aria-expanded="true" title="Perkecil sidebar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 5.3a1 1 0 0 1 0 1.4L9.4 12l5.3 5.3a1 1 0 0 1-1.4 1.4l-6-6a1 1 0 0 1 0-1.4l6-6a1 1 0 0 1 1.4 0Z"/></svg>
+        </button>
+
+        <nav class="dashboard-nav" aria-label="Menu utama">
+          <p class="nav-label">MENU KASIR</p>
+          <a class="nav-item" href="dashboard-kasir.html" aria-label="Dashboard" title="Dashboard">
+            <svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true">
+              <path fill="currentColor" d="M33 19a1 1 0 0 1-.71-.29L18 4.41L3.71 18.71A1 1 0 0 1 2.3 17.3l15-15a1 1 0 0 1 1.41 0l15 15A1 1 0 0 1 33 19Z" />
+              <path fill="currentColor" d="M18 7.79L6 19.79V32a2 2 0 0 0 2 2h7V22h6v12h7a2 2 0 0 0 2-2V19.79ZM28 32h-3V20H11v12H8V19.38l10-10l10 10Z" />
+            </svg>
+            <span class="nav-text">Dashboard</span>
+          </a>
+
+          <a class="nav-item" href="transaksi-baru.html" aria-label="Transaksi Baru" title="Transaksi Baru">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 20v-8m0 0V4m0 8h8m-8 0H4" />
+            </svg>
+            <span class="nav-text">Transaksi Baru</span>
+          </a>
+
+          <a class="nav-item" href="antrean.html" aria-label="Antrean" title="Antrean">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <span class="nav-text">Antrean</span>
+          </a>
+
+          <a class="nav-item" href="pembayaran.html" aria-label="Pembayaran" title="Pembayaran">
+            <svg class="nav-icon-svg" viewBox="0 0 512 512" aria-hidden="true">
+              <path fill="currentColor" d="M0 64c0-17.7 14.3-32 32-32h80c79.5 0 144 64.5 144 144c0 58.8-35.2 109.3-85.7 131.7l51.4 128.4c6.6 16.4-1.4 35-17.8 41.6s-35-1.4-41.6-17.8l-56-139.9H64v128c0 17.7-14.3 32-32 32S0 465.7 0 448zm64 192h48c44.2 0 80-35.8 80-80s-35.8-80-80-80H64zm256-96h80c61.9 0 112 50.1 112 112s-50.1 112-112 112h-48v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V192c0-17.7 14.3-32 32-32m80 160c26.5 0 48-21.5 48-48s-21.5-48-48-48h-48v96z" />
+            </svg>
+            <span class="nav-text">Pembayaran</span>
+          </a>
+
+          <a class="nav-item active" href="riwayat-transaksi.html" aria-current="page" aria-label="Riwayat Transaksi" title="Riwayat Transaksi">
+            <svg class="nav-icon-svg" viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6" d="M8.09 4.5H19a2.05 2.05 0 0 1 2.05 2.05V17.2c0 1.72-1.91 2.74-3 1.65l-3.48-3.5A12.82 12.82 0 1 0 36.83 24c0-3.46-1-6.06-4.93-10c-.84-.84-.1-1.55.38-2l2.28-2.27c.94-.94 1.27-1.12 2.1-.29c4.86 4.86 6.83 8.52 6.84 14.63A19.5 19.5 0 1 1 9.86 10.63C8.69 9.44 8.32 9.06 6.35 7.09c-.77-.76-.08-2.59 1.74-2.59" />
+            </svg>
+            <span class="nav-text">Riwayat Transaksi</span>
+          </a>
+
+          <a class="nav-item" href="pengeluaran.html" aria-label="Pengeluaran" title="Pengeluaran">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M5 3.8h10l4 4V20H5z" />
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M14.5 3.8v4.5H19M8 12h8M8 15.5h8" />
+            </svg>
+            <span class="nav-text">Pengeluaran</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <p class="sidebar-note">Area Kerja Kasir</p>
+          <button class="sidebar-logout" id="history-logout" type="button" aria-label="Logout" title="Logout">
+            <svg class="logout-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H10M14 8l4 4-4 4M8 12h10"/></svg>
+            <span class="nav-text">Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <button class="sidebar-backdrop" id="sidebar-backdrop" type="button" aria-label="Tutup menu" hidden></button>
+
+      <div class="dashboard-content">
+        <header class="dashboard-topbar">
+          <button class="sidebar-toggle mobile-sidebar-toggle" id="mobile-sidebar-toggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="kasir-sidebar" title="Buka menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
+          <div class="topbar-title-wrap">
+            <h1>Riwayat Transaksi</h1>
+          </div>
+          <div class="user-summary profile-trigger" id="profile-edit-trigger" role="button" tabindex="0" aria-label="Edit profil pengguna" aria-haspopup="dialog" aria-controls="profile-edit-dialog" title="Edit profil">
+            <div class="user-avatar-circle" aria-hidden="true">
+              <img class="profile-avatar-image" id="profile-avatar-image" alt="" hidden />
+              <svg id="profile-avatar-placeholder" viewBox="0 0 24 24">
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+              </svg>
+            </div>
+            <div class="user-info">
+              <strong id="profile-display-username">Kasir</strong>
+              <small>Role: Kasir</small>
+            </div>
+          </div>
+        </header>
+
+        <main class="dashboard-main kasir-main history-main">
+          <section class="history-page-heading" aria-labelledby="history-page-title">
+            <p class="eyebrow">ARSIP TRANSAKSI</p>
+            <h2 id="history-page-title">Riwayat Transaksi</h2>
+          </section>
+
+          <section class="history-search-card" aria-label="Pencarian dan filter riwayat transaksi">
+            <div class="history-search-primary">
+              <div class="history-search-field">
+                <label for="history-search">Cari Transaksi</label>
+                <input id="history-search" type="search" placeholder="No.Transaksi, Antrean, Pelanggan..." />
+              </div>
+              <button class="history-filter-toggle" id="history-filter-toggle" type="button" aria-label="Tampilkan filter riwayat" aria-expanded="false" aria-controls="history-filter-options" title="Tampilkan filter">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
+              </button>
+            </div>
+
+            <div class="history-filter-options" id="history-filter-options" hidden>
+              <div class="history-filter-field">
+                <label for="history-service-filter">Status Pengerjaan</label>
+                <select id="history-service-filter">
+                  <option value="Semua">Semua</option>
+                  <option value="Menunggu">Menunggu</option>
+                  <option value="Sedang Dicuci">Sedang Dicuci</option>
+                  <option value="Selesai">Selesai</option>
+                </select>
+              </div>
+              <div class="history-filter-field">
+                <label for="history-payment-filter">Status Pembayaran</label>
+                <select id="history-payment-filter">
+                  <option value="Semua">Semua</option>
+                  <option value="Belum Dibayar">Belum Dibayar</option>
+                  <option value="Lunas">Lunas</option>
+                </select>
+              </div>
+              <div class="history-filter-field">
+                <label for="history-date-filter">Tanggal Transaksi</label>
+                <input id="history-date-filter" type="date" />
+              </div>
+            </div>
+          </section>
+
+          <section class="history-panel" aria-labelledby="history-table-title">
+            <header class="history-panel-heading">
+              <div>
+                <p class="eyebrow">ARSIP TRANSAKSI</p>
+                <h2 id="history-table-title">Daftar Transaksi</h2>
+              </div>
+              <span class="sr-only" id="history-result-count">0 data</span>
+            </header>
+
+            <div class="queue-table-controls history-table-controls">
+              <label class="queue-show-entries" for="history-page-size">
+                <span>Show</span>
+                <select id="history-page-size" aria-label="Jumlah riwayat transaksi per halaman">
+                  <option value="5" selected>5</option>
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+                <span>entries</span>
+              </label>
+            </div>
+            <div class="history-table-wrap">
+              <table class="history-table">
+                <caption class="sr-only">Riwayat transaksi Kasir</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">No. Transaksi</th>
+                    <th scope="col">No. Antrean</th>
+                    <th scope="col">Tanggal/Waktu</th>
+                    <th scope="col">Pelanggan</th>
+                    <th scope="col">Plat</th>
+                    <th scope="col">Kendaraan</th>
+                    <th scope="col">Layanan</th>
+                    <th scope="col">Harga</th>
+                    <th scope="col">Status Pengerjaan</th>
+                    <th scope="col">Status Pembayaran</th>
+                    <th scope="col">Metode Pembayaran</th>
+                    <th scope="col">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="history-table-body"></tbody>
+              </table>
+            </div>
+
+            <div class="history-empty" id="history-empty" hidden>
+              <span class="history-empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48">
+                  <path d="M5 20.5 13.5 7h21L43 20.5V40H5Z" />
+                  <path d="M5 21h12l5 5h8l5-5h8" />
+                </svg>
+              </span>
+              <h3 id="history-empty-title">Belum ada riwayat transaksi.</h3>
+              <p id="history-empty-message">Transaksi yang dibuat Kasir akan tampil di sini.</p>
+            </div>
+            <div class="queue-table-footer history-table-footer" id="history-table-footer">
+              <p class="queue-pagination-range" id="history-pagination-range" aria-live="polite">Showing 0 to 0 of 0 entries</p>
+              <nav class="queue-pagination" aria-label="Navigasi halaman riwayat transaksi">
+                <div class="queue-page-controls" role="group" aria-label="Kontrol halaman riwayat">
+                  <button type="button" class="queue-page-arrow" id="history-page-prev" aria-label="Halaman sebelumnya" title="Halaman sebelumnya" disabled>Previous</button>
+                  <div class="queue-page-numbers" id="history-page-numbers" aria-label="Nomor halaman"></div>
+                  <button type="button" class="queue-page-arrow" id="history-page-next" aria-label="Halaman berikutnya" title="Halaman berikutnya" disabled>Next</button>
+                </div>
+              </nav>
+            </div>
+          </section>
+        </main>
+
+        <footer class="dashboard-footer history-footer">
+          <div class="footer-copy">
+            <span class="c-icon-circle">&copy;</span>
+            <span id="current-year">2026</span> WASHUP - Riwayat Transaksi
+          </div>
+          <span>Maju Bersama Car Wash 2 · Kota Malang</span>
+        </footer>
+      </div>
+    </div>
+
+    <dialog class="queue-dialog" id="history-dialog" aria-labelledby="history-detail-title">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">DETAIL TRANSAKSI</p>
+          <h2 id="history-detail-title">Detail Transaksi</h2>
+        </div>
+        <button class="dialog-close" id="history-dialog-close" type="button" aria-label="Tutup detail">×</button>
+      </div>
+      <div class="detail-grid">
+        <div><span>Nomor Transaksi</span><strong id="history-detail-transaction">-</strong></div>
+        <div><span>Nomor Antrean</span><strong id="history-detail-queue">-</strong></div>
+        <div><span>Nama Pelanggan</span><strong id="history-detail-customer">-</strong></div>
+        <div><span>Nomor Telepon</span><strong id="history-detail-phone">-</strong></div>
+        <div><span>Nomor Plat</span><strong id="history-detail-plate">-</strong></div>
+        <div><span>Jenis Kendaraan</span><strong id="history-detail-vehicle">-</strong></div>
+        <div><span>Layanan</span><strong id="history-detail-service">-</strong></div>
+        <div><span>Harga</span><strong id="history-detail-price">-</strong></div>
+        <div><span>Status Pengerjaan</span><strong id="history-detail-service-status">-</strong></div>
+        <div><span>Status Pembayaran</span><strong id="history-detail-payment-status">-</strong></div>
+        <div><span>Metode Pembayaran</span><strong id="history-detail-payment-method">-</strong></div>
+        <div><span>Waktu Transaksi</span><strong id="history-detail-created-at">-</strong></div>
+      </div>
+    </dialog>
+
+    <div class="history-receipt-overlay" id="history-receipt-overlay" hidden aria-hidden="true">
+      <section class="history-receipt-dialog" role="dialog" aria-modal="true" aria-labelledby="history-receipt-dialog-title">
+        <div class="history-receipt-actions">
+          <span class="history-receipt-badge"><span aria-hidden="true">✓</span> <span id="history-receipt-dialog-title">Struk Transaksi</span></span>
+          <button type="button" class="history-receipt-close" id="history-receipt-close" aria-label="Tutup struk">×</button>
+        </div>
+        <article class="history-receipt-paper" id="history-receipt-paper">
+          <header class="history-receipt-brand">
+            <strong>WASHUP</strong>
+            <p>Maju Bersama Car Wash 2 · Kota Malang</p>
+            <span id="history-receipt-caption">STRUK TRANSAKSI</span>
+          </header>
+          <div class="history-receipt-status" id="history-receipt-paid-status" hidden><span>Status Pembayaran</span><strong>LUNAS</strong></div>
+          <div class="history-receipt-lines">
+            <div><span>No. Transaksi</span><strong id="history-receipt-transaction-number">-</strong></div>
+            <div><span>No. Antrean</span><strong id="history-receipt-queue-number">-</strong></div>
+            <div><span>Tanggal Transaksi</span><strong id="history-receipt-transaction-date">-</strong></div>
+            <div class="history-receipt-transaction-only"><span>Kasir</span><strong>Kasir</strong></div>
+            <div class="history-receipt-payment-only" hidden><span>Tanggal Pembayaran</span><strong id="history-receipt-paid-date">-</strong></div>
+            <div><span>Pelanggan</span><strong id="history-receipt-customer">-</strong></div>
+            <div><span>No. Telepon</span><strong id="history-receipt-phone">-</strong></div>
+            <div><span>No. Plat</span><strong id="history-receipt-plate">-</strong></div>
+            <div><span>Kendaraan</span><strong id="history-receipt-vehicle">-</strong></div>
+          </div>
+          <div class="history-receipt-service">
+            <span>LAYANAN PENCUCIAN</span>
+            <strong id="history-receipt-service">-</strong>
+            <small>1 × <span id="history-receipt-service-price">Rp 0</span></small>
+          </div>
+          <div class="history-receipt-lines history-receipt-money">
+            <div><span>Subtotal</span><strong id="history-receipt-subtotal">Rp 0</strong></div>
+            <div><span>Diskon</span><strong>− Rp 0</strong></div>
+          </div>
+          <div class="history-receipt-grand-total"><span id="history-receipt-total-label">Total tagihan</span><strong id="history-receipt-total">Rp 0</strong></div>
+          <div class="history-receipt-lines history-receipt-payment-only" id="history-receipt-payment-details" hidden>
+            <div><span>Metode Pembayaran</span><strong id="history-receipt-method">-</strong></div>
+            <div><span>Nominal Diterima</span><strong id="history-receipt-received">Rp 0</strong></div>
+            <div><span>Kembalian</span><strong id="history-receipt-change">Rp 0</strong></div>
+          </div>
+          <div class="history-receipt-lines history-receipt-transaction-only">
+            <div><span>Status Pengerjaan</span><strong id="history-receipt-service-status">-</strong></div>
+            <div><span>Status Pembayaran</span><strong id="history-receipt-payment-status">-</strong></div>
+          </div>
+          <p class="history-receipt-note" id="history-receipt-note">Struk ini adalah bukti transaksi, bukan bukti pembayaran.</p>
+          <p class="history-receipt-thanks">Terima kasih telah memilih WASHUP.</p>
+        </article>
+        <div class="history-receipt-dialog-actions">
+          <button type="button" class="history-receipt-secondary" id="history-receipt-done">Tutup</button>
+          <button type="button" class="history-receipt-primary" id="history-receipt-print">Cetak struk</button>
+        </div>
+      </section>
+    </div>
+
+    
+
+    <dialog class="profile-edit-dialog" id="profile-edit-dialog" aria-labelledby="profile-edit-title">
+      <form class="profile-edit-form" id="profile-edit-form">
+        <header class="profile-edit-heading">
+          <div>
+            <p class="eyebrow">PENGATURAN AKUN</p>
+            <h2 id="profile-edit-title">Edit Profil</h2>
+            <p class="profile-edit-subtitle">Perbarui informasi akun Kasir kamu.</p>
+          </div>
+          <button class="profile-edit-close" id="profile-edit-close" type="button" aria-label="Tutup">×</button>
+        </header>
+
+        <section class="profile-photo-section" aria-label="Foto profil">
+          <div class="profile-photo-preview" id="profile-photo-preview">
+            <img id="profile-photo-preview-image" alt="Pratinjau foto profil" hidden />
+            <svg id="profile-photo-placeholder" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+          </div>
+          <div class="profile-photo-controls">
+            <label class="profile-photo-label" for="profile-photo-input">Foto Profil</label>
+            <input id="profile-photo-input" name="photo" type="file" accept="image/*" />
+            <small>Format gambar JPG, PNG, atau WebP. Maksimal 5 MB.</small>
+          </div>
+        </section>
+
+        <label class="profile-form-field" for="profile-username">Username
+          <input id="profile-username" name="username" type="text" maxlength="40" autocomplete="username" required placeholder="Masukkan username" />
+        </label>
+        <label class="profile-form-field" for="profile-password">Password Baru
+          <input id="profile-password" name="password" type="password" minlength="6" autocomplete="new-password" placeholder="Masukkan password baru" />
+          <small>Kosongkan jika tidak ingin mengubah password.</small>
+        </label>
+
+        <p class="profile-form-message" id="profile-form-message" role="status" aria-live="polite"></p>
+        <footer class="profile-edit-actions">
+          <button class="profile-button-secondary" id="profile-edit-cancel" type="button">Batal</button>
+          <button class="profile-button-primary" id="profile-edit-save" type="submit">Simpan Perubahan</button>
+        </footer>
+      </form>
+    </dialog>
+<script src="../../js/app.js?v=20261104-profile-footer"></script>
   </body>
 </html>

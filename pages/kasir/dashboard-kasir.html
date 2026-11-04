@@ -6,78 +6,92 @@
     <meta name="description" content="Dashboard Kasir WASHUP - Sistem Informasi Car Wash" />
     <title>Dashboard Kasir | WASHUP</title>
     <link rel="stylesheet" href="../../css/style.css" />
-    <link rel="stylesheet" href="../../css/kasir.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/kasir.css?v=20261104-profile-footer" />
+    <link href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet" />
   </head>
   <body class="dashboard-page kasir-dashboard-page">
     <div class="dashboard-shell">
       <!-- A. SIDEBAR KASIR -->
-      <aside class="dashboard-sidebar" aria-label="Navigasi Kasir">
+      <aside class="dashboard-sidebar" id="kasir-sidebar" aria-label="Navigasi Kasir">
         <a class="dashboard-brand" href="dashboard-kasir.html" aria-label="WASHUP Dashboard Kasir">
           <img class="brand-logo-img" src="../../assets/logo-washup.png" alt="Logo mobil cuci WASHUP" />
           <span class="brand-text">WASHUP</span>
         </a>
-
+        <button class="sidebar-toggle desktop-sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Perkecil sidebar" aria-expanded="true" title="Perkecil sidebar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 5.3a1 1 0 0 1 0 1.4L9.4 12l5.3 5.3a1 1 0 0 1-1.4 1.4l-6-6a1 1 0 0 1 0-1.4l6-6a1 1 0 0 1 1.4 0Z"/></svg>
+        </button>
         <nav class="dashboard-nav" aria-label="Menu utama">
           <p class="nav-label">MENU KASIR</p>
-          <a class="nav-item active" href="dashboard-kasir.html" aria-current="page">
+          <a class="nav-item active" href="dashboard-kasir.html" aria-current="page" aria-label="Dashboard" title="Dashboard">
             <svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true">
               <path fill="currentColor" d="M33 19a1 1 0 0 1-.71-.29L18 4.41L3.71 18.71A1 1 0 0 1 2.3 17.3l15-15a1 1 0 0 1 1.41 0l15 15A1 1 0 0 1 33 19Z" />
               <path fill="currentColor" d="M18 7.79L6 19.79V32a2 2 0 0 0 2 2h7V22h6v12h7a2 2 0 0 0 2-2V19.79ZM28 32h-3V20H11v12H8V19.38l10-10l10 10Z" />
             </svg>
-            Dashboard
+            <span class="nav-text">Dashboard</span>
           </a>
-          <a class="nav-item" href="transaksi-baru.html">
+          <a class="nav-item" href="transaksi-baru.html" aria-label="Transaksi Baru" title="Transaksi Baru">
             <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
               <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 20v-8m0 0V4m0 8h8m-8 0H4" />
             </svg>
-            Transaksi Baru
+            <span class="nav-text">Transaksi Baru</span>
           </a>
-          <a class="nav-item" href="antrean.html">
+          <a class="nav-item" href="antrean.html" aria-label="Antrean" title="Antrean">
             <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M18 18H6c-.943 0-1.414 0-1.707-.293S4 16.943 4 16s0-1.414.293-1.707S5.057 14 6 14h12c.943 0 1.414 0 1.707.293S20 15.057 20 16s0 1.414-.293 1.707S18.943 18 18 18M4 10h16M4 6h16" />
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
-            Antrean
+            <span class="nav-text">Antrean</span>
           </a>
-          <a class="nav-item" href="pembayaran.html">
+          <a class="nav-item" href="pembayaran.html" aria-label="Pembayaran" title="Pembayaran">
             <svg class="nav-icon-svg" viewBox="0 0 512 512" aria-hidden="true">
               <path fill="currentColor" d="M0 64c0-17.7 14.3-32 32-32h80c79.5 0 144 64.5 144 144c0 58.8-35.2 109.3-85.7 131.7l51.4 128.4c6.6 16.4-1.4 35-17.8 41.6s-35-1.4-41.6-17.8l-56-139.9H64v128c0 17.7-14.3 32-32 32S0 465.7 0 448zm64 192h48c44.2 0 80-35.8 80-80s-35.8-80-80-80H64zm256-96h80c61.9 0 112 50.1 112 112s-50.1 112-112 112h-48v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V192c0-17.7 14.3-32 32-32m80 160c26.5 0 48-21.5 48-48s-21.5-48-48-48h-48v96z" />
             </svg>
-            Pembayaran
+            <span class="nav-text">Pembayaran</span>
           </a>
-          <a class="nav-item" href="riwayat-transaksi.html">
+          <a class="nav-item" href="riwayat-transaksi.html" aria-label="Riwayat Transaksi" title="Riwayat Transaksi">
             <svg class="nav-icon-svg" viewBox="0 0 48 48" aria-hidden="true">
               <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6" d="M8.09 4.5H19a2.05 2.05 0 0 1 2.05 2.05V17.2c0 1.72-1.91 2.74-3 1.65l-3.48-3.5A12.82 12.82 0 1 0 36.83 24c0-3.46-1-6.06-4.93-10c-.84-.84-.1-1.55.38-2l2.28-2.27c.94-.94 1.27-1.12 2.1-.29c4.86 4.86 6.83 8.52 6.84 14.63A19.5 19.5 0 1 1 9.86 10.63C8.69 9.44 8.32 9.06 6.35 7.09c-.77-.76-.08-2.59 1.74-2.59" />
             </svg>
-            Riwayat Transaksi
+            <span class="nav-text">Riwayat Transaksi</span>
+          </a>
+          <a class="nav-item" href="pengeluaran.html" aria-label="Pengeluaran" title="Pengeluaran">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M5 3.8h10l4 4V20H5z" />
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M14.5 3.8v4.5H19M8 12h8M8 15.5h8" />
+            </svg>
+            <span class="nav-text">Pengeluaran</span>
           </a>
         </nav>
-
         <div class="sidebar-bottom">
           <p class="sidebar-note">Area Kerja Kasir</p>
-          <button class="sidebar-logout" id="dashboard-logout" type="button">Logout</button>
+          <button class="sidebar-logout" id="kasir-dashboard-logout" type="button" aria-label="Logout" title="Logout">
+            <svg class="logout-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H10M14 8l4 4-4 4M8 12h10"/></svg>
+            <span class="nav-text">Logout</span>
+          </button>
         </div>
       </aside>
-
+      <button class="sidebar-backdrop" id="sidebar-backdrop" type="button" aria-label="Tutup menu" hidden></button>
       <!-- B. HEADER & MAIN CONTENT -->
       <div class="dashboard-content">
         <header class="dashboard-topbar">
+          <button class="sidebar-toggle mobile-sidebar-toggle" id="mobile-sidebar-toggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="kasir-sidebar" title="Buka menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
           <div class="topbar-title-wrap">
             <h1>Dashboard Kasir</h1>
           </div>
-          <div class="user-summary" aria-label="Informasi pengguna">
+          <div class="user-summary profile-trigger" id="profile-edit-trigger" role="button" tabindex="0" aria-label="Edit profil pengguna" aria-haspopup="dialog" aria-controls="profile-edit-dialog" title="Edit profil">
             <div class="user-avatar-circle" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
+              <img class="profile-avatar-image" id="profile-avatar-image" alt="" hidden />
+              <svg id="profile-avatar-placeholder" viewBox="0 0 24 24">
                 <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
               </svg>
             </div>
             <div class="user-info">
-              <strong>Kasir</strong>
+              <strong id="profile-display-username">Kasir</strong>
               <small>Role: Kasir</small>
             </div>
           </div>
         </header>
-
         <main class="dashboard-main kasir-main">
           <!-- C. AREA SAMBUTAN -->
           <section class="dashboard-welcome" aria-labelledby="welcome-title">
@@ -85,7 +99,6 @@
             <h2 id="welcome-title">Selamat Datang, Kasir!</h2>
             <span class="admin-date-chip date-chip" id="kasir-date">17 Agustus 2026</span>
           </section>
-
           <!-- D. EMPAT KARTU STATISTIK -->
           <section class="summary-grid" aria-label="Ringkasan operasional hari ini">
             <!-- Kartu 1: Kendaraan Hari Ini (ant-design:car-outlined) -->
@@ -100,10 +113,9 @@
               </div>
               <div>
                 <p>Kendaraan Hari Ini</p>
-                <strong id="vehicle-count">45</strong>
+                <strong id="vehicle-count">0</strong>
               </div>
             </article>
-
             <!-- Kartu 2: Transaksi Hari Ini (akar-icons:check-box) -->
             <article class="summary-card">
               <div class="summary-card-top">
@@ -119,10 +131,9 @@
               </div>
               <div>
                 <p>Transaksi Hari Ini</p>
-                <strong id="transaction-count">38</strong>
+                <strong id="transaction-count">0</strong>
               </div>
             </article>
-
             <!-- Kartu 3: Transaksi Hari Ini (grommet-icons:transaction) -->
             <article class="summary-card">
               <div class="summary-card-top">
@@ -138,7 +149,6 @@
                 <strong id="queue-count">0</strong>
               </div>
             </article>
-
             <!-- Kartu 4: Total Transaksi Hari Ini (fa7-solid:rupiah-sign) -->
             <article class="summary-card">
               <div class="summary-card-top">
@@ -151,11 +161,10 @@
               </div>
               <div>
                 <p>Transaksi Hari Ini</p>
-                <strong id="revenue-total">Rp 2.800.000</strong>
+                <strong id="revenue-total">Rp 0</strong>
               </div>
             </article>
           </section>
-
           <!-- E. PANEL ANTREAN SAAT INI -->
           <section class="dashboard-section" id="antrean-section" aria-labelledby="queue-title">
             <div class="section-heading">
@@ -164,6 +173,18 @@
                 <h2 id="queue-title">Antrean Saat Ini</h2>
               </div>
               <span class="badge badge-blue hide-visual" id="queue-badge" hidden>0 kendaraan aktif</span>
+            </div>
+            <div class="queue-table-controls">
+              <label class="queue-show-entries" for="queue-page-size">
+                <span>Show</span>
+                <select id="queue-page-size" aria-label="Jumlah antrean per halaman">
+                  <option value="5" selected>5</option>
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+                <span>entries</span>
+              </label>
             </div>
             <div class="table-wrap">
               <table class="queue-table">
@@ -180,22 +201,18 @@
                 <tbody id="queue-table-body"></tbody>
               </table>
             </div>
-          </section>
-
-          <!-- F. PANEL TINDAKAN ANTREAN (AKSI CEPAT) -->
-          <section class="quick-action-panel" id="aksi-cepat" aria-labelledby="quick-action-title">
-            <div class="quick-action-info">
-              <p class="eyebrow">Kendaraan Hari Ini</p>
-              <h2 id="quick-action-title">Antrean Saat Ini</h2>
-              <p id="dashboard-notice">Buat Transaksi Baru Untuk Menambahkan Pelanggan Ke Antrian</p>
-            </div>
-            <div class="quick-action-buttons">
-              <a class="btn-transaksi-baru dashboard-action" href="transaksi-baru.html">Transaksi Baru</a>
-              <a class="btn-lihat-antrean secondary-dashboard-button" href="antrean.html">Lihat Antrean</a>
+            <div class="queue-table-footer" id="queue-table-footer" hidden>
+              <p class="queue-pagination-range" id="queue-pagination-range" aria-live="polite">Showing 0 to 0 of 0 entries</p>
+              <nav class="queue-pagination" id="queue-pagination" aria-label="Navigasi halaman antrean">
+                <div class="queue-page-controls" role="group" aria-label="Kontrol halaman">
+                  <button type="button" class="queue-page-arrow" id="queue-page-prev" aria-label="Halaman sebelumnya" title="Halaman sebelumnya">Previous</button>
+                  <div class="queue-page-numbers" id="queue-page-numbers" aria-label="Nomor halaman"></div>
+                  <button type="button" class="queue-page-arrow" id="queue-page-next" aria-label="Halaman berikutnya" title="Halaman berikutnya">Next</button>
+                </div>
+              </nav>
             </div>
           </section>
-
-          <!-- G. FOOTER -->
+          <!-- F. FOOTER -->
           <footer class="dashboard-footer">
             <div class="footer-copy">
               <span class="c-icon-circle">&copy;</span>
@@ -206,7 +223,41 @@
         </main>
       </div>
     </div>
-
-    <script src="../../js/app.js"></script>
+    <dialog class="profile-edit-dialog" id="profile-edit-dialog" aria-labelledby="profile-edit-title">
+      <form class="profile-edit-form" id="profile-edit-form">
+        <header class="profile-edit-heading">
+          <div>
+            <p class="eyebrow">PENGATURAN AKUN</p>
+            <h2 id="profile-edit-title">Edit Profil</h2>
+            <p class="profile-edit-subtitle">Perbarui informasi akun Kasir kamu.</p>
+          </div>
+          <button class="profile-edit-close" id="profile-edit-close" type="button" aria-label="Tutup">×</button>
+        </header>
+        <section class="profile-photo-section" aria-label="Foto profil">
+          <div class="profile-photo-preview" id="profile-photo-preview">
+            <img id="profile-photo-preview-image" alt="Pratinjau foto profil" hidden />
+            <svg id="profile-photo-placeholder" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+          </div>
+          <div class="profile-photo-controls">
+            <label class="profile-photo-label" for="profile-photo-input">Foto Profil</label>
+            <input id="profile-photo-input" name="photo" type="file" accept="image/*" />
+            <small>Format gambar JPG, PNG, atau WebP. Maksimal 5 MB.</small>
+          </div>
+        </section>
+        <label class="profile-form-field" for="profile-username">Username
+          <input id="profile-username" name="username" type="text" maxlength="40" autocomplete="username" required placeholder="Masukkan username" />
+        </label>
+        <label class="profile-form-field" for="profile-password">Password Baru
+          <input id="profile-password" name="password" type="password" minlength="6" autocomplete="new-password" placeholder="Masukkan password baru" />
+          <small>Kosongkan jika tidak ingin mengubah password.</small>
+        </label>
+        <p class="profile-form-message" id="profile-form-message" role="status" aria-live="polite"></p>
+        <footer class="profile-edit-actions">
+          <button class="profile-button-secondary" id="profile-edit-cancel" type="button">Batal</button>
+          <button class="profile-button-primary" id="profile-edit-save" type="submit">Simpan Perubahan</button>
+        </footer>
+      </form>
+    </dialog>
+    <script src="../../js/app.js?v=20261104-profile-footer"></script>
   </body>
 </html>
