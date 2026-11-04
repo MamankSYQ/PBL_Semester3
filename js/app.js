@@ -3475,8 +3475,8 @@ setupMasterPage();
 
 
 /* =========================================================
-   EDIT PROFIL KASIR — dipakai bersama di seluruh halaman Kasir.
-   Username, password, dan foto profil disimpan pada akun lokal WASHUP.
+   EDIT PROFIL KASIR — popover kecil tepat di bawah profil topbar.
+   Avatar tetap default; tidak ada fitur unggah/ganti foto.
    ========================================================= */
 (() => {
   "use strict";
@@ -3487,165 +3487,148 @@ setupMasterPage();
   if (!trigger || !dialog || !form) return;
 
   const usernameInput = document.querySelector("#profile-username");
-  const passwordInput = document.querySelector("#profile-password");
-  const photoInput = document.querySelector("#profile-photo-input");
-  const photoPreviewImage = document.querySelector("#profile-photo-preview-image");
-  const photoPlaceholder = document.querySelector("#profile-photo-placeholder");
-  const avatarImage = document.querySelector("#profile-avatar-image");
-  const avatarPlaceholder = document.querySelector("#profile-avatar-placeholder");
+  const currentPasswordInput = document.querySelector("#profile-current-password");
+  const newPasswordInput = document.querySelector("#profile-password");
   const displayUsername = document.querySelector("#profile-display-username");
+  const displayRole = document.querySelector("#profile-display-role");
   const message = document.querySelector("#profile-form-message");
   const saveButton = document.querySelector("#profile-edit-save");
   const closeButton = document.querySelector("#profile-edit-close");
   const cancelButton = document.querySelector("#profile-edit-cancel");
 
   let editingAccountId = null;
-  let savedPhoto = "";
-  let selectedPhoto = "";
-  let photoProcessing = false;
 
   const normalized = (value) => String(value || "").trim().toLowerCase();
 
   function currentAccount(records = getUserAccounts()) {
     const username = normalized(sessionStorage.getItem("washupUsername"));
     const role = sessionStorage.getItem("washupRole");
-    return records.find((account) => normalized(account.username) === username && account.role === role)
-      || records.find((account) => account.protected && account.role === role)
-      || null;
-  }
-
-  function setAvatar(imageElement, placeholderElement, photo) {
-    if (!imageElement || !placeholderElement) return;
-    if (photo) {
-      imageElement.src = photo;
-      imageElement.hidden = false;
-      placeholderElement.hidden = true;
-    } else {
-      imageElement.removeAttribute("src");
-      imageElement.hidden = true;
-      placeholderElement.hidden = false;
-    }
+    return records.find((account) =>
+      normalized(account.username) === username && account.role === role
+    ) || records.find((account) => account.protected && account.role === role) || null;
   }
 
   function setHeaderProfile(account) {
     if (!account) return;
     if (displayUsername) displayUsername.textContent = account.username || "Kasir";
-    setAvatar(avatarImage, avatarPlaceholder, account.profilePhoto || "");
+    if (displayRole) displayRole.textContent = `Role: ${account.role || "Kasir"}`;
     trigger.setAttribute("aria-label", `Edit profil ${account.username || "pengguna"}`);
+    trigger.title = `Edit profil ${account.username || "pengguna"}`;
   }
 
-  function setDialogPreview(photo) {
-    setAvatar(photoPreviewImage, photoPlaceholder, photo);
+  function positionPopover() {
+    if (!dialog.open) return;
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const viewportPadding = 12;
+    const popoverWidth = Math.min(340, window.innerWidth - viewportPadding * 2);
+    const measuredWidth = dialog.getBoundingClientRect().width || popoverWidth;
+    const width = Math.min(measuredWidth, popoverWidth);
+
+    // Right-align the popover with the profile control, then clamp to the viewport.
+    const preferredLeft = triggerRect.right - width + 14;
+    const left = Math.max(
+      viewportPadding,
+      Math.min(preferredLeft, window.innerWidth - width - viewportPadding)
+    );
+    const top = triggerRect.bottom + 8;
+    const availableHeight = Math.max(220, window.innerHeight - top - viewportPadding);
+    const maxHeight = Math.min(Math.round(window.innerHeight * 0.78), availableHeight);
+
+    dialog.style.setProperty("--profile-popover-left", `${Math.round(left)}px`);
+    dialog.style.setProperty("--profile-popover-top", `${Math.round(top)}px`);
+    dialog.style.setProperty("--profile-popover-max-height", `${Math.round(maxHeight)}px`);
+  }
+
+  function resetPasswordVisibility() {
+    dialog.querySelectorAll("[data-password-toggle]").forEach((button) => {
+      const target = document.getElementById(button.dataset.passwordToggle);
+      if (target) target.type = "password";
+      button.setAttribute("aria-pressed", "false");
+      const label = target?.id === "profile-current-password"
+        ? "password lama" : "password baru";
+      button.setAttribute("aria-label", `Tampilkan ${label}`);
+    });
+  }
+
+  function showPopover() {
+    if (typeof dialog.show === "function") {
+      if (!dialog.open) dialog.show();
+    } else {
+      dialog.setAttribute("open", "");
+    }
+    trigger.setAttribute("aria-expanded", "true");
+    positionPopover();
   }
 
   function openDialog() {
-    const records = getUserAccounts();
-    const account = currentAccount(records);
+    const account = currentAccount();
     if (!account) {
+      editingAccountId = null;
       message.textContent = "Akun tidak ditemukan. Silakan keluar dan masuk kembali.";
-      if (typeof dialog.showModal === "function") dialog.showModal();
-      else dialog.setAttribute("open", "");
+      showPopover();
       return;
     }
 
     editingAccountId = account.id;
-    savedPhoto = account.profilePhoto || "";
-    selectedPhoto = savedPhoto;
-    photoProcessing = false;
     usernameInput.value = account.username || "";
-    passwordInput.value = "";
-    photoInput.value = "";
+    currentPasswordInput.value = String(account.password || "");
+    newPasswordInput.value = "";
     message.textContent = "";
     saveButton.disabled = false;
-    setDialogPreview(savedPhoto);
-    if (typeof dialog.showModal === "function") dialog.showModal();
-    else dialog.setAttribute("open", "");
+    resetPasswordVisibility();
+
+    showPopover();
+    usernameInput.focus({ preventScroll: true });
   }
 
-  function closeDialog() {
+  function closeDialog({ restoreFocus = false } = {}) {
     if (typeof dialog.close === "function" && dialog.open) dialog.close();
     else dialog.removeAttribute("open");
+
     form.reset();
     editingAccountId = null;
-    selectedPhoto = "";
-    photoProcessing = false;
     message.textContent = "";
     saveButton.disabled = false;
+    resetPasswordVisibility();
+    trigger.setAttribute("aria-expanded", "false");
+    if (restoreFocus) trigger.focus();
   }
 
-  function compressProfilePhoto(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.addEventListener("error", () => reject(new Error("Foto profil tidak dapat dibaca.")), { once: true });
-      reader.addEventListener("load", () => {
-        const image = new Image();
-        image.addEventListener("error", () => reject(new Error("File foto tidak valid.")), { once: true });
-        image.addEventListener("load", () => {
-          try {
-            const maximumDimension = 640;
-            const scale = Math.min(1, maximumDimension / Math.max(image.naturalWidth, image.naturalHeight));
-            const canvas = document.createElement("canvas");
-            canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
-            canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-            const context = canvas.getContext("2d");
-            if (!context) throw new Error("Foto profil tidak dapat diproses.");
-            context.fillStyle = "#FFFFFF";
-            context.fillRect(0, 0, canvas.width, canvas.height);
-            context.drawImage(image, 0, 0, canvas.width, canvas.height);
-            const result = canvas.toDataURL("image/jpeg", 0.82);
-            if (result.length > 1_000_000) throw new Error("Ukuran foto setelah diproses masih terlalu besar. Pilih foto lain.");
-            resolve(result);
-          } catch (error) {
-            reject(error instanceof Error ? error : new Error("Foto profil tidak dapat diproses."));
-          }
-        }, { once: true });
-        image.src = String(reader.result || "");
-      }, { once: true });
-      reader.readAsDataURL(file);
+  function toggleDialog() {
+    if (dialog.open) closeDialog();
+    else openDialog();
+  }
+
+  trigger.addEventListener("click", toggleDialog);
+  trigger.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      toggleDialog();
+    }
+  });
+
+  dialog.querySelectorAll("[data-password-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const target = document.getElementById(button.dataset.passwordToggle);
+      if (!target) return;
+
+      const shouldShow = target.type === "password";
+      target.type = shouldShow ? "text" : "password";
+
+      const label = target.id === "profile-current-password"
+        ? "password lama" : "password baru";
+      button.setAttribute("aria-pressed", String(shouldShow));
+      button.setAttribute("aria-label", `${shouldShow ? "Sembunyikan" : "Tampilkan"} ${label}`);
     });
-  }
-
-  photoInput?.addEventListener("change", async () => {
-    const file = photoInput.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      message.textContent = "File foto harus berupa gambar.";
-      photoInput.value = "";
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      message.textContent = "Ukuran foto maksimal 5 MB.";
-      photoInput.value = "";
-      return;
-    }
-
-    photoProcessing = true;
-    saveButton.disabled = true;
-    message.textContent = "Memproses foto profil...";
-    try {
-      selectedPhoto = await compressProfilePhoto(file);
-      setDialogPreview(selectedPhoto);
-      message.textContent = "Foto siap disimpan.";
-    } catch (error) {
-      selectedPhoto = savedPhoto;
-      setDialogPreview(savedPhoto);
-      photoInput.value = "";
-      message.textContent = error instanceof Error ? error.message : "Foto profil tidak dapat diproses.";
-    } finally {
-      photoProcessing = false;
-      saveButton.disabled = false;
-    }
   });
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    if (photoProcessing) {
-      message.textContent = "Tunggu sampai proses foto selesai.";
-      return;
-    }
 
     const username = normalized(usernameInput.value);
-    const newPassword = String(passwordInput.value || "");
+    const newPassword = String(newPasswordInput.value || "");
+
     if (!username) {
       message.textContent = "Username wajib diisi.";
       usernameInput.focus();
@@ -3658,7 +3641,7 @@ setupMasterPage();
     }
     if (newPassword && newPassword.length < 6) {
       message.textContent = "Password baru minimal 6 karakter.";
-      passwordInput.focus();
+      newPasswordInput.focus();
       return;
     }
 
@@ -3669,7 +3652,10 @@ setupMasterPage();
         message.textContent = "Akun tidak ditemukan. Tutup formulir lalu coba kembali.";
         return;
       }
-      const duplicate = records.some((account, index) => index !== accountIndex && normalized(account.username) === username);
+
+      const duplicate = records.some((account, index) =>
+        index !== accountIndex && normalized(account.username) === username
+      );
       if (duplicate) {
         message.textContent = "Username sudah digunakan akun lain. Gunakan username yang berbeda.";
         usernameInput.focus();
@@ -3677,16 +3663,18 @@ setupMasterPage();
       }
 
       const current = records[accountIndex];
-      records[accountIndex] = {
+      const updated = {
         ...current,
         username,
         password: newPassword || current.password,
-        profilePhoto: selectedPhoto || "",
         updatedAt: Date.now(),
       };
+
+      delete updated.profilePhoto;
+      records[accountIndex] = updated;
       saveMasterRecords(masterDefinitions.users, records);
       sessionStorage.setItem("washupUsername", username);
-      setHeaderProfile(records[accountIndex]);
+      setHeaderProfile(updated);
       closeDialog();
     } catch (error) {
       message.textContent = error instanceof Error
@@ -3695,21 +3683,31 @@ setupMasterPage();
     }
   });
 
-  trigger.addEventListener("click", openDialog);
-  trigger.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      openDialog();
+  closeButton?.addEventListener("click", () => closeDialog({ restoreFocus: true }));
+  cancelButton?.addEventListener("click", () => closeDialog({ restoreFocus: true }));
+
+  // Outside click closes the compact popover; clicking the profile control toggles it.
+  document.addEventListener("pointerdown", (event) => {
+    if (!dialog.open) return;
+    if (!dialog.contains(event.target) && !trigger.contains(event.target)) {
+      closeDialog();
     }
   });
-  closeButton?.addEventListener("click", closeDialog);
-  cancelButton?.addEventListener("click", closeDialog);
-  dialog.addEventListener("click", (event) => {
-    if (event.target === dialog) closeDialog();
+
+  dialog.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeDialog({ restoreFocus: true });
   });
+
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && dialog.open) closeDialog();
+    if (event.key === "Escape" && dialog.open) {
+      event.preventDefault();
+      closeDialog({ restoreFocus: true });
+    }
   });
+
+  window.addEventListener("resize", positionPopover);
+  window.addEventListener("scroll", positionPopover, true);
 
   setHeaderProfile(currentAccount());
 })();

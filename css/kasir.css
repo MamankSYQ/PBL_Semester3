@@ -6613,3 +6613,1707 @@ body.kasir-payment-page footer.dashboard-footer.payment-footer > span:last-child
     letter-spacing: 0 !important;
   }
 }
+
+
+/* =========================================================
+   FINAL FIX V2 — Gutter footer Riwayat Transaksi & Pembayaran
+   Footer berada di luar main, jadi margin kiri/kanan harus dibuat langsung.
+   Cache-buster HTML: 20261104-footer-gutter-v2-1759
+   ========================================================= */
+body.kasir-history-page .dashboard-content > footer.dashboard-footer.history-footer,
+body.kasir-payment-page .dashboard-content > footer.dashboard-footer.payment-footer {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  align-self: stretch !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  margin-top: auto !important;
+  margin-right: 56px !important;
+  margin-bottom: 16px !important;
+  margin-left: 56px !important;
+  padding: 15px 0 12px !important;
+  box-sizing: border-box !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  gap: 16px !important;
+  border-top: 1px solid #6DB2D0 !important;
+  text-align: left !important;
+}
+
+body.kasir-history-page .dashboard-content > footer.dashboard-footer.history-footer .footer-copy,
+body.kasir-payment-page .dashboard-content > footer.dashboard-footer.payment-footer .footer-copy {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  max-width: 50% !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  text-align: left !important;
+  line-height: 1.35 !important;
+}
+
+body.kasir-history-page .dashboard-content > footer.dashboard-footer.history-footer > span:last-child,
+body.kasir-payment-page .dashboard-content > footer.dashboard-footer.payment-footer > span:last-child {
+  display: block !important;
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  max-width: 50% !important;
+  margin-left: auto !important;
+  white-space: nowrap !important;
+  text-align: right !important;
+  line-height: 1.35 !important;
+}
+
+@media (max-width: 1100px) and (min-width: 769px) {
+  body.kasir-history-page .dashboard-content > footer.dashboard-footer.history-footer,
+  body.kasir-payment-page .dashboard-content > footer.dashboard-footer.payment-footer {
+    margin-right: 40px !important;
+    margin-left: 40px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  body.kasir-history-page .dashboard-content > footer.dashboard-footer.history-footer,
+  body.kasir-payment-page .dashboard-content > footer.dashboard-footer.payment-footer {
+    margin-right: 24px !important;
+    margin-bottom: 12px !important;
+    margin-left: 24px !important;
+    padding: 15px 0 12px !important;
+    gap: 8px !important;
+    font-size: clamp(8px, 1.5vw, 10.5px) !important;
+    letter-spacing: .02em !important;
+  }
+}
+
+@media (max-width: 420px) {
+  body.kasir-history-page .dashboard-content > footer.dashboard-footer.history-footer,
+  body.kasir-payment-page .dashboard-content > footer.dashboard-footer.payment-footer {
+    margin-right: 18px !important;
+    margin-left: 18px !important;
+    gap: 6px !important;
+    font-size: 8px !important;
+    letter-spacing: 0 !important;
+  }
+}
+
+
+/* =========================================================
+   FINAL FIX V3 — Footer sejajar dengan lebar card
+   Riwayat: footer dipindah ke dalam main agar mengikuti padding card.
+   Pengeluaran: footer tetap di dalam main dan memakai lebar konten yang sama.
+   ========================================================= */
+body.kasir-history-page main.dashboard-main.history-main > footer.dashboard-footer.history-footer,
+body.kasir-expense-page main.dashboard-main.expense-main > footer.dashboard-footer.expense-footer {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  align-self: stretch !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+  box-sizing: border-box !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 12px !important;
+}
+
+body.kasir-history-page main.dashboard-main.history-main > footer.dashboard-footer.history-footer {
+  margin-top: auto !important;
+  padding: 15px 0 12px !important;
+  border-top: 1px solid #6DB2D0 !important;
+}
+
+body.kasir-expense-page main.dashboard-main.expense-main > footer.dashboard-footer.expense-footer {
+  margin-top: auto !important;
+  padding: 15px 0 12px !important;
+  border-top: 1px solid #6DB2D0 !important;
+}
+
+body.kasir-history-page main.dashboard-main.history-main > footer.dashboard-footer.history-footer .footer-copy,
+body.kasir-expense-page main.dashboard-main.expense-main > footer.dashboard-footer.expense-footer .footer-copy {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  max-width: 50% !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  text-align: left !important;
+}
+
+body.kasir-history-page main.dashboard-main.history-main > footer.dashboard-footer.history-footer > span:last-child,
+body.kasir-expense-page main.dashboard-main.expense-main > footer.dashboard-footer.expense-footer > span:last-child {
+  display: block !important;
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  max-width: 50% !important;
+  margin-left: auto !important;
+  white-space: nowrap !important;
+  text-align: right !important;
+}
+
+@media (max-width: 768px) {
+  body.kasir-history-page main.dashboard-main.history-main > footer.dashboard-footer.history-footer,
+  body.kasir-expense-page main.dashboard-main.expense-main > footer.dashboard-footer.expense-footer {
+    gap: 8px !important;
+    font-size: clamp(8px, 1.5vw, 10.5px) !important;
+    letter-spacing: .02em !important;
+  }
+}
+
+@media (max-width: 420px) {
+  body.kasir-history-page main.dashboard-main.history-main > footer.dashboard-footer.history-footer,
+  body.kasir-expense-page main.dashboard-main.expense-main > footer.dashboard-footer.expense-footer {
+    gap: 5px !important;
+    font-size: 8px !important;
+    letter-spacing: 0 !important;
+  }
+}
+
+
+
+/* =========================================================
+   WASHUP — Konsistensi tombol antrean dan tipografi panel
+   - Bentuk tombol antrean mengikuti tombol aksi Riwayat Transaksi.
+   - Warna Detail/Edit/Hapus sengaja tidak diubah.
+   - Heading Pengeluaran dan Dashboard Kasir diperkecil agar setara
+     dengan heading panel Riwayat Transaksi.
+   ========================================================= */
+body.kasir-queue-page .queue-page-table .queue-action-buttons .table-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 26px !important;
+  max-height: none !important;
+  padding: 4px 8px !important;
+  border-radius: 7px !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+}
+
+/* Samakan ukuran eyebrow dan judul panel Pengeluaran dengan panel Riwayat. */
+body.kasir-expense-page .expense-panel-heading .eyebrow {
+  margin: 0 0 6px !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.6px !important;
+  line-height: 1.35 !important;
+}
+
+body.kasir-expense-page .expense-panel-heading h2 {
+  margin: 0 !important;
+  font-size: 1.3rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.25px !important;
+  line-height: 1.3 !important;
+}
+
+/* Judul panel Antrean Saat Ini pada Dashboard Kasir mengikuti Riwayat. */
+body.kasir-dashboard-page:not(.kasir-queue-page) #antrean-section .section-heading .eyebrow {
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.6px !important;
+  line-height: 1.35 !important;
+}
+
+body.kasir-dashboard-page:not(.kasir-queue-page) #antrean-section .section-heading h2 {
+  margin: 0 !important;
+  font-size: 1.3rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.25px !important;
+  line-height: 1.3 !important;
+}
+
+@media (max-width: 768px) {
+  body.kasir-queue-page .queue-page-table .queue-action-buttons .table-action {
+    min-height: 26px !important;
+    padding: 4px 8px !important;
+    border-radius: 7px !important;
+  }
+
+  body.kasir-expense-page .expense-panel-heading .eyebrow,
+  body.kasir-dashboard-page:not(.kasir-queue-page) #antrean-section .section-heading .eyebrow {
+    font-size: 0.72rem !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  body.kasir-expense-page .expense-panel-heading h2,
+  body.kasir-dashboard-page:not(.kasir-queue-page) #antrean-section .section-heading h2 {
+    font-size: 1.15rem !important;
+  }
+}
+
+
+/* =========================================================
+   WASHUP — Sidebar toggle ringkas di samping brand
+   Ikon panel-sidebar mengikuti referensi pengguna.
+   ========================================================= */
+
+.kasir-dashboard-page .dashboard-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: calc(100% - 42px) !important;
+  max-width: calc(100% - 42px) !important;
+  min-width: 0 !important;
+  margin: 0 0 36px 0 !important;
+  box-sizing: border-box !important;
+}
+
+.kasir-dashboard-page .dashboard-brand .brand-logo-img {
+  flex: 0 0 46px !important;
+  width: 46px !important;
+  height: 35px !important;
+}
+
+.kasir-dashboard-page .dashboard-brand .brand-text {
+  display: block !important;
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+/* Tombol dibuat lebih kecil agar tidak bertumpuk dengan tulisan WASHUP. */
+.kasir-dashboard-page .desktop-sidebar-toggle {
+  position: absolute !important;
+  top: 31px !important;
+  right: 28px !important;
+  z-index: 1002 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  border: 1px solid rgba(205, 226, 234, 0.34) !important;
+  border-radius: 7px !important;
+  background: rgba(202, 218, 224, 0.16) !important;
+  color: #D9EEF7 !important;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.16),
+              inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  transform: none !important;
+  transition: background-color 0.18s ease, border-color 0.18s ease,
+              box-shadow 0.18s ease !important;
+}
+
+.kasir-dashboard-page .desktop-sidebar-toggle:hover {
+  background: rgba(202, 218, 224, 0.27) !important;
+  border-color: rgba(205, 226, 234, 0.56) !important;
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.2) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Ikon panel dengan chevron mengarah ke kiri, sesuai gambar referensi. */
+.kasir-dashboard-page .desktop-sidebar-toggle svg {
+  display: none !important;
+}
+
+.kasir-dashboard-page .desktop-sidebar-toggle::before {
+  content: "" !important;
+  display: block !important;
+  width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D9EEF7' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='4' width='17' height='16' rx='2.2'/%3E%3Cpath d='M9 4.5v15M15.2 9.2 12.4 12l2.8 2.8'/%3E%3C/svg%3E") !important;
+  transition: transform 0.22s ease !important;
+}
+
+.kasir-dashboard-page .desktop-sidebar-toggle:focus-visible {
+  outline: 2px solid rgba(143, 211, 235, 0.95) !important;
+  outline-offset: 3px !important;
+}
+
+/* Saat sidebar diciutkan, tombol berada tepat di bawah logo. */
+.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .dashboard-brand {
+  width: auto !important;
+  max-width: none !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  margin: 0 0 42px 0 !important;
+}
+
+.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .desktop-sidebar-toggle {
+  top: 72px !important;
+  right: 50% !important;
+  transform: translateX(50%) !important;
+}
+
+.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .desktop-sidebar-toggle:hover {
+  transform: translate(50%, -1px) !important;
+}
+
+.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .desktop-sidebar-toggle::before {
+  transform: rotate(180deg) !important;
+}
+
+/* Pada layar kecil, kontrol buka sidebar tetap memakai hamburger di topbar. */
+@media (max-width: 768px) {
+  .kasir-dashboard-page .dashboard-brand {
+    width: auto !important;
+    max-width: none !important;
+    gap: 12px !important;
+    margin: 0 0 36px 4px !important;
+  }
+
+  .kasir-dashboard-page .desktop-sidebar-toggle {
+    display: none !important;
+  }
+}
+
+
+/* =========================================================
+   WASHUP V8 — Sidebar sticky dan sedikit lebih ramping
+   Desktop: sidebar mengikuti viewport saat halaman discroll.
+   Mobile: tetap menggunakan drawer dengan tombol hamburger.
+   ========================================================= */
+
+@media (min-width: 769px) {
+  body.kasir-dashboard-page .dashboard-sidebar {
+    position: sticky !important;
+    top: 0 !important;
+    align-self: flex-start !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior-y: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(136, 175, 192, 0.38) transparent;
+  }
+
+  body.kasir-dashboard-page .dashboard-sidebar::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  body.kasir-dashboard-page .dashboard-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  body.kasir-dashboard-page .dashboard-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(136, 175, 192, 0.38);
+    border-radius: 8px;
+  }
+
+  /* Desktop lebar: dari 266px menjadi 248px. */
+  body.kasir-dashboard-page:not(.kasir-queue-page) .dashboard-sidebar,
+  body.kasir-dashboard-page.kasir-queue-page .dashboard-sidebar {
+    width: 248px !important;
+    min-width: 248px !important;
+    max-width: 248px !important;
+    flex: 0 0 248px !important;
+    padding: 26px 30px 34px !important;
+  }
+
+  /* Tablet landscape: dibuat sedikit lebih ringkas. */
+  @media (max-width: 992px) {
+    body.kasir-dashboard-page .dashboard-sidebar {
+      width: 220px !important;
+      min-width: 220px !important;
+      max-width: 220px !important;
+      flex: 0 0 220px !important;
+      padding: 24px 20px 30px !important;
+    }
+  }
+
+  /* Mode sidebar diciutkan tetap mempertahankan bentuk ikon. */
+  body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .dashboard-sidebar {
+    width: 72px !important;
+    min-width: 72px !important;
+    max-width: 72px !important;
+    flex: 0 0 72px !important;
+    padding: 26px 9px 28px !important;
+  }
+}
+
+/* Drawer mobile tetap fixed dan tidak ikut aturan sticky desktop. */
+@media (max-width: 768px) {
+  body.kasir-dashboard-page .dashboard-sidebar {
+    position: fixed !important;
+    width: min(78vw, 270px) !important;
+    min-width: 0 !important;
+    max-width: 270px !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+    padding: 24px 16px 24px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .dashboard-sidebar {
+    width: min(78vw, 270px) !important;
+    min-width: 0 !important;
+    max-width: 270px !important;
+    padding: 24px 16px 24px !important;
+  }
+}
+
+/* =========================================================
+   WASHUP V10 — Compact sidebar + toggle position refinement
+   - Keep logo dimensions unchanged.
+   - Move expanded toggle closer to the sidebar's right edge.
+   - Keep collapsed toggle centered with comfortable side spacing.
+   - Reduce sidebar width, not the brand/logo.
+   - Preserve sticky desktop behavior and mobile drawer behavior.
+   ========================================================= */
+
+@media (min-width: 769px) {
+  body.kasir-dashboard-page .dashboard-sidebar {
+    position: sticky !important;
+    top: 0 !important;
+    align-self: flex-start !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior-y: contain !important;
+  }
+
+  /* Sidebar terbuka: lebih ramping, tetapi ruang brand tetap cukup. */
+  body.kasir-dashboard-page .dashboard-sidebar {
+    width: 220px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
+    flex: 0 0 220px !important;
+    padding: 26px 16px 34px !important;
+  }
+
+  /* Tombol digeser ke kanan, mendekati tepi sidebar. */
+  body.kasir-dashboard-page .dashboard-brand {
+    width: calc(100% - 40px) !important;
+    max-width: calc(100% - 40px) !important;
+    min-width: 0 !important;
+    gap: 8px !important;
+    margin: 0 0 36px 0 !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-brand .brand-logo-img {
+    flex: 0 0 46px !important;
+    width: 46px !important;
+    height: 35px !important;
+  }
+
+  body.kasir-dashboard-page .desktop-sidebar-toggle {
+    top: 31px !important;
+    right: 12px !important;
+    width: 28px !important;
+    min-width: 28px !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    transform: none !important;
+  }
+
+  body.kasir-dashboard-page .desktop-sidebar-toggle:hover {
+    transform: translateY(-1px) !important;
+  }
+
+  /* Mode collapsed: lebar cukup untuk ikon menu dan tombol tidak menempel tepi. */
+  body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .dashboard-sidebar {
+    width: 72px !important;
+    min-width: 72px !important;
+    max-width: 72px !important;
+    flex: 0 0 72px !important;
+    padding: 26px 8px 28px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .dashboard-brand {
+    width: auto !important;
+    max-width: none !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    margin: 0 0 42px 0 !important;
+  }
+
+  /* Centered: 22px ruang di kiri dan kanan pada sidebar 72px. */
+  body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .desktop-sidebar-toggle {
+    top: 76px !important;
+    right: 22px !important;
+    transform: none !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .desktop-sidebar-toggle:hover {
+    transform: translateY(-1px) !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .desktop-sidebar-toggle::before {
+    transform: rotate(180deg) !important;
+  }
+
+  /* Tablet: lebih kecil, tetapi tidak sampai memotong area logo/wordmark. */
+  @media (max-width: 992px) {
+    body.kasir-dashboard-page .dashboard-sidebar {
+      width: 204px !important;
+      min-width: 204px !important;
+      max-width: 204px !important;
+      flex: 0 0 204px !important;
+      padding: 22px 14px 30px !important;
+    }
+
+    body.kasir-dashboard-page .dashboard-brand {
+      width: calc(100% - 40px) !important;
+      max-width: calc(100% - 40px) !important;
+    }
+  }
+}
+
+/* Mobile tetap drawer; ukuran dibuat sedikit lebih ringkas. Logo tidak diubah. */
+@media (max-width: 768px) {
+  body.kasir-dashboard-page .dashboard-sidebar {
+    position: fixed !important;
+    width: min(76vw, 244px) !important;
+    min-width: 0 !important;
+    max-width: 244px !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+    padding: 24px 16px 24px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .dashboard-sidebar {
+    width: min(76vw, 244px) !important;
+    min-width: 0 !important;
+    max-width: 244px !important;
+    padding: 24px 16px 24px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-brand {
+    width: auto !important;
+    max-width: none !important;
+    gap: 12px !important;
+    margin: 0 0 36px 4px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-brand .brand-logo-img {
+    flex: 0 0 46px !important;
+    width: 46px !important;
+    height: 35px !important;
+  }
+}
+
+/* =========================================================
+   WASHUP V11 — Final sidebar spacing, logout icon, and expense footer
+   - Tambah jarak dropdown dari ikon menu saat sidebar diciutkan.
+   - Samakan tampilan ikon Logout di seluruh halaman Kasir.
+   - Lebar footer Pengeluaran dibuat identik dengan card expense-panel.
+   ========================================================= */
+
+/* Sidebar desktop: logo tetap utuh; tombol collapsed diberi ruang dari ikon menu. */
+@media (min-width: 769px) {
+  body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .dashboard-brand {
+    margin-bottom: 68px !important;
+  }
+
+  /* Posisikan toggle tepat di tengah saat sidebar sempit, dengan jarak seimbang. */
+  body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .desktop-sidebar-toggle {
+    top: 72px !important;
+    left: 50% !important;
+    right: auto !important;
+    width: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    max-height: 28px !important;
+    transform: translateX(-50%) !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .desktop-sidebar-toggle:hover {
+    transform: translate(-50%, -1px) !important;
+  }
+}
+
+/* Ikon Logout seragam untuk Dashboard, Antrean, Pembayaran, Riwayat,
+   Transaksi Baru, dan Pengeluaran. */
+body.kasir-dashboard-page .sidebar-logout .logout-icon {
+  display: none !important;
+  width: 17px !important;
+  min-width: 17px !important;
+  height: 17px !important;
+  min-height: 17px !important;
+  flex: 0 0 17px !important;
+  margin: 0 !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .sidebar-logout {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 42px !important;
+  min-width: 42px !important;
+  max-width: 42px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  margin: 0 !important;
+  padding: 8px !important;
+  gap: 0 !important;
+  box-sizing: border-box !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  overflow: hidden !important;
+}
+
+body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .sidebar-logout > .nav-text,
+body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .sidebar-logout > .logout-text {
+  display: none !important;
+}
+
+body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .sidebar-logout .logout-icon {
+  display: block !important;
+}
+
+/* Footer Pengeluaran: bentang horizontalnya sama persis dengan card daftar pengeluaran. */
+body.kasir-expense-page main.dashboard-main.expense-main > .expense-panel,
+body.kasir-expense-page main.dashboard-main.expense-main > footer.dashboard-footer.expense-footer {
+  align-self: stretch !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+}
+
+body.kasir-expense-page main.dashboard-main.expense-main > footer.dashboard-footer.expense-footer {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  gap: 12px !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding: 15px 0 12px !important;
+  border-top: 1px solid #6DB2D0 !important;
+}
+
+@media (max-width: 768px) {
+  body.kasir-expense-page main.dashboard-main.expense-main > footer.dashboard-footer.expense-footer {
+    gap: 8px !important;
+    font-size: clamp(8px, 1.5vw, 10.5px) !important;
+  }
+}
+
+@media (max-width: 420px) {
+  body.kasir-expense-page main.dashboard-main.expense-main > footer.dashboard-footer.expense-footer {
+    gap: 5px !important;
+    font-size: 8px !important;
+  }
+}
+
+
+/* =========================================================
+   FIX V12 — Ikon Logout Pembayaran disamakan dengan halaman Kasir lain
+   - Menggunakan kelas .logout-text yang sama dengan markup sidebar
+   - Ukuran ikon 17 × 17 px, stroke 1.8 px
+   - Tombol collapsed 42 × 36 px, radius 9 px
+   ========================================================= */
+body.kasir-payment-page .sidebar-logout {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+
+body.kasir-payment-page .sidebar-logout .logout-icon {
+  display: none !important;
+  width: 17px !important;
+  height: 17px !important;
+  flex: 0 0 17px !important;
+  margin: 0 !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+body.kasir-payment-page .sidebar-logout .logout-text {
+  display: inline !important;
+  white-space: nowrap !important;
+}
+
+body.kasir-payment-page .dashboard-shell.sidebar-collapsed .sidebar-logout {
+  width: 42px !important;
+  min-width: 42px !important;
+  max-width: 42px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  margin: 0 !important;
+  padding: 8px !important;
+  gap: 0 !important;
+  border-radius: 9px !important;
+  font-size: 0 !important;
+}
+
+body.kasir-payment-page .dashboard-shell.sidebar-collapsed .sidebar-logout .logout-icon {
+  display: block !important;
+}
+
+body.kasir-payment-page .dashboard-shell.sidebar-collapsed .sidebar-logout .logout-text {
+  display: none !important;
+}
+
+
+/* =========================================================
+   WASHUP V13 — Samakan tombol/ikon Logout Pembayaran dengan Pengeluaran
+   - Border 1.5px dan radius 9px (bukan border 1px / radius 12px).
+   - Ukuran collapsed 42 × 36 px.
+   - Ikon 17 × 17 px dengan stroke 1.8 px.
+   - Mendukung kedua class teks agar markup lama tetap aman.
+   ========================================================= */
+body.kasir-payment-page .sidebar-logout .logout-icon {
+  display: none !important;
+  width: 17px !important;
+  min-width: 17px !important;
+  height: 17px !important;
+  min-height: 17px !important;
+  flex: 0 0 17px !important;
+  margin: 0 !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+body.kasir-payment-page .dashboard-shell.sidebar-collapsed .sidebar-logout {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  width: 42px !important;
+  min-width: 42px !important;
+  max-width: 42px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  margin: 0 !important;
+  padding: 8px !important;
+  gap: 0 !important;
+  border: 1.5px solid rgba(241, 113, 132, 0.96) !important;
+  border-radius: 9px !important;
+  background: rgba(128, 20, 36, 0.56) !important;
+  color: #E4F4FC !important;
+  box-shadow: none !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  overflow: hidden !important;
+}
+
+body.kasir-payment-page .dashboard-shell.sidebar-collapsed .sidebar-logout > .nav-text,
+body.kasir-payment-page .dashboard-shell.sidebar-collapsed .sidebar-logout > .logout-text {
+  display: none !important;
+}
+
+body.kasir-payment-page .dashboard-shell.sidebar-collapsed .sidebar-logout .logout-icon {
+  display: block !important;
+}
+
+body.kasir-payment-page .dashboard-shell.sidebar-collapsed .sidebar-logout:hover {
+  background: rgba(145, 26, 44, 0.72) !important;
+  border-color: rgba(255, 153, 168, 1) !important;
+}
+
+
+/* =========================================================
+   WASHUP V14 — Footer Pembayaran sejajar dengan card payment-panel
+   Footer berada sebagai sibling dari main, sehingga gutter footer
+   harus identik dengan padding kiri/kanan main yang membatasi card.
+   Desktop: 44px | tablet: 32px | mobile: 16px | compact: 12px.
+   ========================================================= */
+body.kasir-payment-page {
+  --payment-card-gutter: 44px;
+}
+
+/* Card berada dalam content-box main dengan gutter yang sama. */
+body.kasir-payment-page main.dashboard-main.payment-main {
+  padding-left: var(--payment-card-gutter) !important;
+  padding-right: var(--payment-card-gutter) !important;
+}
+
+/* Footer sibling dari main: gunakan gutter identik agar garis atasnya
+   mulai dan berakhir tepat pada tepi card putih payment-panel. */
+body.kasir-payment-page .dashboard-content > footer.dashboard-footer.payment-footer {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  align-self: stretch !important;
+  width: calc(100% - (var(--payment-card-gutter) * 2)) !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  margin-top: auto !important;
+  margin-left: var(--payment-card-gutter) !important;
+  margin-right: var(--payment-card-gutter) !important;
+  margin-bottom: 16px !important;
+  padding: 15px 0 12px !important;
+  box-sizing: border-box !important;
+  border-top: 1px solid #6DB2D0 !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  gap: 16px !important;
+  text-align: left !important;
+}
+
+@media (max-width: 1320px) and (min-width: 769px) {
+  body.kasir-payment-page {
+    --payment-card-gutter: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  body.kasir-payment-page {
+    --payment-card-gutter: 16px;
+  }
+
+  body.kasir-payment-page .dashboard-content > footer.dashboard-footer.payment-footer {
+    margin-bottom: 12px !important;
+    gap: 8px !important;
+    font-size: clamp(8px, 1.5vw, 10.5px) !important;
+    letter-spacing: .02em !important;
+  }
+}
+
+@media (max-width: 420px) {
+  body.kasir-payment-page {
+    --payment-card-gutter: 12px;
+  }
+
+  body.kasir-payment-page .dashboard-content > footer.dashboard-footer.payment-footer {
+    gap: 5px !important;
+    font-size: 8px !important;
+    letter-spacing: 0 !important;
+  }
+}
+
+
+/* =========================================================
+   WASHUP V16 — Modal Edit Profil putih, topbar profile tetap
+   mempertahankan avatar default dan teks Kasir / Role Kasir.
+   ========================================================= */
+
+/* Modal putih mengikuti proporsi contoh, tanpa mengubah tampilan topbar. */
+.kasir-dashboard-page .profile-edit-dialog {
+  width: min(92vw, 680px) !important;
+  max-width: 680px !important;
+  max-height: min(90vh, 820px) !important;
+  margin: auto !important;
+  padding: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  border: 1px solid #D7E7EE !important;
+  border-radius: 16px !important;
+  background: #FFFFFF !important;
+  color: #1D4A5A !important;
+  box-shadow: 0 22px 75px rgba(6, 35, 48, .28) !important;
+}
+
+.kasir-dashboard-page .profile-edit-dialog::backdrop {
+  background: rgba(4, 28, 38, .58) !important;
+  backdrop-filter: blur(3px);
+}
+
+.kasir-dashboard-page .profile-edit-form {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 17px !important;
+  padding: 28px 32px 26px !important;
+  box-sizing: border-box !important;
+  font-family: "Open Sans", Arial, sans-serif !important;
+}
+
+.kasir-dashboard-page .profile-edit-heading {
+  align-items: flex-start !important;
+  margin-bottom: 2px !important;
+}
+
+.kasir-dashboard-page .profile-edit-heading .eyebrow {
+  margin: 0 0 6px !important;
+  color: #238EB6 !important;
+  font-size: .76rem !important;
+  font-weight: 800 !important;
+  letter-spacing: .08em !important;
+}
+
+.kasir-dashboard-page .profile-edit-heading h2 {
+  margin: 0 !important;
+  color: #1D4A5A !important;
+  font-size: clamp(1.45rem, 3vw, 1.8rem) !important;
+  font-weight: 700 !important;
+}
+
+.kasir-dashboard-page .profile-edit-subtitle {
+  margin: 5px 0 0 !important;
+  color: #789BAE !important;
+  font-size: .9rem !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section {
+  display: flex !important;
+  align-items: center !important;
+  gap: 18px !important;
+  min-height: 112px !important;
+  padding: 14px 18px !important;
+  border: 1px solid #E1EDF2 !important;
+  border-radius: 14px !important;
+  background: #F7FBFD !important;
+  box-sizing: border-box !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section .profile-photo-preview {
+  display: grid !important;
+  place-items: center !important;
+  flex: 0 0 84px !important;
+  width: 84px !important;
+  height: 84px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  background: #D3EEF7 !important;
+  color: #07222C !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section .profile-photo-preview svg {
+  display: block !important;
+  width: 52px !important;
+  height: 52px !important;
+  fill: currentColor !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section .profile-photo-controls {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+  min-width: 0 !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section .profile-photo-label {
+  color: #1D4A5A !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section .profile-photo-controls small {
+  color: #789BAE !important;
+  font-size: .78rem !important;
+  line-height: 1.45 !important;
+}
+
+.kasir-dashboard-page .profile-form-field {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+  color: #1D4A5A !important;
+  font-size: .9rem !important;
+  font-weight: 700 !important;
+}
+
+.kasir-dashboard-page .profile-form-field input {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 48px !important;
+  height: 48px !important;
+  padding: 11px 14px !important;
+  border: 1px solid #C6D9E2 !important;
+  border-radius: 9px !important;
+  background: #FFFFFF !important;
+  color: #1D4A5A !important;
+  font: 500 .98rem "Open Sans", Arial, sans-serif !important;
+  box-sizing: border-box !important;
+}
+
+.kasir-dashboard-page .profile-form-field input:focus {
+  outline: 2px solid rgba(35, 142, 182, .22) !important;
+  border-color: #238EB6 !important;
+}
+
+.kasir-dashboard-page .profile-form-field input[readonly] {
+  background: #F9FCFD !important;
+  color: #4F7181 !important;
+  cursor: default !important;
+}
+
+.kasir-dashboard-page .profile-password-control {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+.kasir-dashboard-page .profile-password-control input {
+  padding-right: 54px !important;
+}
+
+.kasir-dashboard-page .profile-password-toggle {
+  position: absolute !important;
+  top: 50% !important;
+  right: 7px !important;
+  display: grid !important;
+  place-items: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  transform: translateY(-50%) !important;
+  border: 0 !important;
+  border-radius: 7px !important;
+  background: transparent !important;
+  color: #648697 !important;
+  cursor: pointer !important;
+}
+
+.kasir-dashboard-page .profile-password-toggle:hover {
+  background: #EDF5F8 !important;
+  color: #1D4A5A !important;
+}
+
+.kasir-dashboard-page .profile-password-toggle svg {
+  display: block !important;
+  width: 20px !important;
+  height: 20px !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+.kasir-dashboard-page .profile-password-toggle .password-eye-hide,
+.kasir-dashboard-page .profile-password-toggle[aria-pressed="true"] .password-eye-show {
+  display: none !important;
+}
+
+.kasir-dashboard-page .profile-password-toggle[aria-pressed="true"] .password-eye-hide {
+  display: block !important;
+}
+
+.kasir-dashboard-page .profile-form-field small {
+  color: #789BAE !important;
+  font-size: .76rem !important;
+  font-weight: 400 !important;
+}
+
+.kasir-dashboard-page .profile-form-message {
+  min-height: 0 !important;
+  margin: -4px 0 0 !important;
+  color: #A33A42 !important;
+  font-size: .78rem !important;
+  line-height: 1.4 !important;
+}
+
+.kasir-dashboard-page .profile-form-message:empty {
+  display: none !important;
+}
+
+.kasir-dashboard-page .profile-edit-actions {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 12px !important;
+  margin: 8px 0 0 !important;
+}
+
+.kasir-dashboard-page .profile-edit-actions button {
+  min-height: 48px !important;
+  padding: 11px 20px !important;
+  border-radius: 9px !important;
+  font: 700 .9rem "Open Sans", Arial, sans-serif !important;
+  cursor: pointer !important;
+}
+
+.kasir-dashboard-page .profile-button-secondary {
+  border: 1px solid #C6D9E2 !important;
+  background: #FFFFFF !important;
+  color: #1D4A5A !important;
+}
+
+.kasir-dashboard-page .profile-button-primary {
+  border: 1px solid #1D4A5A !important;
+  background: #1D4A5A !important;
+  color: #FFFFFF !important;
+}
+
+.kasir-dashboard-page .profile-edit-actions button:disabled {
+  opacity: .55 !important;
+  cursor: wait !important;
+}
+
+@media (max-width: 768px) {
+  .kasir-dashboard-page .profile-edit-dialog {
+    width: min(94vw, 680px) !important;
+    max-width: 680px !important;
+    max-height: 90dvh !important;
+    border-radius: 14px !important;
+  }
+
+  .kasir-dashboard-page .profile-edit-form {
+    gap: 14px !important;
+    padding: 22px 20px 20px !important;
+  }
+
+  .kasir-dashboard-page .profile-default-avatar-section {
+    min-height: 96px !important;
+    gap: 13px !important;
+    padding: 12px !important;
+  }
+
+  .kasir-dashboard-page .profile-default-avatar-section .profile-photo-preview {
+    flex-basis: 68px !important;
+    width: 68px !important;
+    height: 68px !important;
+  }
+
+  .kasir-dashboard-page .profile-default-avatar-section .profile-photo-preview svg {
+    width: 43px !important;
+    height: 43px !important;
+  }
+
+  .kasir-dashboard-page .profile-edit-actions button {
+    min-height: 44px !important;
+    padding: 10px 15px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .kasir-dashboard-page .profile-edit-form {
+    padding: 18px 15px 16px !important;
+  }
+
+  .kasir-dashboard-page .profile-default-avatar-section {
+    align-items: center !important;
+  }
+
+  .kasir-dashboard-page .profile-edit-actions {
+    gap: 8px !important;
+  }
+
+  .kasir-dashboard-page .profile-edit-actions button {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    padding: 9px 10px !important;
+  }
+}
+
+
+/* =========================================================
+   WASHUP V17 — Compact profile editor popover.
+   It opens directly below the existing topbar profile control.
+   The topbar avatar, username and role styling remain unchanged.
+   ========================================================= */
+.kasir-dashboard-page .profile-edit-dialog {
+  position: fixed !important;
+  inset: auto !important;
+  top: var(--profile-popover-top, 88px) !important;
+  left: var(--profile-popover-left, 12px) !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: min(380px, calc(100vw - 24px)) !important;
+  max-width: calc(100vw - 24px) !important;
+  max-height: var(--profile-popover-max-height, 72vh) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  border: 1px solid #3B4C54 !important;
+  border-radius: 15px !important;
+  background: #20272B !important;
+  color: #F2F6F8 !important;
+  box-shadow: 0 14px 42px rgba(0, 0, 0, .42) !important;
+  box-sizing: border-box !important;
+  overscroll-behavior: contain !important;
+}
+
+.kasir-dashboard-page .profile-edit-dialog::backdrop {
+  background: transparent !important;
+}
+
+.kasir-dashboard-page .profile-edit-form {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 11px !important;
+  padding: 15px 16px 14px !important;
+  box-sizing: border-box !important;
+  font-family: "Open Sans", Arial, sans-serif !important;
+}
+
+.kasir-dashboard-page .profile-edit-heading {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  margin: 0 !important;
+}
+
+.kasir-dashboard-page .profile-edit-heading .eyebrow {
+  margin: 0 0 3px !important;
+  color: #8FC7DB !important;
+  font-size: .63rem !important;
+  font-weight: 800 !important;
+  letter-spacing: .08em !important;
+}
+
+.kasir-dashboard-page .profile-edit-heading h2 {
+  margin: 0 !important;
+  color: #FFFFFF !important;
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+}
+
+.kasir-dashboard-page .profile-edit-subtitle {
+  margin: 3px 0 0 !important;
+  color: #AABBC2 !important;
+  font-size: .69rem !important;
+  line-height: 1.35 !important;
+}
+
+.kasir-dashboard-page .profile-edit-close {
+  display: grid !important;
+  place-items: center !important;
+  flex: 0 0 29px !important;
+  width: 29px !important;
+  height: 29px !important;
+  min-width: 29px !important;
+  min-height: 29px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid #485B64 !important;
+  border-radius: 50% !important;
+  background: #2C383E !important;
+  color: #DCEAF0 !important;
+  font-size: 1.15rem !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 66px !important;
+  padding: 9px 11px !important;
+  border: 1px solid #394A51 !important;
+  border-radius: 10px !important;
+  background: #263238 !important;
+  box-sizing: border-box !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section .profile-photo-preview {
+  display: grid !important;
+  place-items: center !important;
+  flex: 0 0 46px !important;
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  background: #C9D0D3 !important;
+  color: #07394A !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section .profile-photo-preview svg {
+  display: block !important;
+  width: 31px !important;
+  height: 31px !important;
+  fill: currentColor !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section .profile-photo-controls {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+  min-width: 0 !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section .profile-photo-label {
+  color: #F2F6F8 !important;
+  font-size: .79rem !important;
+  font-weight: 700 !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section .profile-photo-controls small {
+  color: #AEBFC6 !important;
+  font-size: .65rem !important;
+  line-height: 1.35 !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-form-field {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+  margin: 0 !important;
+  color: #DCE7EB !important;
+  font-size: .72rem !important;
+  font-weight: 650 !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-form-field input {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 37px !important;
+  height: 37px !important;
+  padding: 8px 39px 8px 10px !important;
+  border: 1px solid #4A5A61 !important;
+  border-radius: 7px !important;
+  background: #303B40 !important;
+  color: #F7FAFB !important;
+  font: 500 .78rem "Open Sans", Arial, sans-serif !important;
+  box-sizing: border-box !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-form-field input:focus {
+  outline: 2px solid rgba(143, 199, 219, .2) !important;
+  border-color: #8FC7DB !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-form-field input[readonly] {
+  background: #2C373C !important;
+  color: #D9E5E9 !important;
+  cursor: default !important;
+}
+
+.kasir-dashboard-page .profile-password-control {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+.kasir-dashboard-page .profile-password-control input {
+  padding-right: 43px !important;
+}
+
+.kasir-dashboard-page .profile-password-toggle {
+  position: absolute !important;
+  top: 50% !important;
+  right: 4px !important;
+  display: grid !important;
+  place-items: center !important;
+  width: 31px !important;
+  height: 31px !important;
+  padding: 0 !important;
+  transform: translateY(-50%) !important;
+  border: 0 !important;
+  border-radius: 5px !important;
+  background: transparent !important;
+  color: #B6C8CF !important;
+  cursor: pointer !important;
+}
+
+.kasir-dashboard-page .profile-password-toggle:hover {
+  background: rgba(255, 255, 255, .09) !important;
+  color: #FFFFFF !important;
+}
+
+.kasir-dashboard-page .profile-password-toggle svg {
+  display: block !important;
+  width: 17px !important;
+  height: 17px !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+.kasir-dashboard-page .profile-password-toggle .password-eye-hide,
+.kasir-dashboard-page .profile-password-toggle[aria-pressed="true"] .password-eye-show {
+  display: none !important;
+}
+
+.kasir-dashboard-page .profile-password-toggle[aria-pressed="true"] .password-eye-hide {
+  display: block !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-form-field small {
+  color: #AABBC2 !important;
+  font-size: .63rem !important;
+  font-weight: 400 !important;
+  line-height: 1.3 !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-form-message {
+  min-height: 0 !important;
+  margin: 0 !important;
+  color: #FF9C9C !important;
+  font-size: .67rem !important;
+  line-height: 1.35 !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-form-message:empty {
+  display: none !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-edit-actions {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 7px !important;
+  margin: 1px 0 0 !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-edit-actions button {
+  min-height: 34px !important;
+  padding: 7px 12px !important;
+  border-radius: 7px !important;
+  font: 650 .72rem "Open Sans", Arial, sans-serif !important;
+  cursor: pointer !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-button-secondary {
+  border: 1px solid #53636A !important;
+  background: transparent !important;
+  color: #E1E9EC !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-button-primary {
+  border: 1px solid #176B82 !important;
+  background: #176B82 !important;
+  color: #FFFFFF !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-edit-actions button:disabled {
+  opacity: .55 !important;
+  cursor: wait !important;
+}
+
+/* Compact layout also stays anchored on phones and narrow windows. */
+@media (max-width: 768px) {
+  .kasir-dashboard-page .profile-edit-dialog {
+    width: min(360px, calc(100vw - 24px)) !important;
+    max-width: calc(100vw - 24px) !important;
+    border-radius: 13px !important;
+  }
+
+  .kasir-dashboard-page .profile-edit-form {
+    gap: 10px !important;
+    padding: 13px !important;
+  }
+
+  .kasir-dashboard-page .profile-default-avatar-section {
+    min-height: 60px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .kasir-dashboard-page .profile-edit-dialog {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+  }
+}
+
+
+/* =========================================================
+   WASHUP V18 — White compact profile popover
+   - Panel putih, ukuran lebih kecil.
+   - Digeser sedikit ke kanan dari posisi V17.
+   - Profil topbar tetap menggunakan desain lama.
+   ========================================================= */
+.kasir-dashboard-page .profile-edit-dialog {
+  width: min(340px, calc(100vw - 24px)) !important;
+  max-width: calc(100vw - 24px) !important;
+  max-height: var(--profile-popover-max-height, 72vh) !important;
+  border: 1px solid #D9E7ED !important;
+  border-radius: 13px !important;
+  background: #FFFFFF !important;
+  color: #1D4A5A !important;
+  box-shadow: 0 12px 34px rgba(11, 49, 65, .22) !important;
+}
+
+.kasir-dashboard-page .profile-edit-form {
+  gap: 9px !important;
+  padding: 12px 13px 12px !important;
+  background: #FFFFFF !important;
+  color: #1D4A5A !important;
+}
+
+.kasir-dashboard-page .profile-edit-heading {
+  gap: 8px !important;
+}
+
+.kasir-dashboard-page .profile-edit-heading .eyebrow {
+  margin: 0 0 2px !important;
+  color: #238EB6 !important;
+  font-size: .58rem !important;
+  letter-spacing: .075em !important;
+}
+
+.kasir-dashboard-page .profile-edit-heading h2 {
+  color: #1D4A5A !important;
+  font-size: 1.02rem !important;
+  line-height: 1.2 !important;
+}
+
+.kasir-dashboard-page .profile-edit-subtitle {
+  margin-top: 2px !important;
+  color: #789BAE !important;
+  font-size: .64rem !important;
+}
+
+.kasir-dashboard-page .profile-edit-close {
+  flex-basis: 25px !important;
+  width: 25px !important;
+  min-width: 25px !important;
+  height: 25px !important;
+  min-height: 25px !important;
+  border-color: #D6E4EA !important;
+  background: #F4F8FA !important;
+  color: #315968 !important;
+  font-size: 1rem !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section {
+  min-height: 56px !important;
+  gap: 9px !important;
+  padding: 7px 9px !important;
+  border-color: #E0EBF0 !important;
+  border-radius: 9px !important;
+  background: #F5FAFC !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section .profile-photo-preview {
+  flex-basis: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  background: #D3EEF7 !important;
+  color: #07394A !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section .profile-photo-preview svg {
+  width: 27px !important;
+  height: 27px !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section .profile-photo-label {
+  color: #1D4A5A !important;
+  font-size: .72rem !important;
+}
+
+.kasir-dashboard-page .profile-default-avatar-section .profile-photo-controls small {
+  color: #789BAE !important;
+  font-size: .59rem !important;
+  line-height: 1.3 !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-form-field {
+  gap: 4px !important;
+  color: #1D4A5A !important;
+  font-size: .66rem !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-form-field input {
+  min-height: 33px !important;
+  height: 33px !important;
+  padding: 7px 38px 7px 9px !important;
+  border-color: #C6D9E2 !important;
+  border-radius: 7px !important;
+  background: #FFFFFF !important;
+  color: #1D4A5A !important;
+  font-size: .72rem !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-form-field input[readonly] {
+  background: #F7FAFB !important;
+  color: #4F7181 !important;
+}
+
+.kasir-dashboard-page .profile-password-control input {
+  padding-right: 41px !important;
+}
+
+.kasir-dashboard-page .profile-password-toggle {
+  right: 3px !important;
+  width: 28px !important;
+  height: 28px !important;
+  color: #648697 !important;
+}
+
+.kasir-dashboard-page .profile-password-toggle:hover {
+  background: #EDF5F8 !important;
+  color: #1D4A5A !important;
+}
+
+.kasir-dashboard-page .profile-password-toggle svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-form-field small {
+  color: #789BAE !important;
+  font-size: .58rem !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-form-message {
+  color: #A33A42 !important;
+  font-size: .62rem !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-edit-actions {
+  gap: 6px !important;
+  margin-top: 0 !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-edit-actions button {
+  min-height: 30px !important;
+  padding: 6px 10px !important;
+  border-radius: 7px !important;
+  font-size: .65rem !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-button-secondary {
+  border-color: #C6D9E2 !important;
+  background: #FFFFFF !important;
+  color: #1D4A5A !important;
+}
+
+.kasir-dashboard-page .profile-edit-form .profile-button-primary {
+  border-color: #1D4A5A !important;
+  background: #1D4A5A !important;
+  color: #FFFFFF !important;
+}
+
+@media (max-width: 768px) {
+  .kasir-dashboard-page .profile-edit-dialog {
+    width: min(330px, calc(100vw - 24px)) !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+
+  .kasir-dashboard-page .profile-edit-form {
+    gap: 8px !important;
+    padding: 11px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .kasir-dashboard-page .profile-edit-dialog {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+  }
+}

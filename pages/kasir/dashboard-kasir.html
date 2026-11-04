@@ -6,7 +6,7 @@
     <meta name="description" content="Dashboard Kasir WASHUP - Sistem Informasi Car Wash" />
     <title>Dashboard Kasir | WASHUP</title>
     <link rel="stylesheet" href="../../css/style.css" />
-    <link rel="stylesheet" href="../../css/kasir.css?v=20261104-profile-footer" />
+    <link rel="stylesheet" href="../../css/kasir.css?v=20261105-profile-popover-v18" />
     <link href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet" />
   </head>
   <body class="dashboard-page kasir-dashboard-page">
@@ -18,7 +18,9 @@
           <span class="brand-text">WASHUP</span>
         </a>
         <button class="sidebar-toggle desktop-sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Perkecil sidebar" aria-expanded="true" title="Perkecil sidebar">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 5.3a1 1 0 0 1 0 1.4L9.4 12l5.3 5.3a1 1 0 0 1-1.4 1.4l-6-6a1 1 0 0 1 0-1.4l6-6a1 1 0 0 1 1.4 0Z"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14.7 5.3a1 1 0 0 1 0 1.4L9.4 12l5.3 5.3a1 1 0 0 1-1.4 1.4l-6-6a1 1 0 0 1 0-1.4l6-6a1 1 0 0 1 1.4 0Z"/>
+          </svg>
         </button>
         <nav class="dashboard-nav" aria-label="Menu utama">
           <p class="nav-label">MENU KASIR</p>
@@ -64,7 +66,9 @@
         <div class="sidebar-bottom">
           <p class="sidebar-note">Area Kerja Kasir</p>
           <button class="sidebar-logout" id="kasir-dashboard-logout" type="button" aria-label="Logout" title="Logout">
-            <svg class="logout-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H10M14 8l4 4-4 4M8 12h10"/></svg>
+            <svg class="logout-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H10M14 8l4 4-4 4M8 12h10"/>
+            </svg>
             <span class="nav-text">Logout</span>
           </button>
         </div>
@@ -74,21 +78,22 @@
       <div class="dashboard-content">
         <header class="dashboard-topbar">
           <button class="sidebar-toggle mobile-sidebar-toggle" id="mobile-sidebar-toggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="kasir-sidebar" title="Buka menu">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 6h18M3 12h18M3 18h18"/>
+            </svg>
           </button>
           <div class="topbar-title-wrap">
             <h1>Dashboard Kasir</h1>
           </div>
           <div class="user-summary profile-trigger" id="profile-edit-trigger" role="button" tabindex="0" aria-label="Edit profil pengguna" aria-haspopup="dialog" aria-controls="profile-edit-dialog" title="Edit profil">
             <div class="user-avatar-circle" aria-hidden="true">
-              <img class="profile-avatar-image" id="profile-avatar-image" alt="" hidden />
               <svg id="profile-avatar-placeholder" viewBox="0 0 24 24">
                 <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
               </svg>
             </div>
             <div class="user-info">
               <strong id="profile-display-username">Kasir</strong>
-              <small>Role: Kasir</small>
+              <small id="profile-display-role">Role: Kasir</small>
             </div>
           </div>
         </header>
@@ -233,22 +238,52 @@
           </div>
           <button class="profile-edit-close" id="profile-edit-close" type="button" aria-label="Tutup">×</button>
         </header>
-        <section class="profile-photo-section" aria-label="Foto profil">
-          <div class="profile-photo-preview" id="profile-photo-preview">
-            <img id="profile-photo-preview-image" alt="Pratinjau foto profil" hidden />
-            <svg id="profile-photo-placeholder" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+        <section class="profile-photo-section profile-default-avatar-section" aria-label="Foto profil default">
+          <div class="profile-photo-preview" aria-hidden="true">
+            <svg id="profile-photo-placeholder" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+            </svg>
           </div>
           <div class="profile-photo-controls">
-            <label class="profile-photo-label" for="profile-photo-input">Foto Profil</label>
-            <input id="profile-photo-input" name="photo" type="file" accept="image/*" />
-            <small>Format gambar JPG, PNG, atau WebP. Maksimal 5 MB.</small>
+            <span class="profile-photo-label">Foto Profil</span>
+            <small>Foto profil default WASHUP. Foto ini tidak dapat diganti.</small>
           </div>
         </section>
-        <label class="profile-form-field" for="profile-username">Username
+        <label class="profile-form-field" for="profile-username">
+          Username
           <input id="profile-username" name="username" type="text" maxlength="40" autocomplete="username" required placeholder="Masukkan username" />
         </label>
-        <label class="profile-form-field" for="profile-password">Password Baru
-          <input id="profile-password" name="password" type="password" minlength="6" autocomplete="new-password" placeholder="Masukkan password baru" />
+        <label class="profile-form-field profile-password-field-label" for="profile-current-password">
+          Password Lama
+          <span class="profile-password-control">
+            <input id="profile-current-password" name="profile-current-password" type="password" autocomplete="current-password" readonly aria-readonly="true" placeholder="••••••••" />
+            <button class="profile-password-toggle" type="button" data-password-toggle="profile-current-password" aria-label="Tampilkan password lama" aria-pressed="false">
+              <svg class="password-eye-show" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.5 12s3.4-6.2 9.5-6.2 9.5 6.2 9.5 6.2-3.4 6.2-9.5 6.2S2.5 12 2.5 12Z"/>
+                <circle cx="12" cy="12" r="2.7"/>
+              </svg>
+              <svg class="password-eye-hide" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 3 21 21M10.6 6a9.7 9.7 0 0 1 1.4-.1c6.1 0 9.5 6.1 9.5 6.1a15.4 15.4 0 0 1-3.1 3.7M6.2 6.3C3.8 7.8 2.5 12 2.5 12s3.4 6.2 9.5 6.2c1.2 0 2.3-.3 3.2-.7"/>
+                <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+              </svg>
+            </button>
+          </span>
+        </label>
+        <label class="profile-form-field profile-password-field-label" for="profile-password">
+          Password Baru
+          <span class="profile-password-control">
+            <input id="profile-password" name="profile-password" type="password" autocomplete="new-password" minlength="6" placeholder="Masukkan password baru" />
+            <button class="profile-password-toggle" type="button" data-password-toggle="profile-password" aria-label="Tampilkan password baru" aria-pressed="false">
+              <svg class="password-eye-show" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.5 12s3.4-6.2 9.5-6.2 9.5 6.2 9.5 6.2-3.4 6.2-9.5 6.2S2.5 12 2.5 12Z"/>
+                <circle cx="12" cy="12" r="2.7"/>
+              </svg>
+              <svg class="password-eye-hide" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 3 21 21M10.6 6a9.7 9.7 0 0 1 1.4-.1c6.1 0 9.5 6.1 9.5 6.1a15.4 15.4 0 0 1-3.1 3.7M6.2 6.3C3.8 7.8 2.5 12 2.5 12s3.4 6.2 9.5 6.2c1.2 0 2.3-.3 3.2-.7"/>
+                <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+              </svg>
+            </button>
+          </span>
           <small>Kosongkan jika tidak ingin mengubah password.</small>
         </label>
         <p class="profile-form-message" id="profile-form-message" role="status" aria-live="polite"></p>
@@ -258,6 +293,6 @@
         </footer>
       </form>
     </dialog>
-    <script src="../../js/app.js?v=20261104-profile-footer"></script>
+    <script src="../../js/app.js?v=20261105-profile-popover-v18"></script>
   </body>
 </html>
