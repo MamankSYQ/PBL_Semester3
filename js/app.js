@@ -69,12 +69,6 @@ const accounts = {
 
 const transactionStorageKey = "washupTransactions";
 const attendanceStorageKey = "washupPetugasAttendance";
-const baseDashboardData = {
-  vehicles: 45,
-  transactions: 38,
-  queue: 7,
-  revenue: 2850000,
-};
 
 // Tarif berdasarkan ukuran kendaraan (revisi kelompok, Oktober 2026), menggantikan sistem cuci paket.
 const serviceOptions = {
@@ -506,28 +500,14 @@ if (logoutButton) {
 
 const dashboardLogout = document.querySelector("#dashboard-logout");
 const petugasDashboardLogout = document.querySelector("#petugas-dashboard-logout");
-const dashboardNotice = document.querySelector("#dashboard-notice");
-const placeholderLinks = document.querySelectorAll("[data-placeholder-link]");
 const transactionLogout = document.querySelector("#transaction-logout");
 
-if (document.querySelector(".dashboard-page")) {
+if (document.querySelector(".kasir-page")) {
   const role = sessionStorage.getItem("washupRole");
 
   if (role !== "Kasir") {
     window.location.replace(appUrl(role ? "role.html" : "login.html"));
   }
-}
-
-if (document.querySelector(".transaction-page") && sessionStorage.getItem("washupRole") !== "Kasir") {
-  window.location.replace(appUrl("login.html"));
-}
-
-if (document.querySelector(".payment-page") && sessionStorage.getItem("washupRole") !== "Kasir") {
-  window.location.replace(appUrl("login.html"));
-}
-
-if (document.querySelector(".history-page") && sessionStorage.getItem("washupRole") !== "Kasir") {
-  window.location.replace(appUrl("login.html"));
 }
 
 if (document.querySelector(".owner-dashboard-page") && sessionStorage.getItem("washupRole") !== "Owner") {
@@ -572,15 +552,6 @@ if (petugasDashboardLogout) {
   });
 }
 
-placeholderLinks.forEach((link) => {
-  link.addEventListener("click", (event) => {
-    event.preventDefault();
-    if (dashboardNotice) {
-      dashboardNotice.textContent = "Riwayat Transaksi akan tersedia pada tahap berikutnya.";
-    }
-  });
-});
-
 function renderDashboardData() {
   const vehicleCount = document.querySelector("#vehicle-count");
   const transactionCount = document.querySelector("#transaction-count");
@@ -596,13 +567,31 @@ function renderDashboardData() {
   }
 
   const transactions = getTransactions();
-  const queueRecords = transactions;
-  const activeQueue = transactions.filter((transaction) => transaction.serviceStatus !== "Selesai");
+  const todayKey = getTodayKey();
+  const isToday = (value) => {
+    const date = new Date(value);
+    return !Number.isNaN(date.getTime()) && formatDateKey(date) === todayKey;
+  };
+  const todayTransactions = transactions.filter((transaction) => isToday(transaction.createdAt));
+  const queueRecords = todayTransactions;
+  const activeQueue = todayTransactions.filter((transaction) => (
+    transaction.serviceStatus === "Menunggu" || transaction.serviceStatus === "Sedang Dicuci"
+  ));
+  const uniquePlates = new Set(
+    todayTransactions
+      .map((transaction) => String(transaction.plateNumber || "").trim().toUpperCase().replace(/\s+/g, " "))
+      .filter(Boolean),
+  );
   const statistics = {
-    vehicles: baseDashboardData.vehicles + transactions.length,
-    transactions: baseDashboardData.transactions + transactions.length,
+    vehicles: uniquePlates.size,
+    transactions: todayTransactions.length,
     queue: activeQueue.length,
-    revenue: baseDashboardData.revenue + transactions.filter((transaction) => transaction.paymentStatus === "Lunas").reduce((total, transaction) => total + Number(transaction.price || 0), 0),
+    revenue: transactions
+      .filter((transaction) => transaction.paymentStatus === "Lunas" && isToday(transaction.paidAt || transaction.createdAt))
+      .reduce((total, transaction) => {
+        const price = Number(transaction.price);
+        return total + (Number.isFinite(price) ? price : 0);
+      }, 0),
   };
 
   vehicleCount.textContent = String(statistics.vehicles);
@@ -640,6 +629,8 @@ function setupTransactionForm() {
   const serviceInput = document.querySelector("#service-select");
   const pricePreview = document.querySelector("#price-preview");
   const transactionResult = document.querySelector("#transaction-result");
+  const transactionLayout = document.querySelector("#transaction-layout");
+  const transactionTitle = document.querySelector("#transaction-title");
   const transactionError = document.querySelector("#transaction-error");
 
   if (!transactionForm || !vehicleTypeInput || !serviceInput || !pricePreview) {
@@ -706,10 +697,11 @@ function setupTransactionForm() {
     errors.service.textContent = "";
     updateSummary();
   });
-  Object.values(inputs).forEach((input) => {
+  Object.entries(inputs).forEach(([field, input]) => {
     input.addEventListener("input", () => {
       updateSummary();
-      clearErrors();
+      errors[field].textContent = "";
+      transactionError.textContent = "";
     });
   });
 
@@ -746,7 +738,13 @@ function setupTransactionForm() {
     const transaction = {
       id: `local-${Date.now()}`,
       transactionNumber: getTransactionNumber(transactions),
-      queueNumber: getNextNumber("queueNumber", transactions, baseDashboardData.queue),
+      queueNumber: getNextNumber(
+        "queueNumber",
+        transactions.filter((item) => {
+          const createdDate = new Date(item.createdAt);
+          return !Number.isNaN(createdDate.getTime()) && formatDateKey(createdDate) === getTodayKey();
+        }),
+      ),
       customerName: inputs.customerName.value.trim(),
       customerPhone: inputs.customerPhone.value.trim(),
       plateNumber: inputs.plateNumber.value.trim().toUpperCase(),
@@ -760,21 +758,59 @@ function setupTransactionForm() {
 
     transactions.push(transaction);
     saveTransactions(transactions);
+    const queueNumber = String(transaction.queueNumber).replace(/\D/g, "").padStart(2, "0");
+    const createdAt = new Date(transaction.createdAt);
+    const receiptDate = `${createdAt.toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      timeZone: "Asia/Jakarta",
+    })} · ${createdAt.toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+      timeZone: "Asia/Jakarta",
+    }).replace(":", ".")} WIB`;
     document.querySelector("#result-transaction-number").textContent = transaction.transactionNumber;
-    document.querySelector("#result-queue-number").textContent = transaction.queueNumber;
-    document.querySelector("#result-service-status").textContent = transaction.serviceStatus;
-    document.querySelector("#result-payment-status").textContent = transaction.paymentStatus;
+    document.querySelector("#result-queue-number").textContent = queueNumber;
+    document.querySelector("#result-service-status").textContent = "Menunggu pencucian";
+    document.querySelector("#result-payment-status").textContent = "Belum dibayar";
     document.querySelector("#result-customer").textContent = transaction.customerName;
-    document.querySelector("#result-vehicle").textContent = `${transaction.plateNumber} — ${transaction.vehicleType}`;
+    document.querySelector("#result-customer-phone").textContent = transaction.customerPhone;
+    document.querySelector("#result-plate-number").textContent = transaction.plateNumber;
+    document.querySelector("#result-vehicle").textContent = transaction.vehicleType;
     document.querySelector("#result-service").textContent = transaction.service;
     document.querySelector("#result-price").textContent = formatCurrency(transaction.price);
+    document.querySelector("#result-total").textContent = formatCurrency(transaction.price);
+    document.querySelector("#result-unit-price").textContent = `1 × ${formatCurrency(transaction.price)}`;
+    document.querySelector("#result-date").textContent = receiptDate;
+    document.querySelector("#result-cashier").textContent = sessionStorage.getItem("washupUsername") || "Kasir";
+    document.querySelector("#result-queue-message").textContent =
+      `Nomor antrean ${queueNumber} sudah dibuat. Transaksi masuk ke antrean dan belum dibayar.`;
+    transactionTitle.textContent = "Cetak Struk Transaksi";
     transactionResult.hidden = false;
+    transactionLayout.hidden = true;
     transactionResult.scrollIntoView({ behavior: "smooth", block: "start" });
     transactionForm.hidden = true;
   });
 
   document.querySelector("#cancel-transaction")?.addEventListener("click", () => {
     window.location.href = appUrl("pages/kasir/dashboard-kasir.html");
+  });
+
+  document.querySelector("#print-transaction")?.addEventListener("click", () => {
+    window.print();
+  });
+
+  document.querySelector("#new-transaction")?.addEventListener("click", () => {
+    transactionForm.reset();
+    clearErrors();
+    updateServices();
+    transactionForm.hidden = false;
+    transactionLayout.hidden = false;
+    transactionResult.hidden = true;
+    transactionTitle.textContent = "Data Transaksi";
+    document.querySelector("#customer-name").focus();
   });
 
   updateServices();
@@ -853,9 +889,6 @@ function setupQueuePage() {
       const serviceStatusCell = document.createElement("td");
       serviceStatusCell.append(makeStatusBadge(transaction.serviceStatus));
       row.append(serviceStatusCell);
-      const paymentStatusCell = document.createElement("td");
-      paymentStatusCell.append(makeStatusBadge(transaction.paymentStatus));
-      row.append(paymentStatusCell);
       const actionCell = document.createElement("td");
       const detailButton = document.createElement("button");
       detailButton.className = "table-action";
@@ -956,8 +989,10 @@ function setupTransactionHistory() {
   const emptyTitle = document.querySelector("#history-empty-title");
   const emptyMessage = document.querySelector("#history-empty-message");
   const dialog = document.querySelector("#history-dialog");
+  const filterToggle = document.querySelector("#history-filter-toggle");
+  const filterPopover = document.querySelector("#history-filter-popover");
 
-  if (!body || !search || !serviceFilter || !paymentFilter || !dateFilter || !resultCount || !empty || !emptyTitle || !emptyMessage || !dialog) {
+  if (!body || !search || !serviceFilter || !paymentFilter || !dateFilter || !resultCount || !empty || !emptyTitle || !emptyMessage || !dialog || !filterToggle || !filterPopover) {
     return;
   }
 
@@ -974,6 +1009,10 @@ function setupTransactionHistory() {
   };
   const closeDetail = () => {
     if (typeof dialog.close === "function") dialog.close(); else dialog.removeAttribute("open");
+  };
+  const setFilterPopoverOpen = (isOpen) => {
+    filterPopover.hidden = !isOpen;
+    filterToggle.setAttribute("aria-expanded", String(isOpen));
   };
   const openDetail = (transaction) => {
     const details = {
@@ -1015,7 +1054,15 @@ function setupTransactionHistory() {
     body.replaceChildren();
     transactions.forEach((transaction) => {
       const row = document.createElement("tr");
-      [transaction.transactionNumber, transaction.queueNumber, formatDateTime(transaction.createdAt), transaction.customerName, transaction.plateNumber, transaction.vehicleType, transaction.service, formatCurrency(transaction.price)].forEach((value) => {
+      const transactionCell = document.createElement("td");
+      const transactionButton = document.createElement("button");
+      transactionButton.className = "history-transaction-link";
+      transactionButton.type = "button";
+      transactionButton.textContent = transaction.transactionNumber || "-";
+      transactionButton.addEventListener("click", () => openDetail(transaction));
+      transactionCell.append(transactionButton);
+      row.append(transactionCell);
+      [transaction.queueNumber, formatDateTime(transaction.createdAt), transaction.customerName, transaction.plateNumber, transaction.vehicleType, transaction.service, formatCurrency(transaction.price)].forEach((value) => {
         const cell = document.createElement("td");
         cell.textContent = value || "-";
         row.append(cell);
@@ -1023,20 +1070,6 @@ function setupTransactionHistory() {
       const serviceCell = document.createElement("td");
       serviceCell.append(makeStatusBadge(transaction.serviceStatus, "service"));
       row.append(serviceCell);
-      const paymentCell = document.createElement("td");
-      paymentCell.append(makeStatusBadge(transaction.paymentStatus, "payment"));
-      row.append(paymentCell);
-      const methodCell = document.createElement("td");
-      methodCell.textContent = transaction.paymentMethod || "-";
-      row.append(methodCell);
-      const actionCell = document.createElement("td");
-      const detailButton = document.createElement("button");
-      detailButton.className = "table-action";
-      detailButton.type = "button";
-      detailButton.textContent = "Detail";
-      detailButton.addEventListener("click", () => openDetail(transaction));
-      actionCell.append(detailButton);
-      row.append(actionCell);
       body.append(row);
     });
   };
@@ -1045,6 +1078,13 @@ function setupTransactionHistory() {
   serviceFilter.addEventListener("change", render);
   paymentFilter.addEventListener("change", render);
   dateFilter.addEventListener("change", render);
+  filterToggle.addEventListener("click", () => setFilterPopoverOpen(filterPopover.hidden));
+  document.addEventListener("click", (event) => {
+    if (!filterPopover.hidden && !filterPopover.contains(event.target) && event.target !== filterToggle) setFilterPopoverOpen(false);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") setFilterPopoverOpen(false);
+  });
   document.querySelector("#history-dialog-close")?.addEventListener("click", closeDetail);
   dialog.addEventListener("click", (event) => { if (event.target === dialog) closeDetail(); });
   document.querySelector("#history-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = appUrl("login.html"); });
@@ -1058,104 +1098,137 @@ function setupPaymentPage() {
   const empty = document.querySelector("#payment-empty");
   const resultCount = document.querySelector("#payment-result-count");
   const readyCount = document.querySelector("#payment-ready-count");
+  const unpaidCount = document.querySelector("#payment-unpaid-count");
+  const pendingTotal = document.querySelector("#payment-pending-total");
+  const pendingCount = document.querySelector("#payment-pending-count");
   const notice = document.querySelector("#payment-notice");
-  const dialog = document.querySelector("#payment-dialog");
+  const inspection = document.querySelector("#payment-dialog");
+  const inspectionIdentity = document.querySelector("#payment-inspection-identity");
   const dialogNotice = document.querySelector("#payment-dialog-notice");
   const paymentMethod = document.querySelector("#payment-method");
+  const paymentMethodBadge = document.querySelector("#payment-method-badge");
+  const paymentAmount = document.querySelector("#payment-amount");
+  const paymentChange = document.querySelector("#payment-change");
+  const paymentCashInstruction = document.querySelector("#payment-cash-instruction");
+  const paymentCashField = document.querySelector("#payment-cash-field");
+  const paymentQrisInstruction = document.querySelector("#payment-qris-instruction");
+  const paymentServiceWarning = document.querySelector("#payment-service-warning");
   const confirmButton = document.querySelector("#confirm-payment");
 
-  if (!body || !empty || !resultCount || !readyCount || !notice || !dialog || !dialogNotice || !paymentMethod || !confirmButton) {
+  if (!body || !empty || !resultCount || !readyCount || !unpaidCount || !pendingTotal || !pendingCount || !notice || !inspection || !inspectionIdentity || !dialogNotice || !paymentMethod || !paymentMethodBadge || !paymentAmount || !paymentChange || !paymentCashInstruction || !paymentCashField || !paymentQrisInstruction || !paymentServiceWarning || !confirmButton) {
     return;
   }
 
   let selectedTransactionId = null;
 
-  const makePaymentBadge = (paymentStatus) => {
+  const unpaidTransactions = () => getTransactions().filter((transaction) => transaction.paymentStatus !== "Lunas");
+  const makePaymentBadge = (transaction) => {
     const badge = document.createElement("span");
-    badge.className = `status-badge ${paymentStatus === "Lunas" ? "status-done" : "status-waiting"}`;
-    badge.textContent = paymentStatus || "Belum Dibayar";
+    const needsConfirmation = transaction.serviceStatus === "Selesai";
+    badge.className = `payment-status-badge ${needsConfirmation ? "payment-status-confirm" : "payment-status-unpaid"}`;
+    badge.textContent = needsConfirmation ? "Perlu konfirmasi" : "Belum dibayar";
     return badge;
   };
 
-  const makeServiceBadge = (serviceStatus) => {
-    const badge = document.createElement("span");
-    badge.className = `status-badge ${serviceStatus === "Selesai" ? "status-done" : serviceStatus === "Sedang Dicuci" ? "status-washing" : "status-waiting"}`;
-    badge.textContent = serviceStatus;
-    return badge;
-  };
-
-  const closeDialog = () => {
-    if (typeof dialog.close === "function") dialog.close(); else dialog.removeAttribute("open");
+  const closeInspection = () => {
     selectedTransactionId = null;
+    inspection.hidden = true;
+    body.querySelectorAll("tr").forEach((row) => row.classList.remove("is-selected"));
+  };
+
+  const updatePaymentControls = () => {
+    const transaction = getTransactions().find((item) => item.id === selectedTransactionId);
+    if (!transaction) return;
+    const total = Number(transaction.price) || 0;
+    const cashAmount = Number(paymentAmount.value);
+    const isCash = paymentMethod.value === "Tunai";
+    const change = isCash && Number.isFinite(cashAmount) ? Math.max(cashAmount - total, 0) : 0;
+    paymentMethodBadge.textContent = paymentMethod.value;
+    paymentCashField.hidden = !isCash;
+    paymentQrisInstruction.hidden = isCash;
+    paymentChange.textContent = formatCurrency(change);
+    paymentCashInstruction.textContent = `Hitung uang yang diterima dan serahkan kembalian ${formatCurrency(change)} sebelum konfirmasi lunas.`;
+    paymentServiceWarning.hidden = transaction.serviceStatus === "Selesai";
+    confirmButton.disabled = transaction.serviceStatus !== "Selesai" || (isCash && (!paymentAmount.value || !Number.isFinite(cashAmount) || cashAmount < total));
   };
 
   const openPaymentDetail = (transaction) => {
     selectedTransactionId = transaction.id;
-    const details = {
-      "payment-detail-transaction": transaction.transactionNumber,
-      "payment-detail-customer": transaction.customerName,
-      "payment-detail-plate": transaction.plateNumber,
-      "payment-detail-vehicle": transaction.vehicleType,
-      "payment-detail-service": transaction.service,
-      "payment-detail-total": formatCurrency(transaction.price),
-    };
-    Object.entries(details).forEach(([id, value]) => { document.querySelector(`#${id}`).textContent = value; });
+    const total = Number(transaction.price) || 0;
+    inspectionIdentity.textContent = `${transaction.customerName || "-"} · ${transaction.plateNumber || "-"} · ${transaction.transactionNumber || "-"}`;
+    document.querySelector("#payment-detail-transaction").textContent = transaction.transactionNumber || "-";
+    document.querySelector("#payment-detail-customer").textContent = transaction.customerName || "-";
+    document.querySelector("#payment-detail-plate").textContent = transaction.plateNumber || "-";
+    document.querySelector("#payment-detail-vehicle").textContent = transaction.vehicleType || "-";
+    document.querySelector("#payment-detail-service").textContent = transaction.service || "-";
+    document.querySelector("#payment-detail-subtotal").textContent = formatCurrency(total);
+    document.querySelector("#payment-detail-discount").textContent = "− Rp 0";
+    document.querySelector("#payment-detail-total").textContent = formatCurrency(total);
     paymentMethod.value = "Tunai";
+    paymentAmount.value = "";
     dialogNotice.textContent = "";
-    if (typeof dialog.showModal === "function") dialog.showModal(); else dialog.setAttribute("open", "");
-  };
-
-  const requestPayment = (transaction) => {
-    if (!transaction) {
-      notice.textContent = "Transaksi tidak ditemukan.";
-      return;
-    }
-    if (transaction.serviceStatus !== "Selesai") {
-      notice.textContent = "Pembayaran dapat dilakukan setelah kendaraan selesai dicuci.";
-      return;
-    }
-    if (transaction.paymentStatus === "Lunas") {
-      notice.textContent = "Transaksi ini sudah dibayar.";
-      return;
-    }
-    notice.textContent = "";
-    openPaymentDetail(transaction);
+    inspection.hidden = false;
+    updatePaymentControls();
   };
 
   const render = () => {
-    const transactions = getTransactions();
-    const readyTransactions = transactions.filter((transaction) => transaction.serviceStatus === "Selesai" && transaction.paymentStatus !== "Lunas");
-    readyCount.textContent = `${readyTransactions.length} transaksi`;
+    const transactions = unpaidTransactions();
+    const confirmableTransactions = transactions.filter((transaction) => transaction.serviceStatus === "Selesai");
+    const awaitingServiceTransactions = transactions.filter((transaction) => transaction.serviceStatus !== "Selesai");
+    const totalPending = transactions.reduce((total, transaction) => total + (Number(transaction.price) || 0), 0);
+    unpaidCount.textContent = String(awaitingServiceTransactions.length);
+    readyCount.textContent = String(confirmableTransactions.length);
+    pendingTotal.textContent = formatCurrency(totalPending);
+    pendingCount.textContent = `${transactions.length} tagihan belum dikonfirmasi`;
     resultCount.textContent = `${transactions.length} data`;
     empty.hidden = transactions.length > 0;
     body.replaceChildren();
     transactions.forEach((transaction) => {
       const row = document.createElement("tr");
-      [transaction.transactionNumber, transaction.queueNumber, transaction.customerName, transaction.plateNumber, transaction.vehicleType, transaction.service, formatCurrency(transaction.price)].forEach((value) => {
-        const cell = document.createElement("td");
-        cell.textContent = value;
-        row.append(cell);
-      });
-      const serviceCell = document.createElement("td");
-      serviceCell.append(makeServiceBadge(transaction.serviceStatus));
-      row.append(serviceCell);
+      if (transaction.id === selectedTransactionId) row.classList.add("is-selected");
+      const transactionCell = document.createElement("td");
+      transactionCell.textContent = transaction.transactionNumber || "-";
+      row.append(transactionCell);
+      const customerCell = document.createElement("td");
+      const customerName = document.createElement("strong");
+      customerName.textContent = transaction.customerName || "-";
+      const plateNumber = document.createElement("small");
+      plateNumber.textContent = transaction.plateNumber || "-";
+      customerCell.append(customerName, plateNumber);
+      row.append(customerCell);
+      const totalCell = document.createElement("td");
+      totalCell.textContent = formatCurrency(transaction.price);
+      row.append(totalCell);
       const paymentCell = document.createElement("td");
-      paymentCell.append(makePaymentBadge(transaction.paymentStatus));
+      paymentCell.append(makePaymentBadge(transaction));
       row.append(paymentCell);
       const actionCell = document.createElement("td");
-      const payButton = document.createElement("button");
-      payButton.className = "table-action";
-      payButton.type = "button";
-      payButton.textContent = "Bayar";
-      payButton.addEventListener("click", () => requestPayment(transaction));
-      actionCell.append(payButton);
+      const inspectButton = document.createElement("button");
+      inspectButton.className = "table-action";
+      inspectButton.type = "button";
+      inspectButton.textContent = "Periksa";
+      inspectButton.addEventListener("click", () => {
+        notice.textContent = "";
+        openPaymentDetail(transaction);
+        render();
+      });
+      actionCell.append(inspectButton);
       row.append(actionCell);
       body.append(row);
     });
+    if (!transactions.some((transaction) => transaction.id === selectedTransactionId)) {
+      selectedTransactionId = transactions[0]?.id || null;
+      if (selectedTransactionId) openPaymentDetail(transactions[0]);
+      else inspection.hidden = true;
+      body.querySelectorAll("tr").forEach((row, index) => {
+        if (transactions[index]?.id === selectedTransactionId) row.classList.add("is-selected");
+      });
+    }
   };
 
-  document.querySelector("#payment-dialog-close")?.addEventListener("click", closeDialog);
-  dialog.addEventListener("click", (event) => { if (event.target === dialog) closeDialog(); });
+  document.querySelector("#payment-dialog-close")?.addEventListener("click", closeInspection);
+  paymentMethod.addEventListener("change", updatePaymentControls);
+  paymentAmount.addEventListener("input", updatePaymentControls);
   confirmButton.addEventListener("click", () => {
     const transactions = getTransactions();
     const transaction = transactions.find((item) => item.id === selectedTransactionId);
@@ -1164,18 +1237,29 @@ function setupPaymentPage() {
       return;
     }
     if (transaction.serviceStatus !== "Selesai") {
-      dialogNotice.textContent = "Pembayaran dapat dilakukan setelah kendaraan selesai dicuci.";
+      dialogNotice.textContent = "Kendaraan belum selesai dicuci.";
       return;
     }
     if (transaction.paymentStatus === "Lunas") {
       dialogNotice.textContent = "Transaksi ini sudah dibayar.";
       return;
     }
+    const total = Number(transaction.price) || 0;
+    const amountPaid = Number(paymentAmount.value);
+    if (paymentMethod.value === "Tunai" && (!paymentAmount.value || !Number.isFinite(amountPaid) || amountPaid < total)) {
+      dialogNotice.textContent = "Nominal diterima harus sama dengan atau lebih besar dari total tagihan.";
+      updatePaymentControls();
+      return;
+    }
     transaction.paymentStatus = "Lunas";
     transaction.paymentMethod = paymentMethod.value;
     transaction.paidAt = new Date().toISOString();
+    if (paymentMethod.value === "Tunai") {
+      transaction.amountPaid = amountPaid;
+      transaction.change = amountPaid - total;
+    }
     saveTransactions(transactions);
-    closeDialog();
+    selectedTransactionId = null;
     notice.textContent = "Pembayaran berhasil dikonfirmasi.";
     render();
   });

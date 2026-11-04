@@ -6,63 +6,83 @@
     <meta name="description" content="Antrean Kendaraan WASHUP" />
     <title>Antrean | WASHUP</title>
     <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/kasir.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&family=Roboto:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
   </head>
-  <body class="queue-page">
+  <body class="queue-page kasir-page">
     <div class="dashboard-shell">
       <aside class="dashboard-sidebar" aria-label="Navigasi Kasir">
         <a class="dashboard-brand" href="dashboard-kasir.html" aria-label="WASHUP Dashboard Kasir">
-          <span class="brand-mark">W</span>
-          <span>
-            <strong>WASHUP</strong>
-            <small>Sistem Car Wash</small>
-          </span>
+          <img class="brand-logo-img" src="../../assets/logo-washup.png" alt="Logo mobil cuci WASHUP" />
+          <span class="brand-text">WASHUP</span>
         </a>
 
         <nav class="dashboard-nav" aria-label="Menu utama">
           <p class="nav-label">MENU KASIR</p>
-          <a class="nav-item" href="dashboard-kasir.html">
-            <span class="nav-icon" aria-hidden="true">⌂</span>
-            Dashboard
+          <a class="nav-item" href="dashboard-kasir.html" title="Dashboard" aria-label="Dashboard">
+            <svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true">
+              <path fill="currentColor" d="M33 19a1 1 0 0 1-.71-.29L18 4.41L3.71 18.71A1 1 0 0 1 2.3 17.3l15-15a1 1 0 0 1 1.41 0l15 15A1 1 0 0 1 33 19Z" />
+              <path fill="currentColor" d="M18 7.79L6 19.79V32a2 2 0 0 0 2 2h7V22h6v12h7a2 2 0 0 0 2-2V19.79ZM28 32h-3V20H11v12H8V19.38l10-10l10 10Z" />
+            </svg>
+            <span class="nav-text">Dashboard</span>
           </a>
-          <a class="nav-item" href="transaksi-baru.html">
-            <span class="nav-icon" aria-hidden="true">+</span>
-            Transaksi Baru
+          <a class="nav-item" href="transaksi-baru.html" title="Transaksi Baru" aria-label="Transaksi Baru">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span class="nav-text">Transaksi Baru</span>
           </a>
-          <a class="nav-item active" href="antrean.html" aria-current="page">
-            <span class="nav-icon" aria-hidden="true">≡</span>
-            Antrean
+          <a class="nav-item active" href="antrean.html" title="Antrean" aria-label="Antrean" aria-current="page">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span class="nav-text">Antrean</span>
           </a>
-          <a class="nav-item" href="pembayaran.html">
-            <span class="nav-icon" aria-hidden="true">Rp</span>
-            Pembayaran
+          <a class="nav-item" href="pembayaran.html" title="Pembayaran" aria-label="Pembayaran">
+            <span class="nav-icon-rp" aria-hidden="true">Rp</span>
+            <span class="nav-text">Pembayaran</span>
           </a>
-          <a class="nav-item" href="riwayat-transaksi.html">
-            <span class="nav-icon" aria-hidden="true">↺</span>
-            Riwayat Transaksi
+          <a class="nav-item" href="riwayat-transaksi.html" title="Riwayat Transaksi" aria-label="Riwayat Transaksi">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 2.64-6.36L3 8m0-5v5h5m4-1v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="nav-text">Riwayat Transaksi</span>
           </a>
         </nav>
 
         <div class="sidebar-bottom">
-          <p class="sidebar-note">Area kerja Kasir</p>
+          <p class="sidebar-note">Area Kerja Kasir</p>
           <button class="sidebar-logout" id="queue-logout" type="button">
-            <span class="nav-icon" aria-hidden="true">↪</span>
-            Logout
+            <svg class="logout-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 17l5-5-5-5M15 12H3" />
+              <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" />
+            </svg>
+            <span class="logout-text">Logout</span>
           </button>
         </div>
       </aside>
 
+      <button class="sidebar-collapse-toggle" id="sidebar-collapse-toggle" type="button" aria-expanded="true" aria-label="Ciutkan menu samping" title="Ciutkan menu samping">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7" /></svg>
+      </button>
+
       <div class="dashboard-content">
         <header class="dashboard-topbar">
-          <div>
-            <p class="eyebrow">WASHUP / KASIR</p>
+          <div class="topbar-title-wrap">
             <h1>Antrean</h1>
           </div>
           <div class="user-summary" aria-label="Informasi pengguna">
-            <span class="user-avatar" aria-hidden="true">K</span>
-            <span>
+            <div class="user-avatar-circle" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" /></svg>
+            </div>
+            <div class="user-info">
               <strong>Kasir</strong>
               <small>Role: Kasir</small>
-            </span>
+            </div>
           </div>
         </header>
 
@@ -71,7 +91,6 @@
             <div>
               <p class="eyebrow">PELAYANAN BERJALAN</p>
               <h2 id="queue-page-title">Antrean Kendaraan</h2>
-              <p>Kelola antrean kendaraan yang sedang diproses.</p>
             </div>
             <div class="active-queue-count">
               <span>Antrean Aktif</span>
@@ -81,8 +100,8 @@
 
           <section class="queue-toolbar" aria-label="Pencarian dan filter antrean">
             <div class="queue-search-field">
-              <label for="queue-search">Cari antrean</label>
-              <input id="queue-search" type="search" placeholder="Cari nomor plat atau nama pelanggan..." />
+              <label for="queue-search">Cari Antrean</label>
+              <input id="queue-search" type="search" placeholder="Masukkan Nama Pelanggan" />
             </div>
             <div class="queue-filter-field">
               <label for="queue-filter">Filter Status Pengerjaan</label>
@@ -108,22 +127,23 @@
                 <caption class="sr-only">Daftar transaksi sebagai antrean kendaraan</caption>
                 <thead>
                   <tr>
-                    <th scope="col">No. Antrean</th>
-                    <th scope="col">No. Plat</th>
-                    <th scope="col">Pelanggan</th>
-                    <th scope="col">Kendaraan</th>
-                    <th scope="col">Layanan</th>
-                    <th scope="col">Status Pengerjaan</th>
-                    <th scope="col">Status Pembayaran</th>
-                    <th scope="col">Aksi</th>
+                    <th scope="col">NO. ANTRIAN</th>
+                    <th scope="col">NO.PLAT</th>
+                    <th scope="col">PELANGGAN</th>
+                    <th scope="col">KENDARAAN</th>
+                    <th scope="col">LAYANAN</th>
+                    <th scope="col">STATUS PENGERJAAN</th>
+                    <th scope="col">AKSI</th>
                   </tr>
                 </thead>
                 <tbody id="queue-page-body"></tbody>
               </table>
             </div>
             <div class="queue-empty" id="queue-empty" hidden>
-              <span class="queue-empty-icon" aria-hidden="true">≡</span>
-              <h3>Belum ada antrean</h3>
+              <span class="queue-empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 36 28" focusable="false"><path d="M5 13 10 5h16l5 8v10H5z" /><path d="M5 13h26M12 5l-4 8m16-8 4 8" /></svg>
+              </span>
+              <h3>Belum ada antrean.</h3>
               <p>Buat transaksi baru untuk menambahkan kendaraan ke antrean.</p>
               <a class="primary-button dashboard-action" href="transaksi-baru.html">+ Transaksi Baru</a>
             </div>
@@ -131,8 +151,8 @@
         </main>
 
         <footer class="dashboard-footer">
-          <span>WASHUP · Antrean Kendaraan</span>
-          <span id="current-year"></span>
+          <span class="footer-copy"><span class="c-icon-circle">&copy;</span><span id="current-year"></span> WASHUP - Antrean</span>
+          <span class="footer-location">Maju Bersama Car Wash 2 · Kota Malang</span>
         </footer>
       </div>
     </div>

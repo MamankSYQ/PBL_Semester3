@@ -23,6 +23,10 @@
   --wu-sidebar-w: 266px;
 }
 
+.kasir-page .dashboard-shell {
+  --wu-sidebar-w: 266px;
+}
+
 /* ---------- Tombol panah bulat di batas sidebar ---------- */
 .sidebar-collapse-toggle {
   /* Menempel di layar agar tetap terlihat saat halaman digulir. */

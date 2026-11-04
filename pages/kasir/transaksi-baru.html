@@ -6,80 +6,100 @@
     <meta name="description" content="Transaksi Baru WASHUP" />
     <title>Transaksi Baru | WASHUP</title>
     <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/kasir.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&family=Roboto:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
   </head>
-  <body class="transaction-page">
+  <body class="transaction-page kasir-page">
     <div class="dashboard-shell">
       <aside class="dashboard-sidebar" aria-label="Navigasi Kasir">
         <a class="dashboard-brand" href="dashboard-kasir.html" aria-label="WASHUP Dashboard Kasir">
-          <span class="brand-mark">W</span>
-          <span>
-            <strong>WASHUP</strong>
-            <small>Sistem Car Wash</small>
-          </span>
+          <img class="brand-logo-img" src="../../assets/logo-washup.png" alt="Logo mobil cuci WASHUP" />
+          <span class="brand-text">WASHUP</span>
         </a>
 
         <nav class="dashboard-nav" aria-label="Menu utama">
           <p class="nav-label">MENU KASIR</p>
-          <a class="nav-item" href="dashboard-kasir.html">
-            <span class="nav-icon" aria-hidden="true">⌂</span>
-            Dashboard
+          <a class="nav-item" href="dashboard-kasir.html" title="Dashboard" aria-label="Dashboard">
+            <svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true">
+              <path fill="currentColor" d="M33 19a1 1 0 0 1-.71-.29L18 4.41L3.71 18.71A1 1 0 0 1 2.3 17.3l15-15a1 1 0 0 1 1.41 0l15 15A1 1 0 0 1 33 19Z" />
+              <path fill="currentColor" d="M18 7.79L6 19.79V32a2 2 0 0 0 2 2h7V22h6v12h7a2 2 0 0 0 2-2V19.79ZM28 32h-3V20H11v12H8V19.38l10-10l10 10Z" />
+            </svg>
+            <span class="nav-text">Dashboard</span>
           </a>
-          <a class="nav-item active" href="transaksi-baru.html" aria-current="page">
-            <span class="nav-icon" aria-hidden="true">+</span>
-            Transaksi Baru
+          <a class="nav-item active" href="transaksi-baru.html" title="Transaksi Baru" aria-label="Transaksi Baru" aria-current="page">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span class="nav-text">Transaksi Baru</span>
           </a>
-          <a class="nav-item" href="antrean.html">
-            <span class="nav-icon" aria-hidden="true">≡</span>
-            Antrean
+          <a class="nav-item" href="antrean.html" title="Antrean" aria-label="Antrean">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span class="nav-text">Antrean</span>
           </a>
-          <a class="nav-item" href="pembayaran.html">
-            <span class="nav-icon" aria-hidden="true">Rp</span>
-            Pembayaran
+          <a class="nav-item" href="pembayaran.html" title="Pembayaran" aria-label="Pembayaran">
+            <span class="nav-icon-rp" aria-hidden="true">Rp</span>
+            <span class="nav-text">Pembayaran</span>
           </a>
-          <a class="nav-item" href="riwayat-transaksi.html">
-            <span class="nav-icon" aria-hidden="true">↺</span>
-            Riwayat Transaksi
+          <a class="nav-item" href="riwayat-transaksi.html" title="Riwayat Transaksi" aria-label="Riwayat Transaksi">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 2.64-6.36L3 8m0-5v5h5m4-1v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="nav-text">Riwayat Transaksi</span>
           </a>
         </nav>
 
         <div class="sidebar-bottom">
-          <p class="sidebar-note">Area kerja Kasir</p>
+          <p class="sidebar-note">Area Kerja Kasir</p>
           <button class="sidebar-logout" id="transaction-logout" type="button">
-            <span class="nav-icon" aria-hidden="true">↪</span>
-            Logout
+            <svg class="logout-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 17l5-5-5-5M15 12H3" />
+              <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" />
+            </svg>
+            <span class="logout-text">Logout</span>
           </button>
         </div>
       </aside>
 
+      <button class="sidebar-collapse-toggle" id="sidebar-collapse-toggle" type="button" aria-expanded="true" aria-label="Ciutkan menu samping" title="Ciutkan menu samping">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7" /></svg>
+      </button>
+
       <div class="dashboard-content">
         <header class="dashboard-topbar">
-          <div>
-            <p class="eyebrow">WASHUP / KASIR</p>
-            <h1>Transaksi Baru</h1>
+          <div class="topbar-title-wrap">
+            <h1>Transaksi Kasir</h1>
           </div>
           <div class="user-summary" aria-label="Informasi pengguna">
-            <span class="user-avatar" aria-hidden="true">K</span>
-            <span>
+            <div class="user-avatar-circle" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" /></svg>
+            </div>
+            <div class="user-info">
               <strong>Kasir</strong>
               <small>Role: Kasir</small>
-            </span>
+            </div>
           </div>
         </header>
 
         <main class="dashboard-main transaction-main">
           <section class="transaction-heading" aria-labelledby="transaction-title">
-            <p class="eyebrow">PELAYANAN PELANGGAN</p>
-            <h2 id="transaction-title">Masukkan data pelanggan, kendaraan, dan layanan.</h2>
+            <p class="eyebrow">RINGKASAN PENGERJAAN</p>
+            <h2 id="transaction-title">Data Transaksi</h2>
           </section>
 
-          <div class="transaction-layout">
+          <div class="transaction-layout" id="transaction-layout">
             <form class="transaction-form" id="transaction-form" novalidate>
               <section class="form-section" aria-labelledby="customer-title">
                 <div class="form-section-heading">
                   <span class="form-section-number">01</span>
                   <div>
                     <p class="eyebrow">DATA PELANGGAN</p>
-                    <h3 id="customer-title">Informasi pelanggan</h3>
+                    <h3 id="customer-title">Informasi Pelanggan</h3>
                   </div>
                 </div>
                 <div class="form-grid">
@@ -101,7 +121,7 @@
                   <span class="form-section-number">02</span>
                   <div>
                     <p class="eyebrow">DATA KENDARAAN</p>
-                    <h3 id="vehicle-title">Informasi kendaraan</h3>
+                    <h3 id="vehicle-title">Informasi Kendaraan</h3>
                   </div>
                 </div>
                 <div class="form-grid">
@@ -127,7 +147,7 @@
                   <span class="form-section-number">03</span>
                   <div>
                     <p class="eyebrow">LAYANAN</p>
-                    <h3 id="service-title">Pilih layanan pencucian</h3>
+                    <h3 id="service-title">Pilih Layanan Pencucian</h3>
                   </div>
                 </div>
                 <div class="form-field">
@@ -165,41 +185,64 @@
           </div>
 
           <section class="transaction-result" id="transaction-result" aria-live="polite" hidden>
-            <div class="result-icon" aria-hidden="true">✓</div>
-            <div>
-              <p class="eyebrow">TRANSAKSI TERSIMPAN</p>
-              <h2>Transaksi berhasil dibuat.</h2>
-              <div class="result-details">
-                <span>Nomor Transaksi <strong id="result-transaction-number">-</strong></span>
-                <span>Nomor Antrean <strong id="result-queue-number">-</strong></span>
-              </div>
-              <div class="result-statuses">
-                <div class="result-status result-status-service">
-                  <span>Status Pengerjaan</span>
-                  <strong id="result-service-status">Menunggu</strong>
+            <article class="receipt-card" id="transaction-receipt" aria-label="Struk transaksi">
+              <header class="receipt-header">
+                <strong class="receipt-brand">WASHUP</strong>
+                <span>Maju Bersama Car Wash 2 · Kota Malang</span>
+                <span class="receipt-title">STRUK TRANSAKSI</span>
+              </header>
+              <div class="receipt-queue">
+                <div>
+                  <span>NOMOR ANTREAN</span>
+                  <strong id="result-service-status">Menunggu pencucian</strong>
                 </div>
-                <div class="result-status result-status-payment">
-                  <span>Status Pembayaran</span>
-                  <strong id="result-payment-status">Belum Dibayar</strong>
-                </div>
+                <b id="result-queue-number">00</b>
               </div>
-              <div class="result-details result-customer-details">
-                <span>Pelanggan <strong id="result-customer">-</strong></span>
-                <span>Kendaraan <strong id="result-vehicle">-</strong></span>
-                <span>Layanan <strong id="result-service">-</strong></span>
-                <span>Total <strong id="result-price">Rp 0</strong></span>
+              <dl class="receipt-details">
+                <div><dt>No. transaksi</dt><dd id="result-transaction-number">-</dd></div>
+                <div><dt>Tanggal</dt><dd id="result-date">-</dd></div>
+                <div><dt>Kasir</dt><dd id="result-cashier">-</dd></div>
+                <div class="receipt-divider"></div>
+                <div><dt>Pelanggan</dt><dd id="result-customer">-</dd></div>
+                <div><dt>Nomor telepon</dt><dd id="result-customer-phone">-</dd></div>
+                <div><dt>Nomor plat</dt><dd id="result-plate-number">-</dd></div>
+                <div><dt>Jenis kendaraan</dt><dd id="result-vehicle">-</dd></div>
+              </dl>
+              <section class="receipt-service">
+                <p>LAYANAN PENCUCIAN</p>
+                <div><strong id="result-service">-</strong><span id="result-price">Rp 0</span></div>
+                <small id="result-unit-price">1 × Rp 0</small>
+              </section>
+              <div class="receipt-total">
+                <strong>Total tagihan</strong>
+                <b id="result-total">Rp 0</b>
               </div>
-              <div class="result-actions">
-                <a class="primary-button dashboard-action" href="dashboard-kasir.html">Kembali ke Dashboard</a>
-                <a class="secondary-dashboard-button" href="dashboard-kasir.html#antrean-section">Lihat Antrean</a>
+              <div class="receipt-payment">
+                <span>Status pembayaran</span>
+                <strong id="result-payment-status">Belum dibayar</strong>
               </div>
-            </div>
+              <p class="receipt-note">Struk ini adalah bukti transaksi, bukan bukti pembayaran.</p>
+              <p class="receipt-thanks">Terima kasih telah memilih WASHUP.</p>
+            </article>
+            <aside class="transaction-success-card">
+              <div class="result-icon" aria-hidden="true">✓</div>
+              <p class="eyebrow">TRANSAKSI BARU</p>
+              <h2>Transaksi berhasil disimpan</h2>
+              <p class="success-copy" id="result-queue-message">Nomor antrean sudah dibuat. Transaksi masuk ke antrean dan belum dibayar.</p>
+              <div class="success-divider"></div>
+              <h3>Cetak struk transaksi ini?</h3>
+              <p class="success-hint">Cetak untuk pelanggan, atau selesai tanpa mencetak struk.</p>
+              <div class="success-actions">
+                <button class="primary-button dashboard-action" id="print-transaction" type="button">Cetak struk</button>
+                <button class="secondary-dashboard-button" id="new-transaction" type="button">Tidak</button>
+              </div>
+            </aside>
           </section>
         </main>
 
         <footer class="dashboard-footer">
-          <span>WASHUP · Transaksi Baru</span>
-          <span id="current-year"></span>
+          <span class="footer-copy"><span class="c-icon-circle">&copy;</span><span id="current-year"></span> WASHUP - Transaksi Baru</span>
+          <span class="footer-location">Maju Bersama Car Wash 2 · Kota Malang</span>
         </footer>
       </div>
     </div>
