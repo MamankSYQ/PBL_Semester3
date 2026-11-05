@@ -535,7 +535,7 @@ if (document.querySelector(".admin-dashboard-page") && sessionStorage.getItem("w
   window.location.replace(appUrl("login.html"));
 }
 
-if (document.querySelector(".petugas-dashboard-page") && sessionStorage.getItem("washupRole") !== "Petugas") {
+if (document.querySelector(".petugas-page") && sessionStorage.getItem("washupRole") !== "Petugas") {
   window.location.replace(appUrl("login.html"));
 }
 
@@ -2905,45 +2905,43 @@ function makePetugasStatusBadge(status) {
 function setupPetugasDashboard() {
   const body = document.querySelector("#petugas-dashboard-body");
   const empty = document.querySelector("#petugas-dashboard-empty");
-  if (!body || !empty) return;
+  const dialog = document.querySelector("#petugas-dialog");
+  if (!body || !empty || !dialog) return;
 
-  const search = document.querySelector("#petugas-search");
-  const filter = document.querySelector("#petugas-filter");
-
-  const transactions = getTransactions();
-  const counts = {
-    waiting: transactions.filter((transaction) => transaction.serviceStatus === "Menunggu").length,
-    washing: transactions.filter((transaction) => transaction.serviceStatus === "Sedang Dicuci").length,
-    done: transactions.filter((transaction) => transaction.serviceStatus === "Selesai").length,
-  };
+  let selectedId = null;
   const waitingCount = document.querySelector("#waiting-count");
   const washingCount = document.querySelector("#washing-count");
   const doneCount = document.querySelector("#done-count");
   const vehicleCount = document.querySelector("#petugas-vehicle-count");
-  const queueBadge = document.querySelector("#petugas-queue-badge");
   const dateEl = document.querySelector("#petugas-date");
-
-  if (waitingCount) waitingCount.textContent = counts.waiting;
-  if (washingCount) washingCount.textContent = counts.washing;
-  if (doneCount) doneCount.textContent = counts.done;
-  if (vehicleCount) vehicleCount.textContent = transactions.length;
-  if (queueBadge) queueBadge.textContent = `${transactions.filter((transaction) => transaction.serviceStatus !== "Selesai").length} kendaraan aktif`;
   if (dateEl) dateEl.textContent = getTodayLabel();
 
   const render = () => {
-    const query = search && search.value ? search.value.trim().toLowerCase() : "";
-    const selectedFilter = filter && filter.value ? filter.value : "Semua";
-    const filtered = transactions.filter((transaction) => {
-      const matchesQuery = [transaction.plateNumber, transaction.queueNumber, transaction.customerName].some((value) => String(value || "").toLowerCase().includes(query));
-      return matchesQuery && (selectedFilter === "Semua" || transaction.serviceStatus === selectedFilter);
+    const transactions = getTransactions();
+    const today = getTodayKey();
+    const todayTransactions = transactions.filter((transaction) => {
+      const createdAt = new Date(transaction.createdAt);
+      return !Number.isNaN(createdAt.getTime()) && formatDateKey(createdAt) === today;
     });
+    const completedToday = todayTransactions.filter((transaction) => transaction.serviceStatus === "Selesai");
+    const uniquePlatesToday = new Set(todayTransactions
+      .map((transaction) => String(transaction.plateNumber || "").trim().toUpperCase())
+      .filter(Boolean));
+    if (waitingCount) waitingCount.textContent = transactions.filter((transaction) => transaction.serviceStatus === "Menunggu").length;
+    if (washingCount) washingCount.textContent = transactions.filter((transaction) => transaction.serviceStatus === "Sedang Dicuci").length;
+    if (doneCount) doneCount.textContent = completedToday.length;
+    if (vehicleCount) vehicleCount.textContent = uniquePlatesToday.size;
 
+    const visibleTransactions = transactions.slice().sort((first, second) => {
+      const firstDone = first.serviceStatus === "Selesai";
+      const secondDone = second.serviceStatus === "Selesai";
+      return Number(firstDone) - Number(secondDone);
+    });
     body.replaceChildren();
-    empty.hidden = filtered.length > 0;
-
-    filtered.forEach((transaction) => {
+    empty.hidden = visibleTransactions.length > 0;
+    visibleTransactions.forEach((transaction) => {
       const row = document.createElement("tr");
-      [transaction.queueNumber, transaction.plateNumber, transaction.customerName || "-", transaction.vehicleType, transaction.service].forEach((value) => {
+      [transaction.queueNumber || "-", transaction.plateNumber || "-", transaction.customerName || "-", transaction.vehicleType || "-", transaction.service || "-"].forEach((value) => {
         const cell = document.createElement("td");
         cell.textContent = value;
         row.append(cell);
@@ -2956,57 +2954,6 @@ function setupPetugasDashboard() {
       paymentCell.append(makePetugasStatusBadge(transaction.paymentStatus));
       row.append(paymentCell);
 
-      const actionCell = document.createElement("td");
-      const link = document.createElement("a");
-      link.className = "table-action table-action-link";
-      link.href = appUrl("pages/petugas/antrean-petugas.html");
-      link.textContent = "Detail";
-      actionCell.append(link);
-      row.append(actionCell);
-
-      body.append(row);
-    });
-  };
-
-  if (search) search.addEventListener("input", render);
-  if (filter) filter.addEventListener("change", render);
-  render();
-}
-
-function setupPetugasQueue() {
-  const body = document.querySelector("#petugas-queue-body");
-  const search = document.querySelector("#petugas-search");
-  const filter = document.querySelector("#petugas-filter");
-  const empty = document.querySelector("#petugas-queue-empty");
-  const dialog = document.querySelector("#petugas-dialog");
-  if (!body || !search || !filter || !empty || !dialog) return;
-
-  let selectedId = null;
-  const render = () => {
-    const query = search.value.trim().toLowerCase();
-    const selectedFilter = filter.value;
-    const transactions = getTransactions().filter((transaction) => {
-      const matchesQuery = [transaction.plateNumber, transaction.queueNumber, transaction.customerName].some((value) => String(value || "").toLowerCase().includes(query));
-      return matchesQuery && (selectedFilter === "Semua" || transaction.serviceStatus === selectedFilter);
-    });
-    const activeCount = getTransactions().filter((transaction) => transaction.serviceStatus !== "Selesai").length;
-    document.querySelector("#petugas-active-count").textContent = `${activeCount} kendaraan`;
-    document.querySelector("#petugas-result-count").textContent = `${transactions.length} data`;
-    body.replaceChildren();
-    empty.hidden = transactions.length > 0;
-    transactions.forEach((transaction) => {
-      const row = document.createElement("tr");
-      [transaction.queueNumber, transaction.plateNumber, transaction.customerName, transaction.vehicleType, transaction.service].forEach((value) => {
-        const cell = document.createElement("td");
-        cell.textContent = value;
-        row.append(cell);
-      });
-      const serviceCell = document.createElement("td");
-      serviceCell.append(makePetugasStatusBadge(transaction.serviceStatus));
-      row.append(serviceCell);
-      const paymentCell = document.createElement("td");
-      paymentCell.append(makePetugasStatusBadge(transaction.paymentStatus));
-      row.append(paymentCell);
       const actionCell = document.createElement("td");
       const button = document.createElement("button");
       button.className = "table-action";
@@ -3033,44 +2980,299 @@ function setupPetugasQueue() {
       "petugas-detail-service-status": transaction.serviceStatus,
       "petugas-detail-payment-status": transaction.paymentStatus,
     };
-    Object.entries(values).forEach(([id, value]) => { document.querySelector(`#${id}`).textContent = value; });
+    Object.entries(values).forEach(([id, value]) => {
+      document.querySelector(`#${id}`).textContent = value || "-";
+    });
     document.querySelector("#petugas-detail-status").value = transaction.serviceStatus;
     document.querySelector("#petugas-dialog-notice").textContent = "";
-    if (typeof dialog.showModal === "function") dialog.showModal(); else dialog.setAttribute("open", "");
+    if (typeof dialog.showModal === "function") dialog.showModal();
+    else dialog.setAttribute("open", "");
   }
 
-  const close = () => { if (typeof dialog.close === "function") dialog.close(); else dialog.removeAttribute("open"); selectedId = null; };
-  search.addEventListener("input", render);
-  filter.addEventListener("change", render);
+  const close = () => {
+    if (typeof dialog.close === "function") dialog.close();
+    else dialog.removeAttribute("open");
+    selectedId = null;
+  };
   document.querySelector("#petugas-dialog-close")?.addEventListener("click", close);
-  dialog.addEventListener("click", (event) => { if (event.target === dialog) close(); });
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) close();
+  });
   document.querySelector("#petugas-update-status")?.addEventListener("click", () => {
     const transactions = getTransactions();
     const transaction = transactions.find((item) => item.id === selectedId);
     if (!transaction) return;
+    const notice = document.querySelector("#petugas-dialog-notice");
     if (transaction.paymentStatus === "Lunas") {
-      document.querySelector("#petugas-dialog-notice").textContent = "Status pengerjaan tidak dapat diubah setelah transaksi Lunas.";
+      notice.textContent = "Status pengerjaan tidak dapat diubah setelah transaksi Lunas.";
       return;
     }
     const nextStatus = document.querySelector("#petugas-detail-status").value;
     if (!isValidServiceStatusTransition(transaction.serviceStatus, nextStatus)) {
-      document.querySelector("#petugas-dialog-notice").textContent = "Status harus mengikuti urutan Menunggu, Sedang Dicuci, lalu Selesai.";
+      notice.textContent = "Status harus mengikuti urutan Menunggu, Sedang Dicuci, lalu Selesai.";
       return;
     }
     transaction.serviceStatus = nextStatus;
     saveTransactions(transactions);
     document.querySelector("#petugas-detail-service-status").textContent = transaction.serviceStatus;
-    document.querySelector("#petugas-dialog-notice").textContent = "Status pengerjaan berhasil diperbarui.";
+    notice.textContent = "Status pengerjaan berhasil diperbarui.";
     render();
   });
-  document.querySelector("#petugas-queue-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = appUrl("login.html"); });
   render();
 }
 
 function setupPetugasAttendance() {
+  document.querySelector("#attendance-logout")?.addEventListener("click", () => {
+    sessionStorage.removeItem("washupRole");
+    sessionStorage.removeItem("washupUsername");
+    window.location.href = appUrl("login.html");
+  });
+
+  const employeeId = sessionStorage.getItem("washupUsername") || "petugas";
+  const employeeName = employeeId === "petugas" ? "Petugas" : employeeId;
+  const employeeRecords = () => getAttendanceRecords().filter((record) =>
+    record.employeeId === employeeId || (!record.employeeId && record.employeeName === employeeName));
+  const parseAttendanceDate = (value) => {
+    const digits = String(value || "").replace(/\D/g, "");
+    if (digits.length !== 8) return null;
+    const date = new Date(Number(digits.slice(0, 4)), Number(digits.slice(4, 6)) - 1, Number(digits.slice(6, 8)));
+    if (date.getFullYear() !== Number(digits.slice(0, 4)) ||
+        date.getMonth() !== Number(digits.slice(4, 6)) - 1 ||
+        date.getDate() !== Number(digits.slice(6, 8))) return null;
+    return date;
+  };
+  const formatAttendanceDate = (date, options = { weekday: "long", day: "numeric", month: "short", year: "numeric" }) =>
+    date.toLocaleDateString("id-ID", options);
+  const timeToMinutes = (value) => {
+    const match = /^(\d{1,2})[:.](\d{2})/.exec(String(value || "").trim());
+    if (!match) return null;
+    const hours = Number(match[1]);
+    const minutes = Number(match[2]);
+    return hours <= 23 && minutes <= 59 ? hours * 60 + minutes : null;
+  };
+  const getActiveShifts = () => readMasterRecords(masterDefinitions.shifts).filter((shift) => shift.status === "Aktif");
+  const getShifts = () => readMasterRecords(masterDefinitions.shifts);
+  const findShiftForTime = (date = new Date()) => {
+    const activeShifts = getActiveShifts();
+    const now = date.getHours() * 60 + date.getMinutes();
+    const runningShift = activeShifts.find((shift) => {
+      const start = timeToMinutes(shift.start);
+      const end = timeToMinutes(shift.end);
+      if (start === null || end === null) return false;
+      if (end === 0) return now >= start;
+      return end < start ? now >= start || now < end : now >= start && now < end;
+    });
+    return runningShift || activeShifts[0] || null;
+  };
+  const isLateAttendance = (record) => {
+    if (record?.status === "Terlambat") return true;
+    const checkInMinutes = timeToMinutes(record?.checkIn);
+    if (checkInMinutes === null) return false;
+    const shift = getShifts().find((item) => item.name === record.shift);
+    const shiftStart = timeToMinutes(shift?.start);
+    const shiftEnd = timeToMinutes(shift?.end);
+    if (shiftStart === null) return false;
+    let adjustedCheckIn = checkInMinutes;
+    if (shiftEnd !== null && shiftEnd > 0 && shiftEnd < shiftStart && adjustedCheckIn < shiftEnd) adjustedCheckIn += 1440;
+    return adjustedCheckIn > shiftStart;
+  };
+
+  if (document.body.dataset.page === "recap") {
+    const form = document.querySelector("#attendance-period-form");
+    const monthSelect = document.querySelector("#attendance-month");
+    const yearSelect = document.querySelector("#attendance-year");
+    const body = document.querySelector("#petugas-attendance-history-body");
+    const empty = document.querySelector("#petugas-attendance-history-empty");
+    const pagination = document.querySelector("#attendance-pagination");
+    if (!form || !monthSelect || !yearSelect || !body || !empty || !pagination) return;
+
+    const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    const now = new Date();
+    let currentPage = 1;
+    for (let month = 0; month < monthNames.length; month += 1) {
+      const option = document.createElement("option");
+      option.value = String(month);
+      option.textContent = monthNames[month];
+      monthSelect.append(option);
+    }
+    monthSelect.value = String(now.getMonth());
+
+    const records = employeeRecords();
+    const years = new Set([now.getFullYear()]);
+    records.forEach((record) => {
+      const date = parseAttendanceDate(record.date);
+      if (date) years.add(date.getFullYear());
+    });
+    [...years].sort((first, second) => second - first).forEach((year) => {
+      const option = document.createElement("option");
+      option.value = String(year);
+      option.textContent = String(year);
+      yearSelect.append(option);
+    });
+    yearSelect.value = String(now.getFullYear());
+
+    const makeCell = (label, value) => {
+      const cell = document.createElement("td");
+      cell.dataset.label = label;
+      cell.textContent = value;
+      return cell;
+    };
+    const formatDuration = (record) => {
+      let start = timeToMinutes(record.checkIn);
+      let end = timeToMinutes(record.checkOut);
+      if (start === null || end === null) return "—";
+      if (end < start) end += 1440;
+      const duration = end - start;
+      const hours = Math.floor(duration / 60);
+      const minutes = duration % 60;
+      if (!hours) return `${minutes} mnt`;
+      return minutes ? `${hours} jam ${minutes} mnt` : `${hours} jam`;
+    };
+
+    function renderRecap() {
+      const selectedMonth = Number(monthSelect.value);
+      const selectedYear = Number(yearSelect.value);
+      const monthStart = new Date(selectedYear, selectedMonth, 1);
+      const monthEnd = new Date(selectedYear, selectedMonth + 1, 0);
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const endDate = monthEnd < today ? monthEnd : today;
+      const monthRecords = employeeRecords().filter((record) => {
+        const recordDate = parseAttendanceDate(record.date);
+        return recordDate && recordDate >= monthStart && recordDate <= endDate;
+      });
+      const recordsByDay = new Map();
+      monthRecords.forEach((record) => {
+        const recordDate = parseAttendanceDate(record.date);
+        if (recordDate) recordsByDay.set(formatDateKey(recordDate), record);
+      });
+
+      const rows = [];
+      if (endDate >= monthStart) {
+        for (let day = new Date(monthStart); day <= endDate; day.setDate(day.getDate() + 1)) {
+          const record = recordsByDay.get(formatDateKey(day));
+          const isWorkday = day.getDay() !== 0;
+          if (record) {
+            const reportStatus = record.status === "Izin" || record.status === "Sakit"
+              ? record.status
+              : record.checkIn
+                ? isLateAttendance(record) ? "Terlambat" : "Hadir"
+                : "Tanpa Keterangan";
+            rows.push({ date: new Date(day), record, status: reportStatus });
+          } else if (isWorkday) {
+            rows.push({ date: new Date(day), record: null, status: "Tanpa Keterangan" });
+          }
+        }
+      }
+
+      const attendedRecords = monthRecords.filter((record) => Boolean(record.checkIn));
+      const lateCount = attendedRecords.filter(isLateAttendance).length;
+      // Form izin dan sakit belum tersedia; kedua jumlah tetap nol sampai ada sumber data resmi.
+      const izinCount = 0;
+      const sakitCount = 0;
+      const absentCount = rows.filter((row) => row.status === "Tanpa Keterangan").length;
+      const setDayCount = (id, count) => {
+        const element = document.querySelector(id);
+        const value = document.createElement("span");
+        value.textContent = String(count);
+        const unit = document.createElement("small");
+        unit.textContent = "hari";
+        element.replaceChildren(value, document.createTextNode(" "), unit);
+      };
+      setDayCount("#recap-present-count", attendedRecords.length);
+      setDayCount("#recap-late-count", lateCount);
+      document.querySelector("#recap-late-detail").textContent = `Dari ${attendedRecords.length} hari hadir`;
+      setDayCount("#recap-leave-count", izinCount + sakitCount);
+      document.querySelector("#recap-leave-detail").textContent = `${izinCount} hari izin · ${sakitCount} hari sakit`;
+      setDayCount("#recap-absent-count", absentCount);
+      document.querySelector("#recap-period-label").textContent = `${monthNames[selectedMonth]} ${selectedYear}`;
+      document.querySelector("#recap-employee-period").textContent =
+        `${employeeName} · Data s.d. ${formatAttendanceDate(endDate, { day: "numeric", month: "long", year: "numeric" })}`;
+
+      rows.sort((first, second) => second.date - first.date);
+      const pageCount = Math.max(1, Math.ceil(rows.length / 6));
+      currentPage = Math.min(currentPage, pageCount);
+      const visibleRows = rows.slice((currentPage - 1) * 6, currentPage * 6);
+      body.replaceChildren();
+      visibleRows.forEach(({ date, record, status: rowStatus }) => {
+        const row = document.createElement("tr");
+        row.append(
+          makeCell("Tanggal", formatAttendanceDate(date)),
+          makeCell("Shift", record?.shift || "—"),
+          makeCell("Jam Masuk", record?.checkIn || "—"),
+          makeCell("Jam Keluar", record?.checkOut || "—"),
+          makeCell("Durasi Kerja", record ? formatDuration(record) : "—"),
+        );
+        const statusCell = document.createElement("td");
+        statusCell.dataset.label = "Status";
+        const badge = document.createElement("span");
+        badge.className = `attendance-status-badge ${
+          rowStatus === "Terlambat" ? "attendance-status-late"
+            : rowStatus === "Izin" || rowStatus === "Sakit" ? "attendance-status-leave"
+              : rowStatus === "Tanpa Keterangan" ? "attendance-status-absent" : "attendance-status-present"
+        }`;
+        badge.textContent = rowStatus;
+        statusCell.append(badge);
+        row.append(statusCell);
+        body.append(row);
+      });
+      empty.hidden = rows.length > 0;
+
+      const firstDisplayed = rows.length ? (currentPage - 1) * 6 + 1 : 0;
+      const lastDisplayed = Math.min(currentPage * 6, rows.length);
+      pagination.replaceChildren();
+      const statusText = document.createElement("span");
+      statusText.className = "attendance-pagination-status";
+      statusText.textContent = `Menampilkan ${firstDisplayed}–${lastDisplayed} dari ${rows.length} catatan`;
+      pagination.append(statusText);
+      const pages = document.createElement("div");
+      pages.className = "attendance-pagination-pages";
+      const previous = document.createElement("button");
+      previous.type = "button";
+      previous.textContent = "Sebelumnya";
+      previous.disabled = currentPage <= 1;
+      previous.addEventListener("click", () => {
+        currentPage -= 1;
+        renderRecap();
+      });
+      pages.append(previous);
+      for (let page = 1; page <= pageCount; page += 1) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = String(page);
+        if (page === currentPage) button.setAttribute("aria-current", "page");
+        button.addEventListener("click", () => {
+          currentPage = page;
+          renderRecap();
+        });
+        pages.append(button);
+      }
+      const next = document.createElement("button");
+      next.type = "button";
+      next.textContent = "Selanjutnya";
+      next.disabled = currentPage >= pageCount;
+      next.addEventListener("click", () => {
+        currentPage += 1;
+        renderRecap();
+      });
+      pages.append(next);
+      pagination.append(pages);
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      currentPage = 1;
+      renderRecap();
+    });
+    renderRecap();
+    return;
+  }
+
   const action = document.querySelector("#attendance-action");
   if (!action) return;
+  const isCheckOutPage = document.body.dataset.attendanceMode === "out";
   const date = document.querySelector("#attendance-date");
+  const name = document.querySelector("#attendance-name");
+  const shift = document.querySelector("#attendance-shift");
   const checkIn = document.querySelector("#check-in-time");
   const checkOut = document.querySelector("#check-out-time");
   const status = document.querySelector("#attendance-status");
@@ -3084,39 +3286,48 @@ function setupPetugasAttendance() {
   const photoConfirmedIndicator = document.querySelector("#photo-confirmed-indicator");
   const usePhoto = document.querySelector("#use-photo");
   const replacePhoto = document.querySelector("#replace-photo");
-  const photoPurpose = document.querySelector("#photo-purpose");
   const checkInPhotoCard = document.querySelector("#check-in-photo-card");
   const checkOutPhotoCard = document.querySelector("#check-out-photo-card");
   const checkInPhoto = document.querySelector("#check-in-photo");
   const checkOutPhoto = document.querySelector("#check-out-photo");
-  const employeeId = sessionStorage.getItem("washupUsername") || "petugas";
-  const employeeName = employeeId === "petugas" ? "Petugas" : employeeId;
+  if (!date || !name || !shift || !checkIn || !checkOut || !status || !notice ||
+      !photoInput || !photoPicker || !photoPreview || !photoPreviewImage || !photoFileName ||
+      !photoPreviewStatus || !photoConfirmedIndicator || !usePhoto || !replacePhoto ||
+      !checkInPhotoCard || !checkOutPhotoCard || !checkInPhoto || !checkOutPhoto) return;
+
   let selectedPhoto = null;
   let selectedPhotoName = "";
   let confirmedPhoto = null;
   const render = () => {
     const attendance = getAttendance(employeeId);
     date.textContent = getTodayLabel();
+    name.textContent = employeeName;
+    shift.textContent = attendance?.shift || findShiftForTime()?.name || "—";
     checkIn.textContent = attendance?.checkIn || "--";
     checkOut.textContent = attendance?.checkOut || "--";
-    status.textContent = attendance?.status || "Belum Absen";
-    const isCheckOut = Boolean(attendance?.checkIn && !attendance?.checkOut);
-    photoPurpose.textContent = isCheckOut ? "Absen Keluar" : "Absen Masuk";
-    action.textContent = attendance?.checkOut ? "Absensi Selesai" : isCheckOut ? "Absen Keluar" : "Absen Masuk";
-    action.disabled = Boolean(attendance?.checkOut);
+    const hasCheckedIn = Boolean(attendance?.checkIn);
+    const hasCheckedOut = Boolean(attendance?.checkOut);
+    status.textContent = hasCheckedOut ? "Selesai"
+      : hasCheckedIn ? isLateAttendance(attendance) ? "Terlambat" : "Hadir"
+        : "Belum Absen";
+    action.textContent = isCheckOutPage ? "Absen Keluar" : "Absen Masuk";
+    action.disabled = isCheckOutPage ? !hasCheckedIn || hasCheckedOut : hasCheckedIn;
     photoConfirmedIndicator.hidden = !confirmedPhoto;
     photoPreview.classList.toggle("photo-preview-confirmed", Boolean(confirmedPhoto));
     usePhoto.disabled = !selectedPhoto || Boolean(confirmedPhoto);
     photoPreviewStatus.textContent = confirmedPhoto ? "Foto ini siap digunakan untuk absensi." : "Periksa foto sebelum digunakan.";
-    notice.textContent = attendance?.checkOut ? "Absensi hari ini sudah selesai." : notice.textContent;
-    if (attendance?.checkInPhoto) {
-      checkInPhotoCard.hidden = false;
-      checkInPhoto.src = attendance.checkInPhoto;
-    }
-    if (attendance?.checkOutPhoto) {
-      checkOutPhotoCard.hidden = false;
-      checkOutPhoto.src = attendance.checkOutPhoto;
-    }
+    const stateNotice = isCheckOutPage
+      ? !hasCheckedIn ? "Lakukan Absen Masuk terlebih dahulu."
+        : hasCheckedOut ? "Absen Keluar sudah tercatat." : ""
+      : hasCheckedOut ? "Absensi hari ini sudah selesai."
+        : hasCheckedIn ? "Absen Masuk sudah tercatat." : "";
+    if (stateNotice) notice.textContent = stateNotice;
+    checkInPhotoCard.hidden = !attendance?.checkInPhoto;
+    checkOutPhotoCard.hidden = !attendance?.checkOutPhoto;
+    if (attendance?.checkInPhoto) checkInPhoto.src = attendance.checkInPhoto;
+    else checkInPhoto.removeAttribute("src");
+    if (attendance?.checkOutPhoto) checkOutPhoto.src = attendance.checkOutPhoto;
+    else checkOutPhoto.removeAttribute("src");
   };
 
   function resetPhotoSelection() {
@@ -3167,19 +3378,29 @@ function setupPetugasAttendance() {
       notice.textContent = "Pilih foto terlebih dahulu.";
       return;
     }
-
     confirmedPhoto = selectedPhoto;
-    const attendance = getAttendance(employeeId);
-    notice.textContent = `Foto sudah dikonfirmasi. Anda dapat melakukan ${attendance?.checkIn ? "Absen Keluar" : "Absen Masuk"}.`;
+    notice.textContent = `Foto sudah dikonfirmasi. Anda dapat melakukan ${isCheckOutPage ? "Absen Keluar" : "Absen Masuk"}.`;
     render();
   });
 
   action.addEventListener("click", () => {
-    const attendance = getAttendance(employeeId) || { employeeId, employeeName, date: getTodayKey(), shift: "Shift Pagi", checkIn: null, checkInPhoto: null, checkOut: null, checkOutPhoto: null, status: "Belum Absen" };
+    const activeShift = findShiftForTime();
+    const attendance = getAttendance(employeeId) || {
+      employeeId, employeeName, date: getTodayKey(), shift: activeShift?.name || "—",
+      checkIn: null, checkInPhoto: null, checkOut: null, checkOutPhoto: null, status: "Belum Absen",
+    };
     if (!attendance.employeeId) attendance.employeeId = employeeId;
     if (!attendance.employeeName) attendance.employeeName = employeeName;
     if (attendance.checkOut) {
       notice.textContent = "Absensi hari ini sudah selesai.";
+      return;
+    }
+    if (isCheckOutPage && !attendance.checkIn) {
+      notice.textContent = "Lakukan Absen Masuk terlebih dahulu.";
+      return;
+    }
+    if (!isCheckOutPage && attendance.checkIn) {
+      notice.textContent = "Absen Masuk sudah tercatat. Gunakan menu Absensi Keluar untuk melanjutkan.";
       return;
     }
     if (!confirmedPhoto) {
@@ -3187,36 +3408,36 @@ function setupPetugasAttendance() {
       return;
     }
     const now = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
-    if (!attendance.checkIn) {
+    if (!isCheckOutPage && !attendance.checkIn) {
+      attendance.shift = activeShift?.name || attendance.shift;
       attendance.checkIn = now;
       attendance.checkInPhoto = confirmedPhoto;
-      attendance.status = "Hadir";
-    } else if (!attendance.checkOut) {
+      attendance.status = isLateAttendance({ ...attendance, checkIn: now, shift: attendance.shift }) ? "Terlambat" : "Hadir";
+    } else if (isCheckOutPage && attendance.checkIn && !attendance.checkOut) {
       if (confirmedPhoto === attendance.checkInPhoto) {
         notice.textContent = "Gunakan foto baru untuk Absen Keluar.";
         return;
       }
       attendance.checkOut = now;
       attendance.checkOutPhoto = confirmedPhoto;
+      attendance.status = "Selesai";
     }
     if (!saveAttendance(attendance)) {
-      notice.textContent = "Foto tidak dapat disimpan. Gunakan foto yang lebih kecil atau coba lagi.";
+      notice.textContent = "Absensi tidak dapat disimpan. Coba lagi.";
       return;
     }
     resetPhotoSelection();
-    notice.textContent = attendance.checkOut ? "Absensi hari ini sudah selesai." : "Absen masuk berhasil disimpan.";
+    notice.textContent = isCheckOutPage ? "Absen keluar berhasil disimpan." : "Absen masuk berhasil disimpan.";
     render();
   });
-  document.querySelector("#attendance-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); sessionStorage.removeItem("washupUsername"); window.location.href = appUrl("login.html"); });
   render();
 }
 
-if (document.querySelector(".petugas-dashboard-page") || document.querySelector(".petugas-queue-page") || document.querySelector(".petugas-attendance-page")) {
+if (document.querySelector(".petugas-page")) {
   if (sessionStorage.getItem("washupRole") !== "Petugas") window.location.replace(appUrl("login.html"));
 }
 if (document.querySelector(".petugas-dashboard-page")) setupPetugasDashboard();
-if (document.querySelector(".petugas-queue-page")) setupPetugasQueue();
-if (document.querySelector(".petugas-attendance-page")) setupPetugasAttendance();
+if (document.querySelector(".petugas-attendance-page, .petugas-recap-page")) setupPetugasAttendance();
 
 // Dropdown kustom untuk form data master.
 // <select> asli tetap ada tetapi disembunyikan, jadi nilai form dan validasi tetap bekerja seperti biasa.

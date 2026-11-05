@@ -46,6 +46,7 @@ PBL_Semester3/
 │   ├── kasir.css               Dashboard Kasir
 │   └── petugas.css             Dashboard Petugas
 ├── js/
+│   ├── components.js           Komponen sidebar, topbar, dan footer Admin/Owner
 │   └── app.js                  Seluruh logika; bagian yang dijalankan ditentukan dari class <body>
 ├── pages/
 │   ├── admin/
@@ -69,6 +70,14 @@ PBL_Semester3/
 │       └── laporan-transaksi.html
 └── sql/
     └── table.sql               Rancangan skema database
+```
+
+## Komponen
+
+Sidebar, topbar, dan footer Admin/Owner dirender oleh `js/components.js`. Untuk menambah menu, tambahkan item `{ page, href, label, icon }` pada role yang sesuai di `WASHUP_MENUS`. Setiap halaman yang memakai shell komponen memerlukan atribut body, contohnya:
+
+```html
+<body class="master-page" data-master="services" data-role="Admin" data-page="services" data-title="Layanan &amp; Tarif" data-footer="Layanan dan Tarif" data-logout-id="master-logout">
 ```
 
 ## Fitur per Role

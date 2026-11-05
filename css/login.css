@@ -17,11 +17,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 22px;
-  width: min(100% - 40px, 687px);
+  gap: 20px;
+  width: min(100% - 32px, 480px);
   min-height: 100vh;
   margin: 0 auto;
-  padding: 40px 0;
+  padding: 24px 0;
 }
 
 .login-page .login-intro {
@@ -35,15 +35,15 @@
   max-width: 100%;
   align-items: center;
   justify-content: center;
-  gap: 22px;
+  gap: 16px;
   color: #fff;
   text-align: left;
 }
 
 .login-page .washup-logo-icon {
   display: block;
-  width: 108px;
-  height: 85px;
+  width: 72px;
+  height: 56px;
   flex: 0 0 auto;
   object-fit: contain;
 }
@@ -56,7 +56,7 @@
   display: block;
   color: #fff;
   font-family: "Emblema One", sans-serif;
-  font-size: 38px;
+  font-size: 28px;
   font-weight: 400;
   font-style: normal;
   line-height: 1.15;
@@ -64,16 +64,16 @@
 
 .login-page .login-brand-copy small {
   display: block;
-  margin-top: 5px;
+  margin-top: 4px;
   color: #88AFC7;
   font-family: "Open Sans", sans-serif;
-  font-size: 20px;
+  font-size: 15px;
   line-height: 1.4;
 }
 
 .login-page .login-card {
   width: 100%;
-  padding: 37px;
+  padding: 32px;
   border: 0;
   border-radius: 16px;
   background: #fff;
@@ -81,13 +81,13 @@
 }
 
 .login-page .login-card-heading {
-  margin-bottom: 26px;
+  margin-bottom: 20px;
 }
 
 .login-page .login-card-heading .eyebrow {
   margin: 0 0 8px;
   color: #88AFC7;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: .12em;
 }
@@ -96,7 +96,7 @@
   margin: 0 0 8px;
   color: #1D4A5A;
   font-family: "Open Sans", sans-serif;
-  font-size: 34px;
+  font-size: 28px;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: .1em;
@@ -105,7 +105,7 @@
 .login-page .login-card-heading > p:last-child {
   margin: 0;
   color: #1D4A5A;
-  font-size: 15px;
+  font-size: 14px;
   letter-spacing: .08em;
 }
 
@@ -113,22 +113,22 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0;
-  margin-bottom: 26px;
-  padding: 6px;
+  margin-bottom: 20px;
+  padding: 4px;
   border-radius: 8px;
   background: #E9E9E9;
 }
 
 .login-page .role-option {
   min-width: 0;
-  height: 52px;
+  height: 40px;
   padding: 0 4px;
   border: 0;
   border-radius: 8px;
   color: #1D4A5A;
   background: transparent;
   font: inherit;
-  font-size: 19px;
+  font-size: 15px;
   cursor: pointer;
   transition: color .18s ease, background-color .18s ease;
 }
@@ -147,27 +147,28 @@
 }
 
 .login-page .form-field + .form-field {
-  margin-top: 58px;
+  margin-top: 20px;
 }
 
 .login-page .form-field label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   color: #1D4A5A;
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 500;
 }
 
 .login-page .form-field input {
   width: 100%;
-  height: 64px;
-  padding: 13px 14px;
+  height: 46px;
+  min-height: 46px;
+  padding: 10px 12px;
   border: 1px solid #A0A0A0;
   border-radius: 8px;
   color: #1D4A5A;
   background: #fff;
   font-family: "Open Sans", sans-serif;
-  font-size: 19px;
+  font-size: 15px;
 }
 
 .login-page .form-field input::placeholder {
@@ -198,8 +199,8 @@
 }
 
 .login-page .password-toggle .eye-icon {
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;
@@ -231,14 +232,15 @@
 
 .login-page .login-button {
   width: 100%;
-  height: 64px;
-  margin-top: 65px;
+  height: 48px;
+  min-height: 48px;
+  margin-top: 28px;
   border: 0;
   border-radius: 8px;
   color: #fff;
   background: #1D4A5A;
   font-family: "Open Sans", sans-serif;
-  font-size: 32px;
+  font-size: 20px;
   font-weight: 500;
   letter-spacing: .05em;
 }
@@ -250,7 +252,7 @@
 .login-page .login-footer {
   margin: 14px 0 0;
   color: #4E7FA0;
-  font-size: 15px;
+  font-size: 13px;
   line-height: 1.6;
   letter-spacing: .08em;
   text-align: center;
@@ -263,7 +265,7 @@
   outline-offset: 3px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .login-page {
     background-attachment: scroll;
     background-size: 260px 228px, cover;
@@ -271,8 +273,8 @@
 
   .login-page .login-layout {
     width: calc(100% - 32px);
-    gap: 22px;
-    padding: 28px 0;
+    gap: 20px;
+    padding: 24px 0;
   }
 
   .login-page .login-brand {
@@ -281,7 +283,7 @@
 
   .login-page .washup-logo-icon {
     width: 68px;
-    height: 60px;
+    height: 56px;
   }
 
   .login-page .login-brand-copy strong {
@@ -289,11 +291,11 @@
   }
 
   .login-page .login-brand-copy small {
-    font-size: 12px;
+    font-size: 15px;
   }
 
   .login-page .login-card {
-    padding: 24px;
+    padding: 32px;
   }
 
   .login-page .login-card-heading h2 {
@@ -304,12 +306,22 @@
     font-size: 15px;
   }
 
-  .login-page .form-field input,
-  .login-page .login-button {
-    height: 52px;
-  }
-
   .login-page .login-footer {
     font-size: 13px;
+  }
+}
+
+@media (max-height: 640px) {
+  .login-page .login-layout {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .login-page .login-card {
+    padding: 24px;
+  }
+
+  .login-page .form-field + .form-field {
+    margin-top: 14px;
   }
 }
