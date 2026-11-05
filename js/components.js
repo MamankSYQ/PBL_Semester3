@@ -60,7 +60,7 @@ function renderSidebar(role, activePage, logoutId) {
 
   return `<aside class="dashboard-sidebar" aria-label="${escapeHTML(roleMeta.sidebarLabel)}">
         <a class="dashboard-brand" href="${escapeHTML(roleMeta.home)}" aria-label="${escapeHTML(roleMeta.brandLabel)}">
-          <img class="brand-logo-img" src="../../assets/logo-washup.png" alt="Logo mobil cuci WASHUP" />
+          <img class="brand-logo-img" src="../../assets/logo-washup.png" width="68" height="52" alt="Logo mobil cuci WASHUP" />
           <span class="brand-text">WASHUP</span>
         </a>
 

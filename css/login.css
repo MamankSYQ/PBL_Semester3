@@ -65,7 +65,7 @@
 .login-page .login-brand-copy small {
   display: block;
   margin-top: 4px;
-  color: #88AFC7;
+  color: var(--wu-text-on-dark);
   font-family: "Open Sans", sans-serif;
   font-size: 15px;
   line-height: 1.4;
@@ -86,13 +86,13 @@
 
 .login-page .login-card-heading .eyebrow {
   margin: 0 0 8px;
-  color: #88AFC7;
+  color: var(--wu-text-muted);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: .12em;
 }
 
-.login-page .login-card-heading h2 {
+.login-page .login-card-heading :is(h1, h2) {
   margin: 0 0 8px;
   color: #1D4A5A;
   font-family: "Open Sans", sans-serif;
@@ -251,7 +251,7 @@
 
 .login-page .login-footer {
   margin: 14px 0 0;
-  color: #4E7FA0;
+  color: var(--wu-text-muted);
   font-size: 13px;
   line-height: 1.6;
   letter-spacing: .08em;
@@ -298,7 +298,7 @@
     padding: 32px;
   }
 
-  .login-page .login-card-heading h2 {
+  .login-page .login-card-heading :is(h1, h2) {
     font-size: 28px;
   }
 

@@ -4,13 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Pengeluaran operasional WASHUP - Sistem Informasi Car Wash" />
+    <meta name="robots" content="noindex, nofollow" />
     <title>Pengeluaran | WASHUP</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="../../css/tokens.css" />
     <link rel="stylesheet" href="../../css/style.css" />
     <link rel="stylesheet" href="../../css/base.css" />
     <link rel="stylesheet" href="../../css/kasir.css" />
     <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-      <link rel="stylesheet" href="../../css/compact.css" />
+    <link rel="stylesheet" href="../../css/compact.css" />
   </head>
   <body class="dashboard-page kasir-dashboard-page kasir-expense-page kasir-page" data-role="Kasir" data-page="expenses" data-title="Pengeluaran" data-logout-id="kasir-dashboard-logout">
     <div class="dashboard-shell">
@@ -18,7 +23,7 @@
       <div class="dashboard-content">
         <div data-component="topbar"></div>
 <main class="dashboard-main expense-main">
-          <section class="expense-page-heading" aria-labelledby="expense-page-title">
+          <section class="expense-page-heading">
             <div>
               <p class="eyebrow">DATA MASTER</p>
               <h2 id="expense-page-title">Pengeluaran</h2>
@@ -70,7 +75,7 @@
               <h2 id="expense-list-title">Pengeluaran</h2>
             </header>
 
-            <div class="expense-table-wrap">
+            <div class="expense-table-wrap" tabindex="0">
               <table class="expense-table">
                 <caption class="sr-only">Daftar pengeluaran operasional WASHUP</caption>
                 <thead>

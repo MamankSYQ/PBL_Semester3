@@ -56,13 +56,13 @@
 .admin-dashboard-page .summary-trend {
   font-size: 13px !important;
   line-height: 18px !important;
-  color: #4E7FA0 !important;
+  color: var(--wu-text-muted) !important;
 }
 
 .admin-dashboard-page .summary-card p {
   font-size: 13px !important;
   line-height: 18px !important;
-  color: #4E7FA0 !important;
+  color: var(--wu-text-muted) !important;
 }
 
 .admin-dashboard-page .summary-card strong {
@@ -122,12 +122,12 @@
 }
 
 .admin-dashboard-page .admin-badge-green {
-  color: #1F8A5B;
+  color: var(--wu-success-text);
   background: #E6F7EF;
 }
 
 .admin-dashboard-page .admin-badge-blue {
-  color: #2A7FA8;
+  color: var(--wu-accent-text);
   background: #E3F1F8;
 }
 
@@ -147,7 +147,7 @@
 .admin-dashboard-page .admin-stat-columns span,
 .admin-dashboard-page .admin-monitoring-stat > span {
   overflow: hidden;
-  color: #4E7FA0;
+  color: var(--wu-text-muted);
   font-size: 13px;
   line-height: 18px;
   text-overflow: ellipsis;
@@ -194,7 +194,7 @@
 }
 
 .admin-dashboard-page .admin-monitoring-stat small {
-  color: #2A7FA8;
+  color: var(--wu-accent-text);
   font-size: 12px;
   line-height: 16px;
 }
@@ -215,7 +215,7 @@
 }
 
 .admin-dashboard-page .admin-shift-row span {
-  color: #4E7FA0;
+  color: var(--wu-text-muted);
   white-space: nowrap;
 }
 
@@ -244,7 +244,7 @@
   justify-content: space-between;
   gap: 12px;
   margin-top: 6px;
-  color: #4E7FA0;
+  color: var(--wu-text-muted);
   font-size: 12px;
   line-height: 16px;
 }
@@ -286,7 +286,7 @@
   width: 28px;
   height: 28px;
   border-radius: 6px;
-  color: #2A7FA8;
+  color: var(--wu-accent-text);
   background: #E3F1F8;
 }
 
@@ -313,7 +313,7 @@
 
 .admin-dashboard-page .admin-activity-copy span,
 .admin-dashboard-page .admin-activity-empty {
-  color: #4E7FA0;
+  color: var(--wu-text-muted);
   font-size: 12px;
   line-height: 16px;
 }
@@ -356,7 +356,7 @@
 .admin-dashboard-page .queue-table th {
   padding: 9px 8px !important;
   border: 0 !important;
-  color: #4E7FA0 !important;
+  color: var(--wu-text-muted) !important;
   font-size: 10px !important;
   line-height: 14px !important;
   white-space: nowrap;
@@ -393,7 +393,7 @@
 .admin-dashboard-page .queue-empty:not([hidden]) {
   display: block !important;
   padding: 20px 8px 8px !important;
-  color: #4E7FA0;
+  color: var(--wu-text-muted);
   font-size: 13px;
   text-align: center;
 }
@@ -531,7 +531,7 @@ body.admin-verification-page {
 .admin-verification-page .verification-table th {
   padding: 13px 12px;
   background: #F2F6F8;
-  color: #4E7FA0;
+  color: var(--wu-text-muted);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -574,7 +574,7 @@ body.admin-verification-page {
 
 .admin-verification-page .verification-status-verified {
   background: #E6F7EF;
-  color: #1F8A5B;
+  color: var(--wu-success-text);
 }
 
 .admin-verification-page .verification-status-pending {
@@ -614,7 +614,7 @@ body.admin-verification-page {
 .admin-verification-page .verification-empty:not([hidden]) {
   display: block;
   padding: 28px 8px 8px;
-  color: #4E7FA0;
+  color: var(--wu-text-muted);
   text-align: center;
 }
 
@@ -639,7 +639,7 @@ body.admin-verification-page {
 
 .admin-verification-page .verification-review-info {
   margin: 0 0 20px;
-  color: #4E7FA0;
+  color: var(--wu-text-muted);
   font-size: 13px;
 }
 
@@ -677,7 +677,7 @@ body.admin-verification-page {
 .admin-verification-page .verification-partner-status,
 .admin-verification-page .verification-action-hint {
   margin: 0;
-  color: #4E7FA0;
+  color: var(--wu-text-muted);
   font-size: 13px;
   text-align: right;
 }
@@ -706,7 +706,7 @@ body.admin-verification-page {
 
 .admin-verification-page .verification-notice {
   margin: 16px 0 0;
-  color: #1F8A5B;
+  color: var(--wu-success-text);
   font-size: 13px;
   font-weight: 600;
 }

@@ -331,7 +331,7 @@ h2 {
   margin-bottom: 28px;
 }
 
-.login-card-heading h2 {
+.login-card-heading :is(h1, h2) {
   margin-bottom: 10px;
 }
 
@@ -2151,7 +2151,7 @@ h2 {
   font-size: 1.05rem;
   letter-spacing: .11em;
 }
-.login-card-heading h2 {
+.login-card-heading :is(h1, h2) {
   margin-bottom: 7px;
   color: var(--login-ink);
   font-size: 2.1rem;
@@ -2252,7 +2252,7 @@ h2 {
   .login-brand-copy strong { font-size: 1.55rem; }
   .login-brand-copy small { font-size: .72rem; max-width: 250px; }
   .login-card { padding: 26px 20px 30px; }
-  .login-card-heading h2 { font-size: 1.7rem; }
+  .login-card-heading :is(h1, h2) { font-size: 1.7rem; }
   .role-option { font-size: .9rem; min-height: 44px; }
   .login-card .form-field label { font-size: 1.2rem; }
   .login-card .form-field input { min-height: 54px; font-size: 1rem; }
@@ -2298,7 +2298,7 @@ h2 {
   padding: 34px 36px 48px;
   min-height: 0;
 }
-.login-card-heading h2 {
+.login-card-heading :is(h1, h2) {
   font-size: 2.1rem;
 }
 .login-card .form-field {

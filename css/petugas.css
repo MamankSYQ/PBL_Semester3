@@ -19,7 +19,7 @@
 }
 
 .petugas-page .summary-icon-box svg {
-  color: #2A7FA8;
+  color: var(--wu-accent-text);
 }
 
 .petugas-page .queue-empty-box {
@@ -43,7 +43,7 @@
 }
 
 .petugas-page .attendance-card-heading .role-icon {
-  color: #2A7FA8;
+  color: var(--wu-accent-text);
   font-size: 0 !important;
 }
 
@@ -227,7 +227,7 @@
 }
 
 .petugas-attendance-page .attendance-list dt {
-  color: #7798a8;
+  color: var(--wu-text-muted);
 }
 
 .petugas-attendance-page .attendance-list dd {
@@ -278,7 +278,7 @@
   border: 0;
   border-radius: 7px;
   color: #fff;
-  background: #4ea4c0;
+  background: var(--wu-accent-strong);
   font-family: "Open Sans", sans-serif;
   font-size: 10px;
   font-weight: 500;
@@ -338,7 +338,7 @@
 .attendance-period-panel label {
   display: grid;
   gap: 3px;
-  color: #7798a8;
+  color: var(--wu-text-muted);
   font-size: 10px;
 }
 
@@ -361,7 +361,7 @@
   border: 0;
   border-radius: 6px;
   color: #fff;
-  background: #4ea4c0;
+  background: var(--wu-accent-strong);
   font-size: 10px;
   font-weight: 500;
 }
@@ -395,7 +395,7 @@
 
 .petugas-attendance-summary .summary-card p {
   margin: 0 !important;
-  color: #59849a !important;
+  color: var(--wu-text-muted) !important;
   font-size: 10px !important;
 }
 
@@ -411,7 +411,7 @@
 }
 
 .petugas-attendance-summary .summary-card > span {
-  color: #7798a8;
+  color: var(--wu-text-muted);
   font-size: 9px;
 }
 
@@ -436,7 +436,7 @@
 .attendance-period-summary {
   display: grid;
   gap: 2px;
-  color: #527d91;
+  color: var(--wu-text-muted);
   font-size: 9px;
   text-align: right;
 }
@@ -506,7 +506,7 @@
 
 .attendance-recap-empty {
   padding: 20px 8px;
-  color: #7798a8;
+  color: var(--wu-text-muted);
   font-size: 11px;
   text-align: center;
 }
@@ -521,7 +521,7 @@
   justify-content: space-between;
   gap: 10px;
   padding-top: 10px;
-  color: #7798a8;
+  color: var(--wu-text-muted);
   font-size: 9px;
 }
 
@@ -545,7 +545,7 @@
 
 .attendance-pagination button[aria-current="page"] {
   color: #fff;
-  background: #4ea4c0;
+  background: var(--wu-accent-strong);
 }
 
 .attendance-pagination button:disabled {
@@ -636,7 +636,7 @@
 
   .petugas-recap-page .attendance-recap-table td::before {
     content: attr(data-label);
-    color: #7798a8;
+    color: var(--wu-text-muted);
     text-align: left;
   }
 

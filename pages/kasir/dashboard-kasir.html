@@ -4,13 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Dashboard Kasir WASHUP - Sistem Informasi Car Wash" />
+    <meta name="robots" content="noindex, nofollow" />
     <title>Dashboard Kasir | WASHUP</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="../../css/tokens.css" />
     <link rel="stylesheet" href="../../css/style.css" />
     <link rel="stylesheet" href="../../css/base.css" />
     <link rel="stylesheet" href="../../css/kasir.css" />
     <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet" />
-      <link rel="stylesheet" href="../../css/compact.css" />
+    <link rel="stylesheet" href="../../css/compact.css" />
   </head>
   <body class="dashboard-page kasir-dashboard-page kasir-page" data-role="Kasir" data-page="dashboard" data-title="Dashboard Kasir" data-logout-id="kasir-dashboard-logout">
     <div class="dashboard-shell">
@@ -111,7 +116,7 @@
                 <span>entries</span>
               </label>
             </div>
-            <div class="table-wrap">
+            <div class="table-wrap" tabindex="0">
               <table class="queue-table">
                 <caption class="sr-only">Daftar antrean kendaraan saat ini</caption>
                 <thead>
@@ -131,7 +136,7 @@
               <nav class="queue-pagination" id="queue-pagination" aria-label="Navigasi halaman antrean">
                 <div class="queue-page-controls" role="group" aria-label="Kontrol halaman">
                   <button type="button" class="queue-page-arrow" id="queue-page-prev" aria-label="Halaman sebelumnya" title="Halaman sebelumnya">Previous</button>
-                  <div class="queue-page-numbers" id="queue-page-numbers" aria-label="Nomor halaman"></div>
+                  <div class="queue-page-numbers" id="queue-page-numbers" role="group" aria-label="Nomor halaman"></div>
                   <button type="button" class="queue-page-arrow" id="queue-page-next" aria-label="Halaman berikutnya" title="Halaman berikutnya">Next</button>
                 </div>
               </nav>

@@ -4,13 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Pembayaran WASHUP" />
+    <meta name="robots" content="noindex, nofollow" />
     <title>Pembayaran | WASHUP</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="../../css/tokens.css" />
     <link rel="stylesheet" href="../../css/style.css" />
     <link rel="stylesheet" href="../../css/base.css" />
     <link rel="stylesheet" href="../../css/kasir.css" />
     <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-      <link rel="stylesheet" href="../../css/compact.css" />
+    <link rel="stylesheet" href="../../css/compact.css" />
   </head>
   <body class="dashboard-page kasir-dashboard-page payment-page kasir-payment-page kasir-page" data-role="Kasir" data-page="payment" data-title="Pembayaran" data-logout-id="payment-logout">
     <div class="dashboard-shell">
@@ -49,7 +54,7 @@
 
             <div class="payment-workspace">
               <section class="payment-list-column" aria-label="Daftar transaksi pembayaran">
-                <div class="payment-table-wrap">
+                <div class="payment-table-wrap" tabindex="0">
                   <table class="payment-full-table payment-compact-table">
                     <caption class="sr-only">Daftar transaksi yang dapat diperiksa pembayarannya</caption>
                     <thead>
@@ -94,7 +99,7 @@
                 </div>
               </section>
 
-              <aside class="payment-check-panel" aria-labelledby="payment-check-title">
+              <section class="payment-check-panel" aria-labelledby="payment-check-title">
                 <div class="payment-check-heading">
                   <div>
                     <h3 id="payment-check-title">Pemeriksaan pembayaran</h3>
@@ -137,7 +142,7 @@
                 <div class="payment-check-actions">
                   <button class="payment-button-primary" id="confirm-payment" type="button" disabled>Konfirmasi Lunas</button>
                 </div>
-              </aside>
+              </section>
             </div>
             <p class="payment-notice" id="payment-notice" role="status" aria-live="polite"></p>
           </section>

@@ -82,7 +82,7 @@
 }
 .master-page .master-dialog .dialog-heading .eyebrow {
   margin: 0 0 2px 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 12px !important;
-  font-weight: 400 !important; line-height: 14px !important; letter-spacing: 0.05em !important; color: #238EB6 !important; text-transform: uppercase !important;
+  font-weight: 400 !important; line-height: 14px !important; letter-spacing: 0.05em !important; color: var(--wu-accent-text) !important; text-transform: uppercase !important;
 }
 .master-page .master-dialog .dialog-heading h2 {
   margin: 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 21px !important;
@@ -162,7 +162,7 @@
 }
 .master-page .master-detail-dialog .dialog-heading .eyebrow {
   margin: 0 0 5px 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 12px !important;
-  font-weight: 400 !important; line-height: 16px !important; letter-spacing: 0.05em !important; color: #238EB6 !important; text-transform: uppercase !important;
+  font-weight: 400 !important; line-height: 16px !important; letter-spacing: 0.05em !important; color: var(--wu-accent-text) !important; text-transform: uppercase !important;
 }
 .master-page .master-detail-dialog .dialog-heading h2 {
   margin: 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 21px !important;
