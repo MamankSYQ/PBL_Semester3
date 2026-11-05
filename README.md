@@ -36,7 +36,7 @@ PBL_Semester3/
 ├── login.html                  Login (pilih role, username, password)
 ├── role.html                   Halaman cadangan untuk role tanpa dashboard
 ├── 404.html                    Halaman "tidak ditemukan"
-├── robots.txt, sitemap.xml     SEO dasar (ganti DOMAIN-WASHUP setelah deploy)
+├── robots.txt, sitemap.xml     SEO dasar untuk washup-pbl-2026.netlify.app
 ├── assets/                     Logo dan favicon
 ├── css/
 │   ├── tokens.css              Token desain: warna, font, jarak, radius, fokus (dimuat pertama)
@@ -133,7 +133,7 @@ Website statis, tanpa proses build dan tanpa environment variable.
 - **Netlify (disarankan):** masuk ke app.netlify.com → *Add new site* → *Deploy manually* → seret folder proyek. Halaman `404.html` otomatis dipakai.
 - **GitHub Pages:** pemilik repo membuka *Settings → Pages* → pilih branch `main` dan folder root.
 
-Setelah alamat situs diketahui, ganti `DOMAIN-WASHUP` di `robots.txt` dan `sitemap.xml`.
+Situs live: **https://washup-pbl-2026.netlify.app**. Jika alamat berubah, perbarui juga `robots.txt` dan `sitemap.xml`. File `_headers` berisi header keamanan (CSP, anti-clickjacking, HSTS) yang otomatis dipakai Netlify.
 
 ## Keamanan dan Data Pribadi
 
