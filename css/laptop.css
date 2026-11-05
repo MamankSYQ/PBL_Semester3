@@ -19,6 +19,18 @@
   :root { --wu-zoom: 0.8; }
 }
 
+/* Layar lebar 1280px (mis. 1280 x 800): diperkecil lebih jauh agar semua
+   bagian halaman proporsional dan muat. */
+@media (min-width: 1024px) and (max-width: 1300px) and (max-height: 960px) {
+  :root { --wu-zoom: 0.8; }
+}
+@media (min-width: 1024px) and (max-width: 1300px) and (max-height: 800px) {
+  :root { --wu-zoom: 0.72; }
+}
+@media (min-width: 1024px) and (max-width: 1300px) and (max-height: 720px) {
+  :root { --wu-zoom: 0.66; }
+}
+
 /* Login & landing berhuruf besar, jadi boleh lebih kecil agar muat satu layar. */
 @media (min-width: 1024px) and (max-height: 760px) {
   :root:has(body.login-page),
@@ -68,5 +80,14 @@
     padding-top: 16px !important;
     padding-bottom: 16px !important;
     gap: 16px !important;
+  }
+}
+
+/* Admin & Owner: saat diperkecil, isi halaman mengisi lebar layar
+   (sebelumnya dibatasi ±936px sehingga ada ruang kosong besar di kanan). */
+@media (min-width: 1024px) and (max-height: 960px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .admin-verification-page)
+    :is(.dashboard-main, .dashboard-welcome, .summary-grid, .dashboard-section, .dashboard-footer) {
+    max-width: 1240px !important;
   }
 }
