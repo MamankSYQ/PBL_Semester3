@@ -8317,3 +8317,994 @@ body.kasir-payment-page .dashboard-content > footer.dashboard-footer.payment-foo
     max-width: calc(100vw - 20px) !important;
   }
 }
+
+
+/* =========================================================
+   WASHUP V22 — Header Kasir lebih ringkas dan proporsional
+   Berlaku untuk Dashboard, Antrean, Transaksi Baru, Pembayaran,
+   Riwayat Transaksi, dan Pengeluaran.
+   ========================================================= */
+
+/* Desktop: kurangi tinggi header, ukuran judul, dan avatar profil. */
+@media (min-width: 993px) {
+  body.kasir-dashboard-page .dashboard-topbar {
+    height: 76px !important;
+    min-height: 76px !important;
+    max-height: 76px !important;
+    padding: 0 30px !important;
+    gap: 12px !important;
+    align-items: center !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar h1 {
+    margin: 0 !important;
+    font-size: 1.45rem !important;
+    line-height: 1.15 !important;
+    letter-spacing: .25px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-summary {
+    gap: 10px !important;
+    align-items: center !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-avatar-circle {
+    width: 38px !important;
+    height: 38px !important;
+    flex-basis: 38px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-avatar-circle svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-summary strong {
+    font-size: .84rem !important;
+    line-height: 1.2 !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-summary small {
+    font-size: .69rem !important;
+    line-height: 1.2 !important;
+  }
+}
+
+/* Tablet: header sedikit lebih pendek dengan ruang horizontal proporsional. */
+@media (min-width: 769px) and (max-width: 992px) {
+  body.kasir-dashboard-page .dashboard-topbar {
+    height: 70px !important;
+    min-height: 70px !important;
+    max-height: 70px !important;
+    padding: 0 22px !important;
+    gap: 10px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar h1 {
+    font-size: 1.3rem !important;
+    line-height: 1.15 !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-summary {
+    gap: 8px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-avatar-circle {
+    width: 35px !important;
+    height: 35px !important;
+    flex-basis: 35px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-avatar-circle svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-summary strong {
+    font-size: .8rem !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-summary small {
+    font-size: .66rem !important;
+  }
+}
+
+/* Mobile: pertahankan satu baris compact tanpa membuat header terlalu tinggi. */
+@media (max-width: 768px) {
+  body.kasir-dashboard-page .dashboard-topbar {
+    height: auto !important;
+    min-height: 62px !important;
+    max-height: none !important;
+    padding: 9px 14px !important;
+    gap: 9px !important;
+    align-items: center !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar h1 {
+    font-size: clamp(.98rem, 3.7vw, 1.18rem) !important;
+    line-height: 1.15 !important;
+    letter-spacing: 0 !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .mobile-sidebar-toggle {
+    flex: 0 0 32px !important;
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    padding: 6px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-summary {
+    gap: 7px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-avatar-circle {
+    width: 32px !important;
+    height: 32px !important;
+    flex-basis: 32px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-avatar-circle svg {
+    width: 19px !important;
+    height: 19px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-summary strong {
+    font-size: .74rem !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-topbar .user-summary small {
+    font-size: .62rem !important;
+  }
+}
+
+@media (max-width: 420px) {
+  body.kasir-dashboard-page .dashboard-topbar {
+    min-height: 58px !important;
+    padding: 8px 11px !important;
+    gap: 7px !important;
+  }
+}
+
+
+/* =========================================================
+   WASHUP V23 — Tombol Tambahkan Data Pengeluaran lebih compact
+   Ikon plus ditambahkan melalui pseudo-element agar markup/JS
+   tombol #expense-add-button tetap tidak berubah.
+   ========================================================= */
+body.kasir-expense-page .expense-add-button {
+  display: inline-flex !important;
+  flex: 0 0 auto !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  width: auto !important;
+  min-width: 142px !important;
+  max-width: max-content !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 0 13px !important;
+  box-sizing: border-box !important;
+  border: 1px solid #1D4A5A !important;
+  border-radius: 6px !important;
+  background: #1D4A5A !important;
+  color: #FFFFFF !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  letter-spacing: .01em !important;
+  white-space: nowrap !important;
+}
+
+body.kasir-expense-page .expense-add-button::before {
+  content: "" !important;
+  display: inline-block !important;
+  flex: 0 0 15px !important;
+  width: 15px !important;
+  height: 15px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+}
+
+body.kasir-expense-page .expense-add-button:hover {
+  background: #143C4A !important;
+  border-color: #143C4A !important;
+}
+
+@media (max-width: 768px) {
+  body.kasir-expense-page .expense-add-button {
+    min-width: 132px !important;
+    height: 37px !important;
+    min-height: 37px !important;
+    max-height: 37px !important;
+    padding: 0 11px !important;
+    gap: 6px !important;
+    font-size: 12px !important;
+  }
+
+  body.kasir-expense-page .expense-add-button::before {
+    width: 14px !important;
+    height: 14px !important;
+    flex-basis: 14px !important;
+  }
+}
+
+
+/* =========================================================
+   WASHUP V24 — Standarisasi tipografi heading seluruh menu Kasir
+   Acuan: menu Transaksi Baru
+   "RINGKASAN PENGERJAAN" + "Data Transaksi"
+   Disamakan: ukuran, weight, letter-spacing, line-height,
+   dan jarak label ke judul.
+   ========================================================= */
+
+/* Label/eyebrow — satu standar di semua halaman. */
+body.kasir-dashboard-page .dashboard-welcome > .eyebrow,
+body.kasir-queue-page .queue-heading-copy > .eyebrow,
+body.kasir-transaction-page .transaction-heading > .eyebrow,
+body.kasir-payment-page .payment-heading > .eyebrow,
+body.kasir-history-page .history-page-heading > .eyebrow,
+body.kasir-expense-page .expense-page-heading .eyebrow {
+  display: block !important;
+  margin: 0 0 5px !important;
+  color: #238EB6 !important;
+  font-family: "Open Sans", Arial, sans-serif !important;
+  font-size: .7rem !important;
+  font-weight: 600 !important;
+  letter-spacing: .045em !important;
+  line-height: 1.35 !important;
+  text-transform: uppercase !important;
+}
+
+/* Judul utama — persis mengikuti ukuran dan karakter judul Transaksi Baru. */
+body.kasir-dashboard-page .dashboard-welcome > h2,
+body.kasir-queue-page .queue-heading-copy > h2,
+body.kasir-transaction-page .transaction-heading > h2,
+body.kasir-payment-page .payment-heading > h2,
+body.kasir-history-page .history-page-heading > h2,
+body.kasir-expense-page .expense-page-heading h2 {
+  display: block !important;
+  margin: 0 !important;
+  color: #1D4A5A !important;
+  font-family: "Open Sans", Arial, sans-serif !important;
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .035em !important;
+  line-height: 1.3 !important;
+}
+
+/* Hilangkan gap container yang sebelumnya menambah jarak ganda.
+   Jarak label ke judul tetap dikendalikan oleh margin-bottom 5px. */
+body.kasir-dashboard-page .dashboard-welcome {
+  gap: 0 !important;
+}
+
+body.kasir-dashboard-page .dashboard-welcome > .date-chip,
+body.kasir-dashboard-page .dashboard-welcome > .admin-date-chip {
+  margin-top: 10px !important;
+}
+
+body.kasir-queue-page .queue-heading-copy,
+body.kasir-history-page .history-page-heading {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 0 !important;
+}
+
+body.kasir-payment-page .payment-heading {
+  display: block !important;
+}
+
+body.kasir-expense-page .expense-page-heading > div {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 0 !important;
+}
+
+/* Responsif: semua halaman mengecil dengan rasio yang sama pada HP. */
+@media (max-width: 768px) {
+  body.kasir-dashboard-page .dashboard-welcome > .eyebrow,
+  body.kasir-queue-page .queue-heading-copy > .eyebrow,
+  body.kasir-transaction-page .transaction-heading > .eyebrow,
+  body.kasir-payment-page .payment-heading > .eyebrow,
+  body.kasir-history-page .history-page-heading > .eyebrow,
+  body.kasir-expense-page .expense-page-heading .eyebrow {
+    font-size: .66rem !important;
+    margin-bottom: 5px !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-welcome > h2,
+  body.kasir-queue-page .queue-heading-copy > h2,
+  body.kasir-transaction-page .transaction-heading > h2,
+  body.kasir-payment-page .payment-heading > h2,
+  body.kasir-history-page .history-page-heading > h2,
+  body.kasir-expense-page .expense-page-heading h2 {
+    font-size: 1.2rem !important;
+    line-height: 1.3 !important;
+  }
+
+  body.kasir-dashboard-page .dashboard-welcome > .date-chip,
+  body.kasir-dashboard-page .dashboard-welcome > .admin-date-chip {
+    margin-top: 9px !important;
+  }
+}
+
+
+/* =========================================================
+   WASHUP V27 — PERSEMPIT PANEL SIDEBAR YANG SEBENARNYA
+   Override menggunakan #kasir-sidebar agar menang dari aturan
+   width lama yang lebih spesifik. Fokus pada lebar OUTER PANEL,
+   bukan sekadar ukuran tombol navigasi.
+   ========================================================= */
+
+/* Desktop: panel sidebar terbuka lebih ramping. */
+@media (min-width: 993px) {
+  html body.kasir-dashboard-page #kasir-sidebar {
+    width: 190px !important;
+    min-width: 190px !important;
+    max-width: 190px !important;
+    flex: 0 0 190px !important;
+    flex-basis: 190px !important;
+    padding: 20px 12px 22px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Jangan ubah ukuran gambar logo WASHUP. */
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand .brand-logo-img {
+    width: 46px !important;
+    height: 35px !important;
+    flex: 0 0 46px !important;
+    object-fit: contain !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand {
+    width: calc(100% - 26px) !important;
+    max-width: calc(100% - 26px) !important;
+    gap: 6px !important;
+    margin: 0 0 25px 0 !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand .brand-text {
+    font-size: 1.12rem !important;
+    letter-spacing: 1.1px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Posisi toggle mengikuti lebar panel baru. */
+  html body.kasir-dashboard-page #kasir-sidebar .desktop-sidebar-toggle {
+    top: 21px !important;
+    right: 8px !important;
+    width: 25px !important;
+    min-width: 25px !important;
+    height: 25px !important;
+    min-height: 25px !important;
+  }
+
+  /* Saat diciutkan, panel menjadi kolom ikon yang benar-benar sempit. */
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar {
+    width: 64px !important;
+    min-width: 64px !important;
+    max-width: 64px !important;
+    flex: 0 0 64px !important;
+    flex-basis: 64px !important;
+    padding: 20px 7px 22px !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .dashboard-brand {
+    width: auto !important;
+    max-width: none !important;
+    justify-content: center !important;
+    margin: 0 0 48px 0 !important;
+    gap: 0 !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .desktop-sidebar-toggle {
+    top: 62px !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+  }
+}
+
+/* Tablet: panel tetap ramping namun cukup untuk teks navigasi. */
+@media (min-width: 769px) and (max-width: 992px) {
+  html body.kasir-dashboard-page #kasir-sidebar {
+    width: 182px !important;
+    min-width: 182px !important;
+    max-width: 182px !important;
+    flex: 0 0 182px !important;
+    flex-basis: 182px !important;
+    padding: 19px 11px 21px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand .brand-logo-img {
+    width: 46px !important;
+    height: 35px !important;
+    flex-basis: 46px !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar {
+    width: 62px !important;
+    min-width: 62px !important;
+    max-width: 62px !important;
+    flex: 0 0 62px !important;
+    flex-basis: 62px !important;
+    padding: 19px 7px 21px !important;
+  }
+}
+
+/* Mobile drawer: batasi panel pada 230px, bukan 82vw hingga hampir
+   memenuhi layar. Kedua state shell (normal/collapsed) ikut ditangani. */
+@media (max-width: 768px) {
+  html body.kasir-dashboard-page #kasir-sidebar,
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar {
+    position: fixed !important;
+    inset: 0 auto 0 0 !important;
+    width: min(72vw, 230px) !important;
+    min-width: 0 !important;
+    max-width: 230px !important;
+    flex: none !important;
+    flex-basis: auto !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+    padding: 19px 13px 21px !important;
+    box-sizing: border-box !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand,
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .dashboard-brand {
+    width: calc(100% - 26px) !important;
+    max-width: calc(100% - 26px) !important;
+    justify-content: flex-start !important;
+    gap: 7px !important;
+    margin: 0 0 24px 0 !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand .brand-logo-img {
+    width: 46px !important;
+    height: 35px !important;
+    flex: 0 0 46px !important;
+  }
+}
+
+
+/* =========================================================
+   WASHUP V28 — Seluruh elemen sidebar lebih kecil
+   Panel sidebar tetap menggunakan lebar V27.
+   Logo, wordmark, tombol navigasi, ikon, Logout dan tombol
+   collapse diperkecil. Jarak brand-toggle dibuat aman.
+   ========================================================= */
+
+/* Desktop: kecilkan elemen di dalam panel, bukan lebar panel V27. */
+@media (min-width: 993px) {
+  html body.kasir-dashboard-page #kasir-sidebar {
+    padding: 17px 11px 19px !important;
+  }
+
+  /* Brand diberi ruang khusus di kanan untuk tombol collapse. */
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand {
+    width: calc(100% - 42px) !important;
+    max-width: calc(100% - 42px) !important;
+    min-height: 28px !important;
+    gap: 5px !important;
+    margin: 0 0 21px 0 !important;
+    overflow: visible !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand .brand-logo-img {
+    width: 36px !important;
+    height: 28px !important;
+    flex: 0 0 36px !important;
+    object-fit: contain !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand .brand-text {
+    font-size: .94rem !important;
+    line-height: 1 !important;
+    letter-spacing: .75px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Tombol dropdown kecil dan terpisah dari logo/wordmark. */
+  html body.kasir-dashboard-page #kasir-sidebar .desktop-sidebar-toggle {
+    top: 18px !important;
+    right: 8px !important;
+    width: 22px !important;
+    min-width: 22px !important;
+    height: 22px !important;
+    min-height: 22px !important;
+    padding: 3px !important;
+    border-radius: 6px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .desktop-sidebar-toggle svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-nav {
+    gap: 5px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .nav-label {
+    margin: 0 0 5px 0 !important;
+    font-size: .58rem !important;
+    letter-spacing: .95px !important;
+    line-height: 1.2 !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .nav-item {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 30px !important;
+    height: 30px !important;
+    padding: 4px 7px !important;
+    gap: 6px !important;
+    border-radius: 6px !important;
+    font-size: .67rem !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .nav-item .nav-text {
+    display: block !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .nav-item .nav-icon-svg,
+  html body.kasir-dashboard-page #kasir-sidebar .nav-item .nav-icon-rp {
+    width: 13px !important;
+    min-width: 13px !important;
+    height: 13px !important;
+    flex: 0 0 13px !important;
+    font-size: .67rem !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .sidebar-bottom {
+    gap: 12px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .sidebar-note {
+    font-size: .63rem !important;
+    line-height: 1.25 !important;
+    letter-spacing: .02em !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .sidebar-logout {
+    width: 76px !important;
+    min-width: 76px !important;
+    max-width: 76px !important;
+    height: 23px !important;
+    min-height: 23px !important;
+    padding: 3px 6px !important;
+    border-radius: 7px !important;
+    font-size: .64rem !important;
+    line-height: 1 !important;
+  }
+
+  /* Collapsed state: logo dan toggle tetap terpisah secara vertikal. */
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar {
+    padding: 17px 6px 19px !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .dashboard-brand {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 28px !important;
+    justify-content: center !important;
+    margin: 0 0 43px 0 !important;
+    gap: 0 !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .dashboard-brand .brand-logo-img {
+    width: 34px !important;
+    height: 26px !important;
+    flex-basis: 34px !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .desktop-sidebar-toggle {
+    top: 55px !important;
+    left: 50% !important;
+    right: auto !important;
+    width: 22px !important;
+    min-width: 22px !important;
+    height: 22px !important;
+    min-height: 22px !important;
+    transform: translateX(-50%) !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .dashboard-nav {
+    gap: 5px !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .nav-item {
+    min-height: 29px !important;
+    height: 29px !important;
+    padding: 5px 3px !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .sidebar-logout {
+    width: 31px !important;
+    min-width: 31px !important;
+    max-width: 31px !important;
+    height: 29px !important;
+    min-height: 29px !important;
+    padding: 5px !important;
+  }
+}
+
+/* Tablet: gunakan ukuran antara desktop dan mobile. */
+@media (min-width: 769px) and (max-width: 992px) {
+  html body.kasir-dashboard-page #kasir-sidebar {
+    padding: 16px 10px 18px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand {
+    width: calc(100% - 40px) !important;
+    max-width: calc(100% - 40px) !important;
+    min-height: 28px !important;
+    gap: 5px !important;
+    margin-bottom: 20px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand .brand-logo-img {
+    width: 35px !important;
+    height: 27px !important;
+    flex-basis: 35px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand .brand-text {
+    font-size: .9rem !important;
+    letter-spacing: .65px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .desktop-sidebar-toggle {
+    top: 17px !important;
+    right: 7px !important;
+    width: 21px !important;
+    min-width: 21px !important;
+    height: 21px !important;
+    min-height: 21px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .nav-item {
+    min-height: 29px !important;
+    height: 29px !important;
+    padding: 4px 6px !important;
+    gap: 5px !important;
+    font-size: .64rem !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .nav-icon-svg,
+  html body.kasir-dashboard-page #kasir-sidebar .nav-icon-rp {
+    width: 12px !important;
+    min-width: 12px !important;
+    height: 12px !important;
+    flex-basis: 12px !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .dashboard-brand .brand-logo-img {
+    width: 32px !important;
+    height: 25px !important;
+    flex-basis: 32px !important;
+  }
+}
+
+/* Mobile drawer: skala ringkas, namun area sentuh masih memadai. */
+@media (max-width: 768px) {
+  html body.kasir-dashboard-page #kasir-sidebar,
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar {
+    padding: 16px 12px 18px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand,
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .dashboard-brand {
+    width: calc(100% - 40px) !important;
+    max-width: calc(100% - 40px) !important;
+    min-height: 29px !important;
+    justify-content: flex-start !important;
+    gap: 6px !important;
+    margin: 0 0 21px 0 !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand .brand-logo-img {
+    width: 36px !important;
+    height: 28px !important;
+    flex: 0 0 36px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand .brand-text {
+    font-size: .94rem !important;
+    letter-spacing: .7px !important;
+  }
+
+  /* Dropdown/hamburger di sidebar tidak menempel pada logo. */
+  html body.kasir-dashboard-page #kasir-sidebar .desktop-sidebar-toggle {
+    top: 16px !important;
+    right: 7px !important;
+    width: 22px !important;
+    min-width: 22px !important;
+    height: 22px !important;
+    min-height: 22px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-nav {
+    gap: 5px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .nav-label {
+    margin-bottom: 5px !important;
+    font-size: .6rem !important;
+    letter-spacing: 1px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .nav-item,
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .nav-item {
+    min-height: 32px !important;
+    height: 32px !important;
+    padding: 5px 8px !important;
+    gap: 7px !important;
+    font-size: .7rem !important;
+    white-space: nowrap !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .nav-item .nav-icon-svg,
+  html body.kasir-dashboard-page #kasir-sidebar .nav-item .nav-icon-rp {
+    width: 13px !important;
+    min-width: 13px !important;
+    height: 13px !important;
+    flex-basis: 13px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .sidebar-note {
+    font-size: .66rem !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .sidebar-logout {
+    width: 78px !important;
+    min-width: 78px !important;
+    max-width: 78px !important;
+    height: 24px !important;
+    min-height: 24px !important;
+    font-size: .65rem !important;
+  }
+}
+
+
+/* =========================================================
+   WASHUP V29 — Brand spacing & collapsed sidebar cleanup
+   - Tambah jarak logo ke label MENU KASIR saat sidebar terbuka.
+   - Saat collapsed: area brand hanya menampilkan gambar logo.
+   - Wordmark, label menu, teks navigasi, dan catatan bawah disembunyikan.
+   - Ikon navigasi tetap tampil dalam tombol yang terpusat.
+   - Tombol collapse ditempatkan terpisah di bawah logo, tidak menempel.
+   ========================================================= */
+
+/* Sidebar terbuka: beri ruang lebih lega di bawah brand/logo. */
+@media (min-width: 993px) {
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand {
+    margin-bottom: 38px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-nav > .nav-label {
+    margin-top: 2px !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Brand tetap dalam ruang kiri agar tidak bersinggungan dengan tombol collapse. */
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand {
+    width: calc(100% - 38px) !important;
+    max-width: calc(100% - 38px) !important;
+  }
+}
+
+/* Collapsed desktop: hanya gambar logo di area brand, semua teks disembunyikan. */
+@media (min-width: 993px) {
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .dashboard-brand {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 27px !important;
+    height: 27px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 0 0 46px 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .dashboard-brand .brand-logo-img {
+    display: block !important;
+    width: 32px !important;
+    height: 25px !important;
+    flex: 0 0 32px !important;
+    object-fit: contain !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .dashboard-brand .brand-text,
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .nav-label,
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .nav-text,
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .sidebar-note {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Tombol collapse berada di bawah logo dengan jarak yang jelas. */
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .desktop-sidebar-toggle {
+    top: 57px !important;
+    left: 50% !important;
+    right: auto !important;
+    width: 22px !important;
+    min-width: 22px !important;
+    height: 22px !important;
+    min-height: 22px !important;
+    transform: translateX(-50%) !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .dashboard-nav {
+    width: 100% !important;
+    margin-top: 0 !important;
+    gap: 6px !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .nav-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 31px !important;
+    min-height: 31px !important;
+    padding: 5px 3px !important;
+    gap: 0 !important;
+    overflow: hidden !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .nav-item .nav-icon-svg,
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .nav-item .nav-icon-rp {
+    display: inline-flex !important;
+    width: 14px !important;
+    min-width: 14px !important;
+    height: 14px !important;
+    flex: 0 0 14px !important;
+    margin: 0 auto !important;
+    font-size: 13px !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .sidebar-bottom {
+    align-items: center !important;
+    justify-content: flex-end !important;
+    width: 100% !important;
+    gap: 0 !important;
+    padding: 0 !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .sidebar-logout {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 31px !important;
+    min-width: 31px !important;
+    max-width: 31px !important;
+    height: 29px !important;
+    min-height: 29px !important;
+    padding: 5px !important;
+    gap: 0 !important;
+  }
+}
+
+/* Tablet collapsed: perilaku sama — logo saja di brand, ikon di menu. */
+@media (min-width: 769px) and (max-width: 992px) {
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand {
+    margin-bottom: 34px !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .dashboard-brand {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 26px !important;
+    height: 26px !important;
+    justify-content: center !important;
+    margin: 0 0 44px 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .dashboard-brand .brand-logo-img {
+    display: block !important;
+    width: 30px !important;
+    height: 23px !important;
+    flex: 0 0 30px !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .dashboard-brand .brand-text,
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .nav-label,
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .nav-text,
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .sidebar-note {
+    display: none !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .desktop-sidebar-toggle {
+    top: 54px !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+  }
+
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed #kasir-sidebar .nav-item {
+    justify-content: center !important;
+    padding: 5px 3px !important;
+    gap: 0 !important;
+  }
+}
+
+/* Mobile drawer terbuka: jarak logo ke MENU KASIR ditambah. */
+@media (max-width: 768px) {
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-brand {
+    margin-bottom: 34px !important;
+  }
+
+  html body.kasir-dashboard-page #kasir-sidebar .dashboard-nav > .nav-label {
+    margin-top: 1px !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Pada tampilan mobile, tombol menu drawer tetap mempertahankan teks. */
+  html body.kasir-dashboard-page .dashboard-shell.mobile-sidebar-open #kasir-sidebar .brand-text,
+  html body.kasir-dashboard-page .dashboard-shell.mobile-sidebar-open #kasir-sidebar .nav-label,
+  html body.kasir-dashboard-page .dashboard-shell.mobile-sidebar-open #kasir-sidebar .nav-text {
+    display: initial !important;
+    visibility: visible !important;
+  }
+
+  /* Mobile drawer tidak memakai mode ikon-only saat class collapsed terpasang. */
+  html body.kasir-dashboard-page .dashboard-shell.sidebar-collapsed.mobile-sidebar-open #kasir-sidebar .dashboard-brand {
+    justify-content: flex-start !important;
+  }
+}
+
+
+/* =========================================================
+   WASHUP V30 — Header Kasir sticky saat halaman discroll
+   Berlaku untuk seluruh halaman Kasir.
+   Header tetap di atas viewport, sementara konten di bawahnya
+   yang bergerak ketika pengguna melakukan scroll.
+   ========================================================= */
+body.kasir-dashboard-page .dashboard-content {
+  overflow: visible !important;
+}
+
+body.kasir-dashboard-page .dashboard-topbar {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 80 !important;
+  align-self: stretch !important;
+  flex: 0 0 auto !important;
+  isolation: isolate !important;
+  width: 100% !important;
+}
+
+/* Pastikan konten tidak menimpa header saat bergerak di bawahnya. */
+body.kasir-dashboard-page .dashboard-main {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Popover Edit Profil tetap dapat muncul di atas header dan konten. */
+body.kasir-dashboard-page .profile-edit-dialog {
+  z-index: 1200 !important;
+}
