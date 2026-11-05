@@ -235,3 +235,24 @@
     white-space: normal !important;
   }
 }
+
+/* ---------- Ikon seragam (satu gaya garis untuk semua role) ----------
+   Ikon dirender dari WASHUP_ICONS di js/components.js. */
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .summary-icon-box {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  width: 34px !important; height: 34px !important; min-width: 34px !important; min-height: 34px !important;
+  padding: 0 !important; border: 0 !important; border-radius: 9px !important;
+  background: #E3F0F7 !important; color: var(--wu-accent-text) !important; box-shadow: none !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) :is(.summary-icon-box, .dashboard-nav) svg:is(.wu-icon, .nav-icon-svg) {
+  fill: none !important; stroke: currentColor !important; stroke-width: 2 !important;
+  stroke-linecap: round !important; stroke-linejoin: round !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .summary-icon-box svg {
+  width: 18px !important; height: 18px !important; min-width: 18px !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .summary-icon-box .wu-icon-rp {
+  display: inline-block !important; width: auto !important; height: auto !important; padding: 0 !important;
+  background: none !important; color: inherit !important;
+  font: 800 13px/1 var(--wu-font-body) !important; letter-spacing: 0 !important;
+}

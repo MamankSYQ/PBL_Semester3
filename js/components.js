@@ -1,31 +1,79 @@
+// Ikon WASHUP: satu set ikon garis (24x24, stroke) untuk menu dan kartu ringkasan semua role.
+const WASHUP_ICONS = {
+  "home": '<path d="m3 9.5 9-7 9 7V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+  "plus": '<path d="M12 5v14M5 12h14"/>',
+  "list": '<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
+  "credit-card": '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/>',
+  "history": '<path d="M3 12a9 9 0 1 0 2.64-6.36L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',
+  "file-text": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>',
+  "calendar": '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  "calendar-check": '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/>',
+  "calendar-x": '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m10 14 4 4M14 14l-4 4"/>',
+  "clipboard-check": '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="m9 14 2 2 4-4"/>',
+  "user": '<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>',
+  "users": '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+  "id-card": '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10.5" r="2"/><path d="M5.5 16.5c.6-1.6 1.9-2.5 3.5-2.5s2.9.9 3.5 2.5M15 9.5h3M15 13.5h3"/>',
+  "chart": '<path d="M3 3v18h18"/><path d="m7 14 4-4 4 3 6-7"/>',
+  "log-in": '<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5M15 12H3"/>',
+  "log-out": '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/>',
+  "car": '<path d="M5 17H3v-5l2-5h14l2 5v5h-2"/><path d="M3 12h18M9 17h6"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>',
+  "receipt": '<path d="M5 2v20l2.5-1.5L10 22l2-1.5 2 1.5 2.5-1.5L19 22V2l-2.5 1.5L14 2l-2 1.5L10 2 7.5 3.5z"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+  "check-circle": '<circle cx="12" cy="12" r="9.5"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
+  "alert-circle": '<circle cx="12" cy="12" r="9.5"/><path d="M12 7.5v5M12 16.5h.01"/>',
+  "clock": '<circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3.5 2"/>',
+  "droplet": '<path d="M12 2.5S5.5 9.5 5.5 14.5a6.5 6.5 0 0 0 13 0C18.5 9.5 12 2.5 12 2.5z"/>',
+  "arrows": '<path d="m8 3-4 4 4 4M4 7h16M16 21l4-4-4-4M20 17H4"/>',
+  "arrow-down-circle": '<circle cx="12" cy="12" r="9.5"/><path d="M12 7.5v9M8 12.5l4 4 4-4"/>',
+  "arrow-up-circle": '<circle cx="12" cy="12" r="9.5"/><path d="M12 16.5v-9M8 11.5l4-4 4 4"/>',
+  "wallet": '<path d="M20 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h15v-4"/><path d="M3 5a2 2 0 0 0 2 2h16v10h-5a3 3 0 0 1 0-6h5"/>',
+  "layers": '<path d="m12 2 10 5-10 5L2 7z"/><path d="m2 12 10 5 10-5M2 17l10 5 10-5"/>',
+  "activity": '<path d="M22 12h-4l-3 8L9 4l-3 8H2"/>',
+  "award": '<circle cx="12" cy="8.5" r="6"/><path d="M8.5 13.5 7 22l5-3 5 3-1.5-8.5"/>'
+};
+
+// Merender ikon berdasarkan nama. "rupiah" dirender sebagai teks Rp.
+function renderIcon(name, className = "wu-icon") {
+  if (name === "rupiah") return `<span class="${className} wu-icon-rp" aria-hidden="true">Rp</span>`;
+  const paths = WASHUP_ICONS[name];
+  if (!paths) return "";
+  return `<svg class="${className}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${paths}</svg>`;
+}
+
+// Mengisi semua elemen [data-icon] di halaman dengan ikon dari WASHUP_ICONS.
+function mountIcons(root = document) {
+  root.querySelectorAll("[data-icon]").forEach((element) => {
+    element.innerHTML = renderIcon(element.dataset.icon);
+  });
+}
+
 const WASHUP_MENUS = {
   Admin: [
-    { page: "dashboard", href: "dashboard-admin.html", label: "Dashboard", icon: `<svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true"><path fill="currentColor" d="M33 19a1 1 0 0 1-.71-.29L18 4.41L3.71 18.71A1 1 0 0 1 2.3 17.3l15-15a1 1 0 0 1 1.41 0l15 15A1 1 0 0 1 33 19Z" /><path fill="currentColor" d="M18 7.79L6 19.79V32a2 2 0 0 0 2 2h7V22h6v12h7a2 2 0 0 0 2-2V19.79ZM28 32h-3V20H11v12H8V19.38l10-10l10 10Z" /></svg>` },
-    { page: "services", href: "layanan-tarif.html", label: "Layanan & Tarif", icon: `<span class="nav-icon-rp" aria-hidden="true">Rp</span>` },
-    { page: "shifts", href: "data-shift.html", label: "Data Shift", icon: `<svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true"><path fill="currentColor" d="M32.25 6h-4v3a1 1 0 0 1-2 0V6h-7v3a1 1 0 0 1-2 0V6h-7v3a1 1 0 0 1-2 0V6h-4.5A2.76 2.76 0 0 0 1 8.75v21.5A2.76 2.76 0 0 0 3.75 33h28.5A2.76 2.76 0 0 0 35 30.25V8.75A2.76 2.76 0 0 0 32.25 6ZM33 30.25a.75.75 0 0 1-.75.75H3.75a.75.75 0 0 1-.75-.75V15h30ZM33 13H3V8.75a.75.75 0 0 1 .75-.75H8v2a1 1 0 0 0 2 0V8h7v2a1 1 0 0 0 2 0V8h7v2a1 1 0 0 0 2 0V8h4.25a.75.75 0 0 1 .75.75Z" /></svg>` },
-    { page: "verification", href: "verifikasi-absensi.html", label: "Verifikasi Absensi", icon: `<svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /><rect x="8" y="2" width="8" height="4" rx="1" fill="none" stroke="currentColor" stroke-width="2" /><path d="M9 14l2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>` },
-    { page: "users", href: "akun-pengguna.html", label: "Akun Pengguna", icon: `<svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4.2" fill="currentColor" /><path d="M5 21v-1.5c0-3.3 3.1-6 7-6s7 2.7 7 6V21H5z" fill="currentColor" /></svg>` }
+    { page: "dashboard", href: "dashboard-admin.html", label: "Dashboard", icon: renderIcon("home", "nav-icon-svg") },
+    { page: "services", href: "layanan-tarif.html", label: "Layanan & Tarif", icon: renderIcon("rupiah", "nav-icon-rp") },
+    { page: "shifts", href: "data-shift.html", label: "Data Shift", icon: renderIcon("calendar", "nav-icon-svg") },
+    { page: "verification", href: "verifikasi-absensi.html", label: "Verifikasi Absensi", icon: renderIcon("clipboard-check", "nav-icon-svg") },
+    { page: "users", href: "akun-pengguna.html", label: "Akun Pengguna", icon: renderIcon("user", "nav-icon-svg") }
   ],
   Owner: [
-    { page: "dashboard", href: "dashboard-owner.html", label: "Dashboard", icon: `<svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true"><path fill="currentColor" d="M33 19a1 1 0 0 1-.71-.29L18 4.41L3.71 18.71A1 1 0 0 1 2.3 17.3l15-15a1 1 0 0 1 1.41 0l15 15A1 1 0 0 1 33 19Z" /><path fill="currentColor" d="M18 7.79L6 19.79V32a2 2 0 0 0 2 2h7V22h6v12h7a2 2 0 0 0 2-2V19.79ZM28 32h-3V20H11v12H8V19.38l10-10l10 10Z" /></svg>` },
-    { page: "transactions", href: "laporan-transaksi.html", label: "Laporan Transaksi", icon: `<svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>` },
-    { page: "finance", href: "laporan-keuangan.html", label: "Laporan Keuangan", icon: `<span class="nav-icon-rp" aria-hidden="true">Rp</span>` },
-    { page: "employees", href: "laporan-karyawan.html", label: "Laporan Karyawan", icon: `<svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zm7 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm-7 2c-3.1 0-7 1.6-7 4.5V20h14v-1.5c0-2.9-3.9-4.5-7-4.5zm7 1.5c.9.6 1.8 1.4 1.8 3V20H22v-1.5c0-2-3-3.2-5-3.5z" /></svg>` },
-    { page: "stats", href: "statistik-layanan.html", label: "Statistik Layanan", icon: `<svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 19.5h18M4 17V5m0 12 5-5 4 3 7-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>` }
+    { page: "dashboard", href: "dashboard-owner.html", label: "Dashboard", icon: renderIcon("home", "nav-icon-svg") },
+    { page: "transactions", href: "laporan-transaksi.html", label: "Laporan Transaksi", icon: renderIcon("receipt", "nav-icon-svg") },
+    { page: "finance", href: "laporan-keuangan.html", label: "Laporan Keuangan", icon: renderIcon("rupiah", "nav-icon-rp") },
+    { page: "employees", href: "laporan-karyawan.html", label: "Laporan Karyawan", icon: renderIcon("users", "nav-icon-svg") },
+    { page: "stats", href: "statistik-layanan.html", label: "Statistik Layanan", icon: renderIcon("chart", "nav-icon-svg") }
   ],
   Kasir: [
-    { page: "dashboard", href: "dashboard-kasir.html", label: "Dashboard", icon: `<svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>` },
-    { page: "new-transaction", href: "transaksi-baru.html", label: "Transaksi Baru", icon: `<svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 20v-8m0 0V4m0 8h8m-8 0H4" /></svg>` },
-    { page: "queue", href: "antrean.html", label: "Antrean", icon: `<svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16" /></svg>` },
-    { page: "payment", href: "pembayaran.html", label: "Pembayaran", icon: `<svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M3 10h18M7 15h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>` },
-    { page: "history", href: "riwayat-transaksi.html", label: "Riwayat Transaksi", icon: `<svg class="nav-icon-svg" viewBox="0 0 48 48" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6" d="M8.09 4.5H19a2.05 2.05 0 0 1 2.05 2.05V17.2c0 1.72-1.91 2.74-3 1.65l-3.48-3.5A12.82 12.82 0 1 0 36.83 24c0-3.46-1-6.06-4.93-10c-.84-.84-.1-1.55.38-2l2.28-2.27c.94-.94 1.27-1.12 2.1-.29c4.86 4.86 6.83 8.52 6.84 14.63A19.5 19.5 0 1 1 9.86 10.63C8.69 9.44 8.32 9.06 6.35 7.09c-.77-.76-.08-2.59 1.74-2.59" /></svg>` },
-    { page: "expenses", href: "pengeluaran.html", label: "Pengeluaran", icon: `<svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M5 3.8h10l4 4V20H5z" /><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M14.5 3.8v4.5H19M8 12h8M8 15.5h8" /></svg>` }
+    { page: "dashboard", href: "dashboard-kasir.html", label: "Dashboard", icon: renderIcon("home", "nav-icon-svg") },
+    { page: "new-transaction", href: "transaksi-baru.html", label: "Transaksi Baru", icon: renderIcon("plus", "nav-icon-svg") },
+    { page: "queue", href: "antrean.html", label: "Antrean", icon: renderIcon("list", "nav-icon-svg") },
+    { page: "payment", href: "pembayaran.html", label: "Pembayaran", icon: renderIcon("credit-card", "nav-icon-svg") },
+    { page: "history", href: "riwayat-transaksi.html", label: "Riwayat Transaksi", icon: renderIcon("history", "nav-icon-svg") },
+    { page: "expenses", href: "pengeluaran.html", label: "Pengeluaran", icon: renderIcon("file-text", "nav-icon-svg") }
   ],
   Petugas: [
-    { page: "dashboard", href: "dashboard-petugas.html", label: "Dashboard", icon: `<svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" /><path d="M9 21V12h6v9" /></svg>` },
-    { page: "checkin", href: "absensi-masuk.html", label: "Absensi Masuk", icon: `<svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" /></svg>` },
-    { page: "checkout", href: "absensi-keluar.html", label: "Absensi Keluar", icon: `<svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>` },
-    { page: "recap", href: "rekap-absensi.html", label: "Rekap Absensi", icon: `<svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18" /><path d="m7 14 4-4 4 3 6-7" /></svg>` }
+    { page: "dashboard", href: "dashboard-petugas.html", label: "Dashboard", icon: renderIcon("home", "nav-icon-svg") },
+    { page: "checkin", href: "absensi-masuk.html", label: "Absensi Masuk", icon: renderIcon("log-in", "nav-icon-svg") },
+    { page: "checkout", href: "absensi-keluar.html", label: "Absensi Keluar", icon: renderIcon("log-out", "nav-icon-svg") },
+    { page: "recap", href: "rekap-absensi.html", label: "Rekap Absensi", icon: renderIcon("calendar-check", "nav-icon-svg") }
   ]
 };
 
@@ -189,6 +237,7 @@ function mountAppShell() {
   topbar.outerHTML = renderTopbar(title, role);
   footer.outerHTML = renderFooter(footerLabel);
   document.body.insertAdjacentHTML("beforeend", renderProfileEditor());
+  mountIcons();
   setupMobileMenu();
 }
 

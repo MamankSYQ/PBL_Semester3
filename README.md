@@ -67,7 +67,7 @@ PBL_Semester3/
 
 ## Komponen
 
-Sidebar, topbar, footer, dan popup Edit Profil untuk semua role dirender oleh `js/components.js`. Untuk menambah menu, tambahkan item `{ page, href, label, icon }` pada role yang sesuai di `WASHUP_MENUS`. Setiap halaman yang memakai shell komponen memerlukan atribut body, contohnya:
+Sidebar, topbar, footer, dan popup Edit Profil untuk semua role dirender oleh `js/components.js`. Semua ikon (menu dan kartu ringkasan) berasal dari satu set ikon garis `WASHUP_ICONS` di file yang sama: di HTML cukup tulis `<div class="summary-icon-box" data-icon="car"></div>`, dan menu memakai `renderIcon("nama")`. Gunakan `data-icon="rupiah"` untuk ikon teks Rp. Untuk menambah menu, tambahkan item `{ page, href, label, icon }` pada role yang sesuai di `WASHUP_MENUS`. Setiap halaman yang memakai shell komponen memerlukan atribut body, contohnya:
 
 ```html
 <body class="master-page" data-master="services" data-role="Admin" data-page="services" data-title="Layanan &amp; Tarif" data-footer="Layanan dan Tarif" data-logout-id="master-logout">
