@@ -2186,7 +2186,8 @@ function setupOwnerEmployeeReport() {
     }
   };
   const now = new Date();
-  const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const monthKey = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const dateKey = (value) => String(value || "").replace(/\D/g, "").slice(0, 8);
   const normalizeName = (name) => String(name || "").trim().toLocaleLowerCase("id-ID");
   const activeEmployees = getActiveEmployees();
   const employeeKeys = new Set(activeEmployees.map((employee) => normalizeName(employee.name)));
@@ -2195,7 +2196,7 @@ function setupOwnerEmployeeReport() {
   const attendanceEmployeeKey = (record) => [record.employeeName, record.employeeId]
     .map(normalizeName)
     .find((key) => employeeKeys.has(key));
-  const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const todayKey = getTodayKey();
   const shiftByName = new Map(shifts.map((shift) => [normalizeName(shift.name), shift]));
   const toMinutes = (time) => {
     const match = String(time || "").trim().match(/^(\d{1,2})[.:](\d{2})$/);
@@ -2211,7 +2212,7 @@ function setupOwnerEmployeeReport() {
     const shiftStartMinutes = toMinutes(shift.start);
     return checkInMinutes !== null && shiftStartMinutes !== null && checkInMinutes > shiftStartMinutes;
   };
-  const todayAttendance = attendance.filter((record) => record.date === todayKey && record.checkIn);
+  const todayAttendance = attendance.filter((record) => dateKey(record.date) === todayKey && record.checkIn);
   const checkedInNames = new Set(todayAttendance.map(attendanceEmployeeKey).filter(Boolean));
   const lateNamesToday = new Set(todayAttendance
     .filter(isLate)
@@ -2227,7 +2228,7 @@ function setupOwnerEmployeeReport() {
     cell.textContent = String(value);
     row.append(cell);
   };
-  const monthlyAttendance = attendance.filter((record) => String(record.date || "").startsWith(monthKey));
+  const monthlyAttendance = attendance.filter((record) => dateKey(record.date).startsWith(monthKey));
   const monthlySummaries = new Map();
   activeEmployees.forEach((employee) => {
     const key = normalizeName(employee.name);
@@ -2238,8 +2239,9 @@ function setupOwnerEmployeeReport() {
     if (!key) return;
     if (!record.checkIn) return;
     const summary = monthlySummaries.get(key) || { presentDates: new Set(), lateDates: new Set() };
-    summary.presentDates.add(String(record.date));
-    if (isLate(record)) summary.lateDates.add(String(record.date));
+    const recordDateKey = dateKey(record.date);
+    summary.presentDates.add(recordDateKey);
+    if (isLate(record)) summary.lateDates.add(recordDateKey);
     monthlySummaries.set(key, summary);
   });
   attendanceBody.replaceChildren();
@@ -3050,8 +3052,9 @@ function setupPetugasAttendance() {
     const minutes = Number(match[2]);
     return hours <= 23 && minutes <= 59 ? hours * 60 + minutes : null;
   };
-  const getActiveShifts = () => readMasterRecords(masterDefinitions.shifts).filter((shift) => shift.status === "Aktif");
-  const getShifts = () => readMasterRecords(masterDefinitions.shifts);
+  const shifts = ensureMasterDefaults("shifts", masterDefinitions.shifts);
+  const getActiveShifts = () => shifts.filter((shift) => shift.status === "Aktif");
+  const getShifts = () => shifts;
   const findShiftForTime = (date = new Date()) => {
     const activeShifts = getActiveShifts();
     const now = date.getHours() * 60 + date.getMinutes();
@@ -3386,7 +3389,7 @@ function setupPetugasAttendance() {
   action.addEventListener("click", () => {
     const activeShift = findShiftForTime();
     const attendance = getAttendance(employeeId) || {
-      employeeId, employeeName, date: getTodayKey(), shift: activeShift?.name || "—",
+      employeeId, employeeName, date: getTodayKey(), shift: activeShift?.name || "Shift Pagi",
       checkIn: null, checkInPhoto: null, checkOut: null, checkOutPhoto: null, status: "Belum Absen",
     };
     if (!attendance.employeeId) attendance.employeeId = employeeId;
