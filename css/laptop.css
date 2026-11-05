@@ -1,0 +1,72 @@
+/* =========================================================
+   TAMPILAN LAPTOP 14 INCI — dipakai SEMUA halaman, dimuat paling akhir.
+   Desain Figma dibuat untuk 1440 x 1024. Di laptop 14" ruang browser
+   (layar dikurangi tab + address bar) umumnya 1366 x ±640 s.d. 1536 x ±740.
+   Seluruh tampilan diperkecil proporsional (CSS zoom) supaya perbandingan
+   ukuran Figma tetap sama, lalu tinggi "100vh" dikompensasi agar sidebar
+   dan latar tetap penuh setinggi layar.
+   Tidak berlaku di HP/tablet (< 1024px) dan layar tinggi (> 960px).
+   ========================================================= */
+
+/* --- Faktor zoom menurut tinggi layar browser --- */
+@media (min-width: 1024px) and (max-height: 960px) {
+  :root { --wu-zoom: 0.9; }
+}
+@media (min-width: 1024px) and (max-height: 800px) {
+  :root { --wu-zoom: 0.85; }
+}
+@media (min-width: 1024px) and (max-height: 720px) {
+  :root { --wu-zoom: 0.8; }
+}
+
+/* Login & landing berhuruf besar, jadi boleh lebih kecil agar muat satu layar. */
+@media (min-width: 1024px) and (max-height: 760px) {
+  :root:has(body.login-page),
+  :root:has(body.landing-page) { --wu-zoom: 0.82; }
+}
+@media (min-width: 1024px) and (max-height: 700px) {
+  :root:has(body.login-page),
+  :root:has(body.landing-page) { --wu-zoom: 0.76; }
+}
+@media (min-width: 1024px) and (max-height: 660px) {
+  :root:has(body.login-page),
+  :root:has(body.landing-page) { --wu-zoom: 0.71; }
+}
+@media (min-width: 1024px) and (max-height: 600px) {
+  :root:has(body.login-page),
+  :root:has(body.landing-page) { --wu-zoom: 0.65; }
+}
+
+/* --- Terapkan zoom + kompensasi tinggi layar --- */
+@media (min-width: 1024px) and (max-height: 960px) {
+  html { zoom: var(--wu-zoom); }
+
+  /* Dengan zoom, 100vh ikut mengecil; dibagi faktor zoom supaya tetap penuh. */
+  :root body,
+  :root body .dashboard-shell,
+  :root body .dashboard-shell .dashboard-content,
+  :root body.login-page,
+  :root body .login-layout,
+  :root body .dashboard-shell .dashboard-sidebar {
+    min-height: calc(100vh / var(--wu-zoom)) !important;
+  }
+
+  /* Sidebar yang menempel (sticky/fixed) setinggi layar. */
+  :root body.admin-dashboard-page .dashboard-shell .dashboard-sidebar,
+  :root body.master-page .dashboard-shell .dashboard-sidebar,
+  :root body.owner-page .dashboard-shell .dashboard-sidebar,
+  :root body.kasir-dashboard-page .dashboard-shell .dashboard-sidebar,
+  :root body.kasir-page .dashboard-shell .dashboard-sidebar {
+    height: calc(100vh / var(--wu-zoom)) !important;
+    max-height: calc(100vh / var(--wu-zoom)) !important;
+  }
+}
+
+/* Login muat satu layar di laptop pendek: rapatkan jarak luar. */
+@media (min-width: 1024px) and (max-height: 800px) {
+  :root body.login-page .login-layout {
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+    gap: 16px !important;
+  }
+}
