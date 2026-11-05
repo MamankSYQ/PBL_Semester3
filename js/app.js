@@ -4503,7 +4503,7 @@ function setupProfileEditor() {
     const viewportPadding = 12;
     const popoverWidth = Math.min(340, window.innerWidth - viewportPadding * 2);
     const measuredWidth = dialog.getBoundingClientRect().width || popoverWidth;
-    const width = Math.min(measuredWidth, popoverWidth);
+    const width = Math.min(measuredWidth, window.innerWidth - viewportPadding * 2);
     const preferredLeft = triggerRect.right - width + 14;
     const left = Math.max(
       viewportPadding,

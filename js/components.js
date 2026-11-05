@@ -64,7 +64,9 @@ function renderSidebar(role, activePage, logoutId) {
           <span class="brand-text">WASHUP</span>
         </a>
 
-        <nav class="dashboard-nav" aria-label="Menu utama">
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="dashboard-nav" aria-label="Buka menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg><span>Menu</span></button>
+
+        <nav class="dashboard-nav" id="dashboard-nav" aria-label="Menu utama">
           <p class="nav-label">${roleMeta.menuLabel}</p>
           ${links}
         </nav>
@@ -187,6 +189,31 @@ function mountAppShell() {
   topbar.outerHTML = renderTopbar(title, role);
   footer.outerHTML = renderFooter(footerLabel);
   document.body.insertAdjacentHTML("beforeend", renderProfileEditor());
+  setupMobileMenu();
+}
+
+// Menu hamburger untuk layar HP: membuka/menutup daftar menu di sidebar.
+function setupMobileMenu() {
+  const aside = document.querySelector(".dashboard-sidebar");
+  const toggle = document.getElementById("mobile-menu-toggle");
+  if (!aside || !toggle) return;
+
+  const setOpen = (isOpen) => {
+    aside.classList.toggle("is-menu-open", isOpen);
+    toggle.setAttribute("aria-expanded", String(isOpen));
+    toggle.setAttribute("aria-label", isOpen ? "Tutup menu" : "Buka menu");
+  };
+
+  toggle.addEventListener("click", () => setOpen(!aside.classList.contains("is-menu-open")));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && aside.classList.contains("is-menu-open")) {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+  window.matchMedia("(min-width: 769px)").addEventListener("change", (event) => {
+    if (event.matches) setOpen(false);
+  });
 }
 
 mountAppShell();

@@ -166,3 +166,51 @@
 :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) :is(#kasir-date, #admin-date, #petugas-date, #owner-date, .admin-date-chip) {
   white-space: nowrap !important; width: max-content !important;
 }
+
+/* ---------- Menu hamburger (HP) ---------- */
+.mobile-menu-toggle { display: none; }
+
+@media (max-width: 768px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar {
+    display: flex !important; flex-direction: row !important; flex-wrap: wrap !important;
+    align-items: center !important; justify-content: space-between !important;
+    gap: 10px !important; height: auto !important; min-height: 0 !important;
+    padding: 10px 16px !important; position: relative !important; top: auto !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-brand {
+    margin: 0 !important; flex: 0 1 auto !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .mobile-menu-toggle {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 36px; padding: 0 12px; border: 1px solid rgba(136, 175, 199, .45); border-radius: var(--wu-radius-sm);
+    background: rgba(255, 255, 255, .06); color: #FFFFFF;
+    font: 600 13px/1 var(--wu-font-body); cursor: pointer;
+  }
+  .mobile-menu-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar:not(.is-menu-open) :is(.dashboard-nav, .sidebar-bottom) {
+    display: none !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar.is-menu-open :is(.dashboard-nav, .sidebar-bottom) {
+    flex: 1 0 100% !important; width: 100% !important; margin: 0 !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar.is-menu-open .dashboard-nav .nav-item {
+    width: 100% !important; max-width: none !important;
+  }
+}
+
+/* Topbar HP: judul di kiri, profil di kanan dalam satu baris. */
+@media (max-width: 768px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar {
+    display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important;
+    align-items: center !important; justify-content: space-between !important; gap: 10px !important; text-align: left !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar .topbar-title-wrap {
+    min-width: 0 !important; flex: 1 1 auto !important; margin: 0 !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar h1 {
+    margin: 0 !important; text-align: left !important; overflow-wrap: anywhere;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar .user-summary {
+    flex: 0 0 auto !important; margin: 0 !important; width: auto !important;
+  }
+}
