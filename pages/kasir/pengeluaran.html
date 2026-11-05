@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Pengeluaran operasional WASHUP - Sistem Informasi Car Wash" />
+    <title>Pengeluaran | WASHUP</title>
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/kasir.css?v=20261105-profile-popover-v18" />
+    <link href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body class="dashboard-page kasir-dashboard-page kasir-expense-page">
+    <div class="dashboard-shell">
+      <aside class="dashboard-sidebar" id="kasir-sidebar" aria-label="Navigasi Kasir">
+        <a class="dashboard-brand" href="dashboard-kasir.html" aria-label="WASHUP Dashboard Kasir">
+          <img class="brand-logo-img" src="../../assets/logo-washup.png" alt="Logo mobil cuci WASHUP" />
+          <span class="brand-text">WASHUP</span>
+        </a>
+
+        <button class="sidebar-toggle desktop-sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Perkecil sidebar" aria-expanded="true" title="Perkecil sidebar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 5.3a1 1 0 0 1 0 1.4L9.4 12l5.3 5.3a1 1 0 0 1-1.4 1.4l-6-6a1 1 0 0 1 0-1.4l6-6a1 1 0 0 1 1.4 0Z" /></svg>
+        </button>
+
+        <nav class="dashboard-nav" aria-label="Menu utama">
+          <p class="nav-label">MENU KASIR</p>
+          <a class="nav-item" href="dashboard-kasir.html" aria-label="Dashboard" title="Dashboard">
+            <svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true"><path fill="currentColor" d="M33 19a1 1 0 0 1-.71-.29L18 4.41L3.71 18.71A1 1 0 0 1 2.3 17.3l15-15a1 1 0 0 1 1.41 0l15 15A1 1 0 0 1 33 19Z"/><path fill="currentColor" d="M18 7.79L6 19.79V32a2 2 0 0 0 2 2h7V22h6v12h7a2 2 0 0 0 2-2V19.79ZM28 32h-3V20H11v12H8V19.38l10-10l10 10Z"/></svg>
+            <span class="nav-text">Dashboard</span>
+          </a>
+          <a class="nav-item" href="transaksi-baru.html" aria-label="Transaksi Baru" title="Transaksi Baru">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 20v-8m0 0V4m0 8h8m-8 0H4"/></svg>
+            <span class="nav-text">Transaksi Baru</span>
+          </a>
+          <a class="nav-item" href="antrean.html" aria-label="Antrean" title="Antrean">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            <span class="nav-text">Antrean</span>
+          </a><a class="nav-item" href="pembayaran.html" aria-label="Pembayaran" title="Pembayaran">
+            <svg class="nav-icon-svg" viewBox="0 0 512 512" aria-hidden="true">
+              <path fill="currentColor" d="M0 64c0-17.7 14.3-32 32-32h80c79.5 0 144 64.5 144 144c0 58.8-35.2 109.3-85.7 131.7l51.4 128.4c6.6 16.4-1.4 35-17.8 41.6s-35-1.4-41.6-17.8l-56-139.9H64v128c0 17.7-14.3 32-32 32S0 465.7 0 448zm64 192h48c44.2 0 80-35.8 80-80s-35.8-80-80-80H64zm256-96h80c61.9 0 112 50.1 112 112s-50.1 112-112 112h-48v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V192c0-17.7 14.3-32 32-32m80 160c26.5 0 48-21.5 48-48s-21.5-48-48-48h-48v96z" />
+            </svg>
+            <span class="nav-text">Pembayaran</span>
+          </a>
+          <a class="nav-item" href="riwayat-transaksi.html" aria-label="Riwayat Transaksi" title="Riwayat Transaksi">
+            <svg class="nav-icon-svg" viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6" d="M8.09 4.5H19a2.05 2.05 0 0 1 2.05 2.05V17.2c0 1.72-1.91 2.74-3 1.65l-3.48-3.5A12.82 12.82 0 1 0 36.83 24c0-3.46-1-6.06-4.93-10c-.84-.84-.1-1.55.38-2l2.28-2.27c.94-.94 1.27-1.12 2.1-.29c4.86 4.86 6.83 8.52 6.84 14.63A19.5 19.5 0 1 1 9.86 10.63C8.69 9.44 8.32 9.06 6.35 7.09c-.77-.76-.08-2.59 1.74-2.59" />
+            </svg>
+            <span class="nav-text">Riwayat Transaksi</span>
+          </a>
+          <a class="nav-item active" href="pengeluaran.html" aria-current="page" aria-label="Pengeluaran" title="Pengeluaran">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M5 3.8h10l4 4V20H5z"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M14.5 3.8v4.5H19M8 12h8M8 15.5h8"/></svg>
+            <span class="nav-text">Pengeluaran</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <p class="sidebar-note">Area Kerja Kasir</p>
+          <button class="sidebar-logout" id="kasir-dashboard-logout" type="button" aria-label="Logout" title="Logout">
+            <svg class="logout-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H10M14 8l4 4-4 4M8 12h10"/></svg>
+            <span class="nav-text">Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <button class="sidebar-backdrop" id="sidebar-backdrop" type="button" aria-label="Tutup menu" hidden></button>
+
+      <div class="dashboard-content">
+        <header class="dashboard-topbar">
+          <button class="sidebar-toggle mobile-sidebar-toggle" id="mobile-sidebar-toggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="kasir-sidebar" title="Buka menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
+          <div class="topbar-title-wrap"><h1>Pengeluaran</h1></div>
+          <div class="user-summary profile-trigger" id="profile-edit-trigger" role="button" tabindex="0" aria-label="Edit profil pengguna" aria-haspopup="dialog" aria-controls="profile-edit-dialog" title="Edit profil">
+            <div class="user-avatar-circle" aria-hidden="true"><svg id="profile-avatar-placeholder" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>
+            <div class="user-info"><strong id="profile-display-username">Kasir</strong><small id="profile-display-role">Role: Kasir</small></div>
+          </div>
+        </header>
+
+        <main class="dashboard-main expense-main">
+          <section class="expense-page-heading" aria-labelledby="expense-page-title">
+            <div>
+              <p class="eyebrow">DATA MASTER</p>
+              <h2 id="expense-page-title">Pengeluaran</h2>
+            </div>
+            <button class="expense-add-button" id="expense-add-button" type="button">Tambahkan Data</button>
+          </section>
+
+          <section class="expense-filter-panel" aria-label="Filter periode pengeluaran">
+            <div class="expense-filter-field">
+              <label for="expense-year-filter">Filter Tahun</label>
+              <select id="expense-year-filter" aria-label="Pilih tahun pengeluaran">
+                <option value="">Memuat tahun...</option>
+              </select>
+            </div>
+            <div class="expense-filter-field">
+              <label for="expense-month-filter">Filter Bulan</label>
+              <select id="expense-month-filter" aria-label="Pilih bulan pengeluaran">
+                <option value="">Semua Bulan</option>
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+              </select>
+            </div>
+          </section>
+
+          <section class="expense-summary-grid" aria-label="Ringkasan pengeluaran">
+            <article class="expense-summary-card">
+              <span>Pengeluaran Hari Ini</span>
+              <strong id="expense-today-total">Rp 185.000,00</strong>
+            </article>
+            <article class="expense-summary-card">
+              <span id="expense-month-label">Pengeluaran Bulan Terpilih</span>
+              <strong id="expense-month-total">Rp 3.200.000,00</strong>
+            </article>
+          </section>
+
+          <section class="expense-panel" aria-labelledby="expense-list-title">
+            <header class="expense-panel-heading">
+              <p class="eyebrow">RIWAYAT PENGELUARAN</p>
+              <h2 id="expense-list-title">Pengeluaran</h2>
+            </header>
+
+            <div class="expense-table-wrap">
+              <table class="expense-table">
+                <caption class="sr-only">Daftar pengeluaran operasional WASHUP</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Tanggal</th>
+                    <th scope="col">Keterangan</th>
+                    <th scope="col">Jumlah Barang</th>
+                    <th scope="col">Nominal</th>
+                    <th scope="col">Bukti</th>
+                    <th scope="col">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="expense-table-body"></tbody>
+              </table>
+            </div>
+
+            <div class="expense-empty" id="expense-empty">
+              <span class="expense-empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" focusable="false"><path d="M5 20.5 13 9h22l8 11.5v16H5z"/><path d="M5 20.5h10l5 5h8l5-5h10"/></svg>
+              </span>
+              <h3 id="expense-empty-title">Belum ada Pengeluaran.</h3>
+              <p id="expense-empty-message">Data pengeluaran akan muncul setelah input pengeluaran dilakukan.</p>
+            </div>
+          </section>
+
+          <footer class="dashboard-footer expense-footer">
+            <div class="footer-copy"><span class="c-icon-circle">&copy;</span><span id="current-year">2026</span> WASHUP - Pengeluaran</div>
+            <span>Maju Bersama Car Wash 2 · Kota Malang</span>
+          </footer>
+        </main>
+      </div>
+    </div>
+
+    <dialog class="expense-dialog" id="expense-dialog" aria-labelledby="expense-dialog-title">
+      <form id="expense-form" class="expense-form">
+        <header class="expense-dialog-heading">
+          <div><p class="eyebrow">DATA PENGELUARAN</p><h2 id="expense-dialog-title">Tambahkan Pengeluaran</h2></div>
+          <button class="expense-dialog-close" id="expense-dialog-close" type="button" aria-label="Tutup">×</button>
+        </header>
+        <label class="expense-form-field" for="expense-date">Tanggal Pengeluaran<input id="expense-date" name="date" type="date" required /></label>
+        <label class="expense-form-field" for="expense-description">Keterangan Pengeluaran<input id="expense-description" name="description" type="text" maxlength="120" placeholder="Contoh: Pembelian sabun cuci kendaraan" required /></label>
+        <label class="expense-form-field" for="expense-quantity">Jumlah Barang<input id="expense-quantity" name="quantity" type="number" min="1" step="1" value="1" placeholder="Masukkan jumlah barang" required /></label>
+        <label class="expense-form-field" for="expense-amount">Nominal Pengeluaran<input id="expense-amount" name="amount" type="number" min="1" step="1" placeholder="Masukkan nominal" required /></label>
+        <label class="expense-form-field" for="expense-proof">Bukti Nota <span class="expense-optional">(opsional, JPG/PNG/PDF maks. 1 MB)</span><input id="expense-proof" name="proof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" /></label>
+        <small class="expense-current-proof" id="expense-current-proof" hidden></small>
+        <p class="expense-form-message" id="expense-form-message" role="status" aria-live="polite"></p>
+        <footer class="expense-dialog-actions">
+          <button class="expense-button-secondary" id="expense-cancel-button" type="button">Batal</button>
+          <button class="expense-button-primary" type="submit">Simpan Pengeluaran</button>
+        </footer>
+      </form>
+    </dialog>
+
+    
+
+    <dialog class="profile-edit-dialog" id="profile-edit-dialog" aria-labelledby="profile-edit-title">
+      <form class="profile-edit-form" id="profile-edit-form">
+        <header class="profile-edit-heading">
+          <div>
+            <p class="eyebrow">PENGATURAN AKUN</p>
+            <h2 id="profile-edit-title">Edit Profil</h2>
+            <p class="profile-edit-subtitle">Perbarui informasi akun Kasir kamu.</p>
+          </div>
+          <button class="profile-edit-close" id="profile-edit-close" type="button" aria-label="Tutup">×</button>
+        </header>
+
+        <section class="profile-photo-section profile-default-avatar-section" aria-label="Foto profil default">
+          <div class="profile-photo-preview" aria-hidden="true">
+            <svg id="profile-photo-placeholder" viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+</svg>
+          </div>
+          <div class="profile-photo-controls">
+            <span class="profile-photo-label">Foto Profil</span>
+            <small>Foto profil default WASHUP. Foto ini tidak dapat diganti.</small>
+          </div>
+        </section>
+
+        <label class="profile-form-field" for="profile-username">
+          Username
+          <input id="profile-username" name="username" type="text" maxlength="40" autocomplete="username" required placeholder="Masukkan username" />
+        </label>
+
+        <label class="profile-form-field profile-password-field-label" for="profile-current-password">
+          Password Lama
+          <span class="profile-password-control">
+            <input id="profile-current-password" name="profile-current-password" type="password" autocomplete="current-password" readonly aria-readonly="true" placeholder="••••••••" />
+            <button class="profile-password-toggle" type="button" data-password-toggle="profile-current-password" aria-label="Tampilkan password lama" aria-pressed="false">
+              <svg class="password-eye-show" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.5 12s3.4-6.2 9.5-6.2 9.5 6.2 9.5 6.2-3.4 6.2-9.5 6.2S2.5 12 2.5 12Z"/>
+                <circle cx="12" cy="12" r="2.7"/>
+              </svg>
+              <svg class="password-eye-hide" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 3 21 21M10.6 6a9.7 9.7 0 0 1 1.4-.1c6.1 0 9.5 6.1 9.5 6.1a15.4 15.4 0 0 1-3.1 3.7M6.2 6.3C3.8 7.8 2.5 12 2.5 12s3.4 6.2 9.5 6.2c1.2 0 2.3-.3 3.2-.7"/>
+                <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+              </svg>
+            </button>
+          </span>
+        </label>
+        <label class="profile-form-field profile-password-field-label" for="profile-password">
+          Password Baru
+          <span class="profile-password-control">
+            <input id="profile-password" name="profile-password" type="password" autocomplete="new-password" minlength="6" placeholder="Masukkan password baru" />
+            <button class="profile-password-toggle" type="button" data-password-toggle="profile-password" aria-label="Tampilkan password baru" aria-pressed="false">
+              <svg class="password-eye-show" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.5 12s3.4-6.2 9.5-6.2 9.5 6.2 9.5 6.2-3.4 6.2-9.5 6.2S2.5 12 2.5 12Z"/>
+                <circle cx="12" cy="12" r="2.7"/>
+              </svg>
+              <svg class="password-eye-hide" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 3 21 21M10.6 6a9.7 9.7 0 0 1 1.4-.1c6.1 0 9.5 6.1 9.5 6.1a15.4 15.4 0 0 1-3.1 3.7M6.2 6.3C3.8 7.8 2.5 12 2.5 12s3.4 6.2 9.5 6.2c1.2 0 2.3-.3 3.2-.7"/>
+                <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+              </svg>
+            </button>
+          </span>
+          <small>Kosongkan jika tidak ingin mengubah password.</small>
+        </label>
+
+        <p class="profile-form-message" id="profile-form-message" role="status" aria-live="polite"></p>
+        <footer class="profile-edit-actions">
+          <button class="profile-button-secondary" id="profile-edit-cancel" type="button">Batal</button>
+          <button class="profile-button-primary" id="profile-edit-save" type="submit">Simpan Perubahan</button>
+        </footer>
+      </form>
+    </dialog>
+<script src="../../js/app.js?v=20261105-profile-popover-v18"></script>
+  </body>
+</html>

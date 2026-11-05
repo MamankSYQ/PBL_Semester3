@@ -6,111 +6,310 @@
     <meta name="description" content="Pembayaran WASHUP" />
     <title>Pembayaran | WASHUP</title>
     <link rel="stylesheet" href="../../css/style.css" />
-    <link rel="stylesheet" href="../../css/kasir.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&family=Roboto:wght@500&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
+    <link rel="stylesheet" href="../../css/kasir.css?v=20261105-profile-popover-v18" />
+    <link href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   </head>
-  <body class="payment-page kasir-page">
+  <body class="dashboard-page kasir-dashboard-page payment-page kasir-payment-page">
     <div class="dashboard-shell">
-      <aside class="dashboard-sidebar" aria-label="Navigasi Kasir">
+      <aside class="dashboard-sidebar" id="kasir-sidebar" aria-label="Navigasi Kasir">
         <a class="dashboard-brand" href="dashboard-kasir.html" aria-label="WASHUP Dashboard Kasir">
           <img class="brand-logo-img" src="../../assets/logo-washup.png" alt="Logo mobil cuci WASHUP" />
           <span class="brand-text">WASHUP</span>
         </a>
+
+        <button class="sidebar-toggle desktop-sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Perkecil sidebar" aria-expanded="true" title="Perkecil sidebar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 5.3a1 1 0 0 1 0 1.4L9.4 12l5.3 5.3a1 1 0 0 1-1.4 1.4l-6-6a1 1 0 0 1 0-1.4l6-6a1 1 0 0 1 1.4 0Z"/></svg>
+        </button>
+
         <nav class="dashboard-nav" aria-label="Menu utama">
           <p class="nav-label">MENU KASIR</p>
-          <a class="nav-item" href="dashboard-kasir.html" title="Dashboard" aria-label="Dashboard">
+          <a class="nav-item" href="dashboard-kasir.html" aria-label="Dashboard" title="Dashboard">
             <svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true">
               <path fill="currentColor" d="M33 19a1 1 0 0 1-.71-.29L18 4.41L3.71 18.71A1 1 0 0 1 2.3 17.3l15-15a1 1 0 0 1 1.41 0l15 15A1 1 0 0 1 33 19Z" />
               <path fill="currentColor" d="M18 7.79L6 19.79V32a2 2 0 0 0 2 2h7V22h6v12h7a2 2 0 0 0 2-2V19.79ZM28 32h-3V20H11v12H8V19.38l10-10l10 10Z" />
             </svg>
             <span class="nav-text">Dashboard</span>
           </a>
-          <a class="nav-item" href="transaksi-baru.html" title="Transaksi Baru" aria-label="Transaksi Baru">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+          <a class="nav-item" href="transaksi-baru.html" aria-label="Transaksi Baru" title="Transaksi Baru">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 20v-8m0 0V4m0 8h8m-8 0H4" />
+            </svg>
             <span class="nav-text">Transaksi Baru</span>
           </a>
-          <a class="nav-item" href="antrean.html" title="Antrean" aria-label="Antrean">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+          <a class="nav-item" href="antrean.html" aria-label="Antrean" title="Antrean">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
             <span class="nav-text">Antrean</span>
           </a>
-          <a class="nav-item active" href="pembayaran.html" title="Pembayaran" aria-label="Pembayaran" aria-current="page">
-            <span class="nav-icon-rp" aria-hidden="true">Rp</span>
+          <a class="nav-item active" href="pembayaran.html" aria-current="page" aria-label="Pembayaran" title="Pembayaran">
+            <svg class="nav-icon-svg" viewBox="0 0 512 512" aria-hidden="true">
+              <path fill="currentColor" d="M0 64c0-17.7 14.3-32 32-32h80c79.5 0 144 64.5 144 144c0 58.8-35.2 109.3-85.7 131.7l51.4 128.4c6.6 16.4-1.4 35-17.8 41.6s-35-1.4-41.6-17.8l-56-139.9H64v128c0 17.7-14.3 32-32 32S0 465.7 0 448zm64 192h48c44.2 0 80-35.8 80-80s-35.8-80-80-80H64zm256-96h80c61.9 0 112 50.1 112 112s-50.1 112-112 112h-48v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V192c0-17.7 14.3-32 32-32m80 160c26.5 0 48-21.5 48-48s-21.5-48-48-48h-48v96z" />
+            </svg>
             <span class="nav-text">Pembayaran</span>
           </a>
-          <a class="nav-item" href="riwayat-transaksi.html" title="Riwayat Transaksi" aria-label="Riwayat Transaksi">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.64-6.36L3 8m0-5v5h5m4-1v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          <a class="nav-item" href="riwayat-transaksi.html" aria-label="Riwayat Transaksi" title="Riwayat Transaksi">
+            <svg class="nav-icon-svg" viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6" d="M8.09 4.5H19a2.05 2.05 0 0 1 2.05 2.05V17.2c0 1.72-1.91 2.74-3 1.65l-3.48-3.5A12.82 12.82 0 1 0 36.83 24c0-3.46-1-6.06-4.93-10c-.84-.84-.1-1.55.38-2l2.28-2.27c.94-.94 1.27-1.12 2.1-.29c4.86 4.86 6.83 8.52 6.84 14.63A19.5 19.5 0 1 1 9.86 10.63C8.69 9.44 8.32 9.06 6.35 7.09c-.77-.76-.08-2.59 1.74-2.59" />
+            </svg>
             <span class="nav-text">Riwayat Transaksi</span>
           </a>
+          <a class="nav-item" href="pengeluaran.html" aria-label="Pengeluaran" title="Pengeluaran">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M5 3.8h10l4 4V20H5z" />
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M14.5 3.8v4.5H19M8 12h8M8 15.5h8" />
+            </svg>
+            <span class="nav-text">Pengeluaran</span>
+          </a>
         </nav>
+
         <div class="sidebar-bottom">
           <p class="sidebar-note">Area Kerja Kasir</p>
-          <button class="sidebar-logout" id="payment-logout" type="button">
-            <svg class="logout-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M10 17l5-5-5-5M15 12H3" />
-              <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" />
-            </svg>
-            <span class="logout-text">Logout</span>
+          <button class="sidebar-logout" id="payment-logout" type="button" aria-label="Logout" title="Logout">
+            <svg class="logout-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H10M14 8l4 4-4 4M8 12h10"/></svg>
+            <span class="nav-text">Logout</span>
           </button>
         </div>
       </aside>
-      <button class="sidebar-collapse-toggle" id="sidebar-collapse-toggle" type="button" aria-expanded="true" aria-label="Ciutkan menu samping" title="Ciutkan menu samping">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7" /></svg>
-      </button>
+      <button class="sidebar-backdrop" id="sidebar-backdrop" type="button" aria-label="Tutup menu" hidden></button>
       <div class="dashboard-content">
         <header class="dashboard-topbar">
-          <div class="topbar-title-wrap"><h1>Pembayaran</h1></div>
-          <div class="user-summary" aria-label="Informasi pengguna">
+          <button class="sidebar-toggle mobile-sidebar-toggle" id="mobile-sidebar-toggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="kasir-sidebar" title="Buka menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
+          <div class="topbar-title-wrap">
+            <h1>Pembayaran</h1>
+          </div>
+          <div class="user-summary profile-trigger" id="profile-edit-trigger" role="button" tabindex="0" aria-label="Edit profil pengguna" aria-haspopup="dialog" aria-controls="profile-edit-dialog" title="Edit profil">
             <div class="user-avatar-circle" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" /></svg>
+              <svg id="profile-avatar-placeholder" viewBox="0 0 24 24">
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+              </svg>
             </div>
-            <div class="user-info"><strong>Kasir</strong><small>Role: Kasir</small></div>
+            <div class="user-info">
+              <strong id="profile-display-username">Kasir</strong>
+              <small id="profile-display-role">Role: Kasir</small>
+            </div>
           </div>
         </header>
-        <main class="dashboard-main queue-main payment-main">
-          <section class="queue-heading"><div><p class="eyebrow">PEMBAYARAN TRANSAKSI</p><h2>Daftar Pembayaran</h2></div></section>
-          <section class="queue-panel payment-panel" aria-labelledby="payment-panel-title">
-            <div class="section-heading"><div><p class="eyebrow">VERIFIKASI PEMBAYARAN</p><h2 id="payment-panel-title">Konfirmasi Pembayaran</h2></div><span class="badge badge-blue" id="payment-result-count">0 data</span></div>
-            <div class="payment-summary-grid" aria-label="Ringkasan pembayaran">
-              <article class="payment-summary-card"><span>Belum dibayar</span><strong id="payment-unpaid-count">0</strong><small>Transaksi menunggu pembayaran</small></article>
-              <article class="payment-summary-card"><span>Perlu konfirmasi</span><strong id="payment-ready-count">0</strong><small>Pembayaran menunggu verifikasi</small></article>
-              <article class="payment-summary-card"><span>Total tagihan tertunda</span><strong id="payment-pending-total">Rp 0</strong><small id="payment-pending-count">0 tagihan belum dikonfirmasi</small></article>
+
+        <main class="dashboard-main payment-main">
+          <section class="payment-heading" aria-labelledby="payment-page-title">
+            <p class="eyebrow">PEMBAYARAN TRANSAKSI</p>
+            <h2 id="payment-page-title">Daftar Pembayaran</h2>
+          </section>
+
+          <section class="payment-panel" aria-labelledby="payment-panel-title">
+            <header class="payment-panel-heading">
+              <p class="eyebrow">VERIFIKASI PEMBAYARAN</p>
+              <h2 id="payment-panel-title">Konfirmasi Pembayaran</h2>
+            </header>
+
+            <div class="payment-stat-grid" aria-label="Ringkasan pembayaran">
+              <article class="payment-stat-card">
+                <span>Belum dibayar</span>
+                <strong id="payment-unpaid-count">0</strong>
+                <small>Transaksi menunggu pembayaran</small>
+              </article>
+              <article class="payment-stat-card">
+                <span>Perlu konfirmasi</span>
+                <strong id="payment-ready-count">0</strong>
+                <small>Pembayaran menunggu verifikasi</small>
+              </article>
+              <article class="payment-stat-card payment-stat-card-total">
+                <span>Total tagihan tertunda</span>
+                <strong id="payment-pending-total">Rp 0</strong>
+                <small id="payment-pending-description">0 tagihan belum dikonfirmasi</small>
+              </article>
             </div>
+
             <div class="payment-workspace">
-              <div class="payment-list-column">
-                <div class="queue-table-wrap payment-table-wrap">
-                  <table class="queue-full-table payment-table">
-                    <caption class="sr-only">Daftar transaksi pembayaran</caption>
-                    <thead><tr><th>No. Transaksi</th><th>Pelanggan &amp; Plat</th><th>Total Tagihan</th><th>Status Pembayaran</th><th>Aksi</th></tr></thead>
+              <section class="payment-list-column" aria-label="Daftar transaksi pembayaran">
+                <div class="payment-table-wrap">
+                  <table class="payment-full-table payment-compact-table">
+                    <caption class="sr-only">Daftar transaksi yang dapat diperiksa pembayarannya</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">No. Transaksi</th>
+                        <th scope="col">Pelanggan &amp; Plat</th>
+                        <th scope="col">Total Tagihan</th>
+                        <th scope="col">Status Pembayaran</th>
+                        <th scope="col">Aksi</th>
+                      </tr>
+                    </thead>
                     <tbody id="payment-table-body"></tbody>
                   </table>
                 </div>
-                <div class="queue-empty" id="payment-empty" hidden><h3>Belum ada tagihan.</h3></div>
-              </div>
-              <section class="payment-inspection" id="payment-dialog" aria-labelledby="payment-dialog-title" hidden>
-                <div class="payment-inspection-heading"><div><h3 id="payment-dialog-title">Pemeriksaan pembayaran</h3><p id="payment-inspection-identity"></p></div><span class="payment-method-badge" id="payment-method-badge">Tunai</span></div>
-                <div class="payment-bill-summary"><h4>Ringkasan tagihan</h4><div><span>Subtotal</span><strong id="payment-detail-subtotal">-</strong></div><div><span>Diskon</span><strong id="payment-detail-discount">− Rp 0</strong></div><div class="payment-bill-total"><span>Total tagihan</span><strong id="payment-detail-total">-</strong></div></div>
-                <div class="payment-method-field"><label for="payment-method">Metode pembayaran</label><select id="payment-method"><option value="Tunai">Tunai</option><option value="QRIS">QRIS</option></select></div>
-                <div class="payment-cash-field" id="payment-cash-field"><label for="payment-amount">Nominal diterima</label><input id="payment-amount" type="number" min="0" step="1" inputmode="numeric" placeholder="Masukkan nominal diterima" /><div class="payment-change-row"><span>Kembalian</span><strong id="payment-change">Rp 0</strong></div><p id="payment-cash-instruction">Hitung uang yang diterima dan serahkan kembalian Rp 0 sebelum konfirmasi lunas.</p></div>
-                <p class="payment-qris-instruction" id="payment-qris-instruction" hidden>Pastikan pembayaran QRIS sudah masuk sebelum konfirmasi lunas.</p>
-                <p class="payment-service-warning" id="payment-service-warning" hidden>Kendaraan belum selesai dicuci.</p>
-                <div class="payment-inspection-actions"><button class="payment-secondary-button" id="payment-dialog-close" type="button">Belum Sesuai</button><button class="payment-confirm-button" id="confirm-payment" type="button">Konfirmasi Lunas</button></div>
-                <p class="dialog-notice" id="payment-dialog-notice" role="status" aria-live="polite"></p>
-                <span class="sr-only" id="payment-detail-transaction"></span><span class="sr-only" id="payment-detail-customer"></span><span class="sr-only" id="payment-detail-plate"></span><span class="sr-only" id="payment-detail-vehicle"></span><span class="sr-only" id="payment-detail-service"></span>
+                <div class="payment-empty" id="payment-empty" hidden>
+                  <span class="payment-empty-symbol" aria-hidden="true">₱</span>
+                  <h3>Belum ada transaksi.</h3>
+                  <p>Transaksi dari Kasir akan muncul setelah dibuat.</p>
+                </div>
+                <div class="payment-list-footer">
+                  <span id="payment-result-count">0 transaksi</span>
+                  <label class="payment-show-entries" for="payment-page-size">
+                    <span>Show</span>
+                    <select id="payment-page-size" aria-label="Jumlah transaksi per halaman">
+                      <option value="4" selected>4</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="20">20</option>
+                    </select>
+                    <span>entries</span>
+                  </label>
+                </div>
+                <div class="payment-table-footer" id="payment-table-footer" hidden>
+                  <p class="payment-pagination-range" id="payment-pagination-range" aria-live="polite">Showing 0 to 0 of 0 entries</p>
+                  <nav class="payment-pagination" aria-label="Navigasi halaman pembayaran">
+                    <div class="payment-page-controls">
+                      <button type="button" class="payment-page-arrow" id="payment-page-prev" disabled>Previous</button>
+                      <div class="payment-page-numbers" id="payment-page-numbers"></div>
+                      <button type="button" class="payment-page-arrow" id="payment-page-next" disabled>Next</button>
+                    </div>
+                  </nav>
+                </div>
               </section>
+
+              <aside class="payment-check-panel" aria-labelledby="payment-check-title">
+                <div class="payment-check-heading">
+                  <div>
+                    <h3 id="payment-check-title">Pemeriksaan pembayaran</h3>
+                    <p id="payment-selected-meta">Pilih transaksi dari daftar untuk memeriksa tagihan.</p>
+                  </div>
+                  <span class="payment-method-pill" id="payment-method-pill">Tunai</span>
+                </div>
+
+                <div class="payment-check-section">
+                  <h4>Ringkasan tagihan</h4>
+                  <div class="payment-breakdown">
+                    <div><span>Subtotal</span><strong id="payment-subtotal">Rp 0</strong></div>
+                    <div><span>Diskon</span><strong id="payment-discount">− Rp 0</strong></div>
+                    <div class="payment-breakdown-total"><span>Total tagihan</span><strong id="payment-detail-total">Rp 0</strong></div>
+                  </div>
+                </div>
+
+                <div class="payment-check-section payment-method-section">
+                  <div class="payment-section-title-row">
+                    <h4 id="payment-method-section-title">Pembayaran tunai</h4>
+                    <label class="payment-method-picker" for="payment-method">
+                      <span class="sr-only">Metode pembayaran</span>
+                      <select id="payment-method" aria-label="Metode pembayaran">
+                        <option value="Tunai">Tunai</option>
+                        <option value="QRIS">QRIS</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div class="payment-method-breakdown" id="payment-cash-fields">
+                    <div><span>Nominal diterima</span><label class="payment-amount-input" for="payment-cash-received"><span class="sr-only">Nominal uang diterima</span><input type="number" id="payment-cash-received" min="0" step="1000" inputmode="numeric" placeholder="Rp 0" /></label></div>
+                    <div><span>Kembalian</span><strong id="payment-change">Rp 0</strong></div>
+                  </div>
+                  <div class="payment-qris-fields" id="payment-qris-fields" hidden>
+                    <p>Periksa pembayaran melalui aplikasi merchant sebelum mengonfirmasi.</p>
+                    <label class="payment-qris-check"><input type="checkbox" id="payment-qris-verified" /><span>Saya memastikan pembayaran QRIS telah diterima.</span></label>
+                  </div>
+                </div>
+
+                <p class="payment-check-notice" id="payment-dialog-notice" role="status" aria-live="polite">Pilih transaksi yang sudah selesai dicuci untuk mengonfirmasi pembayaran.</p>
+                <div class="payment-check-actions">
+                  <button class="payment-button-primary" id="confirm-payment" type="button" disabled>Konfirmasi Lunas</button>
+                </div>
+              </aside>
             </div>
             <p class="payment-notice" id="payment-notice" role="status" aria-live="polite"></p>
           </section>
         </main>
-        <footer class="dashboard-footer">
-          <span class="footer-copy"><span class="c-icon-circle">&copy;</span><span id="current-year"></span> WASHUP - Pembayaran</span>
-          <span class="footer-location">Maju Bersama Car Wash 2 · Kota Malang</span>
-        </footer>
+        <footer class="dashboard-footer payment-footer"><div class="footer-copy"><span class="c-icon-circle">&copy;</span><span id="current-year"></span> WASHUP - Pembayaran</div><span>Maju Bersama Car Wash 2 · Kota Malang</span></footer>
       </div>
     </div>
-    <script src="../../js/app.js"></script>
+
+
+    <div class="payment-receipt-overlay" id="payment-receipt-overlay" hidden aria-hidden="true">
+      <div class="payment-receipt-dialog" role="dialog" aria-modal="true" aria-labelledby="payment-receipt-title">
+        <div class="payment-receipt-actions"><span class="payment-receipt-success"><span aria-hidden="true">✓</span> Pembayaran berhasil dikonfirmasi</span><button type="button" class="payment-receipt-close" id="payment-receipt-close" aria-label="Tutup struk">×</button></div>
+        <article class="payment-receipt-paper" id="payment-receipt-paper">
+          <header class="payment-receipt-brand" id="payment-receipt-title"><strong>WASHUP</strong><p>Maju Bersama Car Wash 2 · Kota Malang</p><span>STRUK PEMBAYARAN</span></header>
+          <div class="payment-receipt-status"><span>Status Pembayaran</span><strong>LUNAS</strong></div>
+          <div class="payment-receipt-lines"><div><span>No. Transaksi</span><strong id="receipt-transaction-number">-</strong></div><div><span>Tanggal Transaksi</span><strong id="receipt-transaction-date">-</strong></div><div><span>Tanggal Pembayaran</span><strong id="receipt-paid-date">-</strong></div><div><span>Pelanggan</span><strong id="receipt-customer">-</strong></div><div><span>No. Telepon</span><strong id="receipt-phone">-</strong></div><div><span>No. Plat</span><strong id="receipt-plate">-</strong></div><div><span>Kendaraan</span><strong id="receipt-vehicle">-</strong></div><div><span>No. Antrean</span><strong id="receipt-queue-number">-</strong></div></div>
+          <div class="payment-receipt-service"><span>Layanan Pencucian</span><strong id="receipt-service">-</strong><small>1 × <span id="receipt-service-price">Rp 0</span></small></div>
+          <div class="payment-receipt-lines payment-receipt-money"><div><span>Subtotal</span><strong id="receipt-subtotal">Rp 0</strong></div><div><span>Diskon</span><strong id="receipt-discount">− Rp 0</strong></div></div>
+          <div class="payment-receipt-grand-total"><span>Total Dibayar</span><strong id="receipt-total">Rp 0</strong></div>
+          <div class="payment-receipt-lines payment-receipt-money"><div><span>Metode Pembayaran</span><strong id="receipt-method">-</strong></div><div><span>Nominal Diterima</span><strong id="receipt-received">Rp 0</strong></div><div><span>Kembalian</span><strong id="receipt-change">Rp 0</strong></div></div>
+          <p class="payment-receipt-thanks">Terima kasih telah memilih WASHUP.<br />Simpan struk ini sebagai bukti pembayaran.</p>
+        </article>
+        <div class="payment-receipt-dialog-actions"><button type="button" class="payment-button-secondary" id="payment-receipt-done">Selesai</button><button type="button" class="payment-button-primary" id="payment-receipt-print">Cetak struk</button></div>
+      </div>
+    </div>
+    
+
+    <dialog class="profile-edit-dialog" id="profile-edit-dialog" aria-labelledby="profile-edit-title">
+      <form class="profile-edit-form" id="profile-edit-form">
+        <header class="profile-edit-heading">
+          <div>
+            <p class="eyebrow">PENGATURAN AKUN</p>
+            <h2 id="profile-edit-title">Edit Profil</h2>
+            <p class="profile-edit-subtitle">Perbarui informasi akun Kasir kamu.</p>
+          </div>
+          <button class="profile-edit-close" id="profile-edit-close" type="button" aria-label="Tutup">×</button>
+        </header>
+
+        <section class="profile-photo-section profile-default-avatar-section" aria-label="Foto profil default">
+          <div class="profile-photo-preview" aria-hidden="true">
+            <svg id="profile-photo-placeholder" viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+</svg>
+          </div>
+          <div class="profile-photo-controls">
+            <span class="profile-photo-label">Foto Profil</span>
+            <small>Foto profil default WASHUP. Foto ini tidak dapat diganti.</small>
+          </div>
+        </section>
+
+        <label class="profile-form-field" for="profile-username">
+          Username
+          <input id="profile-username" name="username" type="text" maxlength="40" autocomplete="username" required placeholder="Masukkan username" />
+        </label>
+
+        <label class="profile-form-field profile-password-field-label" for="profile-current-password">
+          Password Lama
+          <span class="profile-password-control">
+            <input id="profile-current-password" name="profile-current-password" type="password" autocomplete="current-password" readonly aria-readonly="true" placeholder="••••••••" />
+            <button class="profile-password-toggle" type="button" data-password-toggle="profile-current-password" aria-label="Tampilkan password lama" aria-pressed="false">
+              <svg class="password-eye-show" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.5 12s3.4-6.2 9.5-6.2 9.5 6.2 9.5 6.2-3.4 6.2-9.5 6.2S2.5 12 2.5 12Z"/>
+                <circle cx="12" cy="12" r="2.7"/>
+              </svg>
+              <svg class="password-eye-hide" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 3 21 21M10.6 6a9.7 9.7 0 0 1 1.4-.1c6.1 0 9.5 6.1 9.5 6.1a15.4 15.4 0 0 1-3.1 3.7M6.2 6.3C3.8 7.8 2.5 12 2.5 12s3.4 6.2 9.5 6.2c1.2 0 2.3-.3 3.2-.7"/>
+                <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+              </svg>
+            </button>
+          </span>
+        </label>
+        <label class="profile-form-field profile-password-field-label" for="profile-password">
+          Password Baru
+          <span class="profile-password-control">
+            <input id="profile-password" name="profile-password" type="password" autocomplete="new-password" minlength="6" placeholder="Masukkan password baru" />
+            <button class="profile-password-toggle" type="button" data-password-toggle="profile-password" aria-label="Tampilkan password baru" aria-pressed="false">
+              <svg class="password-eye-show" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.5 12s3.4-6.2 9.5-6.2 9.5 6.2 9.5 6.2-3.4 6.2-9.5 6.2S2.5 12 2.5 12Z"/>
+                <circle cx="12" cy="12" r="2.7"/>
+              </svg>
+              <svg class="password-eye-hide" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 3 21 21M10.6 6a9.7 9.7 0 0 1 1.4-.1c6.1 0 9.5 6.1 9.5 6.1a15.4 15.4 0 0 1-3.1 3.7M6.2 6.3C3.8 7.8 2.5 12 2.5 12s3.4 6.2 9.5 6.2c1.2 0 2.3-.3 3.2-.7"/>
+                <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+              </svg>
+            </button>
+          </span>
+          <small>Kosongkan jika tidak ingin mengubah password.</small>
+        </label>
+
+        <p class="profile-form-message" id="profile-form-message" role="status" aria-live="polite"></p>
+        <footer class="profile-edit-actions">
+          <button class="profile-button-secondary" id="profile-edit-cancel" type="button">Batal</button>
+          <button class="profile-button-primary" id="profile-edit-save" type="submit">Simpan Perubahan</button>
+        </footer>
+      </form>
+    </dialog>
+<script src="../../js/app.js?v=20261105-profile-popover-v18"></script>
   </body>
 </html>
