@@ -683,6 +683,7 @@
 
 .profile-edit-dialog {
   position: fixed !important;
+  z-index: 1000 !important; /* di atas topbar sticky (40) dan isi halaman Kasir */
   inset: auto !important;
   top: var(--profile-popover-top, 88px) !important;
   left: var(--profile-popover-left, 12px) !important;
