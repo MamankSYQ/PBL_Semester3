@@ -253,8 +253,11 @@ function isValidServiceStatusTransition(currentStatus, nextStatus) {
   return currentIndex >= 0 && nextIndex >= currentIndex && nextIndex <= currentIndex + 1;
 }
 
+// Satu format Rupiah untuk seluruh aplikasi, contoh: Rp 30.000 dan -Rp 20.000.
 function formatCurrency(value) {
-  return `Rp ${Number(value).toLocaleString("id-ID")}`;
+  const amount = Number(value) || 0;
+  const sign = amount < 0 ? "-" : "";
+  return `${sign}Rp ${Math.abs(amount).toLocaleString("id-ID")}`;
 }
 
 function formatDateKey(date) {
@@ -3810,9 +3813,7 @@ setupMasterPage();
   const printButton = document.querySelector("#print-receipt-button");
   const noPrintButton = document.querySelector("#no-print-receipt-button");
 
-  function currency(value) {
-    return `Rp ${Number(value || 0).toLocaleString("id-ID")}`;
-  }
+  const currency = formatCurrency;
 
   function safeTransactions() {
     try {
@@ -4119,7 +4120,7 @@ setupMasterPage();
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   };
-  const money = (value) => `Rp ${Number(value || 0).toLocaleString("id-ID")},00`;
+  const money = formatCurrency;
   const quantityLabel = (value) => {
     if (value === undefined || value === null || value === "") return "—";
     const parsed = Number(value);

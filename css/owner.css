@@ -12,13 +12,13 @@
   flex: initial !important;
 }
 
-/* Ikon Kotak Biru Muda: width 34px, height 31px, radius 5px, background #E0EFF7, icon #0D6BA4 */
+/* Ikon Kotak Biru Muda: width 34px, height 31px, radius 5px, background var(--wu-background), icon #0D6BA4 */
 
 /* Subtitle/Trend Kecil di Atas: 10px, 700, color #88AFC7 */
 
 /* Nama Statistik: 12px, 600, color #88AFC7 */
 
-/* Angka Besar: 24px, 700, line-height 33px, color #4E93AB */
+/* Angka Besar: 24px, 700, line-height 33px, color var(--wu-accent) */
 
 /* =========================================================
    E. PANEL TRANSAKSI TERBARU (Frame 31: width 936px, height 425px)
@@ -27,7 +27,7 @@
 
 /* Eyebrow Tabel: MONITORING TRANSAKSI 15px, 400, color #238EB6 */
 
-/* Title Tabel: Transaksi Terbaru 24px, 700, color #1D4A5A */
+/* Title Tabel: Transaksi Terbaru 24px, 700, color var(--wu-text) */
 
 /* Counter Badge JS */
 
@@ -41,10 +41,10 @@
 
 /* Badge Status */
 
-/* Empty State: box 75x70px, icon 47x47 #0D6BA4, h3 24px #1D4A5A, p 16px #88AFC7 */
+/* Empty State: box 75x70px, icon 47x47 #0D6BA4, h3 24px var(--wu-text), p 16px #88AFC7 */
 
 /* =========================================================
-   F. FOOTER (Frame 11: width 932px, border-top 1px solid #4E93AB, color #4E93AB)
+   F. FOOTER (Frame 11: width 932px, border-top 1px solid var(--wu-accent), color var(--wu-accent))
    ========================================================= */
 
 /* =========================================================
@@ -270,7 +270,7 @@
 }
 
 .owner-payment-method-grid strong {
-  color: #1D4A5A;
+  color: var(--wu-text);
   font-size: 15px;
   font-weight: 600;
 }
@@ -573,7 +573,7 @@
 .owner-stats-filter label {
   display: block;
   margin-bottom: 4px;
-  color: #1D4A5A;
+  color: var(--wu-text);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -752,7 +752,7 @@
   width: 100%;
   padding: 5px 2px 0;
   overflow: hidden;
-  color: #1D4A5A;
+  color: var(--wu-text);
   font-size: 10px;
   line-height: 1.25;
   text-align: center;
@@ -983,5 +983,21 @@
 
   .owner-chart-plot {
     margin-left: 0;
+  }
+}
+
+/* HP kecil: angka saldo dan nama layanan terlaris tidak meluap dari kartunya. */
+@media (max-width: 420px) {
+  .owner-finance-page .summary-card strong {
+    font-size: 18px !important;
+    white-space: nowrap;
+  }
+  .owner-service-stats-page .summary-card:has(#owner-stats-top) {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  .owner-service-stats-page #owner-stats-top {
+    font-size: 15px !important;
+    line-height: 1.3 !important;
   }
 }

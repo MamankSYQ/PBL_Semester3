@@ -28,7 +28,7 @@
               <p class="eyebrow">PELAYANAN BERJALAN</p>
               <h2 id="queue-page-title">Antrean Kendaraan</h2>
             </div>
-            <div class="queue-active-card" aria-label="Jumlah antrean aktif">
+            <div class="queue-active-card" role="group" aria-label="Jumlah antrean aktif">
               <span>Antrean Aktif</span>
               <strong id="active-queue-count">0 kendaraan</strong>
             </div>
@@ -110,10 +110,10 @@
     </div>
 
     <dialog class="queue-detail-dialog" id="queue-dialog" aria-labelledby="queue-dialog-title">
-      <header class="queue-dialog-heading">
+      <div class="queue-dialog-heading">
         <div><p class="eyebrow">DETAIL TRANSAKSI</p><h2 id="queue-dialog-title">Detail Antrean</h2></div>
         <button class="queue-dialog-close" id="dialog-close" type="button" aria-label="Tutup detail">×</button>
-      </header>
+      </div>
       <dl class="queue-detail-grid">
         <div><dt>Nomor Antrean</dt><dd id="detail-queue">-</dd></div>
         <div><dt>Nomor Transaksi</dt><dd id="detail-transaction">-</dd></div>
@@ -135,17 +135,17 @@
         </select>
       </div>
       <p class="queue-dialog-notice" id="dialog-notice" role="status" aria-live="polite"></p>
-      <footer class="queue-dialog-actions">
+      <div class="queue-dialog-actions">
         <button type="button" class="queue-dialog-secondary" id="dialog-cancel">Tutup</button>
         <button type="button" class="queue-dialog-primary" id="update-status">Simpan Status</button>
-      </footer>
+      </div>
     </dialog>
 
     <dialog class="queue-detail-dialog queue-edit-dialog" id="queue-edit-dialog" aria-labelledby="queue-edit-title">
-      <header class="queue-dialog-heading">
+      <div class="queue-dialog-heading">
         <div><p class="eyebrow">EDIT TRANSAKSI</p><h2 id="queue-edit-title">Edit Data Antrean</h2></div>
         <button class="queue-dialog-close" id="queue-edit-close" type="button" aria-label="Tutup edit">×</button>
-      </header>
+      </div>
       <div class="queue-edit-grid">
         <div class="queue-edit-field"><label for="edit-customer">Nama Pelanggan</label><input id="edit-customer" type="text" autocomplete="name" required /></div>
         <div class="queue-edit-field"><label for="edit-phone">Nomor Telepon</label><input id="edit-phone" type="tel" autocomplete="tel" required /></div>
@@ -155,10 +155,10 @@
         <div class="queue-edit-field"><label>Harga Layanan</label><output id="edit-price">Rp 0</output></div>
       </div>
       <p class="queue-dialog-notice" id="queue-edit-notice" role="status" aria-live="polite"></p>
-      <footer class="queue-dialog-actions">
+      <div class="queue-dialog-actions">
         <button type="button" class="queue-dialog-secondary" id="queue-edit-cancel">Batal</button>
         <button type="button" class="queue-dialog-primary" id="queue-edit-save">Simpan Perubahan</button>
-      </footer>
+      </div>
     </dialog>
 <script src="../../js/components.js"></script>
     <script src="../../js/app.js"></script>

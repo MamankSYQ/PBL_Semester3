@@ -9,7 +9,7 @@ body.kasir-dashboard-page {
   min-height: 100vh;
   font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #0C2B38;
-  background-color: #E0EFF7;
+  background-color: var(--wu-background);
   overflow-x: hidden;
 }
 .kasir-dashboard-page .user-avatar-circle svg {
@@ -56,7 +56,7 @@ body.kasir-dashboard-page {
   margin: 0 !important;
   font-size: 1.55rem !important;
   font-weight: 700 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   line-height: 1.3 !important;
   letter-spacing: 0.3px !important;
 }
@@ -113,7 +113,7 @@ body.kasir-dashboard-page {
   width: 36px !important;
   height: 36px !important;
   border-radius: 8px !important;
-  background-color: #E0EFF7 !important;
+  background-color: var(--wu-background) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -124,12 +124,6 @@ body.kasir-dashboard-page {
   width: 20px !important;
   height: 20px !important;
   display: block;
-}
-.kasir-dashboard-page .summary-icon-box .rp-icon-text {
-  font-size: 1.15rem !important;
-  font-weight: 800 !important;
-  line-height: 1 !important;
-  color: #0D6BA4 !important;
 }
 .kasir-dashboard-page .summary-trend {
   font-size: 0.72rem !important;
@@ -177,7 +171,7 @@ body.kasir-dashboard-page {
   margin: 4px 0 0 0 !important;
   font-size: 1.45rem !important;
   font-weight: 700 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   letter-spacing: 0.2px !important;
 }
 .kasir-dashboard-page #queue-badge[hidden], .kasir-dashboard-page .hide-visual {
@@ -202,7 +196,7 @@ body.kasir-dashboard-page {
   font-size: 0.74rem !important;
   font-weight: 700 !important;
   letter-spacing: 1px !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   text-transform: uppercase !important;
   text-align: left !important;
   border: none !important;
@@ -218,7 +212,7 @@ body.kasir-dashboard-page {
 .kasir-dashboard-page .queue-table td {
   padding: 14px 16px !important;
   font-size: 0.84rem !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   border-bottom: 1px solid #EDF3F7 !important;
 }
 .kasir-dashboard-page .status-badge {
@@ -308,17 +302,6 @@ body.kasir-dashboard-page {
         max-width: 100%;
         overflow-x: auto;
       }
-.kasir-dashboard-page .desktop-sidebar-toggle svg {
-        width: 15px; height: 15px; fill: currentColor;
-        transition: transform .22s ease;
-      }
-.kasir-dashboard-page .mobile-sidebar-toggle svg {
-        width: 20px; height: 20px; fill: none; stroke: currentColor;
-        stroke-linecap: round; stroke-width: 2;
-      }
-.kasir-dashboard-page .dashboard-shell.sidebar-collapsed .desktop-sidebar-toggle svg {
-        transform: rotate(180deg);
-      }
 .kasir-dashboard-page .queue-table tbody tr[hidden] { display: none !important; }
 .kasir-dashboard-page .queue-empty-row td {
         padding: 25px 16px 30px !important;
@@ -383,11 +366,6 @@ body.kasir-dashboard-page {
         margin-top: 16px;
         flex-wrap: wrap;
       }
-.kasir-dashboard-page .queue-pagination-info {
-        margin: 0;
-        color: #7697a7;
-        font-size: .8rem;
-      }
 .kasir-dashboard-page .queue-pagination {
         display: flex;
         align-items: center;
@@ -402,17 +380,17 @@ body.kasir-dashboard-page {
         border: 1px solid #c5dfe9;
         border-radius: 8px;
         background: #fff;
-        color: #1d4a5a;
+        color: var(--wu-text);
         font: inherit;
         font-size: .8rem;
         cursor: pointer;
         transition: background .18s ease, color .18s ease, border-color .18s ease;
       }
 .kasir-dashboard-page .queue-pagination button:hover:not(:disabled) {
-        border-color: #4e93ab; background: #edf8fc;
+        border-color: var(--wu-accent); background: #edf8fc;
       }
 .kasir-dashboard-page .queue-pagination button[aria-current="page"] {
-        border-color: #1d4a5a; background: #1d4a5a; color: #fff; font-weight: 700;
+        border-color: var(--wu-text); background: var(--wu-text); color: #fff; font-weight: 700;
       }
 .kasir-dashboard-page .queue-pagination button:disabled {
         opacity: .42; cursor: not-allowed;
@@ -463,8 +441,8 @@ body.kasir-dashboard-page {
 }
 .kasir-transaction-page.kasir-dashboard-page {
   min-height: 100vh;
-  background: #e0eff7;
-  color: #1d4a5a;
+  background: var(--wu-background);
+  color: var(--wu-text);
   font-family: "Open Sans", Arial, sans-serif;
 }
 .kasir-transaction-page.kasir-dashboard-page .transaction-main {
@@ -490,7 +468,7 @@ body.kasir-dashboard-page {
 .kasir-transaction-page .transaction-heading h2 {
   max-width: none;
   margin: 0;
-  color: #1d4a5a;
+  color: var(--wu-text);
   font-size: 1.35rem;
   font-weight: 700;
   letter-spacing: 0.035em;
@@ -537,7 +515,7 @@ body.kasir-dashboard-page {
   place-items: center;
   border: 1px solid #8cbfd2;
   border-radius: 4px;
-  color: #1d4a5a;
+  color: var(--wu-text);
   background: #dcecf4;
   font-size: 0.82rem;
   font-weight: 500;
@@ -553,7 +531,7 @@ body.kasir-dashboard-page {
 }
 .kasir-transaction-page .form-section-heading h3 {
   margin: 0;
-  color: #1d4a5a;
+  color: var(--wu-text);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.035em;
@@ -587,7 +565,7 @@ body.kasir-dashboard-page {
   border-radius: 7px;
   outline: none;
   box-sizing: border-box;
-  color: #1d4a5a;
+  color: var(--wu-text);
   background-color: #fff;
   font-family: inherit;
   font-size: 0.65rem;
@@ -639,7 +617,7 @@ body.kasir-dashboard-page {
   font-size: 0.64rem;
 }
 .kasir-transaction-page .price-preview strong {
-  color: #1d4a5a;
+  color: var(--wu-text);
   font-size: 0.8rem;
   font-weight: 700;
   white-space: nowrap;
@@ -678,13 +656,13 @@ body.kasir-dashboard-page {
 }
 .kasir-transaction-page .form-actions .secondary-dashboard-button, .kasir-transaction-page .receipt-action-buttons .secondary-dashboard-button {
   border: 1px solid #87b8cb;
-  color: #1d4a5a;
+  color: var(--wu-text);
   background: #fff;
 }
 .kasir-transaction-page .form-actions .primary-button, .kasir-transaction-page .receipt-action-buttons .primary-button {
-  border: 1px solid #1d4a5a;
+  border: 1px solid var(--wu-text);
   color: #fff;
-  background: #1d4a5a;
+  background: var(--wu-text);
 }
 .kasir-transaction-page .form-actions button:hover, .kasir-transaction-page .receipt-action-buttons button:hover {
   transform: translateY(-1px);
@@ -708,7 +686,7 @@ body.kasir-dashboard-page {
 }
 .kasir-transaction-page .transaction-summary h3 {
   margin: 0 0 14px;
-  color: #1d4a5a;
+  color: var(--wu-text);
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.025em;
@@ -1097,39 +1075,6 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
   width: auto !important;
   margin-left: auto !important;
 }
-.kasir-dashboard-page .queue-page-summary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #263238 !important;
-  font-family: "Open Sans", Arial, sans-serif !important;
-  font-size: .84rem !important;
-  font-weight: 500 !important;
-  letter-spacing: 0 !important;
-  white-space: nowrap !important;
-  padding: 0 2px !important;
-}
-.kasir-dashboard-page .queue-page-size-label {
-  display: inline-flex !important;
-  align-items: center !important;
-  flex: 0 0 auto !important;
-}
-.kasir-dashboard-page .queue-page-size-label select {
-  width: 112px !important;
-  min-width: 112px !important;
-  height: 42px !important;
-  padding: 0 12px !important;
-  border: 1px solid #d5dde1 !important;
-  border-radius: 9px !important;
-  background-color: #fff !important;
-  color: #59666c !important;
-  font-family: "Open Sans", Arial, sans-serif !important;
-  font-size: .82rem !important;
-  font-weight: 500 !important;
-  line-height: 1.2 !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .04) !important;
-  cursor: pointer !important;
-}
 .kasir-dashboard-page .queue-page-controls {
   display: inline-flex !important;
   align-items: stretch !important;
@@ -1168,7 +1113,7 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
 }
 .kasir-dashboard-page .queue-page-controls button:hover:not(:disabled) {
   background: #eef7fa !important;
-  color: #1d4a5a !important;
+  color: var(--wu-text) !important;
 }
 .kasir-dashboard-page .queue-page-controls button:disabled {
   background: #f8fafb !important;
@@ -1192,16 +1137,6 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
 @media (max-width: 420px)  {
 .kasir-dashboard-page .queue-pagination {
     gap: 5px !important;
-  }
-.kasir-dashboard-page .queue-page-summary {
-    font-size: .68rem !important;
-  }
-.kasir-dashboard-page .queue-page-size-label select {
-    width: 82px !important;
-    min-width: 82px !important;
-    height: 34px !important;
-    padding: 0 7px !important;
-    font-size: .68rem !important;
   }
 .kasir-dashboard-page .queue-page-controls button {
     width: 29px !important;
@@ -1288,11 +1223,11 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
 .kasir-dashboard-page .queue-page-controls button:hover:not(:disabled), .kasir-dashboard-page .queue-page-number:hover:not(.is-current) {
   background: #edf6fa !important;
   border-color: #8dbbcd !important;
-  color: #1d4a5a !important;
+  color: var(--wu-text) !important;
 }
 .kasir-dashboard-page .queue-page-number.is-current, .kasir-dashboard-page .queue-page-number[aria-current="page"] {
-  background: #1d4a5a !important;
-  border-color: #1d4a5a !important;
+  background: var(--wu-text) !important;
+  border-color: var(--wu-text) !important;
   color: #ffffff !important;
 }
 .kasir-dashboard-page .queue-page-controls button:disabled {
@@ -1313,29 +1248,6 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
   font-size: 1.05rem !important;
   line-height: 1 !important;
   user-select: none !important;
-}
-.kasir-dashboard-page .queue-page-size-label {
-  display: inline-flex !important;
-  align-items: center !important;
-  flex: 0 0 auto !important;
-}
-.kasir-dashboard-page .queue-page-size-label select {
-  box-sizing: border-box !important;
-  width: 108px !important;
-  min-width: 108px !important;
-  height: 36px !important;
-  margin: 0 !important;
-  padding: 0 10px !important;
-  border: 1px solid #d4e5ed !important;
-  border-radius: 6px !important;
-  background-color: #ffffff !important;
-  color: #527585 !important;
-  font-family: "Open Sans", Arial, sans-serif !important;
-  font-size: .82rem !important;
-  font-weight: 500 !important;
-  line-height: 1.2 !important;
-  box-shadow: none !important;
-  cursor: pointer !important;
 }
 @media (max-width: 768px)  {
 .kasir-dashboard-page .queue-table-footer {
@@ -1362,13 +1274,6 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
   }
 .kasir-dashboard-page .queue-page-controls .queue-page-arrow {
     font-size: 1.2rem !important;
-  }
-.kasir-dashboard-page .queue-page-size-label select {
-    width: 88px !important;
-    min-width: 88px !important;
-    height: 32px !important;
-    padding: 0 6px !important;
-    font-size: .72rem !important;
   }
 }
 @media (max-width: 520px)  {
@@ -1408,7 +1313,7 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
   align-items: center !important;
   gap: 7px !important;
   margin: 0 !important;
-  color: #1d4a5a !important;
+  color: var(--wu-text) !important;
   font-family: "Open Sans", Arial, sans-serif !important;
   font-size: .82rem !important;
   font-weight: 500 !important;
@@ -1423,7 +1328,7 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
   border: 1px solid #cbd9df !important;
   border-radius: 5px !important;
   background: #fff !important;
-  color: #1d4a5a !important;
+  color: var(--wu-text) !important;
   font: inherit !important;
   font-size: .78rem !important;
   line-height: 1.2 !important;
@@ -1489,7 +1394,7 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
   border-right: 1px solid #dce6eb !important;
   border-radius: 0 !important;
   background: #fff !important;
-  color: #1d4a5a !important;
+  color: var(--wu-text) !important;
   font-family: "Open Sans", Arial, sans-serif !important;
   font-size: .8rem !important;
   font-weight: 500 !important;
@@ -1512,10 +1417,10 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
 }
 .kasir-dashboard-page .queue-page-controls button:hover:not(:disabled), .kasir-dashboard-page .queue-page-number:hover:not(.is-current) {
   background: #edf6fa !important;
-  color: #1d4a5a !important;
+  color: var(--wu-text) !important;
 }
 .kasir-dashboard-page .queue-page-number.is-current, .kasir-dashboard-page .queue-page-number[aria-current="page"] {
-  background: #1d4a5a !important;
+  background: var(--wu-text) !important;
   color: #fff !important;
   font-weight: 700 !important;
 }
@@ -1637,12 +1542,12 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
   }
 }
 .kasir-payment-page {
-  --payment-ink: #1D4A5A;
+  --payment-ink: var(--wu-text);
   --payment-blue: #238EB6;
   --payment-muted: #436D8A;
   --payment-line: #D4E5ED;
   --payment-soft: #F4F9FC;
-  background: #E0EFF7 !important;
+  background: var(--wu-background) !important;
   color: var(--payment-ink);
 }
 .kasir-payment-page .dashboard-main.payment-main {
@@ -1657,15 +1562,7 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
 .kasir-payment-page .payment-heading { display: flex !important; align-items: flex-end !important; justify-content: space-between !important; gap: 20px !important; margin: 0 0 18px !important; }
 .kasir-payment-page .payment-heading .eyebrow { margin: 0 0 5px !important; color: var(--payment-blue) !important; font-size: .68rem !important; font-weight: 700 !important; letter-spacing: .06em !important; }
 .kasir-payment-page .payment-heading h2 { margin: 0 !important; color: var(--payment-ink) !important; font-size: 1.35rem !important; font-weight: 700 !important; letter-spacing: .035em !important; }
-.kasir-payment-page .payment-heading-description { margin: 6px 0 0 !important; color: var(--payment-muted) !important; font-size: .78rem !important; line-height: 1.5 !important; }
-.kasir-payment-page .payment-ready-card { display: flex !important; flex-direction: column !important; gap: 4px !important; min-width: 140px !important; padding: 12px 16px !important; border: 1px solid #C9E1EC !important; border-radius: 10px !important; background: #F8FCFE !important; color: var(--payment-muted) !important; box-sizing: border-box !important; }
-.kasir-payment-page .payment-ready-card span { font-size: .72rem !important; }
-.kasir-payment-page .payment-ready-card strong { color: var(--payment-ink) !important; font-size: .96rem !important; }
 .kasir-payment-page .payment-panel { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 22px 22px 20px !important; border: 1px solid rgba(219,234,241,.95) !important; border-radius: 13px !important; background: #fff !important; box-shadow: 0 2px 10px rgba(13,76,100,.045) !important; box-sizing: border-box !important; }
-.kasir-payment-page .payment-list-heading { margin-bottom: 16px !important; }
-.kasir-payment-page .payment-list-heading h2 { margin: 4px 0 0 !important; color: var(--payment-ink) !important; font-size: 1.08rem !important; font-weight: 700 !important; }
-.kasir-payment-page .payment-list-heading .eyebrow { color: var(--payment-blue) !important; font-size: .68rem !important; font-weight: 700 !important; }
-.kasir-payment-page .payment-table-controls { display: flex !important; align-items: center !important; justify-content: flex-start !important; width: 100% !important; margin: 0 0 20px !important; }
 .kasir-payment-page .payment-show-entries { display: inline-flex !important; align-items: center !important; gap: 7px !important; margin: 0 !important; color: var(--payment-ink) !important; font-size: .8rem !important; font-weight: 500 !important; white-space: nowrap !important; }
 .kasir-payment-page .payment-show-entries select { width: 55px !important; min-width: 55px !important; height: 31px !important; padding: 3px 6px !important; border: 1px solid #C9DDE5 !important; border-radius: 5px !important; background: #fff !important; color: var(--payment-ink) !important; font: inherit !important; font-size: .78rem !important; }
 .kasir-payment-page .payment-table-wrap { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
@@ -1689,40 +1586,20 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
 .kasir-payment-page .payment-pagination { display: flex !important; align-items: center !important; justify-content: flex-end !important; margin-left: auto !important; }
 .kasir-payment-page .payment-page-controls, .kasir-payment-page .payment-page-numbers { display: inline-flex !important; flex-direction: row !important; flex-wrap: nowrap !important; align-items: stretch !important; gap: 0 !important; }
 .kasir-payment-page .payment-page-controls { overflow: hidden !important; border: 1px solid #D4E2E8 !important; border-radius: 5px !important; background: #fff !important; }
-.kasir-payment-page .payment-page-controls button, .kasir-payment-page .payment-page-number { display: inline-flex !important; align-items: center !important; justify-content: center !important; min-width: 34px !important; height: 34px !important; margin: 0 !important; padding: 0 10px !important; border: 0 !important; border-right: 1px solid #DCE6EB !important; border-radius: 0 !important; background: #fff !important; color: #1D4A5A !important; font-family: inherit !important; font-size: .76rem !important; font-weight: 500 !important; white-space: nowrap !important; cursor: pointer !important; }
+.kasir-payment-page .payment-page-controls button, .kasir-payment-page .payment-page-number { display: inline-flex !important; align-items: center !important; justify-content: center !important; min-width: 34px !important; height: 34px !important; margin: 0 !important; padding: 0 10px !important; border: 0 !important; border-right: 1px solid #DCE6EB !important; border-radius: 0 !important; background: #fff !important; color: var(--wu-text) !important; font-family: inherit !important; font-size: .76rem !important; font-weight: 500 !important; white-space: nowrap !important; cursor: pointer !important; }
 .kasir-payment-page .payment-page-controls > *:last-child { border-right: 0 !important; }
 .kasir-payment-page .payment-page-controls button.payment-page-arrow { min-width: 76px !important; padding: 0 12px !important; }
-.kasir-payment-page .payment-page-number.is-current { background: #1D4A5A !important; color: #fff !important; font-weight: 700 !important; }
+.kasir-payment-page .payment-page-number.is-current { background: var(--wu-text) !important; color: #fff !important; font-weight: 700 !important; }
 .kasir-payment-page .payment-page-controls button:hover:not(:disabled), .kasir-payment-page .payment-page-number:hover:not(.is-current) { background: #EDF6FA !important; }
 .kasir-payment-page .payment-page-controls button:disabled { background: #F7FAFB !important; color: #AABAC2 !important; cursor: not-allowed !important; }
 .kasir-payment-page .payment-page-ellipsis { display: inline-flex !important; align-items: center !important; justify-content: center !important; min-width: 30px !important; padding: 0 6px !important; border-right: 1px solid #DCE6EB !important; color: #7595A3 !important; }
 .kasir-payment-page .payment-notice { min-height: 0 !important; margin: 12px 0 0 !important; color: #28728E !important; font-size: .76rem !important; }
 .kasir-payment-page .payment-notice:empty { display: none !important; }
-.kasir-payment-page .payment-footer { width: min(calc(100% - 48px), 1180px) !important; max-width: 1180px !important; margin: auto auto 0 !important; padding: 15px 0 12px !important; box-sizing: border-box !important; }
-.kasir-payment-page .payment-dialog { width: min(92vw, 620px) !important; max-width: 620px !important; max-height: min(88vh, 820px) !important; overflow-y: auto !important; padding: 24px !important; border: 1px solid #D7E7EE !important; border-radius: 16px !important; background: #FFFFFF !important; color: var(--payment-ink) !important; box-shadow: 0 22px 75px rgba(6,35,48,.28) !important; }
-.kasir-payment-page .payment-dialog::backdrop { background: rgba(4,28,38,.58) !important; backdrop-filter: blur(3px); }
-.kasir-payment-page .payment-dialog .dialog-heading { display: flex !important; align-items: flex-start !important; justify-content: space-between !important; gap: 16px !important; margin-bottom: 17px !important; }
-.kasir-payment-page .payment-dialog .dialog-heading .eyebrow { margin: 0 0 5px !important; color: var(--payment-blue) !important; font-size: .68rem !important; font-weight: 700 !important; }
-.kasir-payment-page .payment-dialog .dialog-heading h2 { margin: 0 !important; color: var(--payment-ink) !important; font-size: 1.2rem !important; }
-.kasir-payment-page .payment-dialog .dialog-close { display: inline-flex !important; align-items: center !important; justify-content: center !important; width: 34px !important; height: 34px !important; border: 1px solid #D7E6EC !important; border-radius: 8px !important; background: #F7FBFD !important; color: #426B7B !important; font-size: 1.4rem !important; cursor: pointer !important; }
-.kasir-payment-page .payment-dialog .detail-grid { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; margin-bottom: 20px !important; }
-.kasir-payment-page .payment-dialog .detail-grid > div { display: flex !important; flex-direction: column !important; gap: 5px !important; padding: 11px 12px !important; border: 1px solid #E0ECF1 !important; border-radius: 8px !important; background: #F7FBFD !important; min-width: 0 !important; }
-.kasir-payment-page .payment-dialog .detail-grid span, .kasir-payment-page .payment-dialog .payment-dialog-fields > label, .kasir-payment-page .payment-dialog #payment-cash-fields > label { color: var(--payment-muted) !important; font-size: .72rem !important; }
-.kasir-payment-page .payment-dialog .detail-grid strong { color: var(--payment-ink) !important; font-size: .78rem !important; overflow-wrap: anywhere !important; }
-.kasir-payment-page .payment-dialog-fields { display: flex !important; flex-direction: column !important; gap: 9px !important; }
-.kasir-payment-page .payment-dialog-fields > label { font-weight: 700 !important; color: var(--payment-ink) !important; }
 .kasir-payment-page .payment-dialog-fields select, .kasir-payment-page #payment-cash-received { width: 100% !important; min-height: 40px !important; box-sizing: border-box !important; padding: 9px 11px !important; border: 1px solid #BBD7E3 !important; border-radius: 7px !important; background: #fff !important; color: var(--payment-ink) !important; font: inherit !important; font-size: .82rem !important; }
 .kasir-payment-page #payment-cash-fields { display: grid !important; gap: 8px !important; padding: 12px !important; border: 1px solid #D7E7EE !important; border-radius: 9px !important; background: #F6FBFD !important; }
 .kasir-payment-page #payment-cash-fields[hidden], .kasir-payment-page #payment-qris-fields[hidden] { display: none !important; }
-.kasir-payment-page .payment-change-row { display: flex !important; justify-content: space-between !important; align-items: center !important; padding-top: 3px !important; color: #6E91A1 !important; font-size: .78rem !important; }
-.kasir-payment-page .payment-change-row strong { color: var(--payment-ink) !important; }
-.kasir-payment-page .payment-qris-box { padding: 13px !important; border: 1px solid #D7E7EE !important; border-radius: 9px !important; background: #F6FBFD !important; }
-.kasir-payment-page .payment-qris-box > strong { color: var(--payment-ink) !important; font-size: .82rem !important; }
-.kasir-payment-page .payment-qris-box p { margin: 5px 0 10px !important; color: var(--payment-muted) !important; font-size: .74rem !important; line-height: 1.5 !important; }
 .kasir-payment-page .payment-qris-check { display: flex !important; align-items: flex-start !important; gap: 8px !important; color: #315A6A !important; font-size: .74rem !important; line-height: 1.45 !important; }
-.kasir-payment-page .payment-qris-check input { margin-top: 2px !important; accent-color: #1D4A5A !important; }
-.kasir-payment-page .payment-confirm-button { width: 100% !important; min-height: 42px !important; margin-top: 3px !important; border: 1px solid #1D4A5A !important; border-radius: 8px !important; background: #1D4A5A !important; color: #fff !important; font-family: inherit !important; font-weight: 700 !important; cursor: pointer !important; }
-.kasir-payment-page .payment-confirm-button:hover { background: #143C4A !important; }
+.kasir-payment-page .payment-qris-check input { margin-top: 2px !important; accent-color: var(--wu-text) !important; }
 .kasir-payment-page .dialog-notice { margin: 10px 0 0 !important; color: #A13A49 !important; font-size: .76rem !important; line-height: 1.45 !important; }
 .kasir-payment-page .payment-receipt-overlay[hidden] { display: none !important; }
 .kasir-payment-page .payment-receipt-overlay { position: fixed !important; inset: 0 !important; z-index: 20000 !important; display: flex !important; align-items: center !important; justify-content: center !important; padding: 20px !important; box-sizing: border-box !important; overflow-y: auto !important; background: rgba(4,28,38,.62) !important; backdrop-filter: blur(4px) !important; }
@@ -1752,8 +1629,8 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
 .kasir-payment-page .payment-receipt-thanks { margin: 15px 0 0 !important; color: var(--wu-text-muted) !important; font-size: .7rem !important; line-height: 1.6 !important; text-align: center !important; }
 .kasir-payment-page .payment-receipt-dialog-actions { display: flex !important; justify-content: flex-end !important; gap: 9px !important; margin-top: 14px !important; }
 .kasir-payment-page .payment-button-secondary, .kasir-payment-page .payment-button-primary { display: inline-flex !important; align-items: center !important; justify-content: center !important; min-height: 38px !important; padding: 8px 15px !important; border-radius: 7px !important; font-family: inherit !important; font-size: .78rem !important; font-weight: 700 !important; cursor: pointer !important; }
-.kasir-payment-page .payment-button-secondary { border: 1px solid #BFD8E3 !important; background: #fff !important; color: #1D4A5A !important; }
-.kasir-payment-page .payment-button-primary { border: 1px solid #1D4A5A !important; background: #1D4A5A !important; color: #fff !important; }
+.kasir-payment-page .payment-button-secondary { border: 1px solid #BFD8E3 !important; background: #fff !important; color: var(--wu-text) !important; }
+.kasir-payment-page .payment-button-primary { border: 1px solid var(--wu-text) !important; background: var(--wu-text) !important; color: #fff !important; }
 .kasir-payment-page .payment-button-primary:hover { background: #143C4A !important; }
 @media (max-width: 1200px)  {
 .kasir-payment-page .dashboard-main.payment-main, .kasir-payment-page .payment-footer { width: calc(100% - 40px) !important; }
@@ -1761,15 +1638,11 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
 }
 @media (max-width: 768px)  {
 .kasir-payment-page .dashboard-main.payment-main { width: calc(100% - 30px) !important; padding: 22px 0 !important; }
-.kasir-payment-page .payment-footer { width: calc(100% - 30px) !important; }
 .kasir-payment-page .payment-heading { align-items: stretch !important; flex-direction: column !important; gap: 12px !important; }
-.kasir-payment-page .payment-ready-card { align-self: flex-start !important; min-width: 160px !important; }
 .kasir-payment-page .payment-panel { padding: 15px 12px !important; border-radius: 11px !important; }
-.kasir-payment-page .payment-list-heading { gap: 10px !important; align-items: flex-start !important; }
 .kasir-payment-page .payment-table-footer { align-items: flex-start !important; gap: 10px !important; }
 .kasir-payment-page .payment-pagination { margin-left: auto !important; max-width: 100% !important; }
 .kasir-payment-page .payment-page-controls { max-width: 100% !important; overflow-x: auto !important; }
-.kasir-payment-page .payment-dialog { padding: 18px !important; }
 .kasir-payment-page .payment-receipt-dialog { padding: 12px !important; }
 .kasir-payment-page .payment-receipt-paper { padding: 18px 16px !important; }
 }
@@ -1777,7 +1650,6 @@ body.kasir-transaction-page, body.kasir-transaction-page.kasir-dashboard-page {
 .kasir-payment-page .payment-pagination-range { font-size: .72rem !important; }
 .kasir-payment-page .payment-page-controls button, .kasir-payment-page .payment-page-number { min-width: 28px !important; height: 31px !important; padding: 0 7px !important; font-size: .7rem !important; }
 .kasir-payment-page .payment-page-controls button.payment-page-arrow { min-width: 60px !important; padding: 0 8px !important; }
-.kasir-payment-page .payment-dialog .detail-grid { grid-template-columns: minmax(0, 1fr) !important; }
 .kasir-payment-page .payment-receipt-dialog-actions { justify-content: stretch !important; }
 .kasir-payment-page .payment-receipt-dialog-actions button { flex: 1 1 0 !important; }
 }
@@ -1832,11 +1704,11 @@ body.kasir-payment-page {
 }
 body.kasir-payment-page {
   --payment-frame-width: min(calc(100% - 96px), 1060px);
-  --payment-ink: #1D4A5A;
+  --payment-ink: var(--wu-text);
   --payment-blue: #238EB6;
   --payment-muted: #436D8A;
   --payment-line: #D4E5ED;
-  background: #E0EFF7 !important;
+  background: var(--wu-background) !important;
 }
 body.kasir-payment-page main.dashboard-main.payment-main {
   display: flex !important;
@@ -1863,7 +1735,7 @@ body.kasir-payment-page .payment-heading .eyebrow {
 }
 body.kasir-payment-page .payment-heading h2 {
   margin: 0 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-size: 1.35rem !important;
   font-weight: 700 !important;
   letter-spacing: .035em !important;
@@ -1885,7 +1757,7 @@ body.kasir-payment-page .payment-panel-heading .eyebrow {
   font-weight: 600 !important; letter-spacing: .045em !important;
 }
 body.kasir-payment-page .payment-panel-heading h2 {
-  margin: 0 !important; color: #1D4A5A !important; font-size: 1.08rem !important;
+  margin: 0 !important; color: var(--wu-text) !important; font-size: 1.08rem !important;
   line-height: 1.3 !important; font-weight: 700 !important; letter-spacing: .025em !important;
 }
 body.kasir-payment-page .payment-stat-grid {
@@ -1898,7 +1770,7 @@ body.kasir-payment-page .payment-stat-card {
   border-radius: 9px !important; background: #F7FBFD !important; box-sizing: border-box !important;
 }
 body.kasir-payment-page .payment-stat-card > span { color: var(--wu-text-muted) !important; font-size: .66rem !important; line-height: 1.25 !important; }
-body.kasir-payment-page .payment-stat-card > strong { color: #1D4A5A !important; font-size: 1.13rem !important; line-height: 1.2 !important; font-weight: 700 !important; overflow-wrap: anywhere !important; }
+body.kasir-payment-page .payment-stat-card > strong { color: var(--wu-text) !important; font-size: 1.13rem !important; line-height: 1.2 !important; font-weight: 700 !important; overflow-wrap: anywhere !important; }
 body.kasir-payment-page .payment-stat-card > small { color: var(--wu-text-muted) !important; font-size: .61rem !important; line-height: 1.3 !important; }
 body.kasir-payment-page .payment-stat-card-total > strong { font-size: 1.03rem !important; white-space: nowrap !important; }
 body.kasir-payment-page .payment-workspace {
@@ -1909,7 +1781,7 @@ body.kasir-payment-page .payment-list-column { min-width: 0 !important; }
 body.kasir-payment-page .payment-table-wrap { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; border: 1px solid #E1EEF3 !important; border-radius: 8px !important; }
 body.kasir-payment-page .payment-full-table.payment-compact-table { width: 100% !important; min-width: 490px !important; border-collapse: separate !important; border-spacing: 0 !important; }
 body.kasir-payment-page .payment-compact-table thead th {
-  padding: 10px 8px !important; background: #F4F9FC !important; color: #1D4A5A !important;
+  padding: 10px 8px !important; background: #F4F9FC !important; color: var(--wu-text) !important;
   border-bottom: 1px solid #E3EDF2 !important; font-size: .56rem !important; font-weight: 700 !important;
   letter-spacing: .015em !important; text-align: left !important; text-transform: uppercase !important;
   line-height: 1.35 !important; white-space: normal !important;
@@ -1938,21 +1810,21 @@ body.kasir-payment-page .payment-table-action {
 body.kasir-payment-page .payment-table-action:hover { background: #D9EDF6 !important; border-color: #A8D0E0 !important; }
 body.kasir-payment-page .payment-empty { padding: 22px 12px !important; text-align: center !important; color: var(--wu-text-muted) !important; }
 body.kasir-payment-page .payment-empty-symbol { display: inline-flex !important; align-items: center !important; justify-content: center !important; width: 36px !important; height: 36px !important; border-radius: 50% !important; background: #EAF5FA !important; color: var(--wu-accent-text) !important; font-size: 1rem !important; }
-body.kasir-payment-page .payment-empty h3 { margin: 9px 0 4px !important; color: #1D4A5A !important; font-size: .88rem !important; }
+body.kasir-payment-page .payment-empty h3 { margin: 9px 0 4px !important; color: var(--wu-text) !important; font-size: .88rem !important; }
 body.kasir-payment-page .payment-empty p { margin: 0 !important; color: var(--wu-text-muted) !important; font-size: .7rem !important; }
 body.kasir-payment-page .payment-list-footer { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 8px !important; margin: 8px 1px 0 !important; color: var(--wu-text-muted) !important; font-size: .62rem !important; }
 body.kasir-payment-page .payment-show-entries { display: inline-flex !important; align-items: center !important; gap: 5px !important; margin: 0 !important; color: var(--wu-text-muted) !important; font-size: .62rem !important; white-space: nowrap !important; }
-body.kasir-payment-page .payment-show-entries select { width: 44px !important; min-width: 44px !important; height: 26px !important; border: 1px solid #D3E4EC !important; border-radius: 5px !important; padding: 2px 4px !important; background: #fff !important; color: #1D4A5A !important; font: inherit !important; }
+body.kasir-payment-page .payment-show-entries select { width: 44px !important; min-width: 44px !important; height: 26px !important; border: 1px solid #D3E4EC !important; border-radius: 5px !important; padding: 2px 4px !important; background: #fff !important; color: var(--wu-text) !important; font: inherit !important; }
 body.kasir-payment-page .payment-table-footer { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 8px !important; width: 100% !important; margin: 9px 0 0 !important; flex-wrap: wrap !important; }
 body.kasir-payment-page .payment-table-footer[hidden] { display: none !important; }
 body.kasir-payment-page .payment-pagination-range { margin: 0 !important; color: var(--wu-text-muted) !important; font-size: .66rem !important; line-height: 1.4 !important; white-space: nowrap !important; }
 body.kasir-payment-page .payment-pagination { display: flex !important; align-items: center !important; justify-content: flex-end !important; margin-left: auto !important; }
 body.kasir-payment-page .payment-page-controls, body.kasir-payment-page .payment-page-numbers { display: inline-flex !important; flex-direction: row !important; flex-wrap: nowrap !important; align-items: stretch !important; gap: 0 !important; }
 body.kasir-payment-page .payment-page-controls { overflow: hidden !important; border: 1px solid #D4E2E8 !important; border-radius: 5px !important; background: #fff !important; }
-body.kasir-payment-page .payment-page-controls button, body.kasir-payment-page .payment-page-number { display: inline-flex !important; align-items: center !important; justify-content: center !important; min-width: 27px !important; height: 29px !important; margin: 0 !important; padding: 0 7px !important; border: 0 !important; border-right: 1px solid #DCE6EB !important; border-radius: 0 !important; background: #fff !important; color: #1D4A5A !important; font-family: inherit !important; font-size: .62rem !important; font-weight: 500 !important; white-space: nowrap !important; cursor: pointer !important; }
+body.kasir-payment-page .payment-page-controls button, body.kasir-payment-page .payment-page-number { display: inline-flex !important; align-items: center !important; justify-content: center !important; min-width: 27px !important; height: 29px !important; margin: 0 !important; padding: 0 7px !important; border: 0 !important; border-right: 1px solid #DCE6EB !important; border-radius: 0 !important; background: #fff !important; color: var(--wu-text) !important; font-family: inherit !important; font-size: .62rem !important; font-weight: 500 !important; white-space: nowrap !important; cursor: pointer !important; }
 body.kasir-payment-page .payment-page-controls > *:last-child { border-right: 0 !important; }
 body.kasir-payment-page .payment-page-controls button.payment-page-arrow { min-width: 54px !important; padding: 0 7px !important; }
-body.kasir-payment-page .payment-page-number.is-current { background: #1D4A5A !important; color: #fff !important; font-weight: 700 !important; }
+body.kasir-payment-page .payment-page-number.is-current { background: var(--wu-text) !important; color: #fff !important; font-weight: 700 !important; }
 body.kasir-payment-page .payment-page-controls button:disabled { background: #F7FAFB !important; color: #B1C1C8 !important; cursor: not-allowed !important; }
 body.kasir-payment-page .payment-page-ellipsis { display: inline-flex !important; align-items: center !important; padding: 0 5px !important; color: #7595A3 !important; font-size: .68rem !important; }
 body.kasir-payment-page .payment-check-panel {
@@ -1960,30 +1832,30 @@ body.kasir-payment-page .payment-check-panel {
   border-radius: 9px !important; background: #F7FBFD !important; box-sizing: border-box !important;
 }
 body.kasir-payment-page .payment-check-heading { display: flex !important; align-items: flex-start !important; justify-content: space-between !important; gap: 8px !important; margin: 0 0 13px !important; }
-body.kasir-payment-page .payment-check-heading h3 { margin: 0 0 3px !important; color: #1D4A5A !important; font-size: .88rem !important; font-weight: 700 !important; line-height: 1.3 !important; }
+body.kasir-payment-page .payment-check-heading h3 { margin: 0 0 3px !important; color: var(--wu-text) !important; font-size: .88rem !important; font-weight: 700 !important; line-height: 1.3 !important; }
 body.kasir-payment-page .payment-check-heading p { margin: 0 !important; color: var(--wu-text-muted) !important; font-size: .55rem !important; line-height: 1.35 !important; overflow-wrap: anywhere !important; }
 body.kasir-payment-page .payment-method-pill { flex: 0 0 auto !important; padding: 5px 9px !important; border-radius: 999px !important; background: #E4F2F9 !important; color: #176B91 !important; font-size: .62rem !important; }
 body.kasir-payment-page .payment-check-section { margin-top: 12px !important; }
-body.kasir-payment-page .payment-check-section h4 { margin: 0 0 6px !important; color: #1D4A5A !important; font-size: .72rem !important; font-weight: 700 !important; }
+body.kasir-payment-page .payment-check-section h4 { margin: 0 0 6px !important; color: var(--wu-text) !important; font-size: .72rem !important; font-weight: 700 !important; }
 body.kasir-payment-page .payment-breakdown, body.kasir-payment-page .payment-method-breakdown { overflow: hidden !important; border: 1px solid #E7F0F4 !important; border-radius: 8px !important; background: #FFFFFF !important; }
 body.kasir-payment-page .payment-breakdown > div, body.kasir-payment-page .payment-method-breakdown > div { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 10px !important; padding: 5px 9px !important; min-height: 25px !important; box-sizing: border-box !important; }
 body.kasir-payment-page .payment-breakdown span, body.kasir-payment-page .payment-method-breakdown span { color: var(--wu-text-muted) !important; font-size: .62rem !important; }
-body.kasir-payment-page .payment-breakdown strong, body.kasir-payment-page .payment-method-breakdown strong { color: #1D4A5A !important; font-size: .63rem !important; font-weight: 600 !important; text-align: right !important; }
+body.kasir-payment-page .payment-breakdown strong, body.kasir-payment-page .payment-method-breakdown strong { color: var(--wu-text) !important; font-size: .63rem !important; font-weight: 600 !important; text-align: right !important; }
 body.kasir-payment-page .payment-breakdown-total { border-top: 1px solid #D6E8F0 !important; background: #FAFCFD !important; }
-body.kasir-payment-page .payment-breakdown-total span, body.kasir-payment-page .payment-breakdown-total strong { color: #1D4A5A !important; font-weight: 700 !important; }
+body.kasir-payment-page .payment-breakdown-total span, body.kasir-payment-page .payment-breakdown-total strong { color: var(--wu-text) !important; font-weight: 700 !important; }
 body.kasir-payment-page .payment-section-title-row { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 8px !important; margin-bottom: 6px !important; }
 body.kasir-payment-page .payment-section-title-row h4 { margin: 0 !important; }
-body.kasir-payment-page .payment-method-picker select { max-width: 98px !important; padding: 4px 8px !important; border: 1px solid #D5E6ED !important; border-radius: 6px !important; background: #FFFFFF !important; color: #1D4A5A !important; font: inherit !important; font-size: .62rem !important; }
+body.kasir-payment-page .payment-method-picker select { max-width: 98px !important; padding: 4px 8px !important; border: 1px solid #D5E6ED !important; border-radius: 6px !important; background: #FFFFFF !important; color: var(--wu-text) !important; font: inherit !important; font-size: .62rem !important; }
 body.kasir-payment-page .payment-amount-input { min-width: 0 !important; }
-body.kasir-payment-page .payment-amount-input input { width: 104px !important; max-width: 100% !important; padding: 3px 6px !important; border: 1px solid #D5E6ED !important; border-radius: 5px !important; color: #1D4A5A !important; font: inherit !important; font-size: .63rem !important; text-align: right !important; background: #fff !important; }
+body.kasir-payment-page .payment-amount-input input { width: 104px !important; max-width: 100% !important; padding: 3px 6px !important; border: 1px solid #D5E6ED !important; border-radius: 5px !important; color: var(--wu-text) !important; font: inherit !important; font-size: .63rem !important; text-align: right !important; background: #fff !important; }
 body.kasir-payment-page .payment-qris-fields { padding: 10px !important; border: 1px solid #DCEAF0 !important; border-radius: 7px !important; background: #fff !important; }
 body.kasir-payment-page .payment-qris-fields p { margin: 0 0 8px !important; color: var(--wu-text-muted) !important; font-size: .65rem !important; line-height: 1.45 !important; }
 body.kasir-payment-page .payment-qris-check { display: flex !important; align-items: flex-start !important; gap: 7px !important; color: #315E70 !important; font-size: .63rem !important; line-height: 1.4 !important; }
 body.kasir-payment-page .payment-check-notice { min-height: 30px !important; margin: 10px 0 8px !important; color: var(--wu-text-muted) !important; font-size: .62rem !important; line-height: 1.45 !important; }
 body.kasir-payment-page .payment-check-actions { display: grid !important; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important; gap: 7px !important; }
 body.kasir-payment-page .payment-button-secondary, body.kasir-payment-page .payment-button-primary { display: inline-flex !important; align-items: center !important; justify-content: center !important; min-width: 0 !important; min-height: 35px !important; padding: 7px 9px !important; border-radius: 7px !important; font-family: inherit !important; font-size: .62rem !important; font-weight: 700 !important; cursor: pointer !important; }
-body.kasir-payment-page .payment-button-secondary { border: 1px solid #BFD8E3 !important; background: #FFFFFF !important; color: #1D4A5A !important; }
-body.kasir-payment-page .payment-button-primary { border: 1px solid #1D4A5A !important; background: #1D4A5A !important; color: #FFFFFF !important; }
+body.kasir-payment-page .payment-button-secondary { border: 1px solid #BFD8E3 !important; background: #FFFFFF !important; color: var(--wu-text) !important; }
+body.kasir-payment-page .payment-button-primary { border: 1px solid var(--wu-text) !important; background: var(--wu-text) !important; color: #FFFFFF !important; }
 body.kasir-payment-page .payment-button-primary:hover:not(:disabled) { background: #143C4A !important; }
 body.kasir-payment-page .payment-button-primary:disabled, body.kasir-payment-page .payment-button-secondary:disabled { opacity: .55 !important; cursor: not-allowed !important; }
 body.kasir-payment-page .payment-notice { margin: 8px 0 0 !important; color: var(--wu-text-muted) !important; font-size: .7rem !important; }
@@ -2032,7 +1904,7 @@ body.kasir-payment-page .payment-heading .eyebrow {
 }
 body.kasir-payment-page .payment-heading h2 {
   margin: 0 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-size: 1.45rem !important;
   font-weight: 700 !important;
   letter-spacing: .2px !important;
@@ -2048,7 +1920,7 @@ body.kasir-payment-page .payment-method-picker select {
   padding: 7px 28px 7px 10px !important;
   border: 1.4px solid #91C3D6 !important;
   border-radius: 7px !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   background-color: #FFFFFF !important;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2385B3C8' d='m1 1 5 5 5-5'/%3E%3C/svg%3E") !important;
   background-repeat: no-repeat !important;
@@ -2084,7 +1956,7 @@ body.kasir-payment-page .payment-qris-check input[type="checkbox"] {
   min-width: 16px !important;
   margin: 2px 0 0 !important;
   padding: 0 !important;
-  accent-color: #1D4A5A !important;
+  accent-color: var(--wu-text) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
   cursor: pointer !important;
@@ -2094,8 +1966,8 @@ body.kasir-payment-page .payment-qris-check input[type="checkbox"]:disabled {
   opacity: .55 !important;
 }
 body.kasir-payment-page #confirm-payment.payment-button-primary {
-  border: 1px solid #1D4A5A !important;
-  background: #1D4A5A !important;
+  border: 1px solid var(--wu-text) !important;
+  background: var(--wu-text) !important;
   color: #FFFFFF !important;
   opacity: 1 !important;
   cursor: pointer !important;
@@ -2123,12 +1995,12 @@ body.kasir-payment-page .payment-method-picker select { min-height: 36px !import
 }
 body.kasir-queue-page {
   --queue-frame-width: min(calc(100% - 96px), 960px);
-  --queue-ink: #1D4A5A;
+  --queue-ink: var(--wu-text);
   --queue-blue: #238EB6;
   --queue-muted: #83AFCB;
   margin: 0 !important;
   min-height: 100vh !important;
-  background: #E0EFF7 !important;
+  background: var(--wu-background) !important;
   color: var(--queue-ink) !important;
   overflow-x: hidden;
 }
@@ -2160,7 +2032,7 @@ body.kasir-queue-page .queue-heading-copy .eyebrow, body.kasir-queue-page .queue
 }
 body.kasir-queue-page .queue-heading-copy h2, body.kasir-queue-page .queue-list-heading h2 {
   margin: 0 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-size: 1.35rem !important;
   font-weight: 700 !important;
   letter-spacing: .035em !important;
@@ -2295,7 +2167,7 @@ body.kasir-queue-page .queue-page-table .table-action {
   border: 1px solid #BFD8E3 !important;
   border-radius: 6px !important;
   background: #F6FBFD !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font: inherit !important;
   font-size: .7rem !important;
   cursor: pointer !important;
@@ -2324,7 +2196,7 @@ body.kasir-queue-page .queue-empty-icon {
   color: #0D78B0 !important;
 }
 body.kasir-queue-page .queue-empty-icon svg { display: block !important; width: 49px !important; height: 49px !important; fill: none !important; stroke: currentColor !important; stroke-width: 2.6 !important; stroke-linecap: round !important; stroke-linejoin: round !important; }
-body.kasir-queue-page .queue-empty-state h3 { margin: 0 0 3px !important; color: #1D4A5A !important; font-size: 1.28rem !important; font-weight: 700 !important; letter-spacing: .03em !important; line-height: 1.3 !important; }
+body.kasir-queue-page .queue-empty-state h3 { margin: 0 0 3px !important; color: var(--wu-text) !important; font-size: 1.28rem !important; font-weight: 700 !important; letter-spacing: .03em !important; line-height: 1.3 !important; }
 body.kasir-queue-page .queue-empty-state p { margin: 0 0 18px !important; color: var(--wu-text-muted) !important; font-size: .83rem !important; font-weight: 500 !important; letter-spacing: .02em !important; line-height: 1.45 !important; }
 body.kasir-queue-page .queue-new-transaction-button {
   display: inline-flex !important;
@@ -2333,9 +2205,9 @@ body.kasir-queue-page .queue-new-transaction-button {
   gap: 8px !important;
   min-height: 41px !important;
   padding: 0 15px !important;
-  border: 1px solid #1D4A5A !important;
+  border: 1px solid var(--wu-text) !important;
   border-radius: 8px !important;
-  background: #1D4A5A !important;
+  background: var(--wu-text) !important;
   color: #FFFFFF !important;
   font-size: .78rem !important;
   font-weight: 600 !important;
@@ -2353,26 +2225,26 @@ body.kasir-queue-page .queue-detail-dialog {
   border: 1px solid #D7E7EE !important;
   border-radius: 16px !important;
   background: #FFFFFF !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   box-shadow: 0 22px 75px rgba(6,35,48,.28) !important;
 }
 body.kasir-queue-page .queue-detail-dialog::backdrop { background: rgba(4,28,38,.58) !important; backdrop-filter: blur(3px); }
 body.kasir-queue-page .queue-dialog-heading { display: flex !important; align-items: flex-start !important; justify-content: space-between !important; gap: 16px !important; margin-bottom: 17px !important; }
 body.kasir-queue-page .queue-dialog-heading .eyebrow { margin: 0 0 5px !important; color: var(--wu-accent-text) !important; font-size: .68rem !important; font-weight: 700 !important; }
-body.kasir-queue-page .queue-dialog-heading h2 { margin: 0 !important; font-size: 1.2rem !important; color: #1D4A5A !important; }
+body.kasir-queue-page .queue-dialog-heading h2 { margin: 0 !important; font-size: 1.2rem !important; color: var(--wu-text) !important; }
 body.kasir-queue-page .queue-dialog-close { display: inline-flex !important; align-items: center !important; justify-content: center !important; width: 34px !important; height: 34px !important; border: 1px solid #D7E6EC !important; border-radius: 8px !important; background: #F7FBFD !important; color: #426B7B !important; font-size: 1.4rem !important; cursor: pointer !important; }
 body.kasir-queue-page .queue-detail-grid { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; margin: 0 0 20px !important; }
 body.kasir-queue-page .queue-detail-grid > div { display: flex !important; flex-direction: column !important; gap: 5px !important; padding: 11px 12px !important; border: 1px solid #E0ECF1 !important; border-radius: 8px !important; background: #F7FBFD !important; min-width: 0 !important; }
 body.kasir-queue-page .queue-detail-grid dt { color: var(--wu-text-muted) !important; font-size: .72rem !important; }
-body.kasir-queue-page .queue-detail-grid dd { margin: 0 !important; color: #1D4A5A !important; font-size: .78rem !important; font-weight: 700 !important; overflow-wrap: anywhere !important; }
+body.kasir-queue-page .queue-detail-grid dd { margin: 0 !important; color: var(--wu-text) !important; font-size: .78rem !important; font-weight: 700 !important; overflow-wrap: anywhere !important; }
 body.kasir-queue-page .queue-dialog-status-field { display: flex !important; flex-direction: column !important; gap: 7px !important; }
-body.kasir-queue-page .queue-dialog-status-field label { color: #1D4A5A !important; font-size: .78rem !important; font-weight: 700 !important; }
-body.kasir-queue-page .queue-dialog-status-field select { min-height: 40px !important; padding: 8px 11px !important; border: 1px solid #BBD7E3 !important; border-radius: 7px !important; color: #1D4A5A !important; background: #FFFFFF !important; font: inherit !important; }
+body.kasir-queue-page .queue-dialog-status-field label { color: var(--wu-text) !important; font-size: .78rem !important; font-weight: 700 !important; }
+body.kasir-queue-page .queue-dialog-status-field select { min-height: 40px !important; padding: 8px 11px !important; border: 1px solid #BBD7E3 !important; border-radius: 7px !important; color: var(--wu-text) !important; background: #FFFFFF !important; font: inherit !important; }
 body.kasir-queue-page .queue-dialog-notice { min-height: 18px !important; margin: 10px 0 0 !important; color: #28728E !important; font-size: .76rem !important; line-height: 1.45 !important; }
 body.kasir-queue-page .queue-dialog-actions { display: flex !important; justify-content: flex-end !important; gap: 9px !important; margin-top: 14px !important; }
 body.kasir-queue-page .queue-dialog-secondary, body.kasir-queue-page .queue-dialog-primary { display: inline-flex !important; align-items: center !important; justify-content: center !important; min-height: 38px !important; padding: 8px 15px !important; border-radius: 7px !important; font-family: inherit !important; font-size: .78rem !important; font-weight: 700 !important; cursor: pointer !important; }
-body.kasir-queue-page .queue-dialog-secondary { border: 1px solid #BFD8E3 !important; background: #FFFFFF !important; color: #1D4A5A !important; }
-body.kasir-queue-page .queue-dialog-primary { border: 1px solid #1D4A5A !important; background: #1D4A5A !important; color: #FFFFFF !important; }
+body.kasir-queue-page .queue-dialog-secondary { border: 1px solid #BFD8E3 !important; background: #FFFFFF !important; color: var(--wu-text) !important; }
+body.kasir-queue-page .queue-dialog-primary { border: 1px solid var(--wu-text) !important; background: var(--wu-text) !important; color: #FFFFFF !important; }
 body.kasir-queue-page .queue-dialog-primary:hover { background: #143C4A !important; }
 @media (max-width: 1200px)  {
 body.kasir-queue-page { --queue-frame-width: calc(100% - 64px); }
@@ -2463,8 +2335,8 @@ body.kasir-queue-page .queue-page-table .queue-action-buttons .table-action:focu
 body.kasir-queue-page .queue-edit-dialog { width: min(680px, calc(100vw - 32px)) !important; }
 body.kasir-queue-page .queue-edit-grid { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 14px !important; }
 body.kasir-queue-page .queue-edit-field { display: flex !important; flex-direction: column !important; gap: 6px !important; min-width: 0 !important; }
-body.kasir-queue-page .queue-edit-field label { color: #1D4A5A !important; font-size: .78rem !important; font-weight: 700 !important; }
-body.kasir-queue-page .queue-edit-field input, body.kasir-queue-page .queue-edit-field select, body.kasir-queue-page .queue-edit-field output { box-sizing: border-box !important; width: 100% !important; min-height: 40px !important; padding: 9px 11px !important; border: 1px solid #BBD7E3 !important; border-radius: 7px !important; background: #FFFFFF !important; color: #1D4A5A !important; font: inherit !important; font-size: .82rem !important; }
+body.kasir-queue-page .queue-edit-field label { color: var(--wu-text) !important; font-size: .78rem !important; font-weight: 700 !important; }
+body.kasir-queue-page .queue-edit-field input, body.kasir-queue-page .queue-edit-field select, body.kasir-queue-page .queue-edit-field output { box-sizing: border-box !important; width: 100% !important; min-height: 40px !important; padding: 9px 11px !important; border: 1px solid #BBD7E3 !important; border-radius: 7px !important; background: #FFFFFF !important; color: var(--wu-text) !important; font: inherit !important; font-size: .82rem !important; }
 body.kasir-queue-page .queue-edit-field output { display: flex !important; align-items: center !important; background: #F3F9FC !important; font-weight: 700 !important; }
 @media (max-width: 600px)  {
 body.kasir-queue-page .queue-action-buttons { gap: 6px !important; }
@@ -2567,7 +2439,7 @@ body.kasir-queue-page .queue-heading-copy .eyebrow {
 }
 body.kasir-queue-page .queue-heading-copy h2 {
   margin: 0 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-size: 1.55rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.3px !important;
@@ -2628,7 +2500,7 @@ body.kasir-queue-page .queue-list-panel {
 }
 body.kasir-history-page {
   min-height: 100vh !important;
-  background: #E0EFF7 !important;
+  background: var(--wu-background) !important;
   color: #0C2B38 !important;
 }
 body.kasir-history-page .dashboard-main.history-main {
@@ -2664,7 +2536,7 @@ body.kasir-history-page .history-page-heading .eyebrow {
 }
 body.kasir-history-page .history-page-heading h2 {
   margin: 0 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-family: "Open Sans", Arial, sans-serif !important;
   font-size: 1.55rem !important;
   font-weight: 700 !important;
@@ -2699,7 +2571,7 @@ body.kasir-history-page .history-search-field, body.kasir-history-page .history-
 body.kasir-history-page .history-search-field label, body.kasir-history-page .history-filter-field label {
   display: block !important;
   margin: 0 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-family: "Open Sans", Arial, sans-serif !important;
   font-size: 0.8rem !important;
   font-weight: 600 !important;
@@ -2714,7 +2586,7 @@ body.kasir-history-page .history-search-field input, body.kasir-history-page .hi
   border: 1px solid #B9C5CB !important;
   border-radius: 8px !important;
   background-color: #FFFFFF !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-family: "Open Sans", Arial, sans-serif !important;
   font-size: 0.82rem !important;
   outline: none;
@@ -2738,7 +2610,7 @@ body.kasir-history-page .history-filter-toggle {
   border: 1px solid transparent !important;
   border-radius: 6px !important;
   background: #DDF2FC !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   cursor: pointer !important;
   transition: background-color 0.18s ease, border-color 0.18s ease !important;
 }
@@ -2788,7 +2660,7 @@ body.kasir-history-page .history-panel-heading .eyebrow {
 }
 body.kasir-history-page .history-panel-heading h2 {
   margin: 0 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-family: "Open Sans", Arial, sans-serif !important;
   font-size: 1.3rem !important;
   font-weight: 700 !important;
@@ -2807,7 +2679,7 @@ body.kasir-history-page .history-table {
   min-width: 1120px !important;
   border-collapse: separate !important;
   border-spacing: 0 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-family: "Open Sans", Arial, sans-serif !important;
 }
 body.kasir-history-page .history-table thead th {
@@ -2902,7 +2774,7 @@ body.kasir-history-page .history-empty-icon svg {
 }
 body.kasir-history-page .history-empty h3 {
   margin: 0 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-family: "Open Sans", Arial, sans-serif !important;
   font-size: 1.08rem !important;
   font-weight: 600 !important;
@@ -3047,7 +2919,7 @@ body.kasir-history-page .history-receipt-dialog {
   border-radius: 16px !important;
   background: #F4F9FC !important;
   box-shadow: 0 24px 80px rgba(0,0,0,.28) !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
 }
 body.kasir-history-page .history-receipt-actions {
   display: flex !important;
@@ -3198,8 +3070,8 @@ body.kasir-history-page .history-receipt-secondary {
   color: #24586C !important;
 }
 body.kasir-history-page .history-receipt-primary {
-  border: 1px solid #1D4A5A !important;
-  background: #1D4A5A !important;
+  border: 1px solid var(--wu-text) !important;
+  background: var(--wu-text) !important;
   color: #fff !important;
 }
 @media (max-width: 768px)  {
@@ -3265,7 +3137,7 @@ body.kasir-history-page .history-table .history-action-group .history-action-det
 body.kasir-history-page .history-table .history-action-group .history-action-detail:hover:not(:disabled) {
   background: #D3ECF7 !important;
   border-color: #85C9E1 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
 }
 body.kasir-history-page .history-table .history-action-group .history-action-transaction {
   background: #F0EBFC !important;
@@ -3306,7 +3178,7 @@ body.kasir-history-page .history-page-heading .eyebrow {
 }
 body.kasir-history-page .history-page-heading h2 {
   margin: 0 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
   font-size: 1.55rem !important;
   font-weight: 700 !important;
@@ -3506,7 +3378,7 @@ body.kasir-dashboard-page #antrean-section .section-heading .eyebrow {
 }
 body.kasir-dashboard-page #antrean-section .queue-empty-title {
   margin: 0 0 3px !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-family: "Open Sans", Arial, sans-serif !important;
   font-size: 1.28rem !important;
   font-weight: 700 !important;
@@ -3557,7 +3429,7 @@ body.kasir-history-page .history-empty-icon svg {
 }
 body.kasir-history-page .history-empty h3 {
   margin: 0 0 3px !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-family: "Open Sans", Arial, sans-serif !important;
   font-size: 1.28rem !important;
   font-weight: 700 !important;
@@ -3579,8 +3451,8 @@ body.kasir-history-page .history-empty h3 {
 }
 body.kasir-expense-page {
   min-height: 100vh;
-  background: #E0EFF7 !important;
-  color: #1D4A5A;
+  background: var(--wu-background) !important;
+  color: var(--wu-text);
 }
 body.kasir-expense-page .dashboard-main.expense-main {
   display: flex !important;
@@ -3621,7 +3493,7 @@ body.kasir-expense-page .expense-panel-heading .eyebrow {
 }
 body.kasir-expense-page .expense-page-heading h2 {
   margin: 0 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-size: 1.35rem !important;
   font-weight: 700 !important;
   letter-spacing: .035em !important;
@@ -3635,9 +3507,9 @@ body.kasir-expense-page .expense-add-button {
   min-width: 158px !important;
   min-height: 50px !important;
   padding: 0 17px !important;
-  border: 1px solid #1D4A5A !important;
+  border: 1px solid var(--wu-text) !important;
   border-radius: 6px !important;
-  background: #1D4A5A !important;
+  background: var(--wu-text) !important;
   color: #FFFFFF !important;
   font-family: inherit !important;
   font-size: 17.1px !important;
@@ -3701,7 +3573,7 @@ body.kasir-expense-page .expense-panel {
 body.kasir-expense-page .expense-panel-heading { margin: 0 0 16px !important; }
 body.kasir-expense-page .expense-panel-heading h2 {
   margin: 4px 0 0 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-size: 24px !important;
   font-weight: 700 !important;
   letter-spacing: .025em !important;
@@ -3798,7 +3670,7 @@ body.kasir-expense-page .expense-empty-icon svg {
 }
 body.kasir-expense-page .expense-empty h3 {
   margin: 0 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-family: "Open Sans", Arial, sans-serif !important;
   font-size: 1.08rem !important;
   font-weight: 600 !important;
@@ -3824,17 +3696,17 @@ body.kasir-expense-page .expense-dialog {
   border: 1px solid #D7E7EE !important;
   border-radius: 14px !important;
   background: #FFFFFF !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   box-shadow: 0 22px 75px rgba(6, 35, 48, .28) !important;
 }
 body.kasir-expense-page .expense-dialog::backdrop { background: rgba(4, 28, 38, .58) !important; backdrop-filter: blur(3px); }
 body.kasir-expense-page .expense-form { display: grid !important; gap: 14px !important; padding: 23px !important; }
 body.kasir-expense-page .expense-dialog-heading { display: flex !important; align-items: flex-start !important; justify-content: space-between !important; gap: 12px !important; margin-bottom: 3px !important; }
 body.kasir-expense-page .expense-dialog-heading .eyebrow { margin: 0 0 5px !important; color: var(--wu-accent-text) !important; font-size: .68rem !important; font-weight: 700 !important; letter-spacing: .06em !important; }
-body.kasir-expense-page .expense-dialog-heading h2 { margin: 0 !important; color: #1D4A5A !important; font-size: 1.15rem !important; font-weight: 700 !important; }
+body.kasir-expense-page .expense-dialog-heading h2 { margin: 0 !important; color: var(--wu-text) !important; font-size: 1.15rem !important; font-weight: 700 !important; }
 body.kasir-expense-page .expense-dialog-close { width: 32px !important; height: 32px !important; border: 0 !important; border-radius: 7px !important; background: #F0F6F9 !important; color: #315D6E !important; font-size: 1.35rem !important; cursor: pointer !important; }
 body.kasir-expense-page .expense-form-field { display: grid !important; gap: 6px !important; color: #315D6E !important; font-size: .78rem !important; font-weight: 600 !important; }
-body.kasir-expense-page .expense-form-field input { width: 100% !important; min-height: 40px !important; padding: 9px 11px !important; border: 1px solid #C8D9E1 !important; border-radius: 7px !important; background: #FFFFFF !important; color: #1D4A5A !important; font: inherit !important; font-size: .78rem !important; box-sizing: border-box !important; }
+body.kasir-expense-page .expense-form-field input { width: 100% !important; min-height: 40px !important; padding: 9px 11px !important; border: 1px solid #C8D9E1 !important; border-radius: 7px !important; background: #FFFFFF !important; color: var(--wu-text) !important; font: inherit !important; font-size: .78rem !important; box-sizing: border-box !important; }
 body.kasir-expense-page .expense-form-field input:focus { outline: 2px solid rgba(35, 142, 182, .18) !important; border-color: #57AFCF !important; }
 body.kasir-expense-page .expense-form-field input[type="file"] { padding: 7px !important; }
 body.kasir-expense-page .expense-optional { color: #89A5B2 !important; font-weight: 400 !important; }
@@ -3842,8 +3714,8 @@ body.kasir-expense-page .expense-form-message { min-height: 0 !important; margin
 body.kasir-expense-page .expense-form-message:empty { display: none !important; }
 body.kasir-expense-page .expense-dialog-actions { display: flex !important; justify-content: flex-end !important; gap: 9px !important; margin-top: 3px !important; }
 body.kasir-expense-page .expense-button-secondary, body.kasir-expense-page .expense-button-primary { display: inline-flex !important; align-items: center !important; justify-content: center !important; min-height: 38px !important; padding: 8px 15px !important; border-radius: 7px !important; font-family: inherit !important; font-size: .78rem !important; font-weight: 700 !important; cursor: pointer !important; }
-body.kasir-expense-page .expense-button-secondary { border: 1px solid #BFD8E3 !important; background: #FFFFFF !important; color: #1D4A5A !important; }
-body.kasir-expense-page .expense-button-primary { border: 1px solid #1D4A5A !important; background: #1D4A5A !important; color: #FFFFFF !important; }
+body.kasir-expense-page .expense-button-secondary { border: 1px solid #BFD8E3 !important; background: #FFFFFF !important; color: var(--wu-text) !important; }
+body.kasir-expense-page .expense-button-primary { border: 1px solid var(--wu-text) !important; background: var(--wu-text) !important; color: #FFFFFF !important; }
 body.kasir-expense-page .expense-button-primary:hover { background: #143C4A !important; }
 @media (max-width: 1100px)  {
 body.kasir-expense-page .dashboard-main.expense-main { width: calc(100% - 56px) !important; }
@@ -3954,7 +3826,7 @@ body.kasir-expense-page .expense-page-heading h2 {
   margin: 0 !important;
   font-size: 1.55rem !important;
   font-weight: 700 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   line-height: 1.3 !important;
   letter-spacing: 0.3px !important;
 }
@@ -4004,7 +3876,7 @@ body.kasir-queue-page .queue-page-table .queue-action-buttons .table-action {
 body.kasir-queue-page .queue-page-table .table-action-detail {
   background-color: rgba(166, 206, 230, .44) !important;
   border-color: rgba(29, 74, 90, .20) !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
 }
 body.kasir-queue-page .queue-page-table .table-action-edit {
   background-color: rgba(172, 230, 166, .44) !important;
@@ -4188,9 +4060,6 @@ body.kasir-expense-page .expense-panel-heading h2, body.kasir-dashboard-page:not
     font-size: 1.15rem !important;
   }
 }
-.kasir-dashboard-page .desktop-sidebar-toggle svg {
-  display: none !important;
-}
 body.kasir-expense-page main.dashboard-main.expense-main > .expense-panel {
   align-self: stretch !important;
   width: 100% !important;
@@ -4234,9 +4103,9 @@ body.kasir-expense-page .expense-add-button {
   max-height: 40px !important;
   padding: 0 13px !important;
   box-sizing: border-box !important;
-  border: 1px solid #1D4A5A !important;
+  border: 1px solid var(--wu-text) !important;
   border-radius: 6px !important;
-  background: #1D4A5A !important;
+  background: var(--wu-text) !important;
   color: #FFFFFF !important;
   font-family: inherit !important;
   font-size: 13px !important;
@@ -4290,7 +4159,7 @@ body.kasir-dashboard-page .dashboard-welcome > .eyebrow, body.kasir-queue-page .
 body.kasir-dashboard-page .dashboard-welcome > h2, body.kasir-queue-page .queue-heading-copy > h2, body.kasir-transaction-page .transaction-heading > h2, body.kasir-payment-page .payment-heading > h2, body.kasir-history-page .history-page-heading > h2, body.kasir-expense-page .expense-page-heading h2 {
   display: block !important;
   margin: 0 !important;
-  color: #1D4A5A !important;
+  color: var(--wu-text) !important;
   font-family: "Open Sans", Arial, sans-serif !important;
   font-size: 1.35rem !important;
   font-weight: 700 !important;

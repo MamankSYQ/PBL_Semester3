@@ -76,6 +76,11 @@
   min-width: 940px;
 }
 
+/* Di laptop (>= 1025 px) tabel antrean mengikuti lebar kartu, tanpa gulir samping. */
+@media (min-width: 1025px) {
+  .petugas-page .queue-table { min-width: 0; width: 100%; }
+}
+
 .petugas-page .queue-table th {
   white-space: nowrap;
 }
@@ -159,7 +164,7 @@
 .petugas-attendance-page .queue-heading h2,
 .petugas-recap-page .queue-heading h2 {
   margin: 0;
-  color: #1d4a5a;
+  color: var(--wu-text);
   font-family: "Open Sans", sans-serif;
   font-size: 20px;
   font-weight: 700;
@@ -190,7 +195,7 @@
   place-items: center;
   border: 1px solid #8dbdd0;
   border-radius: 5px;
-  color: #1d4a5a;
+  color: var(--wu-text);
   background: #dcedf4;
   font-size: 0.875rem;
 }
@@ -206,7 +211,7 @@
 
 .petugas-attendance-page .attendance-card-heading h2,
 .petugas-recap-page .attendance-card-heading h2 {
-  color: #1d4a5a;
+  color: var(--wu-text);
   font-family: "Open Sans", sans-serif;
   font-size: 15px;
   font-weight: 600;
@@ -400,7 +405,7 @@
 }
 
 .petugas-attendance-summary .summary-card strong {
-  color: #1d4a5a !important;
+  color: var(--wu-text) !important;
   font-size: 20px !important;
   line-height: 1.15 !important;
 }
@@ -664,5 +669,20 @@
 
   .attendance-period-summary span {
     line-height: 1.4;
+  }
+}
+
+/* HP kecil: setiap pasangan label–nilai rekap absensi satu baris penuh agar tidak berdesakan. */
+@media (max-width: 420px) {
+  .petugas-recap-page .attendance-recap-table tr {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mode kartu (HP): sel tidak ikut lebar kolom tabel desktop (18%, dst.) dari base.css. */
+@media (max-width: 768px) {
+  :root body.petugas-recap-page .attendance-recap-table.queue-table td {
+    width: auto !important;
+    max-width: none !important;
   }
 }

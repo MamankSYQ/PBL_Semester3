@@ -165,6 +165,7 @@
 /* Chip tanggal tidak boleh terpotong menjadi dua baris. */
 :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) :is(#kasir-date, #admin-date, #petugas-date, #owner-date, .admin-date-chip) {
   white-space: nowrap !important; width: max-content !important;
+  padding: 4px 12px !important; box-sizing: border-box !important;
 }
 
 /* ---------- Menu hamburger (HP) ---------- */
@@ -212,5 +213,25 @@
   }
   :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar .user-summary {
     flex: 0 0 auto !important; margin: 0 !important; width: auto !important;
+  }
+}
+
+/* Tabel di laptop: judul kolom boleh turun baris; isi tetap satu baris kecuali
+   kolom teks panjang (pelanggan, layanan, tanggal), agar semua kolom termasuk Aksi
+   terlihat tanpa gulir samping. */
+@media (min-width: 1025px) {
+  :root:root body:is(.admin-dashboard-page, .owner-page, .petugas-page) :is(.queue-table, .queue-full-table):not(.master-table) {
+    min-width: 0 !important; width: 100% !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .owner-page, .petugas-page) :is(.queue-table, .queue-full-table):not(.master-table) th {
+    white-space: normal !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .owner-page, .petugas-page) :is(.queue-table, .queue-full-table):not(.master-table) td {
+    white-space: nowrap !important;
+  }
+  :root:root body.admin-dashboard-page .queue-table td:is(:nth-child(2), :nth-child(4)),
+  :root:root body.owner-page .queue-full-table td:is(:nth-child(2), :nth-child(3), :nth-child(6)),
+  :root:root body.petugas-page .queue-table td:is(:nth-child(3), :nth-child(5)) {
+    white-space: normal !important;
   }
 }
