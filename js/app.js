@@ -9,6 +9,13 @@ document.addEventListener("click", (event) => {
   if (event.target.closest('[id$="logout"], #logout-button')) sessionStorage.removeItem("washupUsername");
 }, true);
 
+const shellLogout = document.getElementById(document.body.dataset.logoutId);
+shellLogout?.addEventListener("click", () => {
+  sessionStorage.removeItem("washupRole");
+  sessionStorage.removeItem("washupUsername");
+  window.location.href = appUrl("login.html");
+});
+
 // Sidebar yang bisa diciutkan. Dipakai halaman yang memuat css/sidebar-collapse.css
 // dan menyediakan tombol #sidebar-collapse-toggle. Preferensi disimpan per peramban.
 function setupCollapsibleSidebar() {
@@ -1426,70 +1433,6 @@ function setupPaymentPage() {
   const receiptOverlay = document.querySelector("#payment-receipt-overlay");
 
   if (!body || !empty || !resultCount || !unpaidCount || !readyCount || !pendingTotalElement || !pendingDescription || !notice || !detailNotice || !paymentMethod || !confirmButton) return;
-
-  // Sidebar Pembayaran mengikuti perilaku dan preferensi collapse Dashboard Kasir.
-  function setupPaymentSidebarControls() {
-    const shell = document.querySelector(".dashboard-shell");
-    const desktopToggle = document.querySelector("#sidebar-toggle");
-    const mobileToggle = document.querySelector("#mobile-sidebar-toggle");
-    const backdrop = document.querySelector("#sidebar-backdrop");
-    const mobileBreakpoint = window.matchMedia("(max-width: 768px)");
-    const collapsedKey = "washupKasirSidebarCollapsed";
-    if (!shell) return;
-
-    function closeMobileSidebar() {
-      shell.classList.remove("mobile-sidebar-open");
-      document.body.classList.remove("mobile-sidebar-scroll-lock");
-      if (backdrop) backdrop.hidden = true;
-      mobileToggle?.setAttribute("aria-expanded", "false");
-      mobileToggle?.setAttribute("aria-label", "Buka menu");
-      if (mobileToggle) mobileToggle.title = "Buka menu";
-    }
-    function openMobileSidebar() {
-      shell.classList.add("mobile-sidebar-open");
-      document.body.classList.add("mobile-sidebar-scroll-lock");
-      if (backdrop) backdrop.hidden = false;
-      mobileToggle?.setAttribute("aria-expanded", "true");
-      mobileToggle?.setAttribute("aria-label", "Tutup menu");
-      if (mobileToggle) mobileToggle.title = "Tutup menu";
-    }
-    function updateDesktopToggle() {
-      const collapsed = shell.classList.contains("sidebar-collapsed");
-      desktopToggle?.setAttribute("aria-expanded", String(!collapsed));
-      desktopToggle?.setAttribute("aria-label", collapsed ? "Perluas sidebar" : "Perkecil sidebar");
-      if (desktopToggle) desktopToggle.title = collapsed ? "Perluas sidebar" : "Perkecil sidebar";
-    }
-    function syncViewport() {
-      if (mobileBreakpoint.matches) {
-        shell.classList.remove("sidebar-collapsed");
-        closeMobileSidebar();
-      } else {
-        closeMobileSidebar();
-        try { shell.classList.toggle("sidebar-collapsed", localStorage.getItem(collapsedKey) === "true"); }
-        catch { shell.classList.remove("sidebar-collapsed"); }
-        updateDesktopToggle();
-      }
-    }
-    desktopToggle?.addEventListener("click", () => {
-      if (mobileBreakpoint.matches) return;
-      const collapsed = shell.classList.toggle("sidebar-collapsed");
-      try { localStorage.setItem(collapsedKey, String(collapsed)); } catch { /* Storage boleh tidak tersedia. */ }
-      updateDesktopToggle();
-    });
-    mobileToggle?.addEventListener("click", () => {
-      if (shell.classList.contains("mobile-sidebar-open")) closeMobileSidebar();
-      else openMobileSidebar();
-    });
-    backdrop?.addEventListener("click", closeMobileSidebar);
-    shell.querySelectorAll(".dashboard-sidebar .nav-item").forEach((link) => {
-      link.addEventListener("click", () => { if (mobileBreakpoint.matches) closeMobileSidebar(); });
-    });
-    document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeMobileSidebar(); });
-    if (mobileBreakpoint.addEventListener) mobileBreakpoint.addEventListener("change", syncViewport);
-    else mobileBreakpoint.addListener(syncViewport);
-    syncViewport();
-  }
-  setupPaymentSidebarControls();
 
   let selectedTransactionId = null;
   let currentPage = 1;
@@ -3859,89 +3802,6 @@ setupMasterPage();
     window.location.replace(appUrl("login.html"));
     return;
   }
-  const shell = document.querySelector(".dashboard-shell");
-  const sidebarToggle = document.querySelector("#sidebar-toggle");
-  const mobileToggle = document.querySelector("#mobile-sidebar-toggle");
-  const sidebarBackdrop = document.querySelector("#sidebar-backdrop");
-  const logoutButton = document.querySelector("#kasir-dashboard-logout");
-  const mobileBreakpoint = window.matchMedia("(max-width: 768px)");
-  const collapsedStorageKey = "washupKasirSidebarCollapsed";
-
-  function updateDesktopToggle() {
-    const collapsed = Boolean(shell?.classList.contains("sidebar-collapsed"));
-    sidebarToggle?.setAttribute("aria-expanded", String(!collapsed));
-    sidebarToggle?.setAttribute("aria-label", collapsed ? "Perluas sidebar" : "Perkecil sidebar");
-    if (sidebarToggle) sidebarToggle.title = collapsed ? "Perluas sidebar" : "Perkecil sidebar";
-  }
-
-  function closeMobileSidebar() {
-    shell?.classList.remove("mobile-sidebar-open");
-    document.body.classList.remove("mobile-sidebar-scroll-lock");
-    if (sidebarBackdrop) sidebarBackdrop.hidden = true;
-    mobileToggle?.setAttribute("aria-expanded", "false");
-    mobileToggle?.setAttribute("aria-label", "Buka menu");
-    if (mobileToggle) mobileToggle.title = "Buka menu";
-  }
-
-  function openMobileSidebar() {
-    shell?.classList.add("mobile-sidebar-open");
-    document.body.classList.add("mobile-sidebar-scroll-lock");
-    if (sidebarBackdrop) sidebarBackdrop.hidden = false;
-    mobileToggle?.setAttribute("aria-expanded", "true");
-    mobileToggle?.setAttribute("aria-label", "Tutup menu");
-    if (mobileToggle) mobileToggle.title = "Tutup menu";
-  }
-
-  function syncSidebarForViewport() {
-    if (!shell) return;
-    if (mobileBreakpoint.matches) {
-      shell.classList.remove("sidebar-collapsed");
-      closeMobileSidebar();
-    } else {
-      closeMobileSidebar();
-      try {
-        shell.classList.toggle("sidebar-collapsed", localStorage.getItem(collapsedStorageKey) === "true");
-      } catch {
-        shell.classList.remove("sidebar-collapsed");
-      }
-      updateDesktopToggle();
-    }
-  }
-
-  sidebarToggle?.addEventListener("click", () => {
-    if (mobileBreakpoint.matches || !shell) return;
-    const collapsed = shell.classList.toggle("sidebar-collapsed");
-    try {
-      localStorage.setItem(collapsedStorageKey, String(collapsed));
-    } catch {
-      // Penyimpanan preferensi sidebar mungkin dinonaktifkan browser.
-    }
-    updateDesktopToggle();
-  });
-
-  mobileToggle?.addEventListener("click", () => {
-    if (shell?.classList.contains("mobile-sidebar-open")) closeMobileSidebar();
-    else openMobileSidebar();
-  });
-  sidebarBackdrop?.addEventListener("click", closeMobileSidebar);
-  shell?.querySelectorAll(".dashboard-sidebar .nav-item").forEach((link) => {
-    link.addEventListener("click", () => {
-      if (mobileBreakpoint.matches) closeMobileSidebar();
-    });
-  });
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeMobileSidebar();
-  });
-  if (mobileBreakpoint.addEventListener) mobileBreakpoint.addEventListener("change", syncSidebarForViewport);
-  else mobileBreakpoint.addListener(syncSidebarForViewport);
-  syncSidebarForViewport();
-
-  logoutButton?.addEventListener("click", () => {
-    sessionStorage.removeItem("washupRole");
-    sessionStorage.removeItem("washupUsername");
-    window.location.href = appUrl("login.html");
-  });
-
   const form = transactionPageForm;
   const layout = document.querySelector("#transaction-layout");
   const result = document.querySelector("#transaction-result");
@@ -4036,7 +3896,7 @@ setupMasterPage();
 })();
 
 /* =========================================================
-   MODUL DASHBOARD KASIR — SIDEBAR DAN PAGINATION
+   MODUL DASHBOARD KASIR — PAGINATION
    Seluruh JavaScript tetap berada di app.js sesuai struktur WASHUP.
    ========================================================= */
 (() => {
@@ -4046,90 +3906,6 @@ setupMasterPage();
   if (!document.body.classList.contains("kasir-dashboard-page") ||
       document.body.classList.contains("kasir-transaction-page") ||
       document.body.classList.contains("kasir-payment-page")) return;
-
-  const shell = document.querySelector(".dashboard-shell");
-  if (!shell) return;
-
-  const sidebarToggle = document.querySelector("#sidebar-toggle");
-  const mobileToggle = document.querySelector("#mobile-sidebar-toggle");
-  const backdrop = document.querySelector("#sidebar-backdrop");
-  const logoutButton = document.querySelector("#kasir-dashboard-logout");
-  const mobileBreakpoint = window.matchMedia("(max-width: 768px)");
-  const collapsedStorageKey = "washupKasirSidebarCollapsed";
-
-  function updateDesktopToggle() {
-    const collapsed = shell.classList.contains("sidebar-collapsed");
-    sidebarToggle?.setAttribute("aria-expanded", String(!collapsed));
-    sidebarToggle?.setAttribute("aria-label", collapsed ? "Perluas sidebar" : "Perkecil sidebar");
-    if (sidebarToggle) sidebarToggle.title = collapsed ? "Perluas sidebar" : "Perkecil sidebar";
-  }
-
-  function closeMobileSidebar() {
-    shell.classList.remove("mobile-sidebar-open");
-    document.body.classList.remove("mobile-sidebar-scroll-lock");
-    if (backdrop) backdrop.hidden = true;
-    mobileToggle?.setAttribute("aria-expanded", "false");
-    mobileToggle?.setAttribute("aria-label", "Buka menu");
-    if (mobileToggle) mobileToggle.title = "Buka menu";
-  }
-
-  function openMobileSidebar() {
-    shell.classList.add("mobile-sidebar-open");
-    document.body.classList.add("mobile-sidebar-scroll-lock");
-    if (backdrop) backdrop.hidden = false;
-    mobileToggle?.setAttribute("aria-expanded", "true");
-    mobileToggle?.setAttribute("aria-label", "Tutup menu");
-    if (mobileToggle) mobileToggle.title = "Tutup menu";
-  }
-
-  function syncSidebarForViewport() {
-    if (mobileBreakpoint.matches) {
-      shell.classList.remove("sidebar-collapsed");
-      closeMobileSidebar();
-      return;
-    }
-    closeMobileSidebar();
-    try {
-      shell.classList.toggle("sidebar-collapsed", localStorage.getItem(collapsedStorageKey) === "true");
-    } catch {
-      shell.classList.remove("sidebar-collapsed");
-    }
-    updateDesktopToggle();
-  }
-
-  sidebarToggle?.addEventListener("click", () => {
-    if (mobileBreakpoint.matches) return;
-    const collapsed = shell.classList.toggle("sidebar-collapsed");
-    try {
-      localStorage.setItem(collapsedStorageKey, String(collapsed));
-    } catch {
-      // Preferensi tetap dapat digunakan walau localStorage tidak tersedia.
-    }
-    updateDesktopToggle();
-  });
-
-  mobileToggle?.addEventListener("click", () => {
-    if (shell.classList.contains("mobile-sidebar-open")) closeMobileSidebar();
-    else openMobileSidebar();
-  });
-  backdrop?.addEventListener("click", closeMobileSidebar);
-  shell.querySelectorAll(".dashboard-sidebar .nav-item").forEach((link) => {
-    link.addEventListener("click", () => {
-      if (mobileBreakpoint.matches) closeMobileSidebar();
-    });
-  });
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeMobileSidebar();
-  });
-  if (mobileBreakpoint.addEventListener) mobileBreakpoint.addEventListener("change", syncSidebarForViewport);
-  else mobileBreakpoint.addListener(syncSidebarForViewport);
-  syncSidebarForViewport();
-
-  logoutButton?.addEventListener("click", () => {
-    sessionStorage.removeItem("washupRole");
-    sessionStorage.removeItem("washupUsername");
-    window.location.href = appUrl("login.html");
-  });
 
   // Pagination meniru referensi: rentang data, nomor halaman, ellipsis, dan pilihan ukuran halaman.
   const tableBody = document.querySelector("#queue-table-body");
@@ -4681,19 +4457,14 @@ setupMasterPage();
 })();
 
 
-/* =========================================================
-   EDIT PROFIL KASIR — popover kecil tepat di bawah profil topbar.
-   Avatar tetap default; tidak ada fitur unggah/ganti foto.
-   ========================================================= */
-(() => {
-  "use strict";
-
+function setupProfileEditor() {
   const trigger = document.querySelector("#profile-edit-trigger");
   const dialog = document.querySelector("#profile-edit-dialog");
   const form = document.querySelector("#profile-edit-form");
   if (!trigger || !dialog || !form) return;
 
   const usernameInput = document.querySelector("#profile-username");
+  const usernameNote = document.querySelector("#profile-username-note");
   const currentPasswordInput = document.querySelector("#profile-current-password");
   const newPasswordInput = document.querySelector("#profile-password");
   const displayUsername = document.querySelector("#profile-display-username");
@@ -4702,25 +4473,27 @@ setupMasterPage();
   const saveButton = document.querySelector("#profile-edit-save");
   const closeButton = document.querySelector("#profile-edit-close");
   const cancelButton = document.querySelector("#profile-edit-cancel");
-
   let editingAccountId = null;
+  let protectedAdmin = false;
 
   const normalized = (value) => String(value || "").trim().toLowerCase();
+  const activeRole = () => sessionStorage.getItem("washupRole") || document.body.dataset.role || "Pengguna";
 
   function currentAccount(records = getUserAccounts()) {
     const username = normalized(sessionStorage.getItem("washupUsername"));
-    const role = sessionStorage.getItem("washupRole");
+    const role = activeRole();
     return records.find((account) =>
       normalized(account.username) === username && account.role === role
     ) || records.find((account) => account.protected && account.role === role) || null;
   }
 
   function setHeaderProfile(account) {
-    if (!account) return;
-    if (displayUsername) displayUsername.textContent = account.username || "Kasir";
-    if (displayRole) displayRole.textContent = `Role: ${account.role || "Kasir"}`;
-    trigger.setAttribute("aria-label", `Edit profil ${account.username || "pengguna"}`);
-    trigger.title = `Edit profil ${account.username || "pengguna"}`;
+    const role = sessionStorage.getItem("washupRole") || account?.role || document.body.dataset.role || "Pengguna";
+    const username = sessionStorage.getItem("washupUsername") || account?.username || role;
+    if (displayUsername) displayUsername.textContent = username;
+    if (displayRole) displayRole.textContent = `Role: ${role}`;
+    trigger.setAttribute("aria-label", `Edit profil ${username || "pengguna"}`);
+    trigger.title = `Edit profil ${username || "pengguna"}`;
   }
 
   function positionPopover() {
@@ -4731,8 +4504,6 @@ setupMasterPage();
     const popoverWidth = Math.min(340, window.innerWidth - viewportPadding * 2);
     const measuredWidth = dialog.getBoundingClientRect().width || popoverWidth;
     const width = Math.min(measuredWidth, popoverWidth);
-
-    // Right-align the popover with the profile control, then clamp to the viewport.
     const preferredLeft = triggerRect.right - width + 14;
     const left = Math.max(
       viewportPadding,
@@ -4752,8 +4523,7 @@ setupMasterPage();
       const target = document.getElementById(button.dataset.passwordToggle);
       if (target) target.type = "password";
       button.setAttribute("aria-pressed", "false");
-      const label = target?.id === "profile-current-password"
-        ? "password lama" : "password baru";
+      const label = target?.id === "profile-current-password" ? "password lama" : "password baru";
       button.setAttribute("aria-label", `Tampilkan ${label}`);
     });
   }
@@ -4772,13 +4542,17 @@ setupMasterPage();
     const account = currentAccount();
     if (!account) {
       editingAccountId = null;
+      protectedAdmin = false;
       message.textContent = "Akun tidak ditemukan. Silakan keluar dan masuk kembali.";
       showPopover();
       return;
     }
 
     editingAccountId = account.id;
+    protectedAdmin = normalized(account.username) === "admin";
     usernameInput.value = account.username || "";
+    usernameInput.disabled = protectedAdmin;
+    if (usernameNote) usernameNote.hidden = !protectedAdmin;
     currentPasswordInput.value = String(account.password || "");
     newPasswordInput.value = "";
     message.textContent = "";
@@ -4786,7 +4560,7 @@ setupMasterPage();
     resetPasswordVisibility();
 
     showPopover();
-    usernameInput.focus({ preventScroll: true });
+    (protectedAdmin ? newPasswordInput : usernameInput).focus({ preventScroll: true });
   }
 
   function closeDialog({ restoreFocus = false } = {}) {
@@ -4795,6 +4569,9 @@ setupMasterPage();
 
     form.reset();
     editingAccountId = null;
+    protectedAdmin = false;
+    usernameInput.disabled = false;
+    if (usernameNote) usernameNote.hidden = true;
     message.textContent = "";
     saveButton.disabled = false;
     resetPasswordVisibility();
@@ -4802,17 +4579,9 @@ setupMasterPage();
     if (restoreFocus) trigger.focus();
   }
 
-  function toggleDialog() {
+  trigger.addEventListener("click", () => {
     if (dialog.open) closeDialog();
     else openDialog();
-  }
-
-  trigger.addEventListener("click", toggleDialog);
-  trigger.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      toggleDialog();
-    }
   });
 
   dialog.querySelectorAll("[data-password-toggle]").forEach((button) => {
@@ -4822,9 +4591,7 @@ setupMasterPage();
 
       const shouldShow = target.type === "password";
       target.type = shouldShow ? "text" : "password";
-
-      const label = target.id === "profile-current-password"
-        ? "password lama" : "password baru";
+      const label = target.id === "profile-current-password" ? "password lama" : "password baru";
       button.setAttribute("aria-pressed", String(shouldShow));
       button.setAttribute("aria-label", `${shouldShow ? "Sembunyikan" : "Tampilkan"} ${label}`);
     });
@@ -4836,12 +4603,12 @@ setupMasterPage();
     const username = normalized(usernameInput.value);
     const newPassword = String(newPasswordInput.value || "");
 
-    if (!username) {
+    if (!protectedAdmin && !username) {
       message.textContent = "Username wajib diisi.";
       usernameInput.focus();
       return;
     }
-    if (username.length > 40) {
+    if (!protectedAdmin && username.length > 40) {
       message.textContent = "Username maksimal 40 karakter.";
       usernameInput.focus();
       return;
@@ -4860,8 +4627,10 @@ setupMasterPage();
         return;
       }
 
+      const current = records[accountIndex];
+      const nextUsername = normalized(current.username) === "admin" ? current.username : username;
       const duplicate = records.some((account, index) =>
-        index !== accountIndex && normalized(account.username) === username
+        index !== accountIndex && normalized(account.username) === nextUsername
       );
       if (duplicate) {
         message.textContent = "Username sudah digunakan akun lain. Gunakan username yang berbeda.";
@@ -4869,10 +4638,9 @@ setupMasterPage();
         return;
       }
 
-      const current = records[accountIndex];
       const updated = {
         ...current,
-        username,
+        username: nextUsername,
         password: newPassword || current.password,
         updatedAt: Date.now(),
       };
@@ -4880,7 +4648,7 @@ setupMasterPage();
       delete updated.profilePhoto;
       records[accountIndex] = updated;
       saveMasterRecords(masterDefinitions.users, records);
-      sessionStorage.setItem("washupUsername", username);
+      sessionStorage.setItem("washupUsername", nextUsername);
       setHeaderProfile(updated);
       closeDialog();
     } catch (error) {
@@ -4893,12 +4661,9 @@ setupMasterPage();
   closeButton?.addEventListener("click", () => closeDialog({ restoreFocus: true }));
   cancelButton?.addEventListener("click", () => closeDialog({ restoreFocus: true }));
 
-  // Outside click closes the compact popover; clicking the profile control toggles it.
   document.addEventListener("pointerdown", (event) => {
     if (!dialog.open) return;
-    if (!dialog.contains(event.target) && !trigger.contains(event.target)) {
-      closeDialog();
-    }
+    if (!dialog.contains(event.target) && !trigger.contains(event.target)) closeDialog();
   });
 
   dialog.addEventListener("cancel", (event) => {
@@ -4915,6 +4680,7 @@ setupMasterPage();
 
   window.addEventListener("resize", positionPopover);
   window.addEventListener("scroll", positionPopover, true);
-
   setHeaderProfile(currentAccount());
-})();
+}
+
+setupProfileEditor();
