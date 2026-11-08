@@ -351,47 +351,17 @@ roleOptions.forEach((option) => {
 
 if (loginForm) {
   loginForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(loginForm);
-    const username = String(formData.get("username")).trim().toLowerCase();
-    const password = String(formData.get("password"));
-    const users = getUserAccounts();
-    const account = users.find((user) => String(user.username || "").trim().toLowerCase() === username);
+    const username = String(new FormData(loginForm).get("username") || "").trim();
+    const password = String(new FormData(loginForm).get("password") || "");
 
     usernameError.textContent = username ? "" : "Username wajib diisi.";
     passwordError.textContent = password ? "" : "Password wajib diisi.";
     loginError.textContent = "";
 
+    // Jika ada field kosong, batalkan kirim. Jika lengkap, form dikirim ke login.php (verifikasi di server).
     if (!username || !password) {
-      return;
+      event.preventDefault();
     }
-
-    if (!account || account.password !== password) {
-      loginError.textContent = "Username atau password salah.";
-      return;
-    }
-
-    if (account.status !== "Aktif") {
-      loginError.textContent = "Akun dinonaktifkan. Silakan hubungi Administrator.";
-      return;
-    }
-
-    const selectedRole = selectedRoleInput?.value || "Admin";
-    if (account.role !== selectedRole) {
-      loginError.textContent = `Akun ini bukan akun ${selectedRole}. Pilih jenis akun yang sesuai.`;
-      return;
-    }
-
-    const validRoles = ["Admin", "Kasir", "Petugas", "Owner"];
-    if (!validRoles.includes(account.role)) {
-      loginError.textContent = "Role akun tidak valid.";
-      return;
-    }
-
-    sessionStorage.setItem("washupRole", account.role);
-    sessionStorage.setItem("washupUsername", username);
-    window.location.href = account.role === "Kasir" ? "dashboard-kasir.html" : account.role === "Petugas" ? "dashboard-petugas.html" : account.role === "Owner" ? "dashboard-owner.html" : account.role === "Admin" ? "dashboard-admin.html" : "role.html";
   });
 }
 
@@ -417,7 +387,7 @@ if (roleName) {
   const role = sessionStorage.getItem("washupRole");
 
   if (!role) {
-    window.location.replace("login.html");
+    window.location.replace("login.php");
   } else if (role === "Kasir") {
     window.location.replace("dashboard-kasir.html");
   } else if (role === "Owner") {
@@ -433,7 +403,7 @@ if (roleName) {
 if (logoutButton) {
   logoutButton.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
-    window.location.href = "login.html";
+    window.location.href = "logout.php";
   });
 }
 
@@ -447,49 +417,49 @@ if (document.querySelector(".dashboard-page")) {
   const role = sessionStorage.getItem("washupRole");
 
   if (role !== "Kasir") {
-    window.location.replace(role ? "role.html" : "login.html");
+    window.location.replace(role ? "role.html" : "login.php");
   }
 }
 
 if (document.querySelector(".transaction-page") && sessionStorage.getItem("washupRole") !== "Kasir") {
-  window.location.replace("login.html");
+  window.location.replace("login.php");
 }
 
 if (document.querySelector(".payment-page") && sessionStorage.getItem("washupRole") !== "Kasir") {
-  window.location.replace("login.html");
+  window.location.replace("login.php");
 }
 
 if (document.querySelector(".history-page") && sessionStorage.getItem("washupRole") !== "Kasir") {
-  window.location.replace("login.html");
+  window.location.replace("login.php");
 }
 
 if (document.querySelector(".owner-dashboard-page") && sessionStorage.getItem("washupRole") !== "Owner") {
-  window.location.replace("login.html");
+  window.location.replace("login.php");
 }
 
 if (document.querySelector(".owner-report-page") && sessionStorage.getItem("washupRole") !== "Owner") {
-  window.location.replace("login.html");
+  window.location.replace("login.php");
 }
 
 if (document.querySelector(".admin-dashboard-page") && sessionStorage.getItem("washupRole") !== "Admin") {
-  window.location.replace("login.html");
+  window.location.replace("login.php");
 }
 
 if (document.querySelector(".petugas-dashboard-page") && sessionStorage.getItem("washupRole") !== "Petugas") {
-  window.location.replace("login.html");
+  window.location.replace("login.php");
 }
 
 if (dashboardLogout) {
   dashboardLogout.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
-    window.location.href = "login.html";
+    window.location.href = "logout.php";
   });
 }
 
 if (petugasDashboardLogout) {
   petugasDashboardLogout.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
-    window.location.href = "login.html";
+    window.location.href = "logout.php";
   });
 }
 
@@ -706,7 +676,7 @@ setupTransactionForm();
 if (transactionLogout) {
   transactionLogout.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
-    window.location.href = "login.html";
+    window.location.href = "logout.php";
   });
 }
 
@@ -851,7 +821,7 @@ function setupQueuePage() {
   });
   queueLogout?.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
-    window.location.href = "login.html";
+    window.location.href = "logout.php";
   });
 
   renderQueuePage();
@@ -860,7 +830,7 @@ function setupQueuePage() {
 if (document.querySelector(".queue-page")) {
   const role = sessionStorage.getItem("washupRole");
   if (role !== "Kasir") {
-    window.location.replace(role ? "role.html" : "login.html");
+    window.location.replace(role ? "role.html" : "login.php");
   } else {
     setupQueuePage();
   }
@@ -968,7 +938,7 @@ function setupTransactionHistory() {
   dateFilter.addEventListener("change", render);
   document.querySelector("#history-dialog-close")?.addEventListener("click", closeDetail);
   dialog.addEventListener("click", (event) => { if (event.target === dialog) closeDetail(); });
-  document.querySelector("#history-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = "login.html"; });
+  document.querySelector("#history-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = "logout.php"; });
   render();
 }
 
@@ -1100,7 +1070,7 @@ function setupPaymentPage() {
     notice.textContent = "Pembayaran berhasil dikonfirmasi.";
     render();
   });
-  document.querySelector("#payment-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = "login.html"; });
+  document.querySelector("#payment-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = "logout.php"; });
   render();
 }
 
@@ -1205,7 +1175,7 @@ function setupOwnerDashboard() {
       document.querySelector("#owner-notice").textContent = "Menu laporan belum tersedia.";
     });
   });
-  document.querySelector("#owner-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = "login.html"; });
+  document.querySelector("#owner-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = "logout.php"; });
   render();
 }
 
@@ -1287,7 +1257,7 @@ function setupOwnerTransactionReport() {
   document.querySelector("#owner-report-dialog-close")?.addEventListener("click", closeDialog);
   dialog.addEventListener("click", (event) => { if (event.target === dialog) closeDialog(); });
   document.querySelectorAll("[data-owner-report-placeholder]").forEach((link) => link.addEventListener("click", (event) => { event.preventDefault(); document.querySelector("#owner-report-notice").textContent = "Menu laporan belum tersedia."; }));
-  document.querySelector("#owner-report-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = "login.html"; });
+  document.querySelector("#owner-report-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = "logout.php"; });
   render();
 }
 
@@ -1355,7 +1325,7 @@ function setupAdminDashboard() {
       notice.textContent = "Menu ini belum tersedia.";
     });
   });
-  document.querySelector("#admin-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = "login.html"; });
+  document.querySelector("#admin-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = "logout.php"; });
   render();
 }
 
@@ -1535,7 +1505,7 @@ function setupPetugasQueue() {
     document.querySelector("#petugas-dialog-notice").textContent = "Status pengerjaan berhasil diperbarui.";
     render();
   });
-  document.querySelector("#petugas-queue-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = "login.html"; });
+  document.querySelector("#petugas-queue-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = "logout.php"; });
   render();
 }
 
@@ -1679,12 +1649,12 @@ function setupPetugasAttendance() {
     notice.textContent = attendance.checkOut ? "Absensi hari ini sudah selesai." : "Absen masuk berhasil disimpan.";
     render();
   });
-  document.querySelector("#attendance-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); sessionStorage.removeItem("washupUsername"); window.location.href = "login.html"; });
+  document.querySelector("#attendance-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); sessionStorage.removeItem("washupUsername"); window.location.href = "logout.php"; });
   render();
 }
 
 if (document.querySelector(".petugas-dashboard-page") || document.querySelector(".petugas-queue-page") || document.querySelector(".petugas-attendance-page")) {
-  if (sessionStorage.getItem("washupRole") !== "Petugas") window.location.replace("login.html");
+  if (sessionStorage.getItem("washupRole") !== "Petugas") window.location.replace("login.php");
 }
 if (document.querySelector(".petugas-dashboard-page")) setupPetugasDashboard();
 if (document.querySelector(".petugas-queue-page")) setupPetugasQueue();
@@ -1695,7 +1665,7 @@ function setupMasterPage() {
   if (!page) return;
 
   if (sessionStorage.getItem("washupRole") !== "Admin") {
-    window.location.replace("login.html");
+    window.location.replace("login.php");
     return;
   }
 
@@ -1900,7 +1870,7 @@ function setupMasterPage() {
   });
   document.querySelector("#master-logout")?.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
-    window.location.href = "login.html";
+    window.location.href = "logout.php";
   });
   renderHeaders();
   render();
