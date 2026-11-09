@@ -367,3 +367,91 @@ tbody > tr[hidden] { display: none !important; }
 @media (min-width: 769px) and (max-width: 1100px) {
   :root:root body.petugas-page .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 }
+
+/* =========================================================
+   TOMBOL AKSI TABEL — satu gaya untuk semua role (acuan: Antrean Kasir)
+   Detail/Tinjau/Periksa/Struk = biru, Edit = hijau, Hapus = merah.
+   ========================================================= */
+:root:root body main tbody :is(.table-action, .payment-table-action, .verification-row-action, .expense-action-button) {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  width: auto !important; min-width: 52px !important; height: 26px !important; min-height: 26px !important;
+  padding: 4px 10px !important; margin: 0 !important; box-sizing: border-box !important;
+  border: 1px solid #1D4A5A !important; border-radius: 7px !important;
+  background: rgba(166, 206, 230, .44) !important; color: #1D4A5A !important;
+  font: 600 11.9px/1 var(--wu-font-body) !important; letter-spacing: .01em !important; white-space: nowrap !important;
+  box-shadow: none !important; cursor: pointer; transition: filter .15s ease;
+}
+:root:root body main tbody :is(.table-action-edit, .expense-action-edit) {
+  border-color: #007A18 !important; background: rgba(172, 230, 166, .44) !important; color: #00631A !important;
+}
+:root:root body main tbody :is(.table-action-delete, .expense-action-delete) {
+  border-color: #930002 !important; background: rgba(255, 121, 124, .44) !important; color: #930002 !important;
+}
+:root:root body main tbody :is(.table-action, .payment-table-action, .verification-row-action, .expense-action-button):hover:not(:disabled) { filter: brightness(.94); }
+:root:root body main tbody .verification-row-action.is-selected { background: #1D4A5A !important; color: #fff !important; }
+:root:root body main tbody :is(.table-action, .payment-table-action):disabled { opacity: .45 !important; cursor: not-allowed !important; }
+:root:root body main tbody :is(.queue-action-buttons, .history-action-group, .expense-actions) { gap: 8px !important; }
+:root:root body main tbody td > :is(.table-action, .payment-table-action, .verification-row-action) + :is(.table-action, .payment-table-action, .verification-row-action) { margin-left: 8px !important; }
+
+/* Paginasi di kanan bawah tabel */
+.wu-pager { justify-content: flex-end !important; }
+@media (max-width: 480px) { .wu-pager { justify-content: center !important; } }
+
+/* =========================================================
+   IKON "DATA KOSONG" — satu gaya di semua tabel
+   ========================================================= */
+:root:root body .wu-empty-icon {
+  display: grid !important; place-items: center !important; flex: 0 0 auto !important;
+  width: 76px !important; height: 72px !important; min-width: 76px !important; max-width: 76px !important;
+  margin: 0 auto 14px !important; padding: 0 !important; border: 0 !important; border-radius: 14px !important;
+  background: #E5F3F8 !important; color: var(--wu-accent-text) !important; box-shadow: none !important;
+  font-size: 0 !important;
+}
+:root:root body .wu-empty-icon::before, :root:root body .wu-empty-icon::after { content: none !important; display: none !important; }
+:root:root body .wu-empty-icon svg {
+  display: block !important; width: 38px !important; height: 38px !important; margin: 0 !important;
+  fill: none !important; stroke: currentColor !important; stroke-width: 1.8 !important; stroke-linecap: round; stroke-linejoin: round;
+}
+:root:root body .attendance-recap-empty:not([hidden]) { display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; padding: 28px 16px !important; }
+
+/* =========================================================
+   HEADER TABEL — satu warna & tema untuk semua tabel
+   ========================================================= */
+:root:root body main table thead tr { background: transparent !important; }
+:root:root body main table thead th {
+  background: #E5F1F7 !important; color: var(--wu-text) !important;
+  font-family: var(--wu-font-body) !important; font-size: 11px !important; font-weight: 700 !important;
+  letter-spacing: .05em !important; text-transform: uppercase !important;
+  border-bottom: 1px solid #C9DCE5 !important; box-shadow: none !important;
+}
+:root:root body main table thead th:first-child { border-top-left-radius: 8px !important; }
+:root:root body main table thead th:last-child { border-top-right-radius: 8px !important; }
+
+/* =========================================================
+   DROPDOWN — panah tidak menempel ke pinggir kolom
+   ========================================================= */
+:root:root body :is(main, dialog) select {
+  -webkit-appearance: none !important; appearance: none !important;
+  padding-right: 44px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23436D8A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important; background-position: right 16px center !important; background-size: 16px 16px !important;
+}
+
+/* =========================================================
+   PROFIL DI TOPBAR (HP) — avatar & teks tetap jelas seperti desktop
+   ========================================================= */
+@media (max-width: 768px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-avatar-circle {
+    width: 40px !important; height: 40px !important; min-width: 40px !important; max-width: 40px !important; flex: 0 0 40px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-avatar-circle svg { width: 24px !important; height: 24px !important; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-summary { gap: 10px !important; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-info strong { font-size: 15px !important; line-height: 1.2 !important; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-info small { font-size: 12px !important; line-height: 1.3 !important; color: var(--wu-text-on-dark) !important; }
+}
+@media (max-width: 400px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar h1 { font-size: 15px !important; }
+}
+@media (max-width: 480px) {
+  :root:root body :is(main, dialog) select { padding-right: 34px !important; background-position: right 12px center !important; background-size: 14px 14px !important; }
+}

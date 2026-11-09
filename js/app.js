@@ -1521,7 +1521,7 @@ function setupPaymentPage() {
       const actionCell = document.createElement("td");
       const action = document.createElement("button");
       action.type = "button";
-      action.className = "payment-table-action";
+      action.className = "payment-table-action table-action-detail";
       action.textContent = isPaid(transaction) ? "Lihat Struk" : "Periksa";
       action.dataset.transactionKey = String(transactionKey(transaction) ?? "");
       action.setAttribute("aria-label", `${isPaid(transaction) ? "Lihat struk" : "Periksa pembayaran"} ${transaction.transactionNumber || "transaksi"}`);
@@ -1843,7 +1843,7 @@ function setupOwnerTransactionReport() {
       [transaction.transactionNumber, formatDateTime(transaction.createdAt), transaction.customerName, transaction.plateNumber, transaction.vehicleType, transaction.service, formatCurrency(transaction.price), transaction.serviceStatus].forEach((value) => { const cell = document.createElement("td"); cell.textContent = value || "-"; row.append(cell); });
       const action = document.createElement("td");
       const detailButton = document.createElement("button");
-      detailButton.className = "table-action";
+      detailButton.className = "table-action table-action-detail";
       detailButton.type = "button";
       detailButton.textContent = "Detail";
       detailButton.addEventListener("click", () => setDetail(transaction));
@@ -2611,7 +2611,7 @@ function setupAdminVerificationPage() {
         } else {
           const action = document.createElement("button");
           action.type = "button";
-          action.className = "verification-row-action";
+          action.className = "verification-row-action table-action-detail";
           action.dataset.recordIndex = String(recordIndex);
           action.dataset.kind = kind;
           action.textContent = status === "Terverifikasi" ? "Detail" : "Tinjau";
@@ -2750,7 +2750,7 @@ function setupPetugasDashboard() {
 
       const actionCell = document.createElement("td");
       const button = document.createElement("button");
-      button.className = "table-action";
+      button.className = "table-action table-action-detail";
       button.type = "button";
       button.textContent = "Detail";
       button.addEventListener("click", () => openDetail(transaction));
@@ -3393,7 +3393,7 @@ function setupMasterPage() {
       });
       const actions = document.createElement("td");
       const detailButton = document.createElement("button");
-      detailButton.className = "table-action table-action-link";
+      detailButton.className = "table-action table-action-link table-action-detail";
       detailButton.type = "button";
       detailButton.dataset.action = "detail";
       detailButton.dataset.id = record.id;
@@ -3401,14 +3401,14 @@ function setupMasterPage() {
       actions.append(detailButton);
       if (!(type === "users" && isProtectedRecord(record))) {
         const editButton = document.createElement("button");
-        editButton.className = "table-action";
+        editButton.className = "table-action table-action-edit";
         editButton.type = "button";
         editButton.dataset.action = "edit";
         editButton.dataset.id = record.id;
         editButton.textContent = "Edit";
         actions.append(editButton);
         const deleteButton = document.createElement("button");
-        deleteButton.className = "table-action";
+        deleteButton.className = "table-action table-action-delete";
         deleteButton.type = "button";
         deleteButton.dataset.action = "delete";
         deleteButton.dataset.id = record.id;
@@ -3746,13 +3746,9 @@ setupMasterPage();
         const emptyState = document.createElement("div");
         emptyState.className = "queue-empty-state";
         const iconWrap = document.createElement("div");
-        iconWrap.className = "queue-empty-icon";
+        iconWrap.className = "queue-empty-icon wu-empty-icon";
         iconWrap.setAttribute("aria-hidden", "true");
-        iconWrap.innerHTML = `
-          <svg viewBox="0 0 48 48" focusable="false">
-            <path d="M5 20.5 13 9h22l8 11.5v16H5z"></path>
-            <path d="M5 20.5h10l5 5h8l5-5h10"></path>
-          </svg>`;
+        iconWrap.innerHTML = window.renderIcon("inbox", "wu-icon");
 
         const title = document.createElement("h3");
         title.className = "queue-empty-title";

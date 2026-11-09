@@ -14,7 +14,20 @@ const WASHUP_ICONS = {
   "chart": '<path d="M3 3v18h18"/><path d="m7 14 4-4 4 3 6-7"/>',
   "log-in": '<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5M15 12H3"/>',
   "log-out": '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/>',
-  "receipt": '<path d="M5 2v20l2.5-1.5L10 22l2-1.5 2 1.5 2.5-1.5L19 22V2l-2.5 1.5L14 2l-2 1.5L10 2 7.5 3.5z"/><path d="M9 8h6M9 12h6M9 16h4"/>'
+  "receipt": '<path d="M5 2v20l2.5-1.5L10 22l2-1.5 2 1.5 2.5-1.5L19 22V2l-2.5 1.5L14 2l-2 1.5L10 2 7.5 3.5z"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+  "car": '<path d="M5 17H3v-5l2-5h14l2 5v5h-2"/><path d="M3 12h18M9 17h6"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>',
+  "clock": '<circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3.5 2"/>',
+  "arrows": '<path d="m8 3-4 4 4 4M4 7h16M16 21l4-4-4-4M20 17H4"/>',
+  "calendar-x": '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9.5 13.5 5 5M14.5 13.5l-5 5"/>',
+  "receipt-clock": '<path d="M12 21H6V3l2 1.5L10 3l2 1.5L14 3l2 1.5L18 3v7"/><path d="M9 8h6M9 12h3"/><circle cx="17" cy="17" r="4.5"/><path d="M17 15v2l1.5 1"/>',
+  "receipt-check": '<path d="M12 21H6V3l2 1.5L10 3l2 1.5L14 3l2 1.5L18 3v9"/><path d="M9 8h6M9 12h4"/><path d="m14.5 18 2 2 4-4"/>',
+  "cash-out": '<rect x="2" y="9" width="20" height="12" rx="2"/><circle cx="12" cy="15" r="2"/><path d="M12 7V2M9.5 4.5 12 2l2.5 2.5"/>',
+  "cash-in": '<rect x="2" y="9" width="20" height="12" rx="2"/><circle cx="12" cy="15" r="2"/><path d="M12 2v5M9.5 4.5 12 7l2.5-2.5"/>',
+  "coins": '<ellipse cx="9" cy="6" rx="6" ry="2.5"/><path d="M3 6v4c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V6"/><path d="M3 10v4c0 1.4 2.7 2.5 6 2.5"/><ellipse cx="16" cy="15" rx="5" ry="2.2"/><path d="M11 15v3.5c0 1.2 2.2 2.2 5 2.2s5-1 5-2.2V15"/>',
+  "clock-alert": '<path d="M21 12a9 9 0 1 0-9 9"/><path d="M12 7v5l3 2"/><path d="M19 15v3M19 21h.01"/>',
+  "grid": '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  "receipt-stack": '<rect x="8" y="2.5" width="12" height="15" rx="1.5"/><path d="M5 6.5v13A1.5 1.5 0 0 0 6.5 21H16"/><path d="M11 7.5h6M11 11.5h6"/>',
+  "inbox": '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>'
 };
 
 // Merender ikon berdasarkan nama. "rupiah" dirender sebagai teks Rp.
@@ -399,8 +412,23 @@ function markHeadings() {
   if (header) header.classList.add("wu-page-header");
 }
 
+// Ikon "data kosong" seragam di semua tabel: kotak biru muda berisi ikon kotak masuk (inbox).
+function mountEmptyIcons() {
+  document.querySelectorAll(".queue-empty-box, .queue-empty-icon, .history-empty-icon, .expense-empty-icon, .payment-empty-symbol").forEach((box) => {
+    box.classList.add("wu-empty-icon");
+    box.setAttribute("aria-hidden", "true");
+    box.innerHTML = renderIcon("inbox");
+  });
+  document.querySelectorAll(".attendance-recap-empty").forEach((empty) => {
+    if (empty.querySelector(".wu-empty-icon")) return;
+    empty.insertAdjacentHTML("afterbegin", `<span class="wu-empty-icon" aria-hidden="true">${renderIcon("inbox")}</span>`);
+  });
+}
+
+window.renderIcon = renderIcon;
 window.WashupPager = { renderPager, ensurePager, paginateTable };
 
 mountAppShell();
 markHeadings();
+mountEmptyIcons();
 mountTablePagination();
