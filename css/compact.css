@@ -485,7 +485,7 @@ tbody > tr[hidden] { display: none !important; }
    ABSENSI MASUK / KELUAR PETUGAS — bentuk kartu tegak, tidak melebar
    ========================================================= */
 @media (min-width: 769px) {
-  :root:root body.petugas-attendance-page .dashboard-main > * { max-width: 560px !important; margin-left: auto !important; margin-right: auto !important; }
+  :root:root body.petugas-attendance-page .dashboard-main > .attendance-card { max-width: 560px !important; margin-left: 0 !important; margin-right: auto !important; }
 }
 :root:root body.petugas-attendance-page .attendance-card { padding: 24px !important; }
 :root:root body.petugas-attendance-page .attendance-list :is(dt, dd) { font-size: 13px !important; line-height: 1.4 !important; }
@@ -498,3 +498,20 @@ tbody > tr[hidden] { display: none !important; }
 :root:root body.kasir-payment-page .payment-check-panel .payment-check-actions { display: block !important; }
 /* Kartu ringkasan Laporan Transaksi: jarak ikon → label sama dengan halaman Owner lain */
 :root:root body.owner-page .owner-report-summary-grid .summary-card { justify-content: space-between !important; min-height: 134px !important; }
+
+/* Header halaman selalu setinggi isinya (chip tanggal tidak menimpa kartu di HP). */
+:root:root body main .wu-page-header { height: auto !important; min-height: 0 !important; max-height: none !important; }
+
+/* Pembayaran: kolom daftar setinggi panel supaya "data kosong" benar-benar di tengah. */
+:root:root body.kasir-payment-page .payment-workspace > .payment-list-column { align-self: stretch !important; }
+
+/* Pembayaran: baris Nominal diterima & Kembalian rata dan sejajar. */
+:root:root body.kasir-payment-page #payment-cash-fields { padding: 6px 14px !important; gap: 0 !important; }
+:root:root body.kasir-payment-page #payment-cash-fields > div {
+  display: grid !important; grid-template-columns: minmax(0, 1fr) minmax(0, 200px) !important; align-items: center !important;
+  gap: 12px !important; min-height: 52px !important; padding: 6px 0 !important;
+}
+:root:root body.kasir-payment-page #payment-cash-fields > div + div { border-top: 1px solid #DCE9EF !important; }
+:root:root body.kasir-payment-page #payment-cash-fields .payment-amount-input { width: 100% !important; margin: 0 !important; }
+:root:root body.kasir-payment-page #payment-cash-fields input { width: 100% !important; height: 40px !important; padding: 0 12px !important; box-sizing: border-box !important; }
+:root:root body.kasir-payment-page #payment-cash-fields > div > strong { justify-self: end !important; padding-right: 13px !important; font-size: 14px !important; }
