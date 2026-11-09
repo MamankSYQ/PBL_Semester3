@@ -32,7 +32,9 @@ const WASHUP_ICONS = {
   "car-moon": '<path d="M4 19H2.5v-4l1.8-4h10.4l1.8 4v4H15"/><path d="M2.5 15h14M7.5 19h4"/><circle cx="5.8" cy="19" r="1.6"/><circle cx="13.2" cy="19" r="1.6"/><path d="M21.8 7.6A4 4 0 1 1 17 2.2a3.1 3.1 0 0 0 4.8 5.4z"/>',
   "car-hourglass": '<path d="M4 19H2.5v-4l1.8-4h10.4l1.8 4v4H15"/><path d="M2.5 15h14M7.5 19h4"/><circle cx="5.8" cy="19" r="1.6"/><circle cx="13.2" cy="19" r="1.6"/><path d="M15.8 2h5.4M15.8 10h5.4"/><path d="M16.5 2v1.3c0 1 .8 1.7 2 2.7 1.2-1 2-1.7 2-2.7V2M16.5 10V8.7c0-1 .8-1.7 2-2.7 1.2 1 2 1.7 2 2.7V10"/>',
   "car-drop": '<path d="M4 19H2.5v-4l1.8-4h10.4l1.8 4v4H15"/><path d="M2.5 15h14M7.5 19h4"/><circle cx="5.8" cy="19" r="1.6"/><circle cx="13.2" cy="19" r="1.6"/><path d="M18.5 1.8s-2.9 3.2-2.9 5.3a2.9 2.9 0 0 0 5.8 0c0-2.1-2.9-5.3-2.9-5.3z"/>',
-  "car-check": '<path d="M4 19H2.5v-4l1.8-4h10.4l1.8 4v4H15"/><path d="M2.5 15h14M7.5 19h4"/><circle cx="5.8" cy="19" r="1.6"/><circle cx="13.2" cy="19" r="1.6"/><circle cx="18.5" cy="6" r="4"/><path d="m16.8 6 1.2 1.2 2.3-2.4"/>'
+  "car-check": '<path d="M4 19H2.5v-4l1.8-4h10.4l1.8 4v4H15"/><path d="M2.5 15h14M7.5 19h4"/><circle cx="5.8" cy="19" r="1.6"/><circle cx="13.2" cy="19" r="1.6"/><circle cx="18.5" cy="6" r="4"/><path d="m16.8 6 1.2 1.2 2.3-2.4"/>',
+  "receipt-calendar": '<path d="M11 21H5V3l2 1.5L9 3l2 1.5L13 3l2 1.5L17 3v7"/><path d="M8 8h6M8 12h3"/><rect x="13" y="13" width="8.5" height="8" rx="1.3"/><path d="M13 16h8.5M15.5 11.8v2.2M19 11.8v2.2"/>',
+  "car-queue": '<path d="M4 19H2.5v-4l1.8-4h10.4l1.8 4v4H15"/><path d="M2.5 15h14M7.5 19h4"/><circle cx="5.8" cy="19" r="1.6"/><circle cx="13.2" cy="19" r="1.6"/><path d="M11 9.5l1.3-3.5h7.4l1.8 4v3.5H20"/><path d="M17.5 10h4"/>'
 };
 
 // Merender ikon berdasarkan nama. "rupiah" dirender sebagai teks Rp.

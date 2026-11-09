@@ -243,7 +243,7 @@
     min-width: 0 !important; width: 100% !important;
   }
   :root:root body:is(.admin-dashboard-page, .owner-page, .petugas-page) :is(.queue-table, .queue-full-table):not(.master-table) th {
-    white-space: normal !important;
+    white-space: nowrap !important; width: auto !important;
   }
   :root:root body:is(.admin-dashboard-page, .owner-page, .petugas-page) :is(.queue-table, .queue-full-table):not(.master-table) td {
     white-space: nowrap !important;
@@ -484,8 +484,22 @@ tbody > tr[hidden] { display: none !important; }
 /* =========================================================
    ABSENSI MASUK / KELUAR PETUGAS — bentuk kartu tegak, tidak melebar
    ========================================================= */
-@media (min-width: 769px) {
-  :root:root body.petugas-attendance-page .dashboard-main > .attendance-card { max-width: 560px !important; margin-left: 0 !important; margin-right: auto !important; }
+/* Desktop: satu kartu penuh seperti halaman lain, isi dibagi dua kolom —
+   kiri data absensi, kanan bukti foto + tombol absen. HP: tetap satu kolom. */
+@media (min-width: 900px) {
+  :root:root body.petugas-attendance-page .attendance-card {
+    display: grid !important; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    grid-template-areas: "head head" "list photo" "list action" "list notice" !important;
+    grid-template-rows: auto auto auto 1fr !important; column-gap: 32px !important; row-gap: 0 !important; align-items: start !important;
+  }
+  :root:root body.petugas-attendance-page .attendance-card > .attendance-card-heading { grid-area: head !important; margin-bottom: 8px !important; }
+  :root:root body.petugas-attendance-page .attendance-card > .attendance-list { grid-area: list !important; margin: 0 !important; }
+  :root:root body.petugas-attendance-page .attendance-card > .attendance-photo-section {
+    grid-area: photo !important; margin: 0 !important; padding: 16px !important;
+    border: 1px solid #D4E2E8 !important; border-radius: 10px !important; background: #F7FBFD !important;
+  }
+  :root:root body.petugas-attendance-page .attendance-card > .attendance-button { grid-area: action !important; margin: 16px 0 0 !important; width: 100% !important; }
+  :root:root body.petugas-attendance-page .attendance-card > .attendance-notice { grid-area: notice !important; margin: 10px 0 0 !important; }
 }
 :root:root body.petugas-attendance-page .attendance-card { padding: 24px !important; }
 :root:root body.petugas-attendance-page .attendance-list :is(dt, dd) { font-size: 13px !important; line-height: 1.4 !important; }
@@ -515,3 +529,10 @@ tbody > tr[hidden] { display: none !important; }
 :root:root body.kasir-payment-page #payment-cash-fields .payment-amount-input { width: 100% !important; margin: 0 !important; }
 :root:root body.kasir-payment-page #payment-cash-fields input { width: 100% !important; height: 40px !important; padding: 0 12px !important; box-sizing: border-box !important; }
 :root:root body.kasir-payment-page #payment-cash-fields > div > strong { justify-self: end !important; padding-right: 13px !important; font-size: 14px !important; }
+
+/* Header tabel lebih lega: judul kolom satu baris, jarak antarkolom seragam. */
+:root:root body main table thead th { white-space: nowrap !important; padding: 13px 14px !important; line-height: 1.3 !important; letter-spacing: .04em !important; }
+:root:root body main table tbody td { padding-left: 14px !important; padding-right: 14px !important; }
+/* Tabel sempit (Transaksi Terbaru Admin, setengah lebar): jarak kolom sedikit lebih rapat agar muat tanpa geser. */
+:root:root body.admin-dashboard-page #admin-recent-body td, :root:root body.admin-dashboard-page #admin-recent-body ~ * td,
+:root:root body.admin-dashboard-page table:has(#admin-recent-body) th { padding-left: 10px !important; padding-right: 10px !important; }
