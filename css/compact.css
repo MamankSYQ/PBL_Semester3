@@ -278,26 +278,26 @@
 
 /* =========================================================
    KOMPONEN BERSAMA — Paginasi "Sebelumnya 1 2 Selanjutnya"
-   Dipakai semua tabel di semua role (dibuat oleh js/components.js).
+   Gaya ringan tanpa garis (acuan revisi kelompok), di kanan bawah tabel.
    ========================================================= */
 .wu-pager {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
-  gap: 8px; margin: 16px 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end;
+  gap: 6px; margin: 14px 0 0; padding: 0;
 }
 .wu-pager[hidden] { display: none !important; }
-.wu-pager-pages { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
+.wu-pager-pages { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .wu-pager-btn {
-  min-width: 34px; height: 34px; padding: 0 14px;
-  border: 1px solid var(--wu-muted); border-radius: var(--wu-radius-sm);
-  background: var(--wu-surface); color: var(--wu-text);
-  font: 600 .8125rem/1 var(--wu-font-body); cursor: pointer;
-  transition: background-color .15s, border-color .15s, color .15s;
+  min-width: 30px; height: 30px; padding: 0 10px;
+  border: 0; border-radius: 6px;
+  background: #EDF5F8; color: #2F5E72;
+  font: 600 .75rem/1 var(--wu-font-body); cursor: pointer;
+  transition: background-color .15s, color .15s;
 }
 .wu-pager-num { padding: 0; }
-.wu-pager-btn:hover:not(:disabled):not(.is-current) { background: var(--wu-background); border-color: var(--wu-accent); }
-.wu-pager-btn.is-current { background: var(--wu-teal); border-color: var(--wu-teal); color: #fff; cursor: default; }
-.wu-pager-btn:disabled { opacity: .5; cursor: not-allowed; }
-.wu-pager-dots { min-width: 20px; text-align: center; color: var(--wu-text-muted); }
+.wu-pager-btn:hover:not(:disabled):not(.is-current) { background: #DCEBF2; }
+.wu-pager-btn.is-current { background: var(--wu-accent-strong); color: #fff; cursor: default; }
+.wu-pager-btn:disabled { background: transparent; color: #8AA5B1; cursor: default; }
+.wu-pager-dots { min-width: 16px; text-align: center; color: var(--wu-text-muted); }
 /* Baris di luar halaman aktif disembunyikan walau tabel memakai display khusus. */
 tbody > tr[hidden] { display: none !important; }
 @media (max-width: 480px) {
@@ -393,9 +393,6 @@ tbody > tr[hidden] { display: none !important; }
 :root:root body main tbody :is(.queue-action-buttons, .history-action-group, .expense-actions) { gap: 8px !important; }
 :root:root body main tbody td > :is(.table-action, .payment-table-action, .verification-row-action) + :is(.table-action, .payment-table-action, .verification-row-action) { margin-left: 8px !important; }
 
-/* Paginasi di kanan bawah tabel */
-.wu-pager { justify-content: flex-end !important; }
-@media (max-width: 480px) { .wu-pager { justify-content: center !important; } }
 
 /* =========================================================
    IKON "DATA KOSONG" — satu gaya di semua tabel
@@ -455,3 +452,49 @@ tbody > tr[hidden] { display: none !important; }
 @media (max-width: 480px) {
   :root:root body :is(main, dialog) select { padding-right: 34px !important; background-position: right 12px center !important; background-size: 14px 14px !important; }
 }
+
+/* =========================================================
+   DATA KOSONG — isi selalu di tengah area tabel
+   ========================================================= */
+:root:root body main :is(.queue-empty, .payment-empty, .history-empty, .expense-empty, .queue-empty-state):not([hidden]) {
+  display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important;
+  text-align: center !important; padding: 40px 16px !important; gap: 0 !important;
+}
+:root:root body main :is(.queue-empty, .payment-empty, .history-empty, .expense-empty, .queue-empty-state) :is(h3, p) { margin: 0 0 6px !important; }
+:root:root body.kasir-payment-page .payment-list-column { display: flex !important; flex-direction: column !important; }
+:root:root body.kasir-payment-page .payment-list-column > .payment-empty:not([hidden]) { flex: 1 1 auto !important; }
+
+/* =========================================================
+   PEMBAYARAN — panel "Pemeriksaan pembayaran" lebih rapi & terbaca
+   ========================================================= */
+:root:root body.kasir-payment-page .payment-check-panel { padding: 18px !important; }
+:root:root body.kasir-payment-page .payment-check-panel h3 { font-size: 16px !important; margin: 0 0 4px !important; }
+:root:root body.kasir-payment-page .payment-check-panel h3 + p,
+:root:root body.kasir-payment-page .payment-check-panel header p { font-size: 12px !important; line-height: 1.45 !important; color: var(--wu-text-muted) !important; }
+:root:root body.kasir-payment-page .payment-check-panel .payment-method-pill { font-size: 12px !important; padding: 4px 12px !important; }
+:root:root body.kasir-payment-page .payment-check-panel h4 { font-size: 13.5px !important; margin: 18px 0 10px !important; }
+:root:root body.kasir-payment-page .payment-check-panel :is(span, strong):not(.sr-only):not(.payment-method-pill) { font-size: 13px !important; line-height: 1.4 !important; }
+:root:root body.kasir-payment-page .payment-check-panel .payment-check-notice { font-size: 12px !important; line-height: 1.5 !important; margin: 14px 0 0 !important; }
+:root:root body.kasir-payment-page .payment-check-panel .payment-button-primary {
+  width: 100% !important; max-width: none !important; min-width: 0 !important; height: 42px !important; min-height: 42px !important; margin-top: 16px !important;
+  font-size: 13.5px !important; border-radius: 8px !important;
+}
+:root:root body.kasir-payment-page .payment-check-panel input { font-size: 14px !important; }
+
+/* =========================================================
+   ABSENSI MASUK / KELUAR PETUGAS — bentuk kartu tegak, tidak melebar
+   ========================================================= */
+@media (min-width: 769px) {
+  :root:root body.petugas-attendance-page .dashboard-main > * { max-width: 560px !important; margin-left: auto !important; margin-right: auto !important; }
+}
+:root:root body.petugas-attendance-page .attendance-card { padding: 24px !important; }
+:root:root body.petugas-attendance-page .attendance-list :is(dt, dd) { font-size: 13px !important; line-height: 1.4 !important; }
+:root:root body.petugas-attendance-page .attendance-list > div { padding: 11px 0 !important; }
+:root:root body.petugas-attendance-page :is(.photo-picker-button, .attendance-card button[type="submit"], .attendance-card .primary-button) { min-height: 42px !important; font-size: 13.5px !important; }
+:root:root body.petugas-attendance-page .attendance-photo-section :is(h3, p) { font-size: 12px !important; }
+:root:root body.kasir-payment-page .payment-list-column tbody td { font-size: 12px !important; }
+:root:root body.kasir-payment-page .payment-list-column tbody td :is(strong, small, span:not([class*="badge"]):not([class*="status"])) { font-size: 12px !important; }
+:root:root body.kasir-payment-page .payment-list-column tbody td :is([class*="badge"], [class*="status"]) { font-size: 11px !important; }
+:root:root body.kasir-payment-page .payment-check-panel .payment-check-actions { display: block !important; }
+/* Kartu ringkasan Laporan Transaksi: jarak ikon → label sama dengan halaman Owner lain */
+:root:root body.owner-page .owner-report-summary-grid .summary-card { justify-content: space-between !important; min-height: 134px !important; }

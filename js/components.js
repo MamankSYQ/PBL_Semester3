@@ -27,7 +27,9 @@ const WASHUP_ICONS = {
   "clock-alert": '<path d="M21 12a9 9 0 1 0-9 9"/><path d="M12 7v5l3 2"/><path d="M19 15v3M19 21h.01"/>',
   "grid": '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
   "receipt-stack": '<rect x="8" y="2.5" width="12" height="15" rx="1.5"/><path d="M5 6.5v13A1.5 1.5 0 0 0 6.5 21H16"/><path d="M11 7.5h6M11 11.5h6"/>',
-  "inbox": '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>'
+  "inbox": '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+  "car-sun": '<path d="M4 19H2.5v-4l1.8-4h10.4l1.8 4v4H15"/><path d="M2.5 15h14M7.5 19h4"/><circle cx="5.8" cy="19" r="1.6"/><circle cx="13.2" cy="19" r="1.6"/><circle cx="18.5" cy="6" r="2.2"/><path d="M18.5 1.5v1M18.5 9.5v1M14 6h1M22 6h1M15.3 2.8l.7.7M21 8.5l.7.7M15.3 9.2l.7-.7M21 3.5l.7-.7"/>',
+  "car-moon": '<path d="M4 19H2.5v-4l1.8-4h10.4l1.8 4v4H15"/><path d="M2.5 15h14M7.5 19h4"/><circle cx="5.8" cy="19" r="1.6"/><circle cx="13.2" cy="19" r="1.6"/><path d="M21.8 7.6A4 4 0 1 1 17 2.2a3.1 3.1 0 0 0 4.8 5.4z"/>'
 };
 
 // Merender ikon berdasarkan nama. "rupiah" dirender sebagai teks Rp.
@@ -418,6 +420,11 @@ function mountEmptyIcons() {
     box.classList.add("wu-empty-icon");
     box.setAttribute("aria-hidden", "true");
     box.innerHTML = renderIcon("inbox");
+  });
+  // Pesan kosong yang belum punya ikon (misalnya "Belum ada transaksi.") ikut diberi ikon.
+  document.querySelectorAll(".queue-empty").forEach((empty) => {
+    if (empty.querySelector(".wu-empty-icon")) return;
+    empty.insertAdjacentHTML("afterbegin", `<span class="wu-empty-icon" aria-hidden="true">${renderIcon("inbox")}</span>`);
   });
   document.querySelectorAll(".attendance-recap-empty").forEach((empty) => {
     if (empty.querySelector(".wu-empty-icon")) return;
