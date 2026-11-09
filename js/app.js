@@ -67,6 +67,9 @@ if (currentYear) {
   currentYear.textContent = new Date().getFullYear();
 }
 
+// Jumlah baris per halaman untuk semua tabel (paginasi seragam: Sebelumnya 1 2 Selanjutnya).
+const TABLE_PAGE_SIZE = 5;
+
 const accounts = {
   admin: { password: "admin123", role: "Admin" },
   kasir: { password: "kasir123", role: "Kasir" },
@@ -779,12 +782,7 @@ function setupQueuePage() {
   const filterInput = document.querySelector("#queue-filter");
   const queueEmpty = document.querySelector("#queue-empty");
   const queueResultCount = document.querySelector("#queue-result-count");
-  const queuePageSize = document.querySelector("#queue-page-size");
-  const queueTableFooter = document.querySelector("#queue-table-footer");
-  const queuePaginationRange = document.querySelector("#queue-pagination-range");
-  const queuePageNumbers = document.querySelector("#queue-page-numbers");
-  const queuePagePrev = document.querySelector("#queue-page-prev");
-  const queuePageNext = document.querySelector("#queue-page-next");
+  const queuePager = document.querySelector("#queue-pager");
   const activeQueueCount = document.querySelector("#active-queue-count");
   const dialog = document.querySelector("#queue-dialog");
   const dialogClose = document.querySelector("#dialog-close");
@@ -845,7 +843,7 @@ function setupQueuePage() {
     const allTransactions = getTransactions();
     const activeTransactions = allTransactions.filter((transaction) => transaction.serviceStatus !== "Selesai");
     const transactions = filteredTransactions();
-    const pageSize = Math.max(1, Number.parseInt(queuePageSize?.value || "5", 10) || 5);
+    const pageSize = TABLE_PAGE_SIZE;
     const totalPages = Math.max(1, Math.ceil(transactions.length / pageSize));
 
     // Pertahankan halaman yang valid saat hasil pencarian/filter atau jumlah data berubah.
@@ -859,53 +857,12 @@ function setupQueuePage() {
     queueBody.replaceChildren();
     queueEmpty.hidden = transactions.length > 0;
 
-    if (queueTableFooter) queueTableFooter.hidden = transactions.length === 0;
-    if (queuePaginationRange) {
-      queuePaginationRange.textContent = transactions.length
-        ? `Showing ${startIndex + 1} to ${endIndex} of ${transactions.length} entries`
-        : "Showing 0 to 0 of 0 entries";
-    }
-    if (queuePagePrev) queuePagePrev.disabled = transactions.length === 0 || currentPage <= 1;
-    if (queuePageNext) queuePageNext.disabled = transactions.length === 0 || currentPage >= totalPages;
-
-    if (queuePageNumbers) {
-      queuePageNumbers.replaceChildren();
-      if (transactions.length) {
-        let pages;
-        if (totalPages <= 7) {
-          pages = Array.from({ length: totalPages }, (_, index) => index + 1);
-        } else {
-          pages = [...new Set([1, currentPage - 1, currentPage, currentPage + 1, totalPages])]
-            .filter((page) => page >= 1 && page <= totalPages)
-            .sort((first, second) => first - second);
-        }
-
-        let previousPage = 0;
-        pages.forEach((page) => {
-          if (page - previousPage > 1) {
-            const ellipsis = document.createElement("span");
-            ellipsis.className = "queue-page-ellipsis";
-            ellipsis.setAttribute("aria-hidden", "true");
-            ellipsis.textContent = "…";
-            queuePageNumbers.append(ellipsis);
-          }
-          const pageButton = document.createElement("button");
-          pageButton.type = "button";
-          pageButton.className = "queue-page-number";
-          pageButton.textContent = String(page);
-          pageButton.setAttribute("aria-label", `Halaman ${page}`);
-          if (page === currentPage) {
-            pageButton.classList.add("is-current");
-            pageButton.setAttribute("aria-current", "page");
-          }
-          pageButton.addEventListener("click", () => {
-            currentPage = page;
-            renderQueuePage();
-          });
-          queuePageNumbers.append(pageButton);
-          previousPage = page;
-        });
-      }
+    if (queuePager) {
+      window.WashupPager.renderPager(queuePager, {
+        page: currentPage,
+        total: totalPages,
+        onChange: (target) => { currentPage = target; renderQueuePage(); },
+      });
     }
 
     visibleTransactions.forEach((transaction) => {
@@ -1083,23 +1040,6 @@ function setupQueuePage() {
     currentPage = 1;
     renderQueuePage();
   });
-  queuePageSize?.addEventListener("change", () => {
-    currentPage = 1;
-    renderQueuePage();
-  });
-  queuePagePrev?.addEventListener("click", () => {
-    if (currentPage > 1) {
-      currentPage -= 1;
-      renderQueuePage();
-    }
-  });
-  queuePageNext?.addEventListener("click", () => {
-    const totalPages = Math.max(1, Math.ceil(filteredTransactions().length / Math.max(1, Number.parseInt(queuePageSize?.value || "5", 10) || 5)));
-    if (currentPage < totalPages) {
-      currentPage += 1;
-      renderQueuePage();
-    }
-  });
   dialogClose?.addEventListener("click", closeDetail);
   dialogCancel?.addEventListener("click", closeDetail);
   editClose?.addEventListener("click", closeEdit);
@@ -1165,16 +1105,12 @@ function setupTransactionHistory() {
   const detailDialog = document.querySelector("#history-dialog");
   const filterToggle = document.querySelector("#history-filter-toggle");
   const filterOptions = document.querySelector("#history-filter-options");
-  const pageSizeSelect = document.querySelector("#history-page-size");
-  const pageRange = document.querySelector("#history-pagination-range");
-  const pageNumbers = document.querySelector("#history-page-numbers");
-  const prevButton = document.querySelector("#history-page-prev");
-  const nextButton = document.querySelector("#history-page-next");
+  const pager = document.querySelector("#history-pager");
   const receiptOverlay = document.querySelector("#history-receipt-overlay");
   const receiptDialogTitle = document.querySelector("#history-receipt-dialog-title");
   const receiptCaption = document.querySelector("#history-receipt-caption");
 
-  if (!body || !search || !serviceFilter || !paymentFilter || !dateFilter || !resultCount || !empty || !emptyTitle || !emptyMessage || !detailDialog || !pageSizeSelect || !pageRange || !pageNumbers || !prevButton || !nextButton || !receiptOverlay) return;
+  if (!body || !search || !serviceFilter || !paymentFilter || !dateFilter || !resultCount || !empty || !emptyTitle || !emptyMessage || !detailDialog || !pager || !receiptOverlay) return;
 
   let currentPage = 1;
   let currentReceiptType = "transaction";
@@ -1282,57 +1218,25 @@ function setupTransactionHistory() {
     document.body.classList.remove("history-receipt-printing");
     if (lastFocusedElement && typeof lastFocusedElement.focus === "function") lastFocusedElement.focus();
   };
-  const renderPageNumbers = (totalPages) => {
-    pageNumbers.replaceChildren();
-    if (!totalPages) return;
-    let pages;
-    if (totalPages <= 7) pages = Array.from({ length: totalPages }, (_, index) => index + 1);
-    else if (currentPage <= 4) pages = [1, 2, 3, 4, 5, "…", totalPages];
-    else if (currentPage >= totalPages - 3) pages = [1, "…", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
-    else pages = [1, "…", currentPage - 1, currentPage, currentPage + 1, "…", totalPages];
-    let previousPage = 0;
-    pages.forEach((page) => {
-      if (page === "…") {
-        const ellipsis = document.createElement("span");
-        ellipsis.className = "queue-page-ellipsis";
-        ellipsis.textContent = "…";
-        ellipsis.setAttribute("aria-hidden", "true");
-        pageNumbers.append(ellipsis);
-        return;
-      }
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "queue-page-number";
-      button.textContent = String(page);
-      button.setAttribute("aria-label", `Halaman ${page}`);
-      if (page === currentPage) {
-        button.classList.add("is-current");
-        button.setAttribute("aria-current", "page");
-      }
-      button.addEventListener("click", () => { currentPage = page; render(); });
-      pageNumbers.append(button);
-      previousPage = page;
-    });
-  };
   const render = () => {
     const allTransactions = getTransactions();
     const transactions = filteredTransactions();
-    const pageSize = Math.max(1, Number.parseInt(pageSizeSelect.value || "5", 10) || 5);
+    const pageSize = TABLE_PAGE_SIZE;
     const totalPages = transactions.length ? Math.ceil(transactions.length / pageSize) : 0;
     currentPage = totalPages ? Math.min(Math.max(1, currentPage), totalPages) : 1;
     const startIndex = transactions.length ? (currentPage - 1) * pageSize : 0;
     const visibleTransactions = transactions.slice(startIndex, startIndex + pageSize);
-    const endIndex = Math.min(startIndex + visibleTransactions.length, transactions.length);
 
     resultCount.textContent = `${transactions.length} data`;
     empty.hidden = transactions.length > 0;
     emptyTitle.textContent = allTransactions.length ? "Transaksi tidak ditemukan." : "Belum ada riwayat transaksi.";
     emptyMessage.textContent = allTransactions.length ? "Ubah pencarian atau filter untuk melihat transaksi lain." : "Transaksi yang dibuat Kasir akan tampil di sini.";
     body.replaceChildren();
-    pageRange.textContent = transactions.length ? `Showing ${startIndex + 1} to ${endIndex} of ${transactions.length} entries` : "Showing 0 to 0 of 0 entries";
-    prevButton.disabled = transactions.length === 0 || currentPage <= 1;
-    nextButton.disabled = transactions.length === 0 || currentPage >= totalPages;
-    renderPageNumbers(totalPages);
+    window.WashupPager.renderPager(pager, {
+      page: currentPage,
+      total: totalPages || 1,
+      onChange: (target) => { currentPage = target; render(); },
+    });
 
     visibleTransactions.forEach((transaction) => {
       const row = document.createElement("tr");
@@ -1380,12 +1284,6 @@ function setupTransactionHistory() {
   serviceFilter.addEventListener("change", () => { currentPage = 1; render(); });
   paymentFilter.addEventListener("change", () => { currentPage = 1; render(); });
   dateFilter.addEventListener("change", () => { currentPage = 1; render(); });
-  pageSizeSelect.addEventListener("change", () => { currentPage = 1; render(); });
-  prevButton.addEventListener("click", () => { if (currentPage > 1) { currentPage -= 1; render(); } });
-  nextButton.addEventListener("click", () => {
-    const totalPages = Math.ceil(filteredTransactions().length / Math.max(1, Number.parseInt(pageSizeSelect.value || "5", 10) || 5));
-    if (currentPage < totalPages) { currentPage += 1; render(); }
-  });
   filterToggle?.addEventListener("click", () => {
     const wasExpanded = filterToggle.getAttribute("aria-expanded") === "true";
     filterToggle.setAttribute("aria-expanded", String(!wasExpanded));
@@ -1422,12 +1320,7 @@ function setupPaymentPage() {
   const detailNotice = document.querySelector("#payment-dialog-notice");
   const paymentMethod = document.querySelector("#payment-method");
   const confirmButton = document.querySelector("#confirm-payment");
-  const pageSizeSelect = document.querySelector("#payment-page-size");
-  const pageFooter = document.querySelector("#payment-table-footer");
-  const rangeLabel = document.querySelector("#payment-pagination-range");
-  const pageNumbers = document.querySelector("#payment-page-numbers");
-  const prevButton = document.querySelector("#payment-page-prev");
-  const nextButton = document.querySelector("#payment-page-next");
+  const pager = document.querySelector("#payment-pager");
   const cashFields = document.querySelector("#payment-cash-fields");
   const cashReceived = document.querySelector("#payment-cash-received");
   const changeLabel = document.querySelector("#payment-change");
@@ -1572,43 +1465,20 @@ function setupPaymentPage() {
     document.body.classList.remove("payment-receipt-open");
   };
 
-  const renderPages = (totalPages) => {
-    if (!pageNumbers) return;
-    pageNumbers.replaceChildren();
-    let pages;
-    if (totalPages <= 5) pages = Array.from({ length: totalPages }, (_, index) => index + 1);
-    else if (currentPage <= 3) pages = [1, 2, 3, 4, "…", totalPages];
-    else if (currentPage >= totalPages - 2) pages = [1, "…", totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
-    else pages = [1, "…", currentPage - 1, currentPage, currentPage + 1, "…", totalPages];
-    pages.forEach((page) => {
-      if (page === "…") {
-        const dots = document.createElement("span"); dots.className = "payment-page-ellipsis"; dots.textContent = "…"; dots.setAttribute("aria-hidden", "true"); pageNumbers.append(dots); return;
-      }
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = `payment-page-number ${page === currentPage ? "is-current" : ""}`;
-      button.textContent = String(page);
-      button.setAttribute("aria-label", `Halaman ${page}`);
-      if (page === currentPage) button.setAttribute("aria-current", "page");
-      button.addEventListener("click", () => { currentPage = page; render(); });
-      pageNumbers.append(button);
-    });
-  };
-
   const renderPagination = (rows) => {
-    if (!pageFooter || !rangeLabel) return;
-    const pageSize = Math.max(1, Number.parseInt(pageSizeSelect?.value || "4", 10) || 4);
+    if (!pager) return;
+    const pageSize = TABLE_PAGE_SIZE;
     const total = rows.length;
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
     currentPage = Math.min(Math.max(1, currentPage), totalPages);
     const startIndex = total ? (currentPage - 1) * pageSize : 0;
     const endIndex = Math.min(startIndex + pageSize, total);
     rows.forEach((row, index) => { row.hidden = index < startIndex || index >= endIndex; });
-    pageFooter.hidden = total <= pageSize;
-    rangeLabel.textContent = total ? `Showing ${startIndex + 1} to ${endIndex} of ${total} entries` : "Showing 0 to 0 of 0 entries";
-    if (prevButton) prevButton.disabled = currentPage === 1 || total === 0;
-    if (nextButton) nextButton.disabled = currentPage === totalPages || total === 0;
-    renderPages(totalPages);
+    window.WashupPager.renderPager(pager, {
+      page: currentPage,
+      total: totalPages,
+      onChange: (target) => { currentPage = target; render(); },
+    });
   };
 
   const render = () => {
@@ -1704,12 +1574,6 @@ function setupPaymentPage() {
   cashReceived?.addEventListener("input", updateChange);
   qrisVerified?.addEventListener("change", () => {
     if (qrisVerified.checked) detailNotice.textContent = "Verifikasi QRIS dicentang. Pastikan status pengerjaan sudah Selesai sebelum mengonfirmasi.";
-  });
-  pageSizeSelect?.addEventListener("change", () => { currentPage = 1; render(); });
-  prevButton?.addEventListener("click", () => { if (currentPage > 1) { currentPage -= 1; render(); } });
-  nextButton?.addEventListener("click", () => {
-    const pageSize = Math.max(1, Number.parseInt(pageSizeSelect?.value || "4", 10) || 4);
-    if (currentPage < Math.ceil(getTransactions().length / pageSize)) { currentPage += 1; render(); }
   });
   confirmButton.addEventListener("click", () => {
     const transactions = getTransactions();
@@ -2311,23 +2175,19 @@ function setupOwnerServiceStats() {
         bar.className = "owner-chart-bar";
         bar.style.height = `${Math.max((service.count / scale) * 100, 4)}%`;
         barTrack.append(value, bar);
-        const icon = document.createElement("span");
-        icon.className = "owner-chart-service-icon";
-        icon.setAttribute("aria-hidden", "true");
-        const isMotorcycle = service.name.toLocaleLowerCase("id-ID").includes("motor");
-        icon.innerHTML = isMotorcycle
-          ? '<svg viewBox="0 0 24 24" fill="none"><circle cx="6" cy="17" r="3" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="17" r="3" stroke="currentColor" stroke-width="1.6"/><path d="m6 17 4-7h4l4 7m-8-7-2-3H5m7 3 3 4H9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-          : '<svg viewBox="0 0 24 24" fill="none"><path d="m4 15 1.5-5h13L20 15v4h-2v-2H6v2H4v-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m7 10 1.5-4h7L17 10M7 14h.01M17 14h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
         const label = document.createElement("span");
         label.className = "owner-chart-label";
         label.textContent = service.name;
         label.title = service.name;
-        column.append(barTrack, icon, label);
+        column.append(barTrack, label);
         bars.append(column);
       });
       plot.append(axisTitle, ticks, bars);
       const scroller = document.createElement("div");
       scroller.className = "owner-chart-scroll";
+      scroller.tabIndex = 0;
+      scroller.setAttribute("role", "region");
+      scroller.setAttribute("aria-label", "Grafik popularitas layanan, dapat digeser");
       scroller.append(plot);
       chart.append(scroller);
     }
@@ -2412,22 +2272,8 @@ function setupAdminDashboard() {
     const icon = document.createElement("span");
     icon.className = "admin-activity-icon";
     icon.setAttribute("aria-hidden", "true");
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("fill", "none");
-    svg.setAttribute("stroke", "currentColor");
-    svg.setAttribute("stroke-width", "2");
-    svg.setAttribute("stroke-linecap", "round");
-    svg.setAttribute("stroke-linejoin", "round");
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    const iconPaths = {
-      payment: "M5 4h14v16H5z M8 12l2.5 2.5L16 9",
-      transaction: "M4 5h2l2 11h10l2-8H7 M10 20h.01 M17 20h.01",
-      attendance: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M4 21c0-4 3.2-6 8-6s8 2 8 6",
-    };
-    path.setAttribute("d", iconPaths[iconType]);
-    svg.append(path);
-    icon.append(svg);
+    const activityIcons = { payment: "credit-card", transaction: "receipt", attendance: "user" };
+    icon.innerHTML = window.renderIcon(activityIcons[iconType] || "list", "wu-icon");
     const copy = document.createElement("span");
     copy.className = "admin-activity-copy";
     const heading = document.createElement("strong");
@@ -3138,9 +2984,9 @@ function setupPetugasAttendance() {
         `${employeeName} · Data s.d. ${formatAttendanceDate(endDate, { day: "numeric", month: "long", year: "numeric" })}`;
 
       rows.sort((first, second) => second.date - first.date);
-      const pageCount = Math.max(1, Math.ceil(rows.length / 6));
+      const pageCount = Math.max(1, Math.ceil(rows.length / TABLE_PAGE_SIZE));
       currentPage = Math.min(currentPage, pageCount);
-      const visibleRows = rows.slice((currentPage - 1) * 6, currentPage * 6);
+      const visibleRows = rows.slice((currentPage - 1) * TABLE_PAGE_SIZE, currentPage * TABLE_PAGE_SIZE);
       body.replaceChildren();
       visibleRows.forEach(({ date, record, status: rowStatus }) => {
         const row = document.createElement("tr");
@@ -3166,45 +3012,12 @@ function setupPetugasAttendance() {
       });
       empty.hidden = rows.length > 0;
 
-      const firstDisplayed = rows.length ? (currentPage - 1) * 6 + 1 : 0;
-      const lastDisplayed = Math.min(currentPage * 6, rows.length);
-      pagination.replaceChildren();
-      const statusText = document.createElement("span");
-      statusText.className = "attendance-pagination-status";
-      statusText.textContent = `Menampilkan ${firstDisplayed}–${lastDisplayed} dari ${rows.length} catatan`;
-      pagination.append(statusText);
-      const pages = document.createElement("div");
-      pages.className = "attendance-pagination-pages";
-      const previous = document.createElement("button");
-      previous.type = "button";
-      previous.textContent = "Sebelumnya";
-      previous.disabled = currentPage <= 1;
-      previous.addEventListener("click", () => {
-        currentPage -= 1;
-        renderRecap();
+      pagination.classList.add("wu-pager");
+      window.WashupPager.renderPager(pagination, {
+        page: currentPage,
+        total: pageCount,
+        onChange: (target) => { currentPage = target; renderRecap(); },
       });
-      pages.append(previous);
-      for (let page = 1; page <= pageCount; page += 1) {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.textContent = String(page);
-        if (page === currentPage) button.setAttribute("aria-current", "page");
-        button.addEventListener("click", () => {
-          currentPage = page;
-          renderRecap();
-        });
-        pages.append(button);
-      }
-      const next = document.createElement("button");
-      next.type = "button";
-      next.textContent = "Selanjutnya";
-      next.disabled = currentPage >= pageCount;
-      next.addEventListener("click", () => {
-        currentPage += 1;
-        renderRecap();
-      });
-      pages.append(next);
-      pagination.append(pages);
     }
 
     form.addEventListener("submit", (event) => {
@@ -3908,17 +3721,11 @@ setupMasterPage();
       document.body.classList.contains("kasir-transaction-page") ||
       document.body.classList.contains("kasir-payment-page")) return;
 
-  // Pagination meniru referensi: rentang data, nomor halaman, ellipsis, dan pilihan ukuran halaman.
+  // Paginasi seragam: Sebelumnya, nomor halaman, Selanjutnya (komponen WashupPager).
   const tableBody = document.querySelector("#queue-table-body");
-  const tableFooter = document.querySelector("#queue-table-footer");
-  const rangeLabel = document.querySelector("#queue-pagination-range");
-  const pageSizeSelect = document.querySelector("#queue-page-size");
-  const pageNumbers = document.querySelector("#queue-page-numbers");
-  const prevButton = document.querySelector("#queue-page-prev");
-  const nextButton = document.querySelector("#queue-page-next");
+  const pager = document.querySelector("#queue-pager");
 
-  if (!tableBody || !tableFooter || !rangeLabel || !pageSizeSelect ||
-      !pageNumbers || !prevButton || !nextButton) return;
+  if (!tableBody || !pager) return;
 
   let currentPage = 1;
 
@@ -3963,76 +3770,12 @@ setupMasterPage();
     }
   }
 
-  function appendEllipsis() {
-    const ellipsis = document.createElement("span");
-    ellipsis.className = "queue-page-ellipsis";
-    ellipsis.textContent = "…";
-    ellipsis.setAttribute("aria-hidden", "true");
-    pageNumbers.appendChild(ellipsis);
-  }
-
-  function appendPageButton(page, totalPages) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "queue-page-number";
-    button.textContent = String(page);
-    button.setAttribute("aria-label", `Halaman ${page} dari ${totalPages}`);
-    if (page === currentPage) {
-      button.classList.add("is-current");
-      button.setAttribute("aria-current", "page");
-    }
-    button.addEventListener("click", () => {
-      currentPage = page;
-      renderPagination();
-    });
-    pageNumbers.appendChild(button);
-  }
-
-  function renderPageNumbers(totalPages) {
-    pageNumbers.replaceChildren();
-    if (totalPages <= 7) {
-      for (let page = 1; page <= totalPages; page += 1) appendPageButton(page, totalPages);
-      return;
-    }
-
-    if (currentPage <= 4) {
-      for (let page = 1; page <= 5; page += 1) appendPageButton(page, totalPages);
-      appendEllipsis();
-      appendPageButton(totalPages, totalPages);
-      return;
-    }
-
-    if (currentPage >= totalPages - 3) {
-      appendPageButton(1, totalPages);
-      appendEllipsis();
-      for (let page = totalPages - 4; page <= totalPages; page += 1) appendPageButton(page, totalPages);
-      return;
-    }
-
-    appendPageButton(1, totalPages);
-    appendEllipsis();
-    for (let page = currentPage - 2; page <= currentPage + 2; page += 1) appendPageButton(page, totalPages);
-    appendEllipsis();
-    appendPageButton(totalPages, totalPages);
-  }
-
   function renderPagination() {
     const rows = getDataRows();
     ensureEmptyState();
 
-    tableFooter.hidden = false;
-    const pageSize = Math.max(1, Number.parseInt(pageSizeSelect.value, 10) || 5);
+    const pageSize = TABLE_PAGE_SIZE;
     const totalRows = rows.length;
-
-    if (totalRows === 0) {
-      currentPage = 1;
-      rangeLabel.textContent = "Showing 0 to 0 of 0 entries";
-      pageNumbers.replaceChildren();
-      prevButton.disabled = true;
-      nextButton.disabled = true;
-      return;
-    }
-
     const totalPages = Math.max(1, Math.ceil(totalRows / pageSize));
     currentPage = Math.min(Math.max(currentPage, 1), totalPages);
     const startIndex = (currentPage - 1) * pageSize;
@@ -4042,30 +3785,12 @@ setupMasterPage();
       row.hidden = index < startIndex || index >= endIndex;
     });
 
-    rangeLabel.textContent = `Showing ${startIndex + 1} to ${endIndex} of ${totalRows} entries`;
-    prevButton.disabled = currentPage === 1;
-    nextButton.disabled = currentPage === totalPages;
-    renderPageNumbers(totalPages);
+    window.WashupPager.renderPager(pager, {
+      page: currentPage,
+      total: totalPages,
+      onChange: (target) => { currentPage = target; renderPagination(); },
+    });
   }
-
-  prevButton.addEventListener("click", () => {
-    if (currentPage > 1) {
-      currentPage -= 1;
-      renderPagination();
-    }
-  });
-  nextButton.addEventListener("click", () => {
-    const pageSize = Math.max(1, Number.parseInt(pageSizeSelect.value, 10) || 5);
-    const totalPages = Math.ceil(getDataRows().length / pageSize);
-    if (currentPage < totalPages) {
-      currentPage += 1;
-      renderPagination();
-    }
-  });
-  pageSizeSelect.addEventListener("change", () => {
-    currentPage = 1;
-    renderPagination();
-  });
 
   // Menjaga pagination sinkron ketika app.js menambah atau mengubah baris antrean.
   const tableObserver = new MutationObserver(() => renderPagination());

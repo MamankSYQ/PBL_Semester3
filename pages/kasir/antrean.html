@@ -55,18 +55,6 @@
               <p class="eyebrow">DATA TRANSAKSI</p>
               <h2 id="queue-list-title">Daftar Antrean</h2>
             </header>
-            <div class="queue-table-controls" id="queue-table-controls">
-              <label class="queue-show-entries" for="queue-page-size">
-                <span>Show</span>
-                <select id="queue-page-size" aria-label="Jumlah antrean per halaman">
-                  <option value="5" selected>5</option>
-                  <option value="10">10</option>
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                </select>
-                <span>entries</span>
-              </label>
-            </div>
             <div class="queue-table-wrap" tabindex="0">
               <table class="queue-page-table">
                 <caption class="sr-only">Daftar antrean kendaraan beserta status pengerjaan</caption>
@@ -92,16 +80,7 @@
               <p>Buat transaksi baru untuk menambahkan kendaraan ke antrean.</p>
               <a class="queue-new-transaction-button" href="transaksi-baru.html"><span aria-hidden="true">＋</span> Transaksi Baru</a>
             </div>
-            <div class="queue-table-footer" id="queue-table-footer" hidden>
-              <p class="queue-pagination-range" id="queue-pagination-range" aria-live="polite">Showing 0 to 0 of 0 entries</p>
-              <nav class="queue-pagination" aria-label="Navigasi halaman antrean">
-                <div class="queue-page-controls" role="group" aria-label="Kontrol halaman antrean">
-                  <button class="queue-page-arrow" id="queue-page-prev" type="button" disabled>Previous</button>
-                  <div class="queue-page-numbers" id="queue-page-numbers"></div>
-                  <button class="queue-page-arrow" id="queue-page-next" type="button" disabled>Next</button>
-                </div>
-              </nav>
-            </div>
+            <nav class="wu-pager" id="queue-pager" aria-label="Navigasi halaman antrean" hidden></nav>
             <p class="queue-result-count" id="queue-result-count" aria-live="polite">0 data</p>
           </section>
 </main>

@@ -72,19 +72,6 @@
               </div>
               <span class="sr-only" id="history-result-count">0 data</span>
             </header>
-
-            <div class="queue-table-controls history-table-controls">
-              <label class="queue-show-entries" for="history-page-size">
-                <span>Show</span>
-                <select id="history-page-size" aria-label="Jumlah riwayat transaksi per halaman">
-                  <option value="5" selected>5</option>
-                  <option value="10">10</option>
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                </select>
-                <span>entries</span>
-              </label>
-            </div>
             <div class="history-table-wrap" tabindex="0">
               <table class="history-table">
                 <caption class="sr-only">Riwayat transaksi Kasir</caption>
@@ -118,16 +105,7 @@
               <h3 id="history-empty-title">Belum ada riwayat transaksi.</h3>
               <p id="history-empty-message">Transaksi yang dibuat Kasir akan tampil di sini.</p>
             </div>
-            <div class="queue-table-footer history-table-footer" id="history-table-footer">
-              <p class="queue-pagination-range" id="history-pagination-range" aria-live="polite">Showing 0 to 0 of 0 entries</p>
-              <nav class="queue-pagination" aria-label="Navigasi halaman riwayat transaksi">
-                <div class="queue-page-controls" role="group" aria-label="Kontrol halaman riwayat">
-                  <button type="button" class="queue-page-arrow" id="history-page-prev" aria-label="Halaman sebelumnya" title="Halaman sebelumnya" disabled>Previous</button>
-                  <div class="queue-page-numbers" id="history-page-numbers" role="group" aria-label="Nomor halaman"></div>
-                  <button type="button" class="queue-page-arrow" id="history-page-next" aria-label="Halaman berikutnya" title="Halaman berikutnya" disabled>Next</button>
-                </div>
-              </nav>
-            </div>
+            <nav class="wu-pager" id="history-pager" aria-label="Navigasi halaman riwayat transaksi" hidden></nav>
           </section>
 </main>
         <div data-component="footer"></div>

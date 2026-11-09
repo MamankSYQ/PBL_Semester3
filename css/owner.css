@@ -936,7 +936,198 @@
 }
 
 .owner-chart-column {
-  grid-template-rows: minmax(0, 1fr) 36px 36px;
+  grid-template-rows: minmax(0, 1fr) 36px;
+}
+
+.owner-chart-label {
+  width: 100%;
+  padding: 5px 2px 0;
+  overflow: hidden;
+  color: var(--wu-text);
+  font-size: 10px;
+  line-height: 1.25;
+  text-align: center;
+  overflow-wrap: break-word;
+}
+
+.owner-service-stats-page .owner-stats-empty:not([hidden]) {
+  min-height: 300px;
+  padding: 70px 20px 20px !important;
+}
+
+.owner-service-stats-page .owner-stats-empty[hidden] {
+  display: none !important;
+}
+
+.owner-service-stats-page .dashboard-footer {
+  margin-top: 40px !important;
+}
+
+@media (max-width: 768px) {
+  .owner-employee-page .dashboard-welcome,
+  .owner-service-stats-page .dashboard-welcome {
+    height: auto !important;
+    margin-bottom: 24px !important;
+  }
+
+  .owner-employee-page .owner-employee-summary-grid,
+  .owner-service-stats-page .owner-service-stats-summary-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .owner-employee-page .owner-employee-summary-grid .summary-card,
+  .owner-service-stats-page .owner-service-stats-summary-grid .summary-card {
+    width: 100% !important;
+  }
+
+  .owner-employee-page .owner-employee-table-wrap {
+    overflow-x: auto !important;
+  }
+
+  .owner-employee-page .owner-employee-table {
+    min-width: 600px;
+  }
+
+  .owner-stats-toolbar {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    min-height: auto;
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+
+  .owner-stats-toolbar button {
+    width: 100%;
+  }
+
+  .owner-service-stats-page .owner-service-stats-chart-section {
+    padding-right: 12px !important;
+    padding-left: 12px !important;
+  }
+
+  .owner-chart-plot {
+    grid-template-columns: 24px minmax(0, 1fr);
+    height: 300px;
+    padding-right: 4px;
+    padding-left: 24px;
+  }
+
+  .owner-chart-bar {
+    width: 75%;
+  }
+
+  .owner-chart-label {
+    font-size: 9px;
+  }
+}
+/* Elemen bertanda hidden harus benar-benar tersembunyi (mis. badge jumlah data yang tidak ada di Figma). */
+.owner-page [hidden] {
+  display: none !important;
+}
+
+/* Laporan Transaksi: kartu tanpa ikon, angka langsung di bawah label (Figma). */
+.owner-report-summary-grid .summary-card {
+  justify-content: flex-start !important;
+}
+
+.owner-report-summary-grid .summary-card strong {
+  margin-top: 10px !important;
+}
+
+.owner-page .owner-report-table th:last-child,
+.owner-page .owner-report-table td:last-child {
+  width: 100px !important;
+  min-width: 100px !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 360px) {
+  body.owner-page {
+    overflow-x: hidden;
+  }
+
+  .owner-page .dashboard-shell {
+    max-width: 100%;
+  }
+
+  .owner-page .summary-card strong {
+    font-size: clamp(18px, 6vw, 24px) !important;
+    overflow-wrap: anywhere;
+  }
+}
+
+.owner-employee-page .owner-employee-section {
+  display: flex !important;
+  min-height: 320px !important;
+  flex-direction: column;
+}
+
+.owner-employee-page .owner-employee-table-wrap[hidden] {
+  display: none !important;
+}
+
+.owner-employee-page .owner-employee-empty:not([hidden]) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 12px !important;
+}
+
+.owner-stats-toolbar {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 117px;
+  gap: 24px;
+  width: min(100%, 930px);
+  min-height: 76px;
+  padding: 14px 24px;
+  border-radius: 8px;
+}
+
+.owner-service-stats-page .dashboard-welcome .eyebrow {
+  text-transform: none;
+}
+
+.owner-stats-filter label {
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+.owner-stats-filter select {
+  border-radius: 4px;
+}
+
+.owner-stats-toolbar button {
+  width: 117px;
+  height: 30px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.owner-chart-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.owner-chart-plot {
+  width: min(100%, 730px);
+  min-width: 730px;
+  height: 350px;
+  margin: 0 auto;
+  padding: 20px 10px 0 30px;
+  background-color: #F7FAFC;
+}
+
+.owner-chart-ticks {
+  padding-bottom: 74px;
+}
+
+.owner-chart-bars {
+  padding-bottom: 0;
+}
+
+.owner-chart-column {
+  grid-template-rows: minmax(0, 1fr) 36px;
 }
 
 .owner-chart-service-icon {

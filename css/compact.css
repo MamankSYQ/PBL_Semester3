@@ -155,7 +155,7 @@
     font-size: clamp(16px, 3.7vw, 19px) !important; line-height: 1.15 !important;
   }
   :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-avatar-circle {
-    width: 32px !important; height: 32px !important; min-width: 32px !important;
+    width: 32px !important; height: 32px !important; min-width: 32px !important; max-width: 32px !important; flex: 0 0 32px !important;
   }
 }
 @media (max-width: 420px) {
@@ -168,35 +168,54 @@
   padding: 4px 12px !important; box-sizing: border-box !important;
 }
 
-/* ---------- Menu hamburger (HP) ---------- */
-.mobile-menu-toggle { display: none; }
+/* ---------- Menu hamburger + drawer sidebar (HP) ----------
+   Di HP sidebar menjadi drawer yang meluncur dari kiri di atas latar gelap;
+   tombol hamburger ada di topbar (dibuat oleh js/components.js). */
+.topbar-menu-button, .drawer-close { display: none; }
+.sidebar-overlay { display: none; }
 
 @media (max-width: 768px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .topbar-menu-button {
+    display: inline-flex !important; align-items: center; justify-content: center; flex: 0 0 38px;
+    width: 38px; height: 38px; padding: 0; border: 1px solid rgba(136, 175, 199, .5); border-radius: 8px;
+    background: rgba(255, 255, 255, .08); color: #FFFFFF; cursor: pointer;
+  }
+  .topbar-menu-button svg, .drawer-close svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
   :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar {
-    display: flex !important; flex-direction: row !important; flex-wrap: wrap !important;
-    align-items: center !important; justify-content: space-between !important;
-    gap: 10px !important; height: auto !important; min-height: 0 !important;
-    padding: 10px 16px !important; position: relative !important; top: auto !important;
+    position: fixed !important; top: 0 !important; left: 0 !important; bottom: 0 !important;
+    width: min(280px, 84vw) !important; min-width: 0 !important; max-width: none !important; flex: none !important;
+    height: 100vh !important; height: 100dvh !important; margin: 0 !important;
+    display: flex !important; flex-direction: column !important; flex-wrap: nowrap !important;
+    align-items: stretch !important; justify-content: flex-start !important; gap: 0 !important;
+    padding: 18px 14px 20px !important; overflow-y: auto !important; z-index: 1000 !important;
+    transform: translateX(-102%); visibility: hidden;
+    transition: transform .25s ease, visibility 0s linear .25s;
   }
-  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-brand {
-    margin: 0 !important; flex: 0 1 auto !important;
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar.is-menu-open {
+    transform: none; visibility: visible; box-shadow: var(--wu-shadow-pop);
+    transition: transform .25s ease, visibility 0s;
   }
-  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .mobile-menu-toggle {
-    display: inline-flex; align-items: center; gap: 6px;
-    height: 36px; padding: 0 12px; border: 1px solid rgba(136, 175, 199, .45); border-radius: var(--wu-radius-sm);
-    background: rgba(255, 255, 255, .06); color: #FFFFFF;
-    font: 600 13px/1 var(--wu-font-body); cursor: pointer;
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar :is(.dashboard-nav, .sidebar-bottom) {
+    display: flex !important; flex-direction: column !important; width: 100% !important; flex: 0 0 auto !important; margin: 0 !important;
   }
-  .mobile-menu-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
-  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar:not(.is-menu-open) :is(.dashboard-nav, .sidebar-bottom) {
-    display: none !important;
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar .dashboard-brand { margin: 0 0 28px !important; padding-right: 44px !important; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar .dashboard-nav .nav-item {
+    width: 100% !important; max-width: none !important; justify-content: flex-start !important; padding: 0 12px !important;
   }
-  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar.is-menu-open :is(.dashboard-nav, .sidebar-bottom) {
-    flex: 1 0 100% !important; width: 100% !important; margin: 0 !important;
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar .sidebar-bottom { margin-top: auto !important; padding-top: 20px !important; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar .sidebar-logout { width: 100% !important; max-width: none !important; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .drawer-close {
+    display: inline-flex; align-items: center; justify-content: center; position: absolute; top: 16px; right: 12px;
+    width: 34px; height: 34px; padding: 0; border: 1px solid rgba(136, 175, 199, .45); border-radius: 8px;
+    background: transparent; color: #FFFFFF; cursor: pointer;
   }
-  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar.is-menu-open .dashboard-nav .nav-item {
-    width: 100% !important; max-width: none !important;
-  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-collapse-toggle { display: none !important; }
+  .sidebar-overlay { display: block; position: fixed; inset: 0; z-index: 999; background: rgba(9, 25, 31, .55); }
+  .sidebar-overlay[hidden] { display: none; }
+  body.is-drawer-open { overflow: hidden; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar { transition: none !important; }
 }
 
 /* Topbar HP: judul di kiri, profil di kanan dalam satu baris. */
@@ -255,4 +274,96 @@
   display: inline-block !important; width: auto !important; height: auto !important; padding: 0 !important;
   background: none !important; color: inherit !important;
   font: 800 13px/1 var(--wu-font-body) !important; letter-spacing: 0 !important;
+}
+
+/* =========================================================
+   KOMPONEN BERSAMA — Paginasi "Sebelumnya 1 2 Selanjutnya"
+   Dipakai semua tabel di semua role (dibuat oleh js/components.js).
+   ========================================================= */
+.wu-pager {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 8px; margin: 16px 0 0; padding: 0;
+}
+.wu-pager[hidden] { display: none !important; }
+.wu-pager-pages { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
+.wu-pager-btn {
+  min-width: 34px; height: 34px; padding: 0 14px;
+  border: 1px solid var(--wu-muted); border-radius: var(--wu-radius-sm);
+  background: var(--wu-surface); color: var(--wu-text);
+  font: 600 .8125rem/1 var(--wu-font-body); cursor: pointer;
+  transition: background-color .15s, border-color .15s, color .15s;
+}
+.wu-pager-num { padding: 0; }
+.wu-pager-btn:hover:not(:disabled):not(.is-current) { background: var(--wu-background); border-color: var(--wu-accent); }
+.wu-pager-btn.is-current { background: var(--wu-teal); border-color: var(--wu-teal); color: #fff; cursor: default; }
+.wu-pager-btn:disabled { opacity: .5; cursor: not-allowed; }
+.wu-pager-dots { min-width: 20px; text-align: center; color: var(--wu-text-muted); }
+/* Baris di luar halaman aktif disembunyikan walau tabel memakai display khusus. */
+tbody > tr[hidden] { display: none !important; }
+@media (max-width: 480px) {
+  .wu-pager { gap: 6px; }
+  .wu-pager-btn { padding: 0 10px; }
+  .wu-pager-num { min-width: 32px; }
+}
+
+/* ---------- Tombol "+ Tambahkan Data" (admin) — sama dengan tombol Kasir ---------- */
+:root:root body.master-page .dashboard-action#master-add {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  gap: 7px !important; flex: 0 0 auto !important; width: auto !important;
+  min-width: 142px !important; height: 40px !important; min-height: 40px !important; padding: 0 13px !important;
+  border: 1px solid var(--wu-text) !important; border-radius: 6px !important;
+  background: var(--wu-text) !important; color: #fff !important;
+  font: 600 13px/1 var(--wu-font-body) !important; letter-spacing: .01em !important; white-space: nowrap !important;
+}
+:root:root body.master-page .dashboard-action#master-add:hover { background: #143C4A !important; border-color: #143C4A !important; }
+:root:root body.master-page .dashboard-action#master-add .btn-icon { display: inline-flex !important; margin: 0 !important; line-height: 0 !important; font-size: 0 !important; }
+:root:root body.master-page .dashboard-action#master-add .btn-icon svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* =========================================================
+   HIERARKI TIPOGRAFI & JARAK HEADER (semua role)
+   Judul halaman 21.6px > judul kartu 17px > eyebrow 11.2px.
+   Kelas dipasang otomatis oleh markHeadings() di js/components.js.
+   ========================================================= */
+:root:root body main .eyebrow { font-size: .7rem !important; font-weight: 600 !important; line-height: 1.3 !important; }
+:root:root body main h2.wu-page-title { font-size: 1.35rem !important; line-height: 1.25 !important; margin: 0 !important; }
+:root:root body main h2.wu-card-title { font-size: 1.0625rem !important; line-height: 1.3 !important; margin: 0 !important; }
+:root:root body main .wu-page-head > .eyebrow,
+:root:root body main :is(.section-heading, .admin-panel-heading, .queue-list-heading, .payment-panel-heading, .expense-panel-heading) > div > .eyebrow,
+:root:root body main :is(.queue-list-heading, .payment-panel-heading, .expense-panel-heading) > .eyebrow { margin: 0 0 4px !important; }
+/* Chip tanggal selalu berjarak 10px dari judul */
+:root:root body main .wu-page-head > :is(.admin-date-chip, .date-chip) { margin-top: 10px !important; }
+/* Jarak header halaman → konten pertama seragam */
+:root:root body main .wu-page-header { margin: 0 0 20px !important; }
+
+/* =========================================================
+   LEBAR KONTEN SERAGAM (semua role, sidebar terbuka maupun ciut)
+   Konten mengisi ruang di samping sidebar dengan padding 32px,
+   lalu dibatasi 1280px dan diratakan tengah pada layar sangat lebar.
+   ========================================================= */
+@media (min-width: 769px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-main {
+    width: 100% !important; max-width: 1280px !important; margin: 0 auto !important;
+    padding: 24px 32px 32px !important; box-sizing: border-box !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-main > * {
+    width: 100% !important; max-width: none !important; margin-left: 0 !important; margin-right: 0 !important; box-sizing: border-box !important;
+  }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-main { padding: 20px 24px 28px !important; }
+}
+
+/* ---------- Avatar pengguna: ikon orang bergaya garis di lingkaran abu-abu ---------- */
+:root:root body .user-avatar-circle svg { fill: none !important; stroke: #fff !important; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Keterangan kecil di kolom pelanggan Pembayaran: kontras AA. */
+:root:root body.kasir-payment-page .payment-customer-cell small { color: var(--wu-text-muted) !important; font-size: 11px !important; }
+
+/* Kartu ringkasan Petugas mengisi lebar penuh (sama seperti role lain). */
+@media (min-width: 769px) {
+  :root:root body.petugas-page .summary-grid { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 12px !important; }
+  :root:root body.petugas-page .summary-grid > .summary-card { width: auto !important; max-width: none !important; min-width: 0 !important; }
+}
+@media (min-width: 769px) and (max-width: 1100px) {
+  :root:root body.petugas-page .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 }

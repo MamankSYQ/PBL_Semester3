@@ -74,29 +74,8 @@
                   <h3>Belum ada transaksi.</h3>
                   <p>Transaksi dari Kasir akan muncul setelah dibuat.</p>
                 </div>
-                <div class="payment-list-footer">
-                  <span id="payment-result-count">0 transaksi</span>
-                  <label class="payment-show-entries" for="payment-page-size">
-                    <span>Show</span>
-                    <select id="payment-page-size" aria-label="Jumlah transaksi per halaman">
-                      <option value="4" selected>4</option>
-                      <option value="5">5</option>
-                      <option value="10">10</option>
-                      <option value="20">20</option>
-                    </select>
-                    <span>entries</span>
-                  </label>
-                </div>
-                <div class="payment-table-footer" id="payment-table-footer" hidden>
-                  <p class="payment-pagination-range" id="payment-pagination-range" aria-live="polite">Showing 0 to 0 of 0 entries</p>
-                  <nav class="payment-pagination" aria-label="Navigasi halaman pembayaran">
-                    <div class="payment-page-controls">
-                      <button type="button" class="payment-page-arrow" id="payment-page-prev" disabled>Previous</button>
-                      <div class="payment-page-numbers" id="payment-page-numbers"></div>
-                      <button type="button" class="payment-page-arrow" id="payment-page-next" disabled>Next</button>
-                    </div>
-                  </nav>
-                </div>
+                <span class="sr-only" id="payment-result-count" aria-live="polite">0 transaksi</span>
+                <nav class="wu-pager" id="payment-pager" aria-label="Navigasi halaman pembayaran" hidden></nav>
               </section>
 
               <section class="payment-check-panel" aria-labelledby="payment-check-title">
