@@ -17,16 +17,30 @@
     <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
     <link rel="stylesheet" href="../../css/compact.css" />
     <link rel="stylesheet" href="../../css/shift-schedule.css" />
+    <link rel="stylesheet" href="../../css/shift-schedule-owner.css" />
   </head>
   <body class="master-page" data-master="shifts" data-role="Admin" data-page="shifts" data-title="Data Shift" data-footer="Kelola Data Shift" data-logout-id="master-logout">
     <div class="dashboard-shell"><div data-component="sidebar"></div><div class="dashboard-content"><div data-component="topbar"></div><main class="dashboard-main master-main">
-          <section class="queue-heading ss-heading"><div data-tab-panel="shifts"><p class="eyebrow">DATA MASTER</p><h2>Kelola data shift</h2><p class="ss-heading-note">Atur jam kerja setiap shift.</p></div><div data-tab-panel="schedule" hidden><p class="eyebrow">DATA MASTER / PEMBAGIAN SHIFT</p><h2>Jadwal mingguan karyawan</h2><p class="ss-heading-note">Lihat satu minggu penuh dan atur shift karyawan dengan cepat.</p></div><button class="primary-button dashboard-action" id="master-add" type="button" data-tab-panel="shifts"><span class="btn-icon" data-icon="plus" aria-hidden="true"></span>Tambahkan Data</button></section>
+          <section class="queue-heading ss-heading"><div data-tab-panel="shifts"><p class="eyebrow">DATA MASTER</p><h2>Kelola pembagian shift</h2><p class="ss-heading-note">Atur pergantian shift karyawan untuk setiap hari.</p></div><div data-tab-panel="schedule" hidden><p class="eyebrow">DATA MASTER / PEMBAGIAN SHIFT</p><h2>Jadwal mingguan karyawan</h2><p class="ss-heading-note">Lihat satu minggu penuh dan atur shift karyawan dengan cepat.</p></div><button class="primary-button dashboard-action sd-open-button" id="sd-open-form" type="button" data-tab-panel="shifts">Atur Pembagian Shift</button></section>
           <div class="ss-tabs" role="tablist" aria-label="Menu Data Shift">
             <button class="ss-tab" id="ss-tab-shifts" type="button" role="tab" aria-selected="true" aria-controls="ss-panel-shifts" data-tab="shifts">Data Shift</button>
             <button class="ss-tab" id="ss-tab-schedule" type="button" role="tab" aria-selected="false" aria-controls="ss-panel-schedule" data-tab="schedule" tabindex="-1">Pembagian Shift</button>
           </div>
           <div id="ss-panel-shifts" role="tabpanel" aria-labelledby="ss-tab-shifts" data-tab-panel="shifts" class="ss-tabpanel">
-          <section class="queue-toolbar master-toolbar"><div><label for="master-search">Cari shift</label><input id="master-search" type="search" placeholder="Cari nama atau shift..." /></div></section><section class="queue-panel"><div class="section-heading"><div><p class="eyebrow">DAFTAR SHIFT</p><h2>Data Shift</h2></div><span class="badge badge-blue" id="master-result-count">0 data</span></div><div class="queue-table-wrap" tabindex="0"><table class="queue-full-table master-table"><caption class="sr-only">Daftar data shift</caption><thead><tr id="master-table-head"></tr></thead><tbody id="master-table-body"></tbody></table></div><div class="queue-empty" id="master-empty" hidden><div class="queue-empty-box" aria-hidden="true">
+          <section class="queue-panel sd-filters" aria-label="Filter jadwal">
+              <label>Periode minggu<select id="sd-week"></select></label>
+              <label>Cari karyawan<input id="sd-search" type="search" placeholder="Cari nama karyawan..." /></label>
+            </section>
+            <section class="queue-panel sd-card" aria-labelledby="sd-title">
+              <div class="section-heading"><div><p class="eyebrow">PEMBAGIAN SHIFT</p><h2 id="sd-title">Jadwal</h2></div><span class="ss-status ss-status-draft" id="sd-status">Draf</span></div>
+              <div class="sched-table-wrap" id="sd-table-wrap" tabindex="0" aria-label="Tabel jadwal per hari, geser ke samping di layar kecil"><table class="sched-day-table" id="sd-table"><caption class="sr-only">Karyawan yang bertugas pada setiap shift per hari</caption></table></div>
+              <div class="queue-empty" id="sd-empty" hidden><div class="queue-empty-box" aria-hidden="true"></div><h3>Belum ada karyawan aktif.</h3><p>Tambahkan akun Kasir atau Petugas berstatus Aktif di halaman Akun Pengguna.</p></div>
+              <p class="sched-footnote" id="sd-legend"></p>
+              <div class="sd-rotation" id="sd-rotation"></div>
+              <p class="sched-footnote">Perubahan tersimpan sebagai draf. Owner melihat jadwal setelah Anda menekan Tampilkan ke Owner di tab Pembagian Shift.</p>
+            </section>
+            <section class="queue-panel sd-master" aria-labelledby="sd-master-title"><div class="section-heading"><div><p class="eyebrow">DAFTAR SHIFT</p><h2 id="sd-master-title">Data Shift</h2><p class="ss-muted">Jam kerja setiap shift.</p></div><div class="sd-master-actions"><span class="badge badge-blue" id="master-result-count">0 data</span><button class="primary-button dashboard-action" id="master-add" type="button"><span class="btn-icon" data-icon="plus" aria-hidden="true"></span>Tambahkan Data</button></div></div>
+              <div class="sd-master-search"><label for="master-search">Cari shift</label><input id="master-search" type="search" placeholder="Cari nama atau shift..." /></div><div class="queue-table-wrap" tabindex="0"><table class="queue-full-table master-table"><caption class="sr-only">Daftar data shift</caption><thead><tr id="master-table-head"></tr></thead><tbody id="master-table-body"></tbody></table></div><div class="queue-empty" id="master-empty" hidden><div class="queue-empty-box" aria-hidden="true">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path fill="currentColor" d="M19 4H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 9.5h-4.2c-.4 1.5-1.7 2.5-3.3 2.5s-2.9-1-3.3-2.5H5V6h14v7.5z" />
                 </svg>
@@ -65,7 +79,26 @@
             </section>
           </div>
         </main><div data-component="footer"></div></div></div>
-    <dialog class="queue-dialog master-dialog" id="master-dialog" aria-labelledby="master-dialog-title"><div class="dialog-heading"><div><p class="eyebrow">FORM SHIFT</p><h2 id="master-dialog-title">Tambah Shift</h2></div><button class="dialog-close" id="master-dialog-close" type="button" aria-label="Tutup form">×</button></div><form id="master-form"><div class="master-form-fields" id="master-form-fields"></div><p class="dialog-notice" id="master-dialog-notice" role="alert"></p><div class="dialog-actions"><button class="secondary-dashboard-button" id="master-dialog-cancel" type="button">Batal</button><button class="primary-button dashboard-action" type="submit">Simpan</button></div></form></dialog><dialog class="queue-dialog master-detail-dialog" id="master-detail-dialog" aria-labelledby="master-detail-title"><div class="dialog-heading"><div><p class="eyebrow">DETAIL SHIFT</p><h2 id="master-detail-title">Detail Shift</h2></div><button class="dialog-close" id="master-detail-close" type="button" aria-label="Tutup detail">×</button></div><div class="master-detail-grid" id="master-detail-content"></div></dialog><dialog class="queue-dialog ss-bulk-dialog" id="ss-bulk-dialog" aria-labelledby="ss-bulk-title">
+    <dialog class="queue-dialog master-dialog" id="master-dialog" aria-labelledby="master-dialog-title"><div class="dialog-heading"><div><p class="eyebrow">FORM SHIFT</p><h2 id="master-dialog-title">Tambah Shift</h2></div><button class="dialog-close" id="master-dialog-close" type="button" aria-label="Tutup form">×</button></div><form id="master-form"><div class="master-form-fields" id="master-form-fields"></div><p class="dialog-notice" id="master-dialog-notice" role="alert"></p><div class="dialog-actions"><button class="secondary-dashboard-button" id="master-dialog-cancel" type="button">Batal</button><button class="primary-button dashboard-action" type="submit">Simpan</button></div></form></dialog><dialog class="queue-dialog master-detail-dialog" id="master-detail-dialog" aria-labelledby="master-detail-title"><div class="dialog-heading"><div><p class="eyebrow">DETAIL SHIFT</p><h2 id="master-detail-title">Detail Shift</h2></div><button class="dialog-close" id="master-detail-close" type="button" aria-label="Tutup detail">×</button></div><div class="master-detail-grid" id="master-detail-content"></div></dialog><dialog class="queue-dialog sd-dialog" id="sd-dialog" aria-labelledby="sd-dialog-title">
+      <form id="sd-form" novalidate>
+        <div class="dialog-heading"><div><p class="eyebrow">FORM PEMBAGIAN SHIFT</p><h2 id="sd-dialog-title">Jadwal mingguan karyawan</h2></div><button class="dialog-close" id="sd-close" type="button" aria-label="Tutup form pembagian shift">×</button></div>
+        <div class="sd-form-grid">
+          <label>Karyawan<select id="sd-form-employee"></select></label>
+          <label>Periode minggu<select id="sd-form-week"></select></label>
+        </div>
+        <div class="sd-shift-info" id="sd-shift-info"></div>
+        <fieldset class="sd-days">
+          <legend><strong>Pilih shift per hari</strong><span>Shift dapat berbeda setiap hari, misalnya Senin Pagi lalu Selasa Malam.</span></legend>
+          <div id="sd-day-rows"></div>
+        </fieldset>
+        <div class="sd-summary"><strong>Ringkasan rotasi</strong><span id="sd-summary">-</span></div>
+        <p class="dialog-notice" id="sd-notice" role="alert"></p>
+        <div class="sd-form-footer">
+          <p>Perubahan masuk ke draf.<span>Owner melihat jadwal setelah Tampilkan ke Owner di tab Pembagian Shift.</span></p>
+          <div class="ss-bulk-actions"><button class="secondary-dashboard-button" id="sd-cancel" type="button">Batal</button><button class="primary-button dashboard-action" type="submit">Simpan Jadwal</button></div>
+        </div>
+      </form>
+    </dialog><dialog class="queue-dialog ss-bulk-dialog" id="ss-bulk-dialog" aria-labelledby="ss-bulk-title">
       <form id="ss-bulk-form" novalidate>
         <div class="dialog-heading"><div><h2 id="ss-bulk-title">Atur beberapa hari</h2><p class="ss-bulk-range"><span data-icon="calendar" aria-hidden="true"></span><strong id="ss-bulk-range">-</strong></p></div><button class="dialog-close" id="ss-bulk-close" type="button" aria-label="Tutup atur jadwal">×</button></div>
         <div class="ss-bulk-body">
@@ -107,5 +140,6 @@
     <script src="../../js/components.js"></script>
     <script src="../../js/app.js"></script>
     <script src="../../js/shift-schedule.js"></script>
+    <script src="../../js/shift-schedule-day.js"></script>
   </body>
 </html>

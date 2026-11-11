@@ -540,6 +540,8 @@
   });
 
   el.publishButton.addEventListener("click", publishWeek);
+  // Form "Atur Pembagian Shift" di tab Data Shift (js/shift-schedule-day.js) menyimpan ke draf yang sama.
+  window.addEventListener("washup:shift-schedule-changed", render);
 
   // ---------- Mulai ----------
   if (typeof mountIcons === "function") {
