@@ -70,24 +70,19 @@
               <h3>Belum ada absensi petugas.</h3>
               <p>Data absensi akan muncul setelah petugas melakukan absen.</p>
             </div>
-          </section>
-          <section class="queue-panel verification-review" id="verification-review" aria-labelledby="verification-review-title" hidden>
-            <div class="section-heading">
-              <div>
-                <p class="eyebrow">FOTO BUKTI ABSEN</p>
-                <h2 id="verification-review-title">Detail Absensi</h2>
+            <div class="verification-review" id="verification-review" aria-labelledby="verification-review-title" hidden>
+              <h3 class="verification-review-title" id="verification-review-title">Detail Absensi</h3>
+              <p class="verification-review-info" id="verification-review-info"></p>
+              <div class="verification-review-content">
+                <div class="verification-photo-wrap" id="verification-photo-wrap"></div>
+                <div class="verification-review-action">
+                  <p class="verification-partner-status" id="verification-partner-status"></p>
+                  <button class="verification-confirm-button" id="verification-confirm" type="button" hidden></button>
+                  <p class="verification-action-hint" id="verification-action-hint" hidden></p>
+                </div>
               </div>
+              <p class="verification-notice" id="verification-notice" role="status" aria-live="polite"></p>
             </div>
-            <p class="verification-review-info" id="verification-review-info"></p>
-            <div class="verification-review-content">
-              <div class="verification-photo-wrap" id="verification-photo-wrap"></div>
-              <div class="verification-review-action">
-                <p class="verification-partner-status" id="verification-partner-status"></p>
-                <button class="verification-confirm-button" id="verification-confirm" type="button" hidden></button>
-                <p class="verification-action-hint" id="verification-action-hint" hidden></p>
-              </div>
-            </div>
-            <p class="verification-notice" id="verification-notice" role="status" aria-live="polite"></p>
           </section>
         </main>
         <div data-component="footer"></div>

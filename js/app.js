@@ -1331,6 +1331,7 @@ function setupPaymentPage() {
   const detailNotice = document.querySelector("#payment-dialog-notice");
   const paymentMethod = document.querySelector("#payment-method");
   const confirmButton = document.querySelector("#confirm-payment");
+  const notMatchButton = document.querySelector("#payment-not-match");
   const pager = document.querySelector("#payment-pager");
   const cashFields = document.querySelector("#payment-cash-fields");
   const cashReceived = document.querySelector("#payment-cash-received");
@@ -1384,6 +1385,12 @@ function setupPaymentPage() {
     const total = transaction ? Math.max(0, Number(transaction.price) || 0) : 0;
     const received = Math.max(0, Number(cashReceived?.value) || 0);
     if (changeLabel) changeLabel.textContent = money(Math.max(0, received - total));
+    // Panduan kasir untuk pembayaran tunai yang siap dikonfirmasi.
+    if (transaction && !isPaid(transaction) && isReady(transaction) && paymentMethod.value !== "QRIS") {
+      detailNotice.textContent = received >= total
+        ? `Hitung uang yang diterima dan serahkan kembalian ${money(received - total)} sebelum konfirmasi lunas.`
+        : `Nominal diterima masih kurang ${money(total - received)}.`;
+    }
   };
 
   const renderMethod = () => {
@@ -1402,6 +1409,7 @@ function setupPaymentPage() {
     // Tombol aktif untuk transaksi belum lunas. Validasi status pengerjaan,
     // nominal tunai, dan verifikasi QRIS dijalankan saat tombol ditekan.
     confirmButton.disabled = !canChoosePayment;
+    if (notMatchButton) notMatchButton.disabled = !canChoosePayment;
     paymentMethod.disabled = !canChoosePayment;
     if (cashReceived) cashReceived.disabled = !canChoosePayment;
     if (qrisVerified) qrisVerified.disabled = !canChoosePayment;
@@ -1583,6 +1591,15 @@ function setupPaymentPage() {
       : "Masukkan nominal uang diterima sebelum mengonfirmasi lunas.";
   });
   cashReceived?.addEventListener("input", updateChange);
+  // "Belum Sesuai": pembayaran tidak dikonfirmasi; isian dikosongkan agar kasir memeriksa ulang.
+  notMatchButton?.addEventListener("click", () => {
+    if (!getSelectedTransaction()) return;
+    if (cashReceived) cashReceived.value = "";
+    if (qrisVerified) qrisVerified.checked = false;
+    if (changeLabel) changeLabel.textContent = money(0);
+    detailNotice.textContent = "Pembayaran ditandai belum sesuai dan tidak dikonfirmasi. Periksa ulang nominal atau metode, lalu konfirmasi bila sudah sesuai.";
+    (paymentMethod.value === "QRIS" ? qrisVerified : cashReceived)?.focus();
+  });
   qrisVerified?.addEventListener("change", () => {
     if (qrisVerified.checked) detailNotice.textContent = "Verifikasi QRIS dicentang. Pastikan status pengerjaan sudah Selesai sebelum mengonfirmasi.";
   });
@@ -3824,9 +3841,14 @@ setupMasterPage();
   const monthTotal = document.querySelector("#expense-month-total");
   const dateInput = document.querySelector("#expense-date");
   const descriptionInput = document.querySelector("#expense-description");
-  const quantityInput = document.querySelector("#expense-quantity");
   const amountInput = document.querySelector("#expense-amount");
   const proofInput = document.querySelector("#expense-proof");
+  const proofText = document.querySelector("#expense-proof-text");
+  // Kotak "Unggah Foto Nota" menampilkan nama file yang dipilih.
+  const syncProofText = () => {
+    if (proofText) proofText.textContent = proofInput?.files?.[0]?.name || "Unggah Foto Nota";
+  };
+  proofInput?.addEventListener("change", syncProofText);
   const currentProofNote = document.querySelector("#expense-current-proof");
   const message = document.querySelector("#expense-form-message");
   const dialogTitle = document.querySelector("#expense-dialog-title");
@@ -3838,7 +3860,7 @@ setupMasterPage();
   const emptyMessage = document.querySelector("#expense-empty-message");
 
   if (!tableBody || !emptyState || !todayTotal || !monthTotal ||
-      !dateInput || !descriptionInput || !quantityInput || !amountInput ||
+      !dateInput || !descriptionInput || !amountInput ||
       !proofInput || !message) return;
 
   let editingExpenseId = null;
@@ -3853,11 +3875,6 @@ setupMasterPage();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   };
   const money = formatCurrency;
-  const quantityLabel = (value) => {
-    if (value === undefined || value === null || value === "") return "—";
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed.toLocaleString("id-ID") : "—";
-  };
 
   function readExpenses() {
     try {
@@ -3929,18 +3946,6 @@ setupMasterPage();
     return { year, month };
   }
 
-  function makeActionButton(action, label, className, record) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = `expense-action-button ${className}`;
-    button.textContent = label;
-    button.dataset.expenseAction = action;
-    button.dataset.expenseId = String(record.id || "");
-    button.setAttribute("aria-label", `${label} pengeluaran ${record.description || ""}`.trim());
-    button.title = `${label} pengeluaran`;
-    return button;
-  }
-
   function render() {
     const allRecords = readExpenses().sort((a, b) =>
       String(b.date).localeCompare(String(a.date)) ||
@@ -3961,33 +3966,22 @@ setupMasterPage();
       const row = document.createElement("tr");
       row.append(createCell(formatDate(record.date)));
       row.append(createCell(record.description || "-"));
-      row.append(createCell(quantityLabel(record.quantity)));
       row.append(createCell(money(record.amount)));
 
       const proofCell = document.createElement("td");
       if (record.proofData) {
-        const link = document.createElement("a");
-        link.className = "expense-proof-link";
-        link.href = record.proofData;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        link.textContent = "Lihat Nota";
-        link.setAttribute("aria-label", `Lihat nota ${record.proofName || "pengeluaran"}`);
+        const link = document.createElement("button");
+        link.type = "button";
+        link.className = "table-action table-action-detail expense-proof-link";
+        link.dataset.expenseAction = "proof";
+        link.dataset.expenseId = String(record.id || "");
+        link.textContent = "Nota";
+        link.setAttribute("aria-label", `Lihat nota ${record.description || record.proofName || "pengeluaran"}`);
         proofCell.append(link);
       } else {
         proofCell.textContent = "—";
       }
       row.append(proofCell);
-
-      const actionCell = document.createElement("td");
-      const actionGroup = document.createElement("div");
-      actionGroup.className = "expense-actions";
-      actionGroup.append(
-        makeActionButton("edit", "Edit", "expense-action-edit", record),
-        makeActionButton("delete", "Hapus", "expense-action-delete", record)
-      );
-      actionCell.append(actionGroup);
-      row.append(actionCell);
 
       tableBody.append(row);
     });
@@ -4023,13 +4017,14 @@ setupMasterPage();
 
   function setDialogMode(mode) {
     const isEditing = mode === "edit";
-    if (dialogTitle) dialogTitle.textContent = isEditing ? "Edit Pengeluaran" : "Tambahkan Pengeluaran";
-    if (submitButton) submitButton.textContent = isEditing ? "Simpan Perubahan" : "Simpan Pengeluaran";
+    if (dialogTitle) dialogTitle.textContent = isEditing ? "Edit Pengeluaran" : "Tambah Pengeluaran";
+    if (submitButton) submitButton.textContent = isEditing ? "Simpan Perubahan" : "Simpan";
   }
 
   function openAddDialog() {
     editingExpenseId = null;
     form.reset();
+    syncProofText();
     setDialogMode("add");
     message.textContent = "";
     if (currentProofNote) {
@@ -4037,21 +4032,20 @@ setupMasterPage();
       currentProofNote.textContent = "";
     }
     dateInput.value = todayKey();
-    quantityInput.value = "1";
     if (typeof dialog.showModal === "function") dialog.showModal();
   }
 
   function openEditDialog(record) {
     editingExpenseId = String(record.id || "");
     form.reset();
+    syncProofText();
     setDialogMode("edit");
     message.textContent = "";
     dateInput.value = record.date || "";
     descriptionInput.value = record.description || "";
     // Catatan lama yang belum memiliki field jumlah tetap bisa diedit:
     // pengguna diminta mengisi jumlahnya sebelum menyimpan perubahan.
-    quantityInput.value = record.quantity == null ? "" : String(record.quantity);
-    amountInput.value = String(record.amount ?? "");
+    amountInput.value = record.amount ? money(record.amount) : "";
     if (currentProofNote) {
       currentProofNote.hidden = !record.proofData;
       currentProofNote.textContent = record.proofData
@@ -4068,6 +4062,7 @@ setupMasterPage();
     editingExpenseId = null;
     message.textContent = "";
     form.reset();
+    syncProofText();
     setDialogMode("add");
     if (currentProofNote) {
       currentProofNote.hidden = true;
@@ -4093,6 +4088,11 @@ setupMasterPage();
     if (!record) {
       window.alert("Data pengeluaran tidak ditemukan. Muat ulang halaman lalu coba kembali.");
       render();
+      return;
+    }
+
+    if (button.dataset.expenseAction === "proof") {
+      openProof(record);
       return;
     }
 
@@ -4125,13 +4125,11 @@ setupMasterPage();
     const formData = new FormData(form);
     const date = String(formData.get("date") || "");
     const description = String(formData.get("description") || "").trim();
-    const quantity = Number(formData.get("quantity"));
-    const amount = Number(formData.get("amount"));
+    const amount = Number(String(formData.get("amount") || "").replace(/[^\d]/g, ""));
     const proofFile = proofInput.files?.[0] || null;
 
-    if (!date || !description || !Number.isSafeInteger(quantity) || quantity <= 0 ||
-        !Number.isFinite(amount) || amount <= 0) {
-      message.textContent = "Lengkapi tanggal, keterangan, jumlah barang, dan nominal dengan benar.";
+    if (!date || !description || !Number.isSafeInteger(amount) || amount <= 0) {
+      message.textContent = "Lengkapi tanggal, keterangan, dan nominal dengan benar.";
       return;
     }
     if (proofFile && proofFile.size > 1024 * 1024) {
@@ -4157,7 +4155,7 @@ setupMasterPage();
         id: existing?.id || `expense-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
         date,
         description,
-        quantity,
+        quantity: existing?.quantity ?? 1,
         amount,
         proofName: proofFile ? proofFile.name : (existing?.proofName || ""),
         proofData: proofFile ? proofData : (existing?.proofData || ""),
@@ -4181,6 +4179,38 @@ setupMasterPage();
         : "Pengeluaran tidak dapat disimpan. Coba lagi.";
     }
   });
+
+  // Nominal ditulis sebagai Rupiah saat diketik (contoh: "Rp 185.000").
+  amountInput.addEventListener("input", () => {
+    const digits = amountInput.value.replace(/[^\d]/g, "").replace(/^0+/, "").slice(0, 12);
+    amountInput.value = digits ? money(Number(digits)) : "";
+  });
+
+  // Lihat bukti nota: gambar ditampilkan di dialog, PDF dibuka di tab baru.
+  const proofDialog = document.querySelector("#expense-proof-dialog");
+  const proofImage = document.querySelector("#expense-proof-image");
+  const proofTitle = document.querySelector("#expense-proof-title");
+  function openProof(record) {
+    const data = String(record.proofData || "");
+    if (data.startsWith("data:application/pdf")) {
+      // Ubah data PDF menjadi file sementara (blob) agar bisa dibuka browser.
+      try {
+        const bytes = Uint8Array.from(atob(data.split(",")[1] || ""), (char) => char.charCodeAt(0));
+        window.open(URL.createObjectURL(new Blob([bytes], { type: "application/pdf" })), "_blank", "noopener");
+      } catch {
+        window.alert("Nota tidak dapat dibuka.");
+      }
+      return;
+    }
+    if (!proofDialog || !proofImage) return;
+    proofImage.src = data;
+    proofImage.alt = `Foto nota ${record.description || ""}`.trim();
+    if (proofTitle) proofTitle.textContent = record.description ? `Nota · ${record.description}` : "Foto Nota";
+    if (typeof proofDialog.showModal === "function") proofDialog.showModal();
+    else proofDialog.setAttribute("open", "");
+  }
+  document.querySelector("#expense-proof-close")?.addEventListener("click", () => proofDialog?.close());
+  proofDialog?.addEventListener("click", (event) => { if (event.target === proofDialog) proofDialog.close(); });
 
   window.addEventListener("storage", (event) => {
     if (event.key === storageKey) render();
@@ -4301,6 +4331,7 @@ function setupProfileEditor() {
     else dialog.removeAttribute("open");
 
     form.reset();
+    syncProofText();
     editingAccountId = null;
     protectedAdmin = false;
     usernameInput.disabled = false;

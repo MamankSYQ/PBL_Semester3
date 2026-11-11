@@ -695,3 +695,26 @@
     min-width: 0;
   }
 }
+
+/* ---------- Draf → Tampilkan ke Owner ---------- */
+.ss-badges { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
+.ss-status { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+.ss-status-draft { background: #FFF1D6; color: #754B03; }
+.ss-status-changed { background: #FFE4D6; color: #8A3A0B; }
+.ss-status-published { background: #DFF5EB; color: #1C6B47; }
+.ss-publish {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--wu-space-4);
+  margin-top: var(--wu-space-5); padding: 18px 22px; border-radius: var(--wu-radius-md);
+  background: var(--wu-surface); box-shadow: var(--wu-shadow-card);
+}
+.ss-publish h3 { margin: 0 0 4px; color: var(--wu-text); font-size: 0.9375rem; }
+.ss-publish p { margin: 0; color: var(--wu-text-muted); font-size: 0.8125rem; }
+.ss-publish .dashboard-action:disabled { opacity: .5; cursor: not-allowed; }
+@media (max-width: 600px) {
+  .ss-publish .dashboard-action { width: 100%; }
+}
+
+/* Pilihan shift di grid: panah lebih rapat supaya nama shift tidak terpotong. */
+:root:root body main select.ss-cell-select { padding-left: 10px !important; padding-right: 26px !important; background-position: right 8px center !important; background-size: 12px 12px !important; }
+/* Kontras AA untuk teks keterangan di kotak info biru. */
+.ss-info p { color: #2F5466; }

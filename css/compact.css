@@ -476,8 +476,7 @@ tbody > tr[hidden] { display: none !important; }
 :root:root body.kasir-payment-page .payment-check-panel :is(span, strong):not(.sr-only):not(.payment-method-pill) { font-size: 13px !important; line-height: 1.4 !important; }
 :root:root body.kasir-payment-page .payment-check-panel .payment-check-notice { font-size: 12px !important; line-height: 1.5 !important; margin: 14px 0 0 !important; }
 :root:root body.kasir-payment-page .payment-check-panel .payment-button-primary {
-  width: 100% !important; max-width: none !important; min-width: 0 !important; height: 42px !important; min-height: 42px !important; margin-top: 16px !important;
-  font-size: 13.5px !important; border-radius: 8px !important;
+  width: 100% !important; max-width: none !important; min-width: 0 !important;
 }
 :root:root body.kasir-payment-page .payment-check-panel input { font-size: 14px !important; }
 
@@ -501,7 +500,6 @@ tbody > tr[hidden] { display: none !important; }
 :root:root body.kasir-payment-page .payment-list-column tbody td { font-size: 12px !important; }
 :root:root body.kasir-payment-page .payment-list-column tbody td :is(strong, small, span:not([class*="badge"]):not([class*="status"])) { font-size: 12px !important; }
 :root:root body.kasir-payment-page .payment-list-column tbody td :is([class*="badge"], [class*="status"]) { font-size: 11px !important; }
-:root:root body.kasir-payment-page .payment-check-panel .payment-check-actions { display: block !important; }
 /* Kartu ringkasan Laporan Transaksi: jarak ikon → label sama dengan halaman Owner lain */
 :root:root body.owner-page .owner-report-summary-grid .summary-card { justify-content: space-between !important; min-height: 134px !important; }
 
@@ -511,16 +509,6 @@ tbody > tr[hidden] { display: none !important; }
 /* Pembayaran: kolom daftar setinggi panel supaya "data kosong" benar-benar di tengah. */
 :root:root body.kasir-payment-page .payment-workspace > .payment-list-column { align-self: stretch !important; }
 
-/* Pembayaran: baris Nominal diterima & Kembalian rata dan sejajar. */
-:root:root body.kasir-payment-page #payment-cash-fields { padding: 6px 14px !important; gap: 0 !important; }
-:root:root body.kasir-payment-page #payment-cash-fields > div {
-  display: grid !important; grid-template-columns: minmax(0, 1fr) minmax(0, 200px) !important; align-items: center !important;
-  gap: 12px !important; min-height: 52px !important; padding: 6px 0 !important;
-}
-:root:root body.kasir-payment-page #payment-cash-fields > div + div { border-top: 1px solid #DCE9EF !important; }
-:root:root body.kasir-payment-page #payment-cash-fields .payment-amount-input { width: 100% !important; margin: 0 !important; }
-:root:root body.kasir-payment-page #payment-cash-fields input { width: 100% !important; height: 40px !important; padding: 0 12px !important; box-sizing: border-box !important; }
-:root:root body.kasir-payment-page #payment-cash-fields > div > strong { justify-self: end !important; padding-right: 13px !important; font-size: 14px !important; }
 
 /* Header tabel lebih lega: judul kolom satu baris, jarak antarkolom seragam. */
 :root:root body main table thead th { white-space: nowrap !important; padding: 13px 14px !important; line-height: 1.3 !important; letter-spacing: .04em !important; }
@@ -538,3 +526,131 @@ tbody > tr[hidden] { display: none !important; }
 @media (min-width: 769px) and (max-width: 1024px) {
   :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-content > .dashboard-footer { width: calc(100% - 48px) !important; }
 }
+
+/* =========================================================
+   VERIFIKASI ABSENSI (Admin) — panel tinjau di dalam kartu daftar
+   ========================================================= */
+:root:root body.admin-verification-page .verification-table tbody td:first-child { font-weight: 700 !important; }
+:root:root body.admin-verification-page .verification-table tbody tr.is-selected td { background: #EAF4F9 !important; }
+:root:root body.admin-verification-page .verification-status {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  min-width: 112px !important; padding: 5px 12px !important; border-radius: 6px !important; font-size: 11.5px !important; font-weight: 700 !important;
+}
+:root:root body.admin-verification-page .verification-status-verified { background: #DFF5EB !important; color: #1C7B51 !important; }
+:root:root body.admin-verification-page .verification-status-pending { background: #FFF1D6 !important; color: #754B03 !important; }
+:root:root body.admin-verification-page .verification-status-unsubmitted { background: #EDF1F3 !important; color: #4E6470 !important; }
+:root:root body.admin-verification-page tbody .verification-row-action { min-width: 60px !important; }
+:root:root body.admin-verification-page tbody .verification-row-action.is-selected { background: #1D4A5A !important; border-color: #1D4A5A !important; color: #fff !important; }
+:root:root body.admin-verification-page .verification-unavailable { color: #5C7480 !important; font-size: 12px !important; }
+
+:root:root body.admin-verification-page .verification-review:not([hidden]) {
+  display: grid !important; margin: 18px 0 0 !important; padding: 16px 18px !important;
+  grid-template-columns: auto minmax(0, 1fr) auto !important;
+  grid-template-areas: "photo title action" "photo info action" "photo partner action" "photo hint hint" "notice notice notice" !important;
+  column-gap: 16px !important; row-gap: 4px !important; align-items: center !important;
+  border: 1px solid #DCE9EF !important; border-radius: 10px !important; background: #F3F8FB !important; box-shadow: none !important;
+}
+:root:root body.admin-verification-page .verification-review :is(.verification-review-content, .verification-review-action) { display: contents !important; }
+:root:root body.admin-verification-page .verification-review-title { grid-area: title !important; margin: 0 !important; font-size: 14.5px !important; font-weight: 700 !important; color: var(--wu-text) !important; }
+:root:root body.admin-verification-page .verification-review-info { grid-area: info !important; margin: 0 !important; font-size: 12px !important; color: var(--wu-text-muted) !important; }
+:root:root body.admin-verification-page .verification-partner-status { grid-area: partner !important; margin: 0 !important; font-size: 11.5px !important; color: var(--wu-text-muted) !important; text-align: left !important; }
+:root:root body.admin-verification-page .verification-action-hint:not([hidden]) { grid-area: hint !important; margin: 4px 0 0 !important; font-size: 11.5px !important; text-align: left !important; }
+:root:root body.admin-verification-page .verification-photo-wrap {
+  grid-area: photo !important; width: 76px !important; height: 76px !important; margin: 0 !important; padding: 0 !important;
+  border-radius: 8px !important; overflow: hidden !important; background: #E5F1F7 !important; display: grid !important; place-items: center !important;
+}
+:root:root body.admin-verification-page .verification-photo-wrap img { width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 0 !important; }
+:root:root body.admin-verification-page .verification-photo-wrap p { margin: 0 !important; padding: 6px !important; font-size: 10px !important; text-align: center !important; }
+:root:root body.admin-verification-page .verification-confirm-button:not([hidden]) {
+  grid-area: action !important; margin: 0 !important; min-width: 168px !important; height: 40px !important; padding: 0 18px !important;
+  border: 0 !important; border-radius: 8px !important; background: #1D4A5A !important; color: #fff !important; font-size: 13px !important; font-weight: 700 !important;
+}
+:root:root body.admin-verification-page .verification-confirm-button:disabled { background: #B9C9D1 !important; }
+:root:root body.admin-verification-page .verification-notice { grid-area: notice !important; margin: 6px 0 0 !important; font-size: 12px !important; }
+:root:root body.admin-verification-page .verification-notice:empty { display: none !important; }
+@media (max-width: 640px) {
+  :root:root body.admin-verification-page .verification-review:not([hidden]) {
+    grid-template-columns: auto minmax(0, 1fr) !important;
+    grid-template-areas: "photo title" "photo info" "partner partner" "hint hint" "action action" "notice notice" !important;
+  }
+  :root:root body.admin-verification-page .verification-confirm-button:not([hidden]) { width: 100% !important; margin-top: 8px !important; }
+}
+
+/* Pembayaran: kotak metode (Metode / Nominal diterima / Kembalian) + dua tombol. */
+:root:root body.kasir-payment-page .payment-method-box {
+  margin: 0 !important; padding: 2px 14px !important; border: 1px solid #DCE9EF !important; border-radius: 10px !important; background: #fff !important;
+}
+:root:root body.kasir-payment-page .payment-method-box :is(.payment-method-row, #payment-cash-fields > div) {
+  display: grid !important; grid-template-columns: minmax(0, 1fr) auto !important; align-items: center !important;
+  gap: 12px !important; min-height: 46px !important; padding: 4px 0 !important; margin: 0 !important; background: none !important; border: 0 !important;
+}
+:root:root body.kasir-payment-page .payment-method-box #payment-cash-fields > div,
+:root:root body.kasir-payment-page .payment-method-box #payment-qris-fields { border-top: 1px solid #E5EEF2 !important; }
+:root:root body.kasir-payment-page .payment-method-box #payment-cash-fields:not([hidden]) { display: block !important; margin: 0 !important; padding: 0 !important; border: 0 !important; background: none !important; }
+:root:root body.kasir-payment-page .payment-method-box #payment-qris-fields:not([hidden]) { display: block !important; margin: 0 !important; padding: 10px 0 !important; background: none !important; }
+:root:root body.kasir-payment-page .payment-method-box #payment-qris-fields p { margin: 0 0 8px !important; font-size: 12px !important; }
+:root:root body.kasir-payment-page .payment-method-box .payment-method-picker { margin: 0 !important; width: auto !important; }
+:root:root body.kasir-payment-page .payment-method-box select { width: 140px !important; height: 34px !important; font-size: 13px !important; border-radius: 7px !important; }
+:root:root body.kasir-payment-page .payment-method-box .payment-amount-input { width: 170px !important; margin: 0 !important; }
+:root:root body.kasir-payment-page .payment-method-box input[type="number"] {
+  width: 100% !important; height: 36px !important; padding: 0 12px !important; box-sizing: border-box !important; text-align: right !important; font-size: 14px !important; border-radius: 7px !important;
+}
+:root:root body.kasir-payment-page .payment-method-box #payment-change { padding-right: 13px !important; font-size: 14px !important; }
+:root:root body.kasir-payment-page .payment-check-panel .payment-check-actions {
+  display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 12px !important; margin-top: 16px !important;
+}
+:root:root body.kasir-payment-page .payment-check-panel .payment-check-actions :is(.payment-button-primary, .payment-button-secondary) {
+  width: 100% !important; max-width: none !important; min-width: 0 !important; height: 44px !important; min-height: 44px !important; margin: 0 !important;
+  border-radius: 8px !important; font-size: 13.5px !important; font-weight: 700 !important;
+}
+:root:root body.kasir-payment-page .payment-check-panel .payment-button-secondary { background: #fff !important; border: 1px solid #1D4A5A !important; color: #1D4A5A !important; }
+:root:root body.kasir-payment-page .payment-check-panel .payment-button-secondary:disabled { opacity: .5 !important; }
+
+/* =========================================================
+   PENGELUARAN — bukti nota: tombol "Nota" di tabel + kotak unggah di form
+   ========================================================= */
+:root:root body.kasir-expense-page tbody .expense-proof-link {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  min-width: 56px !important; height: 26px !important; padding: 0 12px !important; border-radius: 6px !important;
+  border: 1px solid #A9C2D2 !important; background: #DCE9F0 !important; color: #1D4A5A !important;
+  font-size: 11.9px !important; font-weight: 600 !important; text-decoration: none !important;
+}
+:root:root body.kasir-expense-page tbody .expense-proof-link:hover { background: #CDE0EA !important; }
+:root:root body.kasir-expense-page .expense-proof-field { display: flex !important; flex-direction: column !important; gap: 6px !important; }
+:root:root body.kasir-expense-page .expense-proof-drop {
+  position: relative !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important;
+  gap: 4px !important; min-height: 76px !important; padding: 12px !important; box-sizing: border-box !important;
+  border: 1px dashed #88AFC7 !important; border-radius: 8px !important; background: #EAF4F9 !important;
+  color: #1D4A5A !important; font-size: 13px !important; font-weight: 600 !important; cursor: pointer !important; text-align: center !important;
+}
+:root:root body.kasir-expense-page .expense-proof-drop:hover { background: #DFEEF6 !important; }
+:root:root body.kasir-expense-page .expense-proof-drop:focus-within { outline: 3px solid var(--wu-focus) !important; outline-offset: 2px !important; }
+:root:root body.kasir-expense-page .expense-proof-icon svg { width: 22px !important; height: 22px !important; fill: none !important; stroke: currentColor !important; stroke-width: 1.8 !important; stroke-linecap: round; stroke-linejoin: round; }
+:root:root body.kasir-expense-page .expense-proof-text { max-width: 100% !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
+:root:root body.kasir-expense-page .expense-proof-input {
+  position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important;
+  overflow: hidden !important; clip: rect(0 0 0 0) !important; white-space: nowrap !important; border: 0 !important; opacity: 0 !important;
+}
+
+/* Rekap Absensi: judul "Periode Absensi" dengan ikon kalender */
+:root:root body.petugas-page .attendance-period-title { display: inline-flex !important; align-items: center !important; gap: 10px !important; }
+:root:root body.petugas-page .period-title-icon { display: inline-grid !important; place-items: center !important; width: 30px !important; height: 30px !important; border-radius: 8px !important; background: #E5F3F8 !important; color: var(--wu-accent-text) !important; }
+:root:root body.petugas-page .period-title-icon svg { width: 17px !important; height: 17px !important; fill: none !important; stroke: currentColor !important; stroke-width: 2 !important; stroke-linecap: round; stroke-linejoin: round; }
+:root:root body.petugas-page .attendance-period-title { font-size: 15px !important; font-weight: 700 !important; color: var(--wu-text) !important; }
+
+/* =========================================================
+   PENGELUARAN (Kasir) — form ringkas & tombol Nota (revisi 11 Nov)
+   ========================================================= */
+:root:root body.kasir-expense-page .expense-dialog-actions { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 16px !important; margin-top: 20px !important; padding-top: 18px !important; border-top: 1px solid #C9DCE5 !important; }
+:root:root body.kasir-expense-page .expense-dialog-actions button { width: 100% !important; height: 44px !important; min-height: 44px !important; font-size: 15px !important; border-radius: 8px !important; }
+:root:root body.kasir-expense-page .expense-dialog-actions .expense-button-secondary { border: 1.5px solid var(--wu-text) !important; color: var(--wu-text) !important; }
+:root:root body.kasir-expense-page .expense-form-field { font-size: 14px !important; font-weight: 600 !important; }
+:root:root body.kasir-expense-page .expense-form-field input { height: 42px !important; font-size: 14px !important; }
+:root:root body.kasir-expense-page tbody .expense-proof-link { text-decoration: none !important; }
+:root:root body.kasir-expense-page .expense-proof-dialog { width: min(560px, calc(100vw - 32px)) !important; }
+:root:root body.kasir-expense-page .expense-proof-image { display: block; width: 100%; max-height: 70vh; object-fit: contain; border-radius: 10px; background: #F3F8FB; }
+:root:root body.kasir-expense-page .expense-table tbody td { font-size: 13px !important; }
+/* Pembayaran: isian nominal tanpa panah naik-turun bawaan browser. */
+:root:root body.kasir-payment-page #payment-cash-fields input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+:root:root body.kasir-payment-page #payment-cash-fields input[type="number"]::-webkit-inner-spin-button,
+:root:root body.kasir-payment-page #payment-cash-fields input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }

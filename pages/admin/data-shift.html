@@ -46,7 +46,7 @@
               </div>
             </section>
             <section class="queue-panel ss-panel" aria-labelledby="ss-grid-title">
-              <div class="section-heading"><div><h2 id="ss-grid-title">Jadwal karyawan</h2><p class="ss-muted" id="ss-grid-subtitle">Perubahan langsung tersimpan.</p></div><span class="badge badge-blue" id="ss-filled-count">0 terisi</span></div>
+              <div class="section-heading"><div><h2 id="ss-grid-title">Jadwal karyawan</h2><p class="ss-muted" id="ss-grid-subtitle">Perubahan tersimpan sebagai draf.</p></div><div class="ss-badges"><span class="badge badge-blue" id="ss-filled-count">0 terisi</span><span class="ss-status ss-status-draft" id="ss-publish-status">Draf</span></div></div>
               <div class="ss-grid-wrap" tabindex="0" aria-label="Tabel jadwal, geser ke samping di layar kecil">
                 <table class="ss-grid"><caption class="sr-only" id="ss-grid-caption">Jadwal shift karyawan</caption><thead><tr id="ss-grid-head"></tr></thead><tbody id="ss-grid-body"></tbody></table>
               </div>
@@ -54,6 +54,10 @@
               <p class="ss-legend" id="ss-legend"></p>
               <p class="ss-hint"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4l7 17 2.5-7.5L21 11z" /></svg>Klik pilihan shift pada hari tertentu untuk mengubah hari itu saja.</p>
               <p class="ss-notice" id="ss-notice" role="status" aria-live="polite"></p>
+            </section>
+            <section class="ss-publish" aria-labelledby="ss-publish-title">
+              <div><h3 id="ss-publish-title">Draf belum terlihat oleh owner</h3><p id="ss-publish-text">Owner baru melihat jadwal minggu ini setelah Anda menekan Tampilkan ke Owner.</p></div>
+              <button class="primary-button dashboard-action" id="ss-publish-button" type="button">Tampilkan ke Owner</button>
             </section>
             <section class="ss-info" aria-labelledby="ss-info-title">
               <span data-icon="calendar" aria-hidden="true"></span>
@@ -90,8 +94,8 @@
         </div>
         <p class="dialog-notice" id="ss-bulk-notice" role="alert"></p>
         <div class="ss-bulk-footer">
-          <p><strong>Jadwal langsung tersimpan.</strong><span>Hanya hari yang dipilih yang berubah.</span></p>
-          <div class="ss-bulk-actions"><button class="secondary-dashboard-button" id="ss-bulk-cancel" type="button">Batal</button><button class="primary-button dashboard-action" type="submit">Simpan Jadwal</button></div>
+          <p><strong>Perubahan hanya masuk ke draf.</strong><span>Owner baru melihat setelah Anda menekan Tampilkan ke Owner.</span></p>
+          <div class="ss-bulk-actions"><button class="secondary-dashboard-button" id="ss-bulk-cancel" type="button">Batal</button><button class="primary-button dashboard-action" type="submit">Terapkan ke Draf</button></div>
         </div>
       </form>
     </dialog>

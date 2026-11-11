@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Jadwal shift karyawan WASHUP untuk Owner" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Jadwal Shift Karyawan | WASHUP</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="../../css/tokens.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/base.css" />
+    <link rel="stylesheet" href="../../css/owner.css" />
+    <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
+    <link rel="stylesheet" href="../../css/compact.css" />
+    <link rel="stylesheet" href="../../css/shift-schedule-owner.css" />
+  </head>
+  <body class="owner-page owner-schedule-page" data-role="Owner" data-page="schedule" data-title="Jadwal Shift Karyawan" data-logout-id="owner-logout">
+    <div class="dashboard-shell">
+      <div data-component="sidebar"></div>
+      <div class="dashboard-content">
+        <div data-component="topbar"></div>
+        <main class="dashboard-main admin-main owner-schedule-main">
+          <section class="dashboard-welcome" aria-labelledby="owner-schedule-heading">
+            <div>
+              <p class="eyebrow">MONITORING KARYAWAN</p>
+              <h2 id="owner-schedule-heading">Jadwal shift karyawan</h2>
+              <p class="page-subtitle">Pantau pembagian shift harian yang diatur oleh admin.</p>
+            </div>
+          </section>
+
+          <section class="queue-panel sched-filters" aria-label="Filter jadwal">
+            <label>Periode minggu<select id="owner-sched-week"></select></label>
+            <label>Cari karyawan<input id="owner-sched-search" type="search" placeholder="Cari nama karyawan..." /></label>
+            <label>Filter shift<select id="owner-sched-filter"></select></label>
+          </section>
+
+          <section class="queue-panel sched-card" aria-labelledby="owner-sched-title">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">PEMBAGIAN SHIFT</p>
+                <h2 id="owner-sched-title">Jadwal</h2>
+              </div>
+              <span class="sched-status sched-status-view">Hanya lihat</span>
+            </div>
+            <div class="sched-table-wrap" id="owner-sched-table-wrap" tabindex="0">
+              <table class="sched-day-table" id="owner-sched-table">
+                <caption class="sr-only">Karyawan yang bertugas pada setiap shift per hari</caption>
+              </table>
+            </div>
+            <div class="queue-empty" id="owner-sched-empty" hidden>
+              <div class="queue-empty-box" aria-hidden="true"></div>
+              <h3>Jadwal minggu ini belum ditampilkan.</h3>
+              <p>Admin perlu menekan Tampilkan ke Owner di halaman Pembagian Shift.</p>
+            </div>
+            <p class="sched-footnote" id="owner-sched-updated"></p>
+          </section>
+
+          <section class="queue-panel sched-card" aria-labelledby="owner-sched-day-title">
+            <div class="section-heading sched-day-heading">
+              <div>
+                <p class="eyebrow">KARYAWAN BERTUGAS</p>
+                <h2 id="owner-sched-day-title">-</h2>
+              </div>
+              <label class="sched-day-pick">Hari yang dipilih<select id="owner-sched-day"></select></label>
+            </div>
+            <div class="owner-duty-grid" id="owner-sched-duty" aria-live="polite"></div>
+          </section>
+        </main>
+        <div data-component="footer"></div>
+      </div>
+    </div>
+    <script src="../../js/components.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/shift-schedule-owner.js"></script>
+  </body>
+</html>

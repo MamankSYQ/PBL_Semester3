@@ -97,28 +97,32 @@
                 </div>
 
                 <div class="payment-check-section payment-method-section">
-                  <div class="payment-section-title-row">
-                    <h4 id="payment-method-section-title">Pembayaran tunai</h4>
-                    <label class="payment-method-picker" for="payment-method">
-                      <span class="sr-only">Metode pembayaran</span>
-                      <select id="payment-method" aria-label="Metode pembayaran">
-                        <option value="Tunai">Tunai</option>
-                        <option value="QRIS">QRIS</option>
-                      </select>
-                    </label>
-                  </div>
-                  <div class="payment-method-breakdown" id="payment-cash-fields">
-                    <div><span>Nominal diterima</span><label class="payment-amount-input" for="payment-cash-received"><span class="sr-only">Nominal uang diterima</span><input type="number" id="payment-cash-received" min="0" step="1000" inputmode="numeric" placeholder="Rp 0" /></label></div>
-                    <div><span>Kembalian</span><strong id="payment-change">Rp 0</strong></div>
-                  </div>
-                  <div class="payment-qris-fields" id="payment-qris-fields" hidden>
-                    <p>Periksa pembayaran melalui aplikasi merchant sebelum mengonfirmasi.</p>
-                    <label class="payment-qris-check"><input type="checkbox" id="payment-qris-verified" /><span>Saya memastikan pembayaran QRIS telah diterima.</span></label>
+                  <h4 id="payment-method-section-title">Pembayaran tunai</h4>
+                  <div class="payment-method-box">
+                    <div class="payment-method-row">
+                      <span>Metode</span>
+                      <label class="payment-method-picker" for="payment-method">
+                        <span class="sr-only">Metode pembayaran</span>
+                        <select id="payment-method" aria-label="Metode pembayaran">
+                          <option value="Tunai">Tunai</option>
+                          <option value="QRIS">QRIS</option>
+                        </select>
+                      </label>
+                    </div>
+                    <div class="payment-method-breakdown" id="payment-cash-fields">
+                      <div><span>Nominal diterima</span><label class="payment-amount-input" for="payment-cash-received"><span class="sr-only">Nominal uang diterima</span><input type="number" id="payment-cash-received" min="0" step="1000" inputmode="numeric" placeholder="Rp 0" /></label></div>
+                      <div><span>Kembalian</span><strong id="payment-change">Rp 0</strong></div>
+                    </div>
+                    <div class="payment-qris-fields" id="payment-qris-fields" hidden>
+                      <p>Periksa pembayaran melalui aplikasi merchant sebelum mengonfirmasi.</p>
+                      <label class="payment-qris-check"><input type="checkbox" id="payment-qris-verified" /><span>Saya memastikan pembayaran QRIS telah diterima.</span></label>
+                    </div>
                   </div>
                 </div>
 
                 <p class="payment-check-notice" id="payment-dialog-notice" role="status" aria-live="polite">Pilih transaksi yang sudah selesai dicuci untuk mengonfirmasi pembayaran.</p>
                 <div class="payment-check-actions">
+                  <button class="payment-button-secondary" id="payment-not-match" type="button" disabled>Belum Sesuai</button>
                   <button class="payment-button-primary" id="confirm-payment" type="button" disabled>Konfirmasi Lunas</button>
                 </div>
               </section>

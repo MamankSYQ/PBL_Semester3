@@ -1,12 +1,15 @@
 // Pembagian Shift (halaman Data Shift Admin).
 // Jadwal mingguan per karyawan: grid karyawan x hari, atur beberapa hari sekaligus,
-// dan salin jadwal minggu sebelumnya. Perubahan langsung tersimpan (tanpa draf).
+// dan salin jadwal minggu sebelumnya. Perubahan tersimpan sebagai DRAF; tombol
+// "Tampilkan ke Owner" menyalin jadwal minggu itu ke data terbit yang dibaca Owner.
 // Memakai fungsi dari app.js: ensureMasterDefaults, masterDefinitions, getActiveEmployees.
 (() => {
   const panel = document.getElementById("ss-panel-schedule");
   if (!panel) return;
 
-  const STORAGE_KEY = "washupShiftSchedule";
+  const STORAGE_KEY = "washupShiftSchedule"; // draf Admin: { "YYYY-MM-DD": { nama: idShift | "libur" } }
+  const PUBLISHED_KEY = "washupShiftSchedulePublished"; // bentuk sama, yang terlihat oleh Owner
+  const PUBLISHED_AT_KEY = "washupShiftSchedulePublishedAt"; // { "YYYY-MM-DD" (Senin): ISO waktu terbit }
   const OFF = "libur";
   const DAY_NAMES = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
   const MONTHS = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
@@ -29,6 +32,10 @@
     empty: $("#ss-empty"),
     legend: $("#ss-legend"),
     filled: $("#ss-filled-count"),
+    publishStatus: $("#ss-publish-status"),
+    publishTitle: $("#ss-publish-title"),
+    publishText: $("#ss-publish-text"),
+    publishButton: $("#ss-publish-button"),
     notice: $("#ss-notice"),
     bulkDialog: $("#ss-bulk-dialog"),
     bulkForm: $("#ss-bulk-form"),
@@ -112,6 +119,59 @@
       showNotice("Jadwal tidak dapat disimpan. Penyimpanan browser penuh atau tidak tersedia.", true);
       return false;
     }
+  }
+
+  // ---------- Draf & jadwal yang ditampilkan ke Owner ----------
+  function readJson(key) {
+    try {
+      const value = JSON.parse(localStorage.getItem(key) || "{}");
+      return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+    } catch {
+      return {};
+    }
+  }
+  const weekSnapshot = (schedule) => JSON.stringify(weekDates().map((date) => schedule[toKey(date)] || {}));
+  // "empty" = draf kosong & belum pernah tampil, "draft" = belum tampil, "changed" = ada perubahan, "published" = sama.
+  function weekStatus() {
+    const draft = weekSnapshot(readSchedule());
+    const published = readJson(PUBLISHED_KEY);
+    const wasPublished = Boolean(readJson(PUBLISHED_AT_KEY)[toKey(weekStart)]);
+    if (!wasPublished) return draft === weekSnapshot({}) ? "empty" : "draft";
+    return draft === weekSnapshot(published) ? "published" : "changed";
+  }
+  function renderPublishState() {
+    const status = weekStatus();
+    const text = {
+      empty: ["Draf", "Draf masih kosong", "Atur jadwal minggu ini, lalu tekan Tampilkan ke Owner."],
+      draft: ["Draf", "Draf belum terlihat oleh owner", "Owner baru melihat jadwal minggu ini setelah Anda menekan Tampilkan ke Owner."],
+      changed: ["Ada perubahan", "Perubahan belum terlihat oleh owner", "Owner masih melihat versi sebelumnya. Tekan Tampilkan ke Owner untuk memperbarui."],
+      published: ["Tampil di Owner", "Jadwal sudah terlihat oleh owner", "Perubahan berikutnya disimpan sebagai draf sampai Anda menampilkannya lagi."],
+    }[status];
+    el.publishStatus.textContent = text[0];
+    el.publishStatus.className = `ss-status ss-status-${status === "published" ? "published" : status === "changed" ? "changed" : "draft"}`;
+    el.publishTitle.textContent = text[1];
+    el.publishText.textContent = text[2];
+    el.publishButton.disabled = status === "empty" || status === "published";
+  }
+  function publishWeek() {
+    const draft = readSchedule();
+    const published = readJson(PUBLISHED_KEY);
+    const publishedAt = readJson(PUBLISHED_AT_KEY);
+    weekDates().forEach((date) => {
+      const key = toKey(date);
+      if (draft[key] && Object.keys(draft[key]).length) published[key] = { ...draft[key] };
+      else delete published[key];
+    });
+    publishedAt[toKey(weekStart)] = new Date().toISOString();
+    try {
+      localStorage.setItem(PUBLISHED_KEY, JSON.stringify(published));
+      localStorage.setItem(PUBLISHED_AT_KEY, JSON.stringify(publishedAt));
+    } catch {
+      showNotice("Jadwal tidak dapat ditampilkan. Penyimpanan browser penuh atau tidak tersedia.", true);
+      return;
+    }
+    render();
+    showNotice(`Jadwal ${formatRange(weekStart)} sekarang terlihat oleh owner.`);
   }
 
   const getValue = (schedule, dateKey, employeeName) => (schedule[dateKey] && schedule[dateKey][employeeName]) || "";
@@ -257,6 +317,7 @@
 
     const total = employees.length * 7;
     el.filled.textContent = total ? `${filled}/${total} terisi` : "0 karyawan";
+    renderPublishState();
     el.empty.hidden = employees.length > 0;
     el.gridWrap.hidden = employees.length === 0;
     el.openBulk.disabled = employees.length === 0;
@@ -283,7 +344,7 @@
     // Kembalikan fokus ke sel yang sama setelah tabel digambar ulang.
     const same = el.body.querySelector(`.ss-cell-select[data-date="${select.dataset.date}"][data-employee="${CSS.escape(select.dataset.employee)}"]`);
     same?.focus();
-    showNotice(`${select.dataset.employee} · ${DAY_NAMES[dayIndex]} → ${info.label}. Tersimpan.`);
+    showNotice(`${select.dataset.employee} · ${DAY_NAMES[dayIndex]} → ${info.label}. Tersimpan di draf.`);
   });
 
   // ---------- Navigasi minggu ----------
@@ -310,7 +371,7 @@
     });
     if (saveSchedule(schedule)) {
       render();
-      showNotice("Jadwal minggu sebelumnya berhasil disalin.");
+      showNotice("Jadwal minggu sebelumnya disalin ke draf.");
     }
   }
 
@@ -475,8 +536,10 @@
     }
     closeDialog(el.bulkDialog);
     render();
-    showNotice(`Jadwal ${employeeName} untuk ${selectedDays.length} hari berhasil disimpan.`);
+    showNotice(`Jadwal ${employeeName} untuk ${selectedDays.length} hari disimpan di draf.`);
   });
+
+  el.publishButton.addEventListener("click", publishWeek);
 
   // ---------- Mulai ----------
   if (typeof mountIcons === "function") {

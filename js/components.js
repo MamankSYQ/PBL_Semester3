@@ -34,7 +34,8 @@ const WASHUP_ICONS = {
   "car-drop": '<path d="M4 19H2.5v-4l1.8-4h10.4l1.8 4v4H15"/><path d="M2.5 15h14M7.5 19h4"/><circle cx="5.8" cy="19" r="1.6"/><circle cx="13.2" cy="19" r="1.6"/><path d="M18.5 1.8s-2.9 3.2-2.9 5.3a2.9 2.9 0 0 0 5.8 0c0-2.1-2.9-5.3-2.9-5.3z"/>',
   "car-check": '<path d="M4 19H2.5v-4l1.8-4h10.4l1.8 4v4H15"/><path d="M2.5 15h14M7.5 19h4"/><circle cx="5.8" cy="19" r="1.6"/><circle cx="13.2" cy="19" r="1.6"/><circle cx="18.5" cy="6" r="4"/><path d="m16.8 6 1.2 1.2 2.3-2.4"/>',
   "receipt-calendar": '<path d="M11 21H5V3l2 1.5L9 3l2 1.5L13 3l2 1.5L17 3v7"/><path d="M8 8h6M8 12h3"/><rect x="13" y="13" width="8.5" height="8" rx="1.3"/><path d="M13 16h8.5M15.5 11.8v2.2M19 11.8v2.2"/>',
-  "car-queue": '<path d="M4 19H2.5v-4l1.8-4h10.4l1.8 4v4H15"/><path d="M2.5 15h14M7.5 19h4"/><circle cx="5.8" cy="19" r="1.6"/><circle cx="13.2" cy="19" r="1.6"/><path d="M11 9.5l1.3-3.5h7.4l1.8 4v3.5H20"/><path d="M17.5 10h4"/>'
+  "car-queue": '<path d="M4 19H2.5v-4l1.8-4h10.4l1.8 4v4H15"/><path d="M2.5 15h14M7.5 19h4"/><circle cx="5.8" cy="19" r="1.6"/><circle cx="13.2" cy="19" r="1.6"/><path d="M11 9.5l1.3-3.5h7.4l1.8 4v3.5H20"/><path d="M17.5 10h4"/>',
+  "upload-cloud": '<path d="M7 18a4.5 4.5 0 0 1-.9-8.9A6 6 0 0 1 17.6 8 4 4 0 0 1 18 16"/><path d="M12 12v9M8.5 15.5 12 12l3.5 3.5"/>'
 };
 
 // Merender ikon berdasarkan nama. "rupiah" dirender sebagai teks Rp.
@@ -65,6 +66,7 @@ const WASHUP_MENUS = {
     { page: "transactions", href: "laporan-transaksi.html", label: "Laporan Transaksi", icon: renderIcon("receipt", "nav-icon-svg") },
     { page: "finance", href: "laporan-keuangan.html", label: "Laporan Keuangan", icon: renderIcon("rupiah", "nav-icon-rp") },
     { page: "employees", href: "laporan-karyawan.html", label: "Laporan Karyawan", icon: renderIcon("users", "nav-icon-svg") },
+    { page: "schedule", href: "jadwal-shift.html", label: "Jadwal Shift", icon: renderIcon("calendar", "nav-icon-svg") },
     { page: "stats", href: "statistik-layanan.html", label: "Statistik Layanan", icon: renderIcon("chart", "nav-icon-svg") }
   ],
   Kasir: [
