@@ -149,7 +149,10 @@ const masterDefaults = {
     { id: "service-motor-sedang", name: "Cuci Motor Sedang", vehicleType: "Motor", price: 15000, status: "Aktif" },
     { id: "service-motor-besar", name: "Cuci Motor Besar", vehicleType: "Motor", price: 17000, status: "Aktif" },
   ],
-  shifts: [{ id: "shift-pagi", name: "Shift Pagi", start: "08:00", end: "16:00", status: "Aktif" }],
+  shifts: [
+    { id: "shift-pagi", name: "Shift Pagi", start: "08:00", end: "16:00", status: "Aktif" },
+    { id: "shift-malam", name: "Shift Malam", start: "16:00", end: "00:00", status: "Aktif" },
+  ],
   users: Object.entries(accounts).map(([username, account]) => ({ id: `user-${username}`, username, password: account.password, role: account.role, status: "Aktif" })),
 };
 
@@ -209,6 +212,14 @@ function getActiveEmployees() {
     .filter((account) => account && account.status === "Aktif" &&
       (account.role === "Kasir" || account.role === "Petugas") && String(account.username || "").trim())
     .map((account) => ({ name: String(account.username || "").trim(), role: account.role }));
+}
+
+// Shift bawaan disimpan sejak awal agar dashboard, laporan, dan absensi tidak menunggu
+// Admin membuka halaman Data Shift terlebih dahulu.
+try {
+  ensureMasterDefaults("shifts", masterDefinitions.shifts);
+} catch {
+  // localStorage tidak tersedia; halaman tetap berjalan dengan data kosong.
 }
 
 function getActiveServiceOptions() {
@@ -3351,7 +3362,7 @@ function setupMasterPage() {
   // Validasi ditangani validate() agar pesan selalu tampil di dialog (termasuk untuk dropdown kustom yang <select>-nya tersembunyi).
   if (form) form.noValidate = true;
 
-  const isProtectedRecord = (record) => (type === "users" && String(record.username || "").trim().toLowerCase() === "admin") || (type === "services" && masterDefaults.services.some((item) => item.id === record.id)) || (type === "shifts" && record.id === "shift-pagi");
+  const isProtectedRecord = (record) => (type === "users" && String(record.username || "").trim().toLowerCase() === "admin") || (type === "services" && masterDefaults.services.some((item) => item.id === record.id)) || (type === "shifts" && masterDefaults.shifts.some((item) => item.id === record.id));
   // Jam shift ditampilkan dengan titik seperti Figma (08.00); jam selesai 00:00 berarti tengah malam (24.00).
   const formatShiftTime = (key, value) => (key === "end" && value === "00:00" ? "24.00" : String(value).replace(":", "."));
   const valueForDisplay = (key, value) => {
