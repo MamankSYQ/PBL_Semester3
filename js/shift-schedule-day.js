@@ -1,8 +1,8 @@
-// Tab "Data Shift" di halaman Data Shift Admin: jadwal per hari (hari × shift) dan
+// Tab "Pembagian Shift" di halaman Data Shift Admin: jadwal per hari (hari × shift) dan
 // form "Atur Pembagian Shift" untuk satu karyawan selama satu minggu.
-// Memakai data draf yang sama dengan tab Pembagian Shift (js/shift-schedule.js):
+// Memakai data draf yang sama dengan tab Jadwal Karyawan (js/shift-schedule.js):
 // localStorage "washupShiftSchedule" = { "YYYY-MM-DD": { nama: idShift | "libur" } }.
-// Setelah menyimpan, event "washup:shift-schedule-changed" memberi tahu tab Pembagian Shift.
+// Setelah menyimpan, event "washup:shift-schedule-changed" memberi tahu tab Jadwal Karyawan.
 // Memakai fungsi dari app.js: ensureMasterDefaults, masterDefinitions, getActiveEmployees.
 (() => {
   const view = document.getElementById("sd-table");
@@ -320,7 +320,7 @@
   // ---------- Mulai ----------
   ui.week.addEventListener("change", renderView);
   ui.search.addEventListener("input", renderView);
-  // Perubahan dari tab Pembagian Shift (grid, dialog, tampilkan ke owner) ikut tampil di sini.
+  // Perubahan dari tab Jadwal Karyawan (grid, dialog, tampilkan ke owner) ikut tampil di sini.
   window.addEventListener("washup:shift-schedule-changed", renderView);
   document.querySelectorAll(".ss-tab").forEach((tab) => tab.addEventListener("click", () => {
     if (tab.dataset.tab === "shifts") renderView();

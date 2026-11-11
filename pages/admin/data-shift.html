@@ -21,10 +21,10 @@
   </head>
   <body class="master-page" data-master="shifts" data-role="Admin" data-page="shifts" data-title="Data Shift" data-footer="Kelola Data Shift" data-logout-id="master-logout">
     <div class="dashboard-shell"><div data-component="sidebar"></div><div class="dashboard-content"><div data-component="topbar"></div><main class="dashboard-main master-main">
-          <section class="queue-heading ss-heading"><div data-tab-panel="shifts"><p class="eyebrow">DATA MASTER</p><h2>Kelola pembagian shift</h2><p class="ss-heading-note">Atur pergantian shift karyawan untuk setiap hari.</p></div><div data-tab-panel="schedule" hidden><p class="eyebrow">DATA MASTER / PEMBAGIAN SHIFT</p><h2>Jadwal mingguan karyawan</h2><p class="ss-heading-note">Lihat satu minggu penuh dan atur shift karyawan dengan cepat.</p></div><div class="sd-header-actions" data-tab-panel="shifts"><button class="secondary-dashboard-button" id="sd-open-times" type="button" aria-haspopup="dialog"><span class="btn-icon" data-icon="clock" aria-hidden="true"></span>Atur Jam Shift</button><button class="primary-button dashboard-action sd-open-button" id="sd-open-form" type="button">Atur Pembagian Shift</button></div></section>
+          <section class="queue-heading ss-heading"><div data-tab-panel="shifts"><p class="eyebrow">DATA MASTER</p><h2>Kelola pembagian shift</h2><p class="ss-heading-note">Atur pergantian shift karyawan untuk setiap hari.</p></div><div data-tab-panel="schedule" hidden><p class="eyebrow">DATA MASTER / JADWAL KARYAWAN</p><h2>Jadwal mingguan karyawan</h2><p class="ss-heading-note">Lihat satu minggu penuh dan atur shift karyawan dengan cepat.</p></div><div class="sd-header-actions" data-tab-panel="shifts"><button class="secondary-dashboard-button" id="sd-open-times" type="button" aria-haspopup="dialog"><span class="btn-icon" data-icon="clock" aria-hidden="true"></span>Atur Jam Shift</button><button class="primary-button dashboard-action sd-open-button" id="sd-open-form" type="button">Atur Pembagian Shift</button></div></section>
           <div class="ss-tabs" role="tablist" aria-label="Menu Data Shift">
-            <button class="ss-tab" id="ss-tab-shifts" type="button" role="tab" aria-selected="true" aria-controls="ss-panel-shifts" data-tab="shifts">Data Shift</button>
-            <button class="ss-tab" id="ss-tab-schedule" type="button" role="tab" aria-selected="false" aria-controls="ss-panel-schedule" data-tab="schedule" tabindex="-1">Pembagian Shift</button>
+            <button class="ss-tab" id="ss-tab-shifts" type="button" role="tab" aria-selected="true" aria-controls="ss-panel-shifts" data-tab="shifts">Pembagian Shift</button>
+            <button class="ss-tab" id="ss-tab-schedule" type="button" role="tab" aria-selected="false" aria-controls="ss-panel-schedule" data-tab="schedule" tabindex="-1">Jadwal Karyawan</button>
           </div>
           <div id="ss-panel-shifts" role="tabpanel" aria-labelledby="ss-tab-shifts" data-tab-panel="shifts" class="ss-tabpanel">
           <section class="queue-panel sd-filters" aria-label="Filter jadwal">
@@ -37,7 +37,7 @@
               <div class="queue-empty" id="sd-empty" hidden><div class="queue-empty-box" aria-hidden="true"></div><h3>Belum ada karyawan aktif.</h3><p>Tambahkan akun Kasir atau Petugas berstatus Aktif di halaman Akun Pengguna.</p></div>
               <p class="sched-footnote" id="sd-legend"></p>
               <div class="sd-rotation" id="sd-rotation"></div>
-              <p class="sched-footnote">Perubahan tersimpan sebagai draf. Owner melihat jadwal setelah Anda menekan Tampilkan ke Owner di tab Pembagian Shift. Jam kerja tiap shift diubah lewat tombol Atur Jam Shift.</p>
+              <p class="sched-footnote">Perubahan tersimpan sebagai draf. Owner melihat jadwal setelah Anda menekan Tampilkan ke Owner di tab Jadwal Karyawan. Jam kerja tiap shift diubah lewat tombol Atur Jam Shift.</p>
             </section>
           </div>
           <div id="ss-panel-schedule" role="tabpanel" aria-labelledby="ss-tab-schedule" data-tab-panel="schedule" class="ss-tabpanel" hidden>
@@ -93,7 +93,7 @@
         <div class="sd-summary"><strong>Ringkasan rotasi</strong><span id="sd-summary">-</span></div>
         <p class="dialog-notice" id="sd-notice" role="alert"></p>
         <div class="sd-form-footer">
-          <p>Perubahan masuk ke draf.<span>Owner melihat jadwal setelah Tampilkan ke Owner di tab Pembagian Shift.</span></p>
+          <p>Perubahan masuk ke draf.<span>Owner melihat jadwal setelah Tampilkan ke Owner di tab Jadwal Karyawan.</span></p>
           <div class="ss-bulk-actions"><button class="secondary-dashboard-button" id="sd-cancel" type="button">Batal</button><button class="primary-button dashboard-action" type="submit">Simpan Jadwal</button></div>
         </div>
       </form>

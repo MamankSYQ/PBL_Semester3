@@ -1,4 +1,4 @@
-// Pembagian Shift (halaman Data Shift Admin).
+// Tab "Jadwal Karyawan" (halaman Data Shift Admin).
 // Jadwal mingguan per karyawan: grid karyawan x hari, atur beberapa hari sekaligus,
 // dan salin jadwal minggu sebelumnya. Perubahan tersimpan sebagai DRAF; tombol
 // "Tampilkan ke Owner" menyalin jadwal minggu itu ke data terbit yang dibaca Owner.
@@ -540,7 +540,7 @@
   });
 
   el.publishButton.addEventListener("click", publishWeek);
-  // Form "Atur Pembagian Shift" di tab Data Shift (js/shift-schedule-day.js) menyimpan ke draf yang sama.
+  // Form "Atur Pembagian Shift" di tab Pembagian Shift (js/shift-schedule-day.js) menyimpan ke draf yang sama.
   window.addEventListener("washup:shift-schedule-changed", render);
 
   // ---------- Mulai ----------
