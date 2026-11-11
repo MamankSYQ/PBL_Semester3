@@ -733,13 +733,12 @@
   font: 13.5px var(--wu-font-body); color: var(--wu-text); background-color: #fff; box-sizing: border-box;
 }
 :root:root body.master-page .ss-tabpanel > section + section { margin-top: 16px !important; }
-:root:root body.master-page .sd-card .section-heading,
-:root:root body.master-page .sd-master .section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+:root:root body.master-page .sd-card .section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
 .sd-rotation { display: grid; gap: 4px; margin-top: 10px; }
 .sd-rotation p { margin: 0; color: var(--wu-text-muted); font-size: 12.5px; }
 .sd-rotation strong { color: var(--wu-text); }
 .sd-master-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px; }
-:root:root body.master-page .sd-master-search { display: grid; gap: 6px; max-width: 420px; margin: 0 0 14px; }
+:root:root body.master-page .sd-master-search { display: grid; gap: 6px; flex: 1 1 260px; max-width: 420px; margin: 0; }
 :root:root body.master-page .sd-master-search label { color: var(--wu-text); font-size: 13px; font-weight: 600; }
 :root:root body.master-page .sd-master-search input { height: 40px; border: 1px solid #C9DCE5; border-radius: 8px; padding: 0 12px; font: 13.5px var(--wu-font-body); }
 
@@ -778,21 +777,66 @@
   .sd-form-footer .ss-bulk-actions { width: 100%; }
 }
 
-/* Kartu tab Data Shift setinggi isinya; padding bawah tabel master tetap rapi. */
+/* Kartu tab Data Shift setinggi isinya. */
 :root:root body.master-page :is(.sd-filters, .sd-card) { min-height: 0 !important; padding-bottom: 20px !important; }
 :root:root body.master-page .sd-card { padding-bottom: 24px !important; }
-:root:root body.master-page .sd-master { min-height: 0 !important; padding-bottom: 24px !important; }
 
 /* Tombol di tab Data Shift & form: ukuran sama dengan "+ Tambahkan Data". */
-:root:root body.master-page :is(#sd-open-form, .sd-form-footer .dashboard-action, .sd-form-footer .secondary-dashboard-button) {
+:root:root body.master-page :is(#sd-open-form, #sd-open-times, .sd-form-footer .dashboard-action, .sd-form-footer .secondary-dashboard-button) {
   display: inline-flex !important; align-items: center !important; justify-content: center !important;
   width: auto !important; min-width: 142px !important; height: 40px !important; min-height: 40px !important; padding: 0 16px !important;
   border-radius: 6px !important; font: 600 13px/1 var(--wu-font-body) !important; white-space: nowrap !important;
 }
 :root:root body.master-page #sd-open-form, :root:root body.master-page .sd-form-footer .dashboard-action { border: 1px solid var(--wu-text) !important; background: var(--wu-text) !important; color: #fff !important; }
-:root:root body.master-page .sd-form-footer .secondary-dashboard-button { border: 1px solid var(--wu-text) !important; background: #fff !important; color: var(--wu-text) !important; }
+:root:root body.master-page :is(#sd-open-times, .sd-form-footer .secondary-dashboard-button) { border: 1px solid var(--wu-text) !important; background: #fff !important; color: var(--wu-text) !important; }
 :root:root body.master-page #sd-open-form:disabled { opacity: .5; cursor: not-allowed; }
 .sd-form-footer .ss-bulk-actions { display: flex; gap: 10px; }
 @media (max-width: 700px) {
   .sd-form-footer .ss-bulk-actions > button { flex: 1; }
 }
+
+/* Tombol di kepala halaman: Atur Jam Shift (sekunder) + Atur Pembagian Shift (utama). */
+.sd-header-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+.sd-header-actions[hidden] { display: none !important; }
+:root:root body.master-page #sd-open-times { gap: 7px !important; }
+:root:root body.master-page #sd-open-times .btn-icon { display: inline-flex; line-height: 0; }
+:root:root body.master-page #sd-open-times .btn-icon svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+:root:root body.master-page #sd-open-times:hover { background: #EEF6FA !important; }
+
+/* Dialog Atur Jam Shift: tabel master shift (Tambah/Detail/Edit/Hapus) */
+.sd-times-dialog { width: min(860px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto; }
+.sd-times-toolbar { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; margin: 4px 0 14px; }
+:root:root body.master-page .sd-times-dialog .queue-empty:not([hidden]) { padding: 28px 16px !important; }
+@media (max-width: 600px) {
+  .sd-header-actions { width: 100%; }
+  .sd-header-actions > button { flex: 1 1 100%; }
+  .sd-master-actions { width: 100%; justify-content: space-between; }
+}
+
+/* Tabel di dialog Atur Jam Shift memakai gaya tabel yang sama dengan halaman (header tema, tombol aksi). */
+:root:root body .sd-times-dialog table thead tr { background: transparent !important; }
+:root:root body .sd-times-dialog table thead th {
+  background: #E5F1F7 !important; color: var(--wu-text) !important; font: 700 11px/1.3 var(--wu-font-body) !important;
+  letter-spacing: .04em !important; text-transform: uppercase !important; white-space: nowrap !important;
+  padding: 13px 14px !important; border-bottom: 1px solid #C9DCE5 !important;
+}
+:root:root body .sd-times-dialog table thead th:first-child { border-top-left-radius: 8px !important; }
+:root:root body .sd-times-dialog table thead th:last-child { border-top-right-radius: 8px !important; }
+:root:root body .sd-times-dialog table tbody td { padding: 12px 14px !important; font-size: 13px !important; }
+:root:root body .sd-times-dialog tbody .table-action {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  min-width: 52px !important; height: 26px !important; min-height: 26px !important; padding: 4px 10px !important; margin: 0 !important;
+  border: 1px solid #1D4A5A !important; border-radius: 7px !important; background: rgba(166, 206, 230, .44) !important; color: #1D4A5A !important;
+  font: 600 11.9px/1 var(--wu-font-body) !important; box-shadow: none !important;
+}
+:root:root body .sd-times-dialog tbody .table-action-edit { border-color: #007A18 !important; background: rgba(172, 230, 166, .44) !important; color: #00631A !important; }
+:root:root body .sd-times-dialog tbody .table-action-delete { border-color: #930002 !important; background: rgba(255, 121, 124, .44) !important; color: #930002 !important; }
+:root:root body .sd-times-dialog tbody td > .table-action + .table-action { margin-left: 8px !important; }
+:root:root body.master-page :is(.sd-times-dialog, .sd-dialog) .dialog-heading h2 { font-size: 20px !important; }
+:root:root body.master-page .sd-times-dialog #master-add {
+  display: inline-flex !important; align-items: center !important; gap: 7px !important; height: 40px !important; padding: 0 14px !important;
+  border: 1px solid var(--wu-text) !important; border-radius: 6px !important; background: var(--wu-text) !important; color: #fff !important;
+  font: 600 13px/1 var(--wu-font-body) !important; white-space: nowrap !important;
+}
+:root:root body.master-page .sd-times-dialog #master-add .btn-icon { display: inline-flex; line-height: 0; }
+:root:root body.master-page .sd-times-dialog #master-add .btn-icon svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }

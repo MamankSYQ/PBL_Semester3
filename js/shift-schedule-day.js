@@ -208,7 +208,7 @@
     const employeeName = ui.formEmployee.value;
     ui.shiftInfo.replaceChildren(
       make("strong", "", options.filter((shift) => shift.id !== OFF).map((shift) => `${shift.label} · ${shift.time}`).join("   |   ")),
-      make("span", "", "Pilihan shift memakai jam dari daftar Data Shift; jam master tidak berubah."),
+      make("span", "", "Jam setiap shift diatur lewat tombol Atur Jam Shift."),
     );
     ui.dayRows.replaceChildren(...weekDates(ui.formWeek.value).map((date, index) => {
       const dateKey = toKey(date);
@@ -303,6 +303,19 @@
     renderView();
     window.dispatchEvent(new Event("washup:shift-schedule-changed"));
   });
+
+  // ---------- Atur Jam Shift (tabel master shift di dalam dialog) ----------
+  const timesDialog = $("#sd-times-dialog");
+  if (timesDialog) {
+    $("#sd-open-times")?.addEventListener("click", () => openDialog(timesDialog));
+    $("#sd-times-close")?.addEventListener("click", () => closeDialog(timesDialog));
+    timesDialog.addEventListener("click", (event) => { if (event.target === timesDialog) closeDialog(timesDialog); });
+    // Jam shift bisa berubah: perbarui label jam di jadwal setelah dialog ditutup.
+    timesDialog.addEventListener("close", () => {
+      renderView();
+      window.dispatchEvent(new Event("washup:shift-schedule-changed"));
+    });
+  }
 
   // ---------- Mulai ----------
   ui.week.addEventListener("change", renderView);
