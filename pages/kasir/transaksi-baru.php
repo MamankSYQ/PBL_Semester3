@@ -1,71 +1,20 @@
-<!doctype html>
-<html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Transaksi Baru WASHUP" />
-    <title>Transaksi Baru | WASHUP</title>
-    <link rel="stylesheet" href="../../css/style.css" />
-  </head>
-  <body class="transaction-page">
-    <div class="dashboard-shell">
-      <aside class="dashboard-sidebar" aria-label="Navigasi Kasir">
-        <a class="dashboard-brand" href="dashboard-kasir.html" aria-label="WASHUP Dashboard Kasir">
-          <span class="brand-mark">W</span>
-          <span>
-            <strong>WASHUP</strong>
-            <small>Sistem Car Wash</small>
-          </span>
-        </a>
+<?php
+declare(strict_types=1);
+require __DIR__ . '/../../config/app.php';
 
-        <nav class="dashboard-nav" aria-label="Menu utama">
-          <p class="nav-label">MENU KASIR</p>
-          <a class="nav-item" href="dashboard-kasir.html">
-            <span class="nav-icon" aria-hidden="true">⌂</span>
-            Dashboard
-          </a>
-          <a class="nav-item active" href="transaksi-baru.html" aria-current="page">
-            <span class="nav-icon" aria-hidden="true">+</span>
-            Transaksi Baru
-          </a>
-          <a class="nav-item" href="antrean.html">
-            <span class="nav-icon" aria-hidden="true">≡</span>
-            Antrean
-          </a>
-          <a class="nav-item" href="pembayaran.html">
-            <span class="nav-icon" aria-hidden="true">Rp</span>
-            Pembayaran
-          </a>
-          <a class="nav-item" href="riwayat-transaksi.html">
-            <span class="nav-icon" aria-hidden="true">↺</span>
-            Riwayat Transaksi
-          </a>
-        </nav>
+$role = 'kasir';
+$page = 'transaksi-baru';
+$pageTitle = 'Transaksi Baru';
+$pageDescription = 'Transaksi Baru WASHUP';
+$h1 = 'Transaksi Baru';
+$bodyClass = 'transaction-page';
+$css = ['style.css'];
+$layout = 'classic';
+$logoutId = 'transaction-logout';
+$footerLabel = 'Transaksi Baru';
 
-        <div class="sidebar-bottom">
-          <p class="sidebar-note">Area kerja Kasir</p>
-          <button class="sidebar-logout" id="transaction-logout" type="button">
-            <span class="nav-icon" aria-hidden="true">↪</span>
-            Logout
-          </button>
-        </div>
-      </aside>
-
-      <div class="dashboard-content">
-        <header class="dashboard-topbar">
-          <div>
-            <p class="eyebrow">WASHUP / KASIR</p>
-            <h1>Transaksi Baru</h1>
-          </div>
-          <div class="user-summary" aria-label="Informasi pengguna">
-            <span class="user-avatar" aria-hidden="true">K</span>
-            <span>
-              <strong>Kasir</strong>
-              <small>Role: Kasir</small>
-            </span>
-          </div>
-        </header>
-
+require __DIR__ . '/../../includes/header.php';
+?>
         <main class="dashboard-main transaction-main">
           <section class="transaction-heading" aria-labelledby="transaction-title">
             <p class="eyebrow">PELAYANAN PELANGGAN</p>
@@ -190,20 +139,14 @@
                 <span>Total <strong id="result-price">Rp 0</strong></span>
               </div>
               <div class="result-actions">
-                <a class="primary-button dashboard-action" href="dashboard-kasir.html">Kembali ke Dashboard</a>
-                <a class="secondary-dashboard-button" href="dashboard-kasir.html#antrean-section">Lihat Antrean</a>
+                <a class="primary-button dashboard-action" href="dashboard-kasir.php">Kembali ke Dashboard</a>
+                <a class="secondary-dashboard-button" href="dashboard-kasir.php#antrean-section">Lihat Antrean</a>
               </div>
             </div>
           </section>
         </main>
 
-        <footer class="dashboard-footer">
-          <span>WASHUP · Transaksi Baru</span>
-          <span id="current-year"></span>
-        </footer>
-      </div>
-    </div>
+<?php require __DIR__ . '/../../includes/footer.php'; ?>
+    
 
-    <script src="../../js/app.js"></script>
-  </body>
-</html>
+<?php require __DIR__ . '/../../includes/scripts.php'; ?>

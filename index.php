@@ -1,3 +1,11 @@
+<?php
+declare(strict_types=1);
+require __DIR__ . '/config/app.php';
+
+// Tombol utama menuju login, atau langsung ke dashboard bila sudah login.
+$user = current_user();
+$loginHref = $user ? ROLE_HOME[$user['role']] : 'login.php';
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -33,7 +41,7 @@
         <section class="hero">
             <h2>Pusat Operasional Maju Bersama Car Wash 2</h2>
             <p>WASHUP akan membantu menghubungkan pelayanan pelanggan, antrean<br>pencucian, dan pemantauan usaha dalam sistem</p>
-            <a href="login.html" class="btn-login">Login WASHUP</a>
+            <a href="<?= e($loginHref) ?>" class="btn-login">Login WASHUP</a>
         </section>
 
         <!-- Main Card -->
@@ -75,14 +83,12 @@
         <!-- Bottom Footer -->
         <footer class="bottom-footer">
             <div class="copyright">
-                <span class="c-icon">C</span> <span id="current-year">2026</span> WASHUP
+                <span class="c-icon">C</span> <span id="current-year"><?= date('Y') ?></span> WASHUP
             </div>
             <div class="location">
-                Maju Bersama Car Wash 2 &middot; Kota Malang
+                <?= e(APP_LOCATION) ?>
             </div>
         </footer>
     </div>
-
-    <script src="js/app.js"></script>
 </body>
 </html>
