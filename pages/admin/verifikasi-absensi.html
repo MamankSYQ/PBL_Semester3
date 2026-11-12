@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Verifikasi absensi petugas WASHUP" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Verifikasi Absensi | WASHUP</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="../../css/tokens.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/base.css" />
+    <link rel="stylesheet" href="../../css/admin-master.css" />
+    <link rel="stylesheet" href="../../css/admin.css" />
+    <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
+    <link rel="stylesheet" href="../../css/compact.css" />
+  </head>
+  <body class="admin-verification-page master-page" data-role="Admin" data-page="verification" data-title="Verifikasi Absensi" data-logout-id="verification-logout">
+    <div class="dashboard-shell">
+      <div data-component="sidebar"></div>
+      <div class="dashboard-content">
+        <div data-component="topbar"></div>
+        <main class="dashboard-main master-main verification-main">
+          <section class="queue-heading">
+            <div>
+              <p class="eyebrow">VERIFIKASI ABSENSI</p>
+              <h2>Verifikasi absensi petugas</h2>
+            </div>
+          </section>
+          <section class="queue-toolbar master-toolbar verification-search">
+            <div>
+              <label for="verification-search">Cari nama karyawan</label>
+              <input id="verification-search" type="search" placeholder="Cari nama karyawan..." />
+            </div>
+          </section>
+          <section class="queue-panel verification-list-panel">
+            <div class="section-heading verification-section-heading">
+              <div>
+                <p class="eyebrow">DAFTAR VERIFIKASI DAN ABSENSI</p>
+                <h2>Absensi Masuk dan Keluar</h2>
+              </div>
+              <span class="verification-pending-count" id="verification-pending-count">0 perlu verifikasi</span>
+            </div>
+            <div class="queue-table-wrap verification-table-wrap" tabindex="0">
+              <table class="queue-full-table verification-table">
+                <caption class="sr-only">Daftar absensi masuk dan keluar Petugas</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">PETUGAS</th>
+                    <th scope="col">TANGGAL</th>
+                    <th scope="col">SHIFT</th>
+                    <th scope="col">JENIS</th>
+                    <th scope="col">WAKTU</th>
+                    <th scope="col">STATUS VERIFIKASI</th>
+                    <th scope="col">AKSI</th>
+                  </tr>
+                </thead>
+                <tbody id="verification-table-body"></tbody>
+              </table>
+            </div>
+            <div class="queue-empty verification-empty" id="verification-empty" hidden>
+              <div class="queue-empty-box" aria-hidden="true">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" d="M19 4H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 9.5h-4.2c-.4 1.5-1.7 2.5-3.3 2.5s-2.9-1-3.3-2.5H5V6h14v7.5z" />
+                </svg>
+              </div>
+              <h3>Belum ada absensi petugas.</h3>
+              <p>Data absensi akan muncul setelah petugas melakukan absen.</p>
+            </div>
+            <div class="verification-review" id="verification-review" aria-labelledby="verification-review-title" hidden>
+              <h3 class="verification-review-title" id="verification-review-title">Detail Absensi</h3>
+              <p class="verification-review-info" id="verification-review-info"></p>
+              <div class="verification-review-content">
+                <div class="verification-photo-wrap" id="verification-photo-wrap"></div>
+                <div class="verification-review-action">
+                  <p class="verification-partner-status" id="verification-partner-status"></p>
+                  <button class="verification-confirm-button" id="verification-confirm" type="button" hidden></button>
+                  <p class="verification-action-hint" id="verification-action-hint" hidden></p>
+                </div>
+              </div>
+              <p class="verification-notice" id="verification-notice" role="status" aria-live="polite"></p>
+            </div>
+          </section>
+        </main>
+        <div data-component="footer"></div>
+      </div>
+    </div>
+    <script src="../../js/components.js"></script>
+    <script src="../../js/app.js"></script>
+  </body>
+</html>

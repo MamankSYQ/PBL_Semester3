@@ -1,6 +1,21 @@
 # Editor
 .vscode/
+.idea/
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Rahasia dan konfigurasi lokal
+.env
+.env.*
+!.env.example
+
+# Dependensi dan hasil build (jika nanti dipakai)
+node_modules/
+dist/
+build/
+
+# Log dan arsip sementara
+*.log
+*.zip

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Rekap Absensi Petugas WASHUP" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Rekap Absensi | WASHUP</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="../../css/tokens.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/base.css" />
+    <link rel="stylesheet" href="../../css/petugas.css" />
+    <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
+    <link rel="stylesheet" href="../../css/compact.css" />
+  </head>
+  <body class="petugas-page petugas-recap-page" data-role="Petugas" data-page="recap" data-title="Rekap Absensi" data-logout-id="attendance-logout">
+    <div class="dashboard-shell">
+      <div data-component="sidebar"></div>
+      <div class="dashboard-content">
+        <div data-component="topbar"></div>
+        <main class="dashboard-main admin-main petugas-main petugas-recap-main">
+          <section class="queue-heading">
+            <div><p class="eyebrow">KEHADIRAN KARYAWAN</p><h2>Rekap Absensi Petugas</h2></div>
+          </section>
+          <form class="attendance-period-panel" id="attendance-period-form">
+            <strong class="attendance-period-title"><span class="period-title-icon" data-icon="calendar" aria-hidden="true"></span>Periode Absensi</strong>
+            <label for="attendance-month">Bulan
+              <select id="attendance-month" name="month"></select>
+            </label>
+            <label for="attendance-year">Tahun
+              <select id="attendance-year" name="year"></select>
+            </label>
+            <button class="primary-button dashboard-action" type="submit">Tampilkan</button>
+          </form>
+          <section class="summary-grid petugas-attendance-summary" aria-label="Ringkasan absensi">
+            <article class="summary-card">
+              <p>Hadir</p><strong id="recap-present-count">0 <small>hari</small></strong>
+              <span>Termasuk hari terlambat</span>
+            </article>
+            <article class="summary-card">
+              <p>Terlambat</p><strong id="recap-late-count">0 <small>hari</small></strong>
+              <span id="recap-late-detail">Dari 0 hari hadir</span>
+            </article>
+            <article class="summary-card">
+              <p>Izin / Sakit</p><strong id="recap-leave-count">0 <small>hari</small></strong>
+              <span id="recap-leave-detail">0 hari izin · 0 hari sakit</span>
+            </article>
+            <article class="summary-card">
+              <p>Tanpa Keterangan</p><strong id="recap-absent-count">0 <small>hari</small></strong>
+              <span>Tidak melakukan absensi</span>
+            </article>
+          </section>
+          <section class="dashboard-section attendance-history-panel" aria-labelledby="attendance-history-title">
+            <div class="section-heading attendance-history-heading">
+              <div class="attendance-card-heading">
+                <span class="role-icon" aria-hidden="true">P</span>
+                <div><p class="eyebrow">DATA ABSENSI</p><h2 id="attendance-history-title">Riwayat Kehadiran</h2></div>
+              </div>
+              <div class="attendance-period-summary">
+                <strong id="recap-period-label">-</strong>
+                <span id="recap-employee-period">Petugas · Data s.d. -</span>
+              </div>
+            </div>
+            <div class="table-wrap attendance-recap-table-wrap" tabindex="0">
+              <table class="queue-table attendance-recap-table">
+                <caption class="sr-only">Riwayat absensi Petugas</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Tanggal</th><th scope="col">Shift</th><th scope="col">Jam Masuk</th>
+                    <th scope="col">Jam Keluar</th><th scope="col">Durasi Kerja</th><th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="petugas-attendance-history-body"></tbody>
+              </table>
+            </div>
+            <div class="attendance-recap-empty" id="petugas-attendance-history-empty" hidden>
+              Belum ada catatan absensi pada periode ini.
+            </div>
+            <nav class="attendance-pagination" id="attendance-pagination" aria-label="Halaman riwayat absensi"></nav>
+          </section>
+        </main>
+        <div data-component="footer"></div>
+      </div>
+    </div>
+    <script src="../../js/components.js"></script>
+    <script src="../../js/app.js"></script>
+  </body>
+</html>

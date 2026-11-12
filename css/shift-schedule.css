@@ -1,0 +1,842 @@
+/* =========================================================
+   Pembagian Shift (halaman Data Shift Admin)
+   Tab Data Shift / Pembagian Shift, grid jadwal mingguan,
+   dialog Atur beberapa hari. Semua warna dari tokens.css.
+   ========================================================= */
+
+.master-page {
+  --ss-line: #D3E3EC;
+  --ss-soft: #EEF5F9;
+  --ss-chip: #E6EFF4;
+}
+
+/* ---------- Judul dan tab ---------- */
+.ss-heading-note {
+  margin: 4px 0 0;
+  color: var(--wu-text-muted);
+  font-size: 0.875rem;
+}
+
+.ss-heading [hidden] {
+  display: none;
+}
+
+.ss-heading p.ss-heading-note:not(.eyebrow) {
+  margin: 4px 0 0;
+  color: var(--wu-text-muted);
+  font-size: 0.875rem;
+}
+
+/* compact.css menyeragamkan semua header tabel (huruf kapital, 11px) dengan !important.
+   Grid jadwal mengikuti Figma: nama hari biasa + tanggal kecil, jadi perlu ditimpa di sini saja. */
+:root:root body main .ss-grid thead th {
+  background: var(--ss-soft) !important;
+  font-size: 0.875rem !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+/* compact.css memaksa tombol ini tampil (display: inline-flex !important),
+   jadi perlu !important juga agar tombol tersembunyi di tab Pembagian Shift. */
+:root:root body.master-page .dashboard-action#master-add[hidden] {
+  display: none !important;
+}
+
+.ss-tabs {
+  display: flex;
+  gap: var(--wu-space-2);
+  margin: 0 0 var(--wu-space-5);
+  border-bottom: 1px solid var(--ss-line);
+}
+
+.ss-tab {
+  position: relative;
+  padding: 10px 22px;
+  border: 0;
+  background: none;
+  color: var(--wu-text-muted);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.ss-tab.is-active {
+  color: var(--wu-text);
+  font-weight: 700;
+}
+
+.ss-tab.is-active::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: var(--wu-teal);
+}
+
+.ss-tabpanel[hidden] {
+  display: none;
+}
+
+/* ---------- Toolbar minggu ---------- */
+.ss-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wu-space-3);
+  margin-bottom: var(--wu-space-4);
+}
+
+.ss-week-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wu-space-2);
+  padding: 6px;
+  border: 1px solid var(--ss-line);
+  border-radius: var(--wu-radius-md);
+  background: var(--wu-surface);
+}
+
+.ss-week-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wu-space-2);
+  min-width: 200px;
+  justify-content: center;
+  color: var(--wu-text);
+  font-size: 0.9375rem;
+}
+
+.ss-week-label svg,
+.ss-bulk-range svg,
+.ss-info > span svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+
+.ss-icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: var(--wu-radius-sm);
+  background: none;
+  color: var(--wu-text);
+  cursor: pointer;
+}
+
+.ss-icon-button:hover {
+  background: var(--ss-soft);
+}
+
+.ss-icon-button svg,
+.ss-copy-button svg,
+.ss-hint svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ss-link-button {
+  padding: 4px 6px;
+  border: 0;
+  background: none;
+  color: var(--wu-accent-text);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.ss-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wu-space-3);
+  margin-left: auto;
+}
+
+.ss-copy-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wu-space-2);
+}
+
+.ss-toolbar-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Panel dan grid ---------- */
+.ss-panel .section-heading {
+  align-items: flex-start;
+}
+
+.ss-muted {
+  margin: 4px 0 0;
+  color: var(--wu-text-muted);
+  font-size: 0.8125rem;
+}
+
+.ss-grid-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--ss-line);
+  border-radius: var(--wu-radius-md);
+}
+
+.ss-grid {
+  width: 100%;
+  min-width: 860px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.ss-grid th,
+.ss-grid td {
+  padding: 14px 10px;
+  border-left: 1px solid var(--ss-line);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.ss-grid thead th {
+  background: var(--ss-soft);
+  border-bottom: 1px solid var(--ss-line);
+  color: var(--wu-text);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.ss-grid thead th span,
+.ss-grid thead th small {
+  display: block;
+}
+
+.ss-grid thead th small {
+  margin-top: 2px;
+  color: var(--wu-text-muted);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.ss-grid th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  width: 170px;
+  border-left: 0;
+  background: var(--wu-surface);
+  text-align: left;
+  padding-left: 16px;
+}
+
+.ss-grid thead th:first-child {
+  background: var(--ss-soft);
+}
+
+.ss-grid tbody tr + tr > * {
+  border-top: 1px solid var(--ss-line);
+}
+
+.ss-grid tbody th strong,
+.ss-grid tbody th small {
+  display: block;
+}
+
+.ss-grid tbody th strong {
+  color: var(--wu-text);
+  font-size: 0.9375rem;
+}
+
+.ss-grid tbody th small {
+  margin-top: 2px;
+  color: var(--wu-text-muted);
+  font-size: 0.8125rem;
+  font-weight: 400;
+}
+
+.ss-grid .is-today {
+  background: #F4F9FC;
+}
+
+.ss-grid thead th.is-today {
+  box-shadow: inset 0 -3px 0 var(--wu-accent);
+}
+
+.ss-cell-select {
+  width: 100%;
+  min-height: 34px;
+  padding: 6px 26px 6px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--wu-radius-sm);
+  background: var(--ss-chip) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23436D8A'/%3E%3C/svg%3E") no-repeat right 10px center;
+  color: var(--wu-text);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  appearance: none;
+  cursor: pointer;
+}
+
+.ss-cell-select:hover {
+  border-color: var(--wu-muted);
+}
+
+.ss-grid td small {
+  display: block;
+  margin-top: 6px;
+  color: var(--wu-text-muted);
+  font-size: 0.75rem;
+}
+
+.ss-grid td[data-kind="off"] .ss-cell-select {
+  background-color: var(--ss-soft);
+  color: var(--wu-text-muted);
+}
+
+.ss-grid td[data-kind="empty"] .ss-cell-select {
+  border: 1px dashed var(--wu-muted);
+  background-color: var(--wu-surface);
+  color: var(--wu-text-muted);
+  font-weight: 500;
+}
+
+.ss-grid td[data-kind="inactive"] .ss-cell-select {
+  border-color: var(--wu-danger);
+  color: var(--wu-danger);
+}
+
+.ss-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 24px;
+  margin: var(--wu-space-4) 0 0;
+  color: var(--wu-accent-text);
+  font-size: 0.8125rem;
+}
+
+.ss-hint {
+  display: flex;
+  align-items: center;
+  gap: var(--wu-space-2);
+  margin: var(--wu-space-4) 0 0;
+  padding-top: var(--wu-space-4);
+  border-top: 1px solid var(--ss-line);
+  color: var(--wu-text-muted);
+  font-size: 0.875rem;
+}
+
+.ss-notice {
+  min-height: 1.25em;
+  margin: var(--wu-space-2) 0 0;
+  color: var(--wu-success-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.ss-notice.is-error {
+  color: var(--wu-danger);
+}
+
+.ss-info {
+  display: flex;
+  gap: var(--wu-space-4);
+  align-items: flex-start;
+  margin-top: var(--wu-space-5);
+  padding: 18px 22px;
+  border-radius: var(--wu-radius-md);
+  background: #D8E9F2;
+  color: var(--wu-text);
+}
+
+.ss-info > span {
+  margin-top: 2px;
+  color: var(--wu-text-muted);
+}
+
+.ss-info > span svg {
+  width: 22px;
+  height: 22px;
+}
+
+.ss-info h3 {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+.ss-info p {
+  margin: 4px 0 0;
+  color: var(--wu-text-muted);
+  font-size: 0.875rem;
+}
+
+/* ---------- Dialog Atur beberapa hari ---------- */
+.queue-dialog.ss-bulk-dialog {
+  width: min(1080px, calc(100% - 32px));
+  max-height: calc(100vh - 32px);
+}
+
+.ss-bulk-dialog .dialog-heading h2 {
+  margin: 0;
+}
+
+.ss-bulk-range {
+  display: flex;
+  align-items: center;
+  gap: var(--wu-space-2);
+  margin: 6px 0 0;
+  color: var(--wu-text);
+  font-size: 0.9375rem;
+}
+
+.ss-bulk-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: var(--wu-space-5);
+  margin-top: var(--wu-space-4);
+}
+
+.ss-step {
+  margin: 0 0 var(--wu-space-5);
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.ss-step-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 0;
+  color: var(--wu-text);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.ss-step-number {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--wu-radius-sm);
+  background: var(--ss-chip);
+  font-size: 0.8125rem;
+}
+
+.ss-step-meta {
+  margin-left: auto;
+  color: var(--wu-text-muted);
+  font-size: 0.8125rem;
+  font-weight: 400;
+}
+
+.ss-step select {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--wu-muted);
+  border-radius: var(--wu-radius-sm);
+  background: var(--wu-surface);
+  color: var(--wu-text);
+  font: inherit;
+}
+
+.ss-day-options {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--wu-space-2);
+  margin-bottom: var(--wu-space-2);
+}
+
+.ss-day-option,
+.ss-shift-option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--ss-line);
+  border-radius: var(--wu-radius-sm);
+  background: var(--wu-surface);
+  color: var(--wu-text);
+  cursor: pointer;
+}
+
+.ss-day-option {
+  align-items: center;
+  gap: 2px;
+  padding: 12px 4px;
+  text-align: center;
+}
+
+.ss-day-option input {
+  width: 16px;
+  height: 16px;
+  margin: 0 0 6px;
+  accent-color: var(--wu-teal);
+}
+
+.ss-day-option strong {
+  font-size: 0.875rem;
+}
+
+.ss-day-option small,
+.ss-shift-option small {
+  color: var(--wu-text-muted);
+  font-size: 0.75rem;
+}
+
+.ss-day-option.is-checked {
+  border: 2px solid var(--wu-teal);
+  padding: 11px 3px;
+  background: var(--ss-soft);
+}
+
+.ss-day-option:has(input:focus-visible),
+.ss-shift-option:has(input:focus-visible) {
+  outline: 3px solid var(--wu-focus);
+  outline-offset: 2px;
+}
+
+.ss-shift-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--wu-space-2);
+}
+
+.ss-shift-option {
+  gap: 4px;
+  padding: 14px 16px;
+}
+
+.ss-shift-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ss-shift-option strong {
+  font-size: 0.9375rem;
+}
+
+.ss-shift-option.is-checked {
+  border-color: var(--wu-teal);
+  background: var(--wu-teal);
+  color: #FFFFFF;
+}
+
+.ss-shift-option.is-checked strong::before {
+  content: "✓ ";
+}
+
+.ss-shift-option.is-checked small {
+  color: #D3E3EC;
+}
+
+.ss-summary {
+  padding: 14px 16px;
+  border-radius: var(--wu-radius-sm);
+  background: var(--ss-soft);
+  color: var(--wu-text);
+  font-size: 0.875rem;
+}
+
+.ss-summary p {
+  margin: 4px 0 0;
+  color: var(--wu-text-muted);
+}
+
+.ss-bulk-preview {
+  padding: 16px;
+  border-radius: var(--wu-radius-md);
+  background: var(--ss-soft);
+}
+
+.ss-preview-name {
+  margin: 0 0 10px;
+  color: var(--wu-text);
+  font-weight: 700;
+}
+
+.ss-preview-list {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.ss-preview-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--wu-space-3);
+  padding: 8px 0;
+  border-top: 1px solid var(--ss-line);
+}
+
+.ss-preview-list li span:last-child {
+  text-align: right;
+}
+
+.ss-preview-list strong,
+.ss-preview-list small {
+  display: block;
+}
+
+.ss-preview-list strong {
+  color: var(--wu-text);
+  font-size: 0.875rem;
+}
+
+.ss-preview-list small {
+  color: var(--wu-text-muted);
+  font-size: 0.75rem;
+}
+
+.ss-preview-list li:not(.is-changed) span:last-child strong {
+  font-weight: 500;
+}
+
+.ss-preview-list li.is-changed span:last-child strong {
+  color: var(--wu-accent-text);
+}
+
+.ss-bulk-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wu-space-4);
+  margin-top: var(--wu-space-2);
+  padding-top: var(--wu-space-4);
+  border-top: 1px solid var(--ss-line);
+}
+
+.ss-bulk-footer p {
+  margin: 0;
+  color: var(--wu-text);
+  font-size: 0.8125rem;
+}
+
+.ss-bulk-footer p span {
+  display: block;
+  color: var(--wu-text-muted);
+}
+
+.ss-bulk-actions {
+  display: flex;
+  gap: var(--wu-space-3);
+}
+
+.ss-bulk-actions button {
+  min-width: 150px;
+  font-size: 0.9375rem;
+}
+
+.ss-confirm-text {
+  margin: var(--wu-space-3) 0 var(--wu-space-4);
+  color: var(--wu-text-muted);
+}
+
+/* ---------- Layar kecil ---------- */
+@media (max-width: 1024px) {
+  .ss-bulk-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .ss-toolbar-actions {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .ss-toolbar-actions button {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .ss-week-nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .ss-week-label {
+    min-width: 0;
+  }
+
+  .ss-grid th:first-child {
+    width: 120px;
+  }
+
+  .ss-day-options {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .ss-tab {
+    padding: 10px 14px;
+  }
+
+  .ss-bulk-actions {
+    width: 100%;
+  }
+
+  .ss-bulk-actions button {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+/* ---------- Draf → Tampilkan ke Owner ---------- */
+.ss-badges { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
+.ss-status { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+.ss-status-draft { background: #FFF1D6; color: #754B03; }
+.ss-status-changed { background: #FFE4D6; color: #8A3A0B; }
+.ss-status-published { background: #DFF5EB; color: #1C6B47; }
+.ss-publish {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--wu-space-4);
+  margin-top: var(--wu-space-5); padding: 18px 22px; border-radius: var(--wu-radius-md);
+  background: var(--wu-surface); box-shadow: var(--wu-shadow-card);
+}
+.ss-publish h3 { margin: 0 0 4px; color: var(--wu-text); font-size: 0.9375rem; }
+.ss-publish p { margin: 0; color: var(--wu-text-muted); font-size: 0.8125rem; }
+.ss-publish .dashboard-action:disabled { opacity: .5; cursor: not-allowed; }
+@media (max-width: 600px) {
+  .ss-publish .dashboard-action { width: 100%; }
+}
+
+/* Pilihan shift di grid: panah lebih rapat supaya nama shift tidak terpotong. */
+:root:root body main select.ss-cell-select { padding-left: 10px !important; padding-right: 26px !important; background-position: right 8px center !important; background-size: 12px 12px !important; }
+/* Kontras AA untuk teks keterangan di kotak info biru. */
+.ss-info p { color: #2F5466; }
+
+/* =========================================================
+   TAB DATA SHIFT — jadwal per hari + form Atur Pembagian Shift
+   (js/shift-schedule-day.js). Tabel hari × shift memakai gaya
+   sched-* dari css/shift-schedule-owner.css.
+   ========================================================= */
+:root:root body.master-page .sd-filters {
+  display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 16px; align-items: end; padding: 18px 20px !important;
+}
+:root:root body.master-page :is(.sd-filters, .sd-form-grid) label { display: grid; gap: 6px; margin: 0; color: var(--wu-text); font-size: 13px; font-weight: 600; }
+:root:root body.master-page :is(.sd-filters, .sd-form-grid) :is(select, input) {
+  width: 100%; height: 40px; border: 1px solid #C9DCE5; border-radius: 8px; padding-left: 12px;
+  font: 13.5px var(--wu-font-body); color: var(--wu-text); background-color: #fff; box-sizing: border-box;
+}
+:root:root body.master-page .ss-tabpanel > section + section { margin-top: 16px !important; }
+:root:root body.master-page .sd-card .section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.sd-rotation { display: grid; gap: 4px; margin-top: 10px; }
+.sd-rotation p { margin: 0; color: var(--wu-text-muted); font-size: 12.5px; }
+.sd-rotation strong { color: var(--wu-text); }
+.sd-master-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px; }
+:root:root body.master-page .sd-master-search { display: grid; gap: 6px; flex: 1 1 260px; max-width: 420px; margin: 0; }
+:root:root body.master-page .sd-master-search label { color: var(--wu-text); font-size: 13px; font-weight: 600; }
+:root:root body.master-page .sd-master-search input { height: 40px; border: 1px solid #C9DCE5; border-radius: 8px; padding: 0 12px; font: 13.5px var(--wu-font-body); }
+
+/* Form dialog */
+.sd-dialog { width: min(820px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto; }
+.sd-dialog form { display: grid; gap: 16px; }
+.sd-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.sd-shift-info { display: grid; gap: 3px; padding: 10px 14px; border-radius: 8px; background: #EAF4F9; font-size: 12.5px; color: var(--wu-text); }
+.sd-shift-info span { color: var(--wu-text-muted); font-size: 12px; }
+.sd-days { margin: 0; padding: 0; border: 0; min-width: 0; }
+.sd-days legend { display: grid; gap: 2px; margin-bottom: 8px; padding: 0; font-size: 13.5px; color: var(--wu-text); }
+.sd-days legend span { color: var(--wu-text-muted); font-size: 12px; font-weight: 400; }
+.sd-day-row { display: grid; grid-template-columns: 110px minmax(0, 1fr) 150px; align-items: center; gap: 12px; padding: 7px 0; border-top: 1px solid #E5EEF2; }
+.sd-day-name { display: flex; align-items: baseline; gap: 6px; }
+.sd-day-name strong { font-size: 13.5px; color: var(--wu-text); }
+.sd-day-name small, .sd-day-time { color: var(--wu-text-muted); font-size: 12px; }
+.sd-segment { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 6px; }
+.sd-segment-option { position: relative; }
+.sd-segment-option input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.sd-segment-option span {
+  display: flex; align-items: center; justify-content: center; height: 32px; border-radius: 6px;
+  background: #EDF5F8; color: #2F5E72; font-size: 12.5px; font-weight: 600; transition: background-color .15s, color .15s;
+}
+.sd-segment-option input:checked + span { background: var(--wu-text); color: #fff; }
+.sd-segment-option input:checked + span::before { content: "✓ "; white-space: pre; }
+.sd-segment-option input:focus-visible + span { outline: var(--wu-focus-ring, 2px solid #1C7090); outline-offset: 2px; }
+.sd-segment-option:hover input:not(:checked) + span { background: #DCEBF2; }
+.sd-summary { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 10px 14px; border-radius: 8px; background: #EAF4F9; font-size: 12.5px; color: var(--wu-text); }
+.sd-form-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding-top: 14px; border-top: 1px solid #E5EEF2; }
+.sd-form-footer p { display: grid; gap: 2px; margin: 0; font-size: 12.5px; font-weight: 700; color: var(--wu-text); }
+.sd-form-footer p span { font-weight: 400; color: var(--wu-text-muted); }
+
+@media (max-width: 700px) {
+  :root:root body.master-page .sd-filters, .sd-form-grid { grid-template-columns: 1fr; }
+  .sd-day-row { grid-template-columns: 1fr; gap: 6px; }
+  .sd-form-footer .ss-bulk-actions { width: 100%; }
+}
+
+/* Kartu tab Data Shift setinggi isinya. */
+:root:root body.master-page :is(.sd-filters, .sd-card) { min-height: 0 !important; padding-bottom: 20px !important; }
+:root:root body.master-page .sd-card { padding-bottom: 24px !important; }
+
+/* Tombol di tab Data Shift & form: ukuran sama dengan "+ Tambahkan Data". */
+:root:root body.master-page :is(#sd-open-form, #sd-open-times, .sd-form-footer .dashboard-action, .sd-form-footer .secondary-dashboard-button) {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  width: auto !important; min-width: 142px !important; height: 40px !important; min-height: 40px !important; padding: 0 16px !important;
+  border-radius: 6px !important; font: 600 13px/1 var(--wu-font-body) !important; white-space: nowrap !important;
+}
+:root:root body.master-page #sd-open-form, :root:root body.master-page .sd-form-footer .dashboard-action { border: 1px solid var(--wu-text) !important; background: var(--wu-text) !important; color: #fff !important; }
+:root:root body.master-page :is(#sd-open-times, .sd-form-footer .secondary-dashboard-button) { border: 1px solid var(--wu-text) !important; background: #fff !important; color: var(--wu-text) !important; }
+:root:root body.master-page #sd-open-form:disabled { opacity: .5; cursor: not-allowed; }
+.sd-form-footer .ss-bulk-actions { display: flex; gap: 10px; }
+@media (max-width: 700px) {
+  .sd-form-footer .ss-bulk-actions > button { flex: 1; }
+}
+
+/* Tombol di kepala halaman: Atur Jam Shift (sekunder) + Atur Pembagian Shift (utama). */
+.sd-header-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+.sd-header-actions[hidden] { display: none !important; }
+:root:root body.master-page #sd-open-times { gap: 7px !important; }
+:root:root body.master-page #sd-open-times .btn-icon { display: inline-flex; line-height: 0; }
+:root:root body.master-page #sd-open-times .btn-icon svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+:root:root body.master-page #sd-open-times:hover { background: #EEF6FA !important; }
+
+/* Dialog Atur Jam Shift: tabel master shift (Tambah/Detail/Edit/Hapus) */
+.sd-times-dialog { width: min(860px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto; }
+.sd-times-toolbar { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; margin: 4px 0 14px; }
+:root:root body.master-page .sd-times-dialog .queue-empty:not([hidden]) { padding: 28px 16px !important; }
+@media (max-width: 600px) {
+  .sd-header-actions { width: 100%; }
+  .sd-header-actions > button { flex: 1 1 100%; }
+  .sd-master-actions { width: 100%; justify-content: space-between; }
+}
+
+/* Tabel di dialog Atur Jam Shift memakai gaya tabel yang sama dengan halaman (header tema, tombol aksi). */
+:root:root body .sd-times-dialog table thead tr { background: transparent !important; }
+:root:root body .sd-times-dialog table thead th {
+  background: #E5F1F7 !important; color: var(--wu-text) !important; font: 700 11px/1.3 var(--wu-font-body) !important;
+  letter-spacing: .04em !important; text-transform: uppercase !important; white-space: nowrap !important;
+  padding: 13px 14px !important; border-bottom: 1px solid #C9DCE5 !important;
+}
+:root:root body .sd-times-dialog table thead th:first-child { border-top-left-radius: 8px !important; }
+:root:root body .sd-times-dialog table thead th:last-child { border-top-right-radius: 8px !important; }
+:root:root body .sd-times-dialog table tbody td { padding: 12px 14px !important; font-size: 13px !important; }
+:root:root body .sd-times-dialog tbody .table-action {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  min-width: 52px !important; height: 26px !important; min-height: 26px !important; padding: 4px 10px !important; margin: 0 !important;
+  border: 1px solid #1D4A5A !important; border-radius: 7px !important; background: rgba(166, 206, 230, .44) !important; color: #1D4A5A !important;
+  font: 600 11.9px/1 var(--wu-font-body) !important; box-shadow: none !important;
+}
+:root:root body .sd-times-dialog tbody .table-action-edit { border-color: #007A18 !important; background: rgba(172, 230, 166, .44) !important; color: #00631A !important; }
+:root:root body .sd-times-dialog tbody .table-action-delete { border-color: #930002 !important; background: rgba(255, 121, 124, .44) !important; color: #930002 !important; }
+:root:root body .sd-times-dialog tbody td > .table-action + .table-action { margin-left: 8px !important; }
+:root:root body.master-page :is(.sd-times-dialog, .sd-dialog) .dialog-heading h2 { font-size: 20px !important; }
+:root:root body.master-page .sd-times-dialog #master-add {
+  display: inline-flex !important; align-items: center !important; gap: 7px !important; height: 40px !important; padding: 0 14px !important;
+  border: 1px solid var(--wu-text) !important; border-radius: 6px !important; background: var(--wu-text) !important; color: #fff !important;
+  font: 600 13px/1 var(--wu-font-body) !important; white-space: nowrap !important;
+}
+:root:root body.master-page .sd-times-dialog #master-add .btn-icon { display: inline-flex; line-height: 0; }
+:root:root body.master-page .sd-times-dialog #master-add .btn-icon svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }

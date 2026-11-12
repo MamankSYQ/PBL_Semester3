@@ -1,3 +1,170 @@
 <!doctype html>
-<html lang="id"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Laporan Transaksi Owner WASHUP" /><title>Laporan Transaksi | WASHUP</title><link rel="stylesheet" href="../../css/style.css" /></head>
-<body class="owner-report-page"><div class="dashboard-shell"><aside class="dashboard-sidebar" aria-label="Navigasi Owner"><a class="dashboard-brand" href="dashboard-owner.html"><span class="brand-mark">W</span><span><strong>WASHUP</strong><small>Sistem Car Wash</small></span></a><nav class="dashboard-nav"><p class="nav-label">MENU OWNER</p><a class="nav-item" href="dashboard-owner.html">Dashboard</a><a class="nav-item active" href="laporan-transaksi.html" aria-current="page">Laporan Transaksi</a><a class="nav-item" href="laporan-transaksi.html">Laporan Keuangan</a><a class="nav-item" href="#laporan-karyawan" data-owner-report-placeholder>Laporan Karyawan</a></nav><div class="sidebar-bottom"><p class="sidebar-note">Area monitoring Owner</p><button class="sidebar-logout" id="owner-report-logout" type="button">Logout</button></div></aside><div class="dashboard-content"><header class="dashboard-topbar"><div><p class="eyebrow">WASHUP / OWNER</p><h1>Laporan Transaksi</h1></div><div class="user-summary"><span class="user-avatar" aria-hidden="true">O</span><span><strong>Owner</strong><small>Role: Owner</small></span></div></header><main class="dashboard-main owner-main"><section class="queue-heading"><div><p class="eyebrow">MONITORING USAHA</p><h2>Laporan Transaksi</h2><p>Ringkasan transaksi dan pembayaran WASHUP.</p></div></section><section class="queue-toolbar owner-report-toolbar"><div><label for="owner-report-search">Cari transaksi</label><input id="owner-report-search" type="search" placeholder="Nomor transaksi, antrean, pelanggan, atau plat..." /></div><div><label for="owner-report-period">Periode</label><select id="owner-report-period"><option value="Semua">Semua</option><option value="Hari Ini">Hari Ini</option><option value="Minggu Ini">Minggu Ini</option><option value="Bulan Ini">Bulan Ini</option></select></div></section><section class="summary-grid"><article class="summary-card"><p>Total Transaksi</p><strong id="owner-report-total-count">0</strong></article><article class="summary-card"><p>Transaksi Lunas</p><strong id="owner-report-paid-count">0</strong></article><article class="summary-card"><p>Belum Dibayar</p><strong id="owner-report-unpaid-count">0</strong></article><article class="summary-card summary-card-accent"><p>Total Pendapatan</p><strong id="owner-report-revenue">Rp0</strong></article></section><section class="dashboard-section owner-report-methods"><div class="section-heading"><div><p class="eyebrow">METODE PEMBAYARAN</p><h2>Rincian Pembayaran Lunas</h2></div></div><div class="owner-revenue-grid"><div><span>Tunai</span><strong id="owner-report-cash">0 transaksi · Rp0</strong></div><div><span>QRIS</span><strong id="owner-report-qris">0 transaksi · Rp0</strong></div></div></section><section class="queue-panel"><div class="section-heading"><div><p class="eyebrow">RINCIAN LAPORAN</p><h2>Daftar Transaksi</h2></div><span class="badge badge-blue" id="owner-report-result-count">0 data</span></div><div class="queue-table-wrap"><table class="queue-full-table owner-report-table"><thead><tr><th>No. Transaksi</th><th>Tanggal/Waktu</th><th>Pelanggan</th><th>Plat</th><th>Kendaraan</th><th>Layanan</th><th>Harga</th><th>Status Pengerjaan</th><th>Status Pembayaran</th><th>Metode Pembayaran</th><th>Aksi</th></tr></thead><tbody id="owner-report-table-body"></tbody></table></div><div class="queue-empty" id="owner-report-empty" hidden><h3 id="owner-report-empty-title">Belum ada transaksi.</h3><p id="owner-report-empty-message">Data transaksi akan tampil di sini.</p></div><p class="owner-notice" id="owner-report-notice" role="status"></p></section></main><footer class="dashboard-footer"><span>WASHUP · Laporan Transaksi</span><span id="current-year"></span></footer></div></div><dialog class="queue-dialog" id="owner-report-dialog"><div class="dialog-heading"><div><p class="eyebrow">DETAIL TRANSAKSI</p><h2>Detail Transaksi</h2></div><button class="dialog-close" id="owner-report-dialog-close" type="button">×</button></div><div class="detail-grid"><div><span>Nomor Transaksi</span><strong id="owner-report-detail-transaction">-</strong></div><div><span>Nomor Antrean</span><strong id="owner-report-detail-queue">-</strong></div><div><span>Nama Pelanggan</span><strong id="owner-report-detail-customer">-</strong></div><div><span>Nomor Telepon</span><strong id="owner-report-detail-phone">-</strong></div><div><span>Nomor Plat</span><strong id="owner-report-detail-plate">-</strong></div><div><span>Jenis Kendaraan</span><strong id="owner-report-detail-vehicle">-</strong></div><div><span>Layanan</span><strong id="owner-report-detail-service">-</strong></div><div><span>Harga</span><strong id="owner-report-detail-price">-</strong></div><div><span>Status Pengerjaan</span><strong id="owner-report-detail-service-status">-</strong></div><div><span>Status Pembayaran</span><strong id="owner-report-detail-payment-status">-</strong></div><div><span>Metode Pembayaran</span><strong id="owner-report-detail-payment-method">-</strong></div><div><span>Waktu Transaksi</span><strong id="owner-report-detail-created-at">-</strong></div></div></dialog><script src="../../js/app.js"></script></body></html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Laporan Transaksi Owner WASHUP" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Laporan Transaksi | WASHUP</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="../../css/tokens.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/base.css" />
+    <link rel="stylesheet" href="../../css/owner.css" />
+    <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
+    <link rel="stylesheet" href="../../css/compact.css" />
+  </head>
+  <body class="owner-page owner-report-page" data-role="Owner" data-page="transactions" data-title="Laporan Transaksi" data-logout-id="owner-logout">
+    <div class="dashboard-shell">
+      <div data-component="sidebar"></div>
+
+      <div class="dashboard-content">
+        <div data-component="topbar"></div>
+
+        <main class="dashboard-main admin-main owner-report-main">
+          <section class="dashboard-welcome" aria-labelledby="owner-report-title">
+            <div>
+              <p class="eyebrow">RINGKASAN USAHA</p>
+              <h2 id="owner-report-title">Laporan Transaksi</h2>
+            </div>
+          </section>
+          <section class="queue-toolbar owner-report-toolbar">
+            <div>
+              <label for="owner-report-search">Cari Transaksi</label>
+              <input
+                id="owner-report-search"
+                type="search"
+                placeholder="Nomor transaksi, antrean, pelanggan, atau plat..."
+              />
+            </div>
+            <div>
+              <label for="owner-report-period">Periode</label>
+              <select id="owner-report-period">
+                <option value="Semua">Semua</option>
+                <option value="Hari Ini">Hari Ini</option>
+                <option value="Minggu Ini">Minggu Ini</option>
+                <option value="Bulan Ini">Bulan Ini</option>
+              </select>
+            </div>
+          </section>
+          <section class="summary-grid owner-report-summary-grid" aria-label="Ringkasan transaksi">
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" data-icon="receipt" aria-hidden="true"></div>
+              </div>
+              <p>Total Transaksi</p>
+              <strong id="owner-report-total-count">0</strong>
+            </article>
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" data-icon="car-sun" aria-hidden="true"></div>
+              </div>
+              <p>Kendaraan Shift Pagi</p>
+              <strong id="owner-report-shift-morning">0</strong>
+            </article>
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" data-icon="car-moon" aria-hidden="true"></div>
+              </div>
+              <p>Kendaraan Shift Malam</p>
+              <strong id="owner-report-shift-night">0</strong>
+            </article>
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" data-icon="rupiah" aria-hidden="true"></div>
+              </div>
+              <p>Total Pendapatan</p>
+              <strong id="owner-report-revenue">Rp 0</strong>
+            </article>
+          </section>
+          <section class="dashboard-section owner-report-methods">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">METODE PEMBAYARAN</p>
+                <h2>Rincian Pembayaran Lunas</h2>
+              </div>
+            </div>
+            <div class="owner-payment-method-grid">
+              <div>
+                <span>Tunai</span>
+                <strong id="owner-report-cash">0 transaksi · Rp 0</strong>
+              </div>
+              <div>
+                <span>QRIS</span>
+                <strong id="owner-report-qris">0 transaksi · Rp 0</strong>
+              </div>
+            </div>
+          </section>
+          <section class="dashboard-section owner-report-table-section">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">RINCIAN LAPORAN</p>
+                <h2>Daftar Transaksi</h2>
+              </div>
+            </div>
+            <div class="queue-table-wrap owner-report-table-wrap" tabindex="0">
+              <table class="queue-full-table owner-report-table">
+                <caption class="sr-only">Daftar transaksi</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">NO. TRANSAKSI</th>
+                    <th scope="col">TANGGAL/WAKTU</th>
+                    <th scope="col">PELANGGAN</th>
+                    <th scope="col">PLAT</th>
+                    <th scope="col">KENDARAAN</th>
+                    <th scope="col">LAYANAN</th>
+                    <th scope="col">HARGA</th>
+                    <th scope="col">STATUS PENGERJAAN</th>
+                    <th scope="col">AKSI</th>
+                  </tr>
+                </thead>
+                <tbody id="owner-report-table-body"></tbody>
+              </table>
+            </div>
+            <div class="queue-empty owner-report-empty" id="owner-report-empty">
+              <div class="queue-empty-box" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    fill="currentColor"
+                    d="M19 4H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 9.5h-4.2c-.4 1.5-1.7 2.5-3.3 2.5s-2.9-1-3.3-2.5H5V6h14v7.5z"
+                  />
+                </svg>
+              </div>
+              <h3 id="owner-report-empty-title">Belum ada transaksi.</h3>
+              <p id="owner-report-empty-message">Data Transaksi Kasir Akan Tampil Disini</p>
+            </div>
+            <span class="sr-only" id="owner-report-result-count" hidden>0 data</span>
+            <p class="owner-notice" id="owner-report-notice" role="status" aria-live="polite"></p>
+          </section>
+        </main>
+        <div data-component="footer"></div>
+      </div>
+    </div>
+
+    <dialog class="queue-dialog" id="owner-report-dialog">
+      <div class="dialog-heading">
+        <div><p class="eyebrow">DETAIL TRANSAKSI</p><h2>Detail Transaksi</h2></div>
+        <button class="dialog-close" id="owner-report-dialog-close" type="button" aria-label="Tutup detail transaksi">×</button>
+      </div>
+      <div class="detail-grid">
+        <div><span>Nomor Transaksi</span><strong id="owner-report-detail-transaction">-</strong></div>
+        <div><span>Nomor Antrean</span><strong id="owner-report-detail-queue">-</strong></div>
+        <div><span>Nama Pelanggan</span><strong id="owner-report-detail-customer">-</strong></div>
+        <div><span>Nomor Telepon</span><strong id="owner-report-detail-phone">-</strong></div>
+        <div><span>Nomor Plat</span><strong id="owner-report-detail-plate">-</strong></div>
+        <div><span>Jenis Kendaraan</span><strong id="owner-report-detail-vehicle">-</strong></div>
+        <div><span>Layanan</span><strong id="owner-report-detail-service">-</strong></div>
+        <div><span>Harga</span><strong id="owner-report-detail-price">-</strong></div>
+        <div><span>Status Pengerjaan</span><strong id="owner-report-detail-service-status">-</strong></div>
+        <div><span>Status Pembayaran</span><strong id="owner-report-detail-payment-status">-</strong></div>
+        <div><span>Metode Pembayaran</span><strong id="owner-report-detail-payment-method">-</strong></div>
+        <div><span>Waktu Transaksi</span><strong id="owner-report-detail-created-at">-</strong></div>
+      </div>
+    </dialog>
+    <script src="../../js/components.js"></script>
+    <script src="../../js/app.js"></script>
+  </body>
+</html>

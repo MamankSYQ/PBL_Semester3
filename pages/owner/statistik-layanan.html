@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Statistik Layanan Owner WASHUP" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Statistik Layanan | WASHUP</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="../../css/tokens.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/base.css" />
+    <link rel="stylesheet" href="../../css/owner.css" />
+    <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
+    <link rel="stylesheet" href="../../css/compact.css" />
+  </head>
+  <body class="owner-page owner-service-stats-page" data-role="Owner" data-page="stats" data-title="Statistik Layanan" data-logout-id="owner-logout">
+    <div class="dashboard-shell">
+      <div data-component="sidebar"></div>
+      <div class="dashboard-content">
+        <div data-component="topbar"></div>
+        <main class="dashboard-main admin-main owner-service-stats-main">
+          <section class="dashboard-welcome" aria-labelledby="owner-service-stats-title">
+            <div>
+              <p class="eyebrow">Ringkasan Statistik Layanan</p>
+              <h2 id="owner-service-stats-title">Performa Layanan WASHUP</h2>
+            </div>
+          </section>
+          <section class="owner-stats-toolbar" aria-label="Filter periode statistik">
+            <div class="owner-stats-filter">
+              <label for="owner-stats-month">Periode Bulan</label>
+              <select id="owner-stats-month">
+                <option value="">Pilih periode bulan</option>
+              </select>
+            </div>
+            <div class="owner-stats-filter">
+              <label for="owner-stats-year">Periode Tahun</label>
+              <select id="owner-stats-year">
+                <option value="">Pilih periode tahun</option>
+              </select>
+            </div>
+            <button id="owner-stats-apply" type="button">Terapkan</button>
+          </section>
+          <section class="summary-grid owner-service-stats-summary-grid" aria-label="Ringkasan statistik layanan">
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" data-icon="grid" aria-hidden="true"></div>
+              </div>
+              <p>Total Jenis Layanan</p>
+              <strong id="owner-stats-types">0</strong>
+            </article>
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" data-icon="receipt-stack" aria-hidden="true"></div>
+              </div>
+              <p>Total Penggunaan Layanan</p>
+              <strong id="owner-stats-usage">0</strong>
+            </article>
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" data-icon="chart" aria-hidden="true"></div>
+              </div>
+              <p>Layanan Terlaris</p>
+              <strong id="owner-stats-top">-</strong>
+            </article>
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" data-icon="rupiah" aria-hidden="true"></div>
+              </div>
+              <p>Pendapatan Layanan</p>
+              <strong id="owner-stats-revenue">Rp 0</strong>
+            </article>
+          </section>
+          <section class="dashboard-section owner-service-stats-chart-section" aria-labelledby="owner-stats-chart-title">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">GRAFIK BATANG</p>
+                <h2 id="owner-stats-chart-title">Popularitas Layanan</h2>
+              </div>
+            </div>
+            <div class="owner-stats-chart" id="owner-stats-chart"></div>
+            <div class="queue-empty owner-stats-empty" id="owner-stats-empty">
+              <div class="queue-empty-box" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M19 4H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 9.5h-4.2c-.4 1.5-1.7 2.5-3.3 2.5s-2.9-1-3.3-2.5H5V6h14v7.5z" />
+                </svg>
+              </div>
+              <h3>Belum ada data.</h3>
+              <p>Grafik popularitas layanan akan tampil di sini.</p>
+            </div>
+          </section>
+        </main>
+        <div data-component="footer"></div>
+      </div>
+    </div>
+    <script src="../../js/components.js"></script>
+    <script src="../../js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Pengeluaran operasional WASHUP - Sistem Informasi Car Wash" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Pengeluaran | WASHUP</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="../../css/tokens.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/base.css" />
+    <link rel="stylesheet" href="../../css/kasir.css" />
+    <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
+    <link rel="stylesheet" href="../../css/compact.css" />
+  </head>
+  <body class="dashboard-page kasir-dashboard-page kasir-expense-page kasir-page" data-role="Kasir" data-page="expenses" data-title="Pengeluaran" data-logout-id="kasir-dashboard-logout">
+    <div class="dashboard-shell">
+      <div data-component="sidebar"></div>
+      <div class="dashboard-content">
+        <div data-component="topbar"></div>
+<main class="dashboard-main expense-main">
+          <section class="expense-page-heading">
+            <div>
+              <p class="eyebrow">DATA MASTER</p>
+              <h2 id="expense-page-title">Pengeluaran</h2>
+            </div>
+            <button class="expense-add-button" id="expense-add-button" type="button">Tambahkan Data</button>
+          </section>
+
+          <section class="expense-filter-panel" aria-label="Filter periode pengeluaran">
+            <div class="expense-filter-field">
+              <label for="expense-year-filter">Filter Tahun</label>
+              <select id="expense-year-filter" aria-label="Pilih tahun pengeluaran">
+                <option value="">Memuat tahun...</option>
+              </select>
+            </div>
+            <div class="expense-filter-field">
+              <label for="expense-month-filter">Filter Bulan</label>
+              <select id="expense-month-filter" aria-label="Pilih bulan pengeluaran">
+                <option value="">Semua Bulan</option>
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+              </select>
+            </div>
+          </section>
+
+          <section class="expense-summary-grid" aria-label="Ringkasan pengeluaran">
+            <article class="expense-summary-card">
+              <span>Pengeluaran Hari Ini</span>
+              <strong id="expense-today-total">Rp 185.000,00</strong>
+            </article>
+            <article class="expense-summary-card">
+              <span id="expense-month-label">Pengeluaran Bulan Terpilih</span>
+              <strong id="expense-month-total">Rp 3.200.000,00</strong>
+            </article>
+          </section>
+
+          <section class="expense-panel" aria-labelledby="expense-list-title">
+            <header class="expense-panel-heading">
+              <p class="eyebrow">RIWAYAT PENGELUARAN</p>
+              <h2 id="expense-list-title">Pengeluaran</h2>
+            </header>
+
+            <div class="expense-table-wrap" tabindex="0">
+              <table class="expense-table">
+                <caption class="sr-only">Daftar pengeluaran operasional WASHUP</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Tanggal</th>
+                    <th scope="col">Keterangan</th>
+                    <th scope="col">Nominal</th>
+                    <th scope="col">Bukti</th>
+                  </tr>
+                </thead>
+                <tbody id="expense-table-body"></tbody>
+              </table>
+            </div>
+
+            <div class="expense-empty" id="expense-empty">
+              <span class="expense-empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" focusable="false"><path d="M5 20.5 13 9h22l8 11.5v16H5z"/><path d="M5 20.5h10l5 5h8l5-5h10"/></svg>
+              </span>
+              <h3 id="expense-empty-title">Belum ada Pengeluaran.</h3>
+              <p id="expense-empty-message">Data pengeluaran akan muncul setelah input pengeluaran dilakukan.</p>
+            </div>
+          </section>
+</main>
+        <div data-component="footer"></div>
+      </div>
+    </div>
+
+    <dialog class="expense-dialog" id="expense-dialog" aria-labelledby="expense-dialog-title">
+      <form id="expense-form" class="expense-form">
+        <header class="expense-dialog-heading">
+          <div><p class="eyebrow">FORM PENGELUARAN</p><h2 id="expense-dialog-title">Tambah Pengeluaran</h2></div>
+          <button class="expense-dialog-close" id="expense-dialog-close" type="button" aria-label="Tutup">×</button>
+        </header>
+        <label class="expense-form-field" for="expense-date">Tanggal<input id="expense-date" name="date" type="date" required /></label>
+        <label class="expense-form-field" for="expense-description">Keterangan<input id="expense-description" name="description" type="text" maxlength="120" placeholder="Contoh: Sabun Cuci Mobil 5L" required /></label>
+        <label class="expense-form-field" for="expense-amount">Nominal<input id="expense-amount" name="amount" type="text" inputmode="numeric" autocomplete="off" placeholder="Rp 0" required /></label>
+        <div class="expense-form-field expense-proof-field">
+          <span class="expense-proof-label" id="expense-proof-label">Foto Nota <span class="expense-optional">(opsional, JPG/PNG/PDF maks. 1 MB)</span></span>
+          <label class="expense-proof-drop" for="expense-proof">
+            <span class="expense-proof-icon" data-icon="upload-cloud" aria-hidden="true"></span>
+            <span class="expense-proof-text" id="expense-proof-text">Unggah Foto Nota</span>
+            <input class="expense-proof-input" id="expense-proof" name="proof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" aria-describedby="expense-proof-label" />
+          </label>
+        </div>
+        <small class="expense-current-proof" id="expense-current-proof" hidden></small>
+        <p class="expense-form-message" id="expense-form-message" role="status" aria-live="polite"></p>
+        <footer class="expense-dialog-actions">
+          <button class="expense-button-secondary" id="expense-cancel-button" type="button">Batal</button>
+          <button class="expense-button-primary" type="submit">Simpan</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <dialog class="expense-dialog expense-proof-dialog" id="expense-proof-dialog" aria-labelledby="expense-proof-title">
+      <header class="expense-dialog-heading">
+        <div><p class="eyebrow">BUKTI PENGELUARAN</p><h2 id="expense-proof-title">Foto Nota</h2></div>
+        <button class="expense-dialog-close" id="expense-proof-close" type="button" aria-label="Tutup">×</button>
+      </header>
+      <img class="expense-proof-image" id="expense-proof-image" alt="" />
+    </dialog>
+<script src="../../js/components.js"></script>
+    <script src="../../js/app.js"></script>
+  </body>
+</html>

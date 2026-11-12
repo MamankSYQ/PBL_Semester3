@@ -1,0 +1,656 @@
+/* =========================================================
+   UKURAN COMPACT — SEMUA ROLE (Admin, Kasir, Petugas, Owner)
+   Acuan: tampilan Kasir versi Nindya (commit 6d97d21,
+   "sidebar diperkecil dan header stay"), diterapkan sekali
+   di sini supaya seragam di semua halaman. Dimuat PALING AKHIR.
+   ========================================================= */
+
+
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell {
+  --wu-sidebar-w: 190px;
+  --wu-sidebar-w-collapsed: 64px;
+}
+
+/* ---------- Desktop & laptop ---------- */
+@media (min-width: 769px) {
+  /* Sidebar */
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar {
+    width: 190px !important; min-width: 190px !important; max-width: 190px !important;
+    flex: 0 0 190px !important;
+    padding: 17px 11px 19px !important;
+    position: sticky !important; top: 0 !important;
+    height: 100vh !important; align-self: flex-start !important; overflow-y: auto !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-brand {
+    gap: 5px !important; margin: 0 0 40px !important; padding-right: 30px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .brand-logo-img {
+    width: 36px !important; min-width: 36px !important; max-width: 36px !important; height: 28px !important; flex: 0 0 36px !important; object-fit: contain;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .brand-text {
+    font-size: 15px !important; letter-spacing: .05em !important; white-space: nowrap;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .nav-label {
+    margin: 0 0 13px !important; font-size: 9.3px !important; font-weight: 800 !important; letter-spacing: .1em !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-nav {
+    display: flex !important; flex-direction: column !important; gap: 5px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-nav .nav-item {
+    width: 100% !important; height: 30px !important; min-height: 30px !important; max-height: 30px !important;
+    margin: 0 !important; padding: 0 8px !important; gap: 7px !important; border-radius: 6px !important;
+    font-size: 10.7px !important; font-weight: 600 !important; letter-spacing: .02em !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-nav .nav-item :is(.nav-icon-svg, svg) {
+    width: 13px !important; height: 13px !important; flex: 0 0 13px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-nav .nav-item .nav-icon-rp {
+    width: 13px !important; flex: 0 0 13px !important; font-size: 9.5px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-note {
+    margin: 0 0 12px !important; font-size: 10px !important; letter-spacing: .02em !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-logout {
+    width: 76px !important; height: 23px !important; min-height: 23px !important; max-height: 23px !important;
+    padding: 0 6px !important; border-radius: 7px !important; font-size: 10.2px !important; font-weight: 700 !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-bottom {
+    margin-top: auto !important; padding-top: 16px !important;
+  }
+
+  /* Tombol ciut: kotak kecil di pojok kanan atas sidebar (seperti versi Nindya). */
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-collapse-toggle {
+    top: 18px !important; left: calc(var(--wu-sidebar-w) - 31px) !important;
+    width: 22px !important; height: 22px !important; border-radius: 6px !important; box-shadow: none !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-collapse-toggle svg {
+    width: 14px !important; height: 14px !important;
+  }
+
+  /* Topbar: lebih pendek dan menempel di atas saat halaman digulir. */
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar {
+    position: sticky !important; top: 0 !important; z-index: 40 !important;
+    height: 76px !important; min-height: 76px !important; max-height: 76px !important;
+    padding: 0 30px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar h1 {
+    font-size: 23px !important; line-height: 1.15 !important; letter-spacing: .01em !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-avatar-circle {
+    width: 38px !important; height: 38px !important; min-width: 38px !important; max-width: 38px !important; flex: 0 0 38px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-avatar-circle svg {
+    width: 22px !important; height: 22px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-info strong {
+    font-size: 13.4px !important; letter-spacing: 0 !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-info small {
+    font-size: 11px !important; letter-spacing: .02em !important;
+  }
+
+  /* Jarak label ke judul hanya 5px (hilangkan gap container). */
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-main > :first-child,
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-main > :first-child > div:has(> .eyebrow) {
+    row-gap: 0 !important;
+  }
+
+  /* Judul halaman: satu standar (acuan Transaksi Baru Kasir). */
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-main > :first-child .eyebrow {
+    margin: 0 0 5px !important; font-size: 11.2px !important; font-weight: 600 !important;
+    letter-spacing: .045em !important; line-height: 1.35 !important; text-transform: uppercase !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-main > :first-child :is(h1, h2) {
+    margin: 0 !important;
+    font-size: 21.6px !important; line-height: 1.3 !important; letter-spacing: .035em !important;
+  }
+
+  /* ---------- Sidebar ciut: kolom ikon 64px ---------- */
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell.sidebar-collapsed .dashboard-sidebar {
+    width: 64px !important; min-width: 64px !important; max-width: 64px !important; flex: 0 0 64px !important;
+    padding: 17px 7px 19px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell.sidebar-collapsed .dashboard-brand {
+    padding-right: 0 !important; margin-bottom: 40px !important; justify-content: center !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell.sidebar-collapsed .brand-logo-img {
+    width: 36px !important; height: 28px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell.sidebar-collapsed .dashboard-nav .nav-item {
+    width: 46px !important; min-width: 46px !important; max-width: 46px !important;
+    height: 34px !important; min-height: 34px !important; max-height: 34px !important;
+    padding: 0 !important; justify-content: center !important; border-radius: 8px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell.sidebar-collapsed .dashboard-nav .nav-item :is(.nav-icon-svg, svg) {
+    width: 16px !important; height: 16px !important; flex-basis: 16px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell.sidebar-collapsed .dashboard-nav .nav-item .nav-icon-rp {
+    font-size: 12px !important; width: 16px !important; height: auto !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell.sidebar-collapsed .sidebar-logout {
+    width: 40px !important; min-width: 40px !important; max-width: 40px !important; margin: 0 auto !important;
+  }
+  /* Saat ciut, tombol pindah ke bawah logo agar tidak menimpa. */
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell.sidebar-collapsed .sidebar-collapse-toggle {
+    top: 52px !important; left: 21px !important;
+  }
+}
+
+/* ---------- Tablet ---------- */
+@media (min-width: 769px) and (max-width: 992px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar {
+    height: 70px !important; min-height: 70px !important; max-height: 70px !important; padding: 0 22px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar h1 { font-size: 20.8px !important; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-avatar-circle { width: 35px !important; height: 35px !important; min-width: 35px !important; }
+}
+
+/* ---------- HP ---------- */
+@media (max-width: 768px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar {
+    position: sticky !important; top: 0 !important; z-index: 40 !important;
+    height: auto !important; min-height: 62px !important; max-height: none !important; padding: 9px 14px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar h1 {
+    font-size: clamp(16px, 3.7vw, 19px) !important; line-height: 1.15 !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-avatar-circle {
+    width: 32px !important; height: 32px !important; min-width: 32px !important; max-width: 32px !important; flex: 0 0 32px !important;
+  }
+}
+@media (max-width: 420px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar { min-height: 58px !important; padding: 8px 11px !important; }
+}
+
+/* Chip tanggal tidak boleh terpotong menjadi dua baris. */
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) :is(#kasir-date, #admin-date, #petugas-date, #owner-date, .admin-date-chip) {
+  white-space: nowrap !important; width: max-content !important;
+  padding: 4px 12px !important; box-sizing: border-box !important;
+}
+
+/* ---------- Menu hamburger + drawer sidebar (HP) ----------
+   Di HP sidebar menjadi drawer yang meluncur dari kiri di atas latar gelap;
+   tombol hamburger ada di topbar (dibuat oleh js/components.js). */
+.topbar-menu-button, .drawer-close { display: none; }
+.sidebar-overlay { display: none; }
+
+@media (max-width: 768px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .topbar-menu-button {
+    display: inline-flex !important; align-items: center; justify-content: center; flex: 0 0 38px;
+    width: 38px; height: 38px; padding: 0; border: 1px solid rgba(136, 175, 199, .5); border-radius: 8px;
+    background: rgba(255, 255, 255, .08); color: #FFFFFF; cursor: pointer;
+  }
+  .topbar-menu-button svg, .drawer-close svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar {
+    position: fixed !important; top: 0 !important; left: 0 !important; bottom: 0 !important;
+    width: min(280px, 84vw) !important; min-width: 0 !important; max-width: none !important; flex: none !important;
+    height: 100vh !important; height: 100dvh !important; margin: 0 !important;
+    display: flex !important; flex-direction: column !important; flex-wrap: nowrap !important;
+    align-items: stretch !important; justify-content: flex-start !important; gap: 0 !important;
+    padding: 18px 14px 20px !important; overflow-y: auto !important; z-index: 1000 !important;
+    transform: translateX(-102%); visibility: hidden;
+    transition: transform .25s ease, visibility 0s linear .25s;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar.is-menu-open {
+    transform: none; visibility: visible; box-shadow: var(--wu-shadow-pop);
+    transition: transform .25s ease, visibility 0s;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar :is(.dashboard-nav, .sidebar-bottom) {
+    display: flex !important; flex-direction: column !important; width: 100% !important; flex: 0 0 auto !important; margin: 0 !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar .dashboard-brand { margin: 0 0 28px !important; padding-right: 44px !important; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar .dashboard-nav .nav-item {
+    width: 100% !important; max-width: none !important; justify-content: flex-start !important; padding: 0 12px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar .sidebar-bottom { margin-top: auto !important; padding-top: 20px !important; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar .sidebar-logout { width: 100% !important; max-width: none !important; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .drawer-close {
+    display: inline-flex; align-items: center; justify-content: center; position: absolute; top: 16px; right: 12px;
+    width: 34px; height: 34px; padding: 0; border: 1px solid rgba(136, 175, 199, .45); border-radius: 8px;
+    background: transparent; color: #FFFFFF; cursor: pointer;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-collapse-toggle { display: none !important; }
+  .sidebar-overlay { display: block; position: fixed; inset: 0; z-index: 999; background: rgba(9, 25, 31, .55); }
+  .sidebar-overlay[hidden] { display: none; }
+  body.is-drawer-open { overflow: hidden; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-sidebar { transition: none !important; }
+}
+
+/* Topbar HP: judul di kiri, profil di kanan dalam satu baris. */
+@media (max-width: 768px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar {
+    display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important;
+    align-items: center !important; justify-content: space-between !important; gap: 10px !important; text-align: left !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar .topbar-title-wrap {
+    min-width: 0 !important; flex: 1 1 auto !important; margin: 0 !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar h1 {
+    margin: 0 !important; text-align: left !important; overflow-wrap: anywhere;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar .user-summary {
+    flex: 0 0 auto !important; margin: 0 !important; width: auto !important;
+  }
+}
+
+/* Tabel di laptop: judul kolom boleh turun baris; isi tetap satu baris kecuali
+   kolom teks panjang (pelanggan, layanan, tanggal), agar semua kolom termasuk Aksi
+   terlihat tanpa gulir samping. */
+@media (min-width: 1025px) {
+  :root:root body:is(.admin-dashboard-page, .owner-page, .petugas-page) :is(.queue-table, .queue-full-table):not(.master-table) {
+    min-width: 0 !important; width: 100% !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .owner-page, .petugas-page) :is(.queue-table, .queue-full-table):not(.master-table) th {
+    white-space: nowrap !important; width: auto !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .owner-page, .petugas-page) :is(.queue-table, .queue-full-table):not(.master-table) td {
+    white-space: nowrap !important;
+  }
+  :root:root body.admin-dashboard-page .queue-table td:is(:nth-child(2), :nth-child(4)),
+  :root:root body.owner-page .queue-full-table td:is(:nth-child(2), :nth-child(3), :nth-child(6)),
+  :root:root body.petugas-page .queue-table td:is(:nth-child(3), :nth-child(5)) {
+    white-space: normal !important;
+  }
+}
+
+/* ---------- Ikon seragam (satu gaya garis untuk semua role) ----------
+   Ikon dirender dari WASHUP_ICONS di js/components.js. */
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .summary-icon-box {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  width: 34px !important; height: 34px !important; min-width: 34px !important; min-height: 34px !important;
+  padding: 0 !important; border: 0 !important; border-radius: 9px !important;
+  background: #E3F0F7 !important; color: var(--wu-accent-text) !important; box-shadow: none !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) :is(.summary-icon-box, .dashboard-nav) svg:is(.wu-icon, .nav-icon-svg) {
+  fill: none !important; stroke: currentColor !important; stroke-width: 2 !important;
+  stroke-linecap: round !important; stroke-linejoin: round !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .summary-icon-box svg {
+  width: 18px !important; height: 18px !important; min-width: 18px !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .summary-icon-box .wu-icon-rp {
+  display: inline-block !important; width: auto !important; height: auto !important; padding: 0 !important;
+  background: none !important; color: inherit !important;
+  font: 800 13px/1 var(--wu-font-body) !important; letter-spacing: 0 !important;
+}
+
+/* =========================================================
+   KOMPONEN BERSAMA — Paginasi "Sebelumnya 1 2 Selanjutnya"
+   Gaya ringan tanpa garis (acuan revisi kelompok), di kanan bawah tabel.
+   ========================================================= */
+.wu-pager {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end;
+  gap: 6px; margin: 14px 0 0; padding: 0;
+}
+.wu-pager[hidden] { display: none !important; }
+.wu-pager-pages { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.wu-pager-btn {
+  min-width: 30px; height: 30px; padding: 0 10px;
+  border: 0; border-radius: 6px;
+  background: #EDF5F8; color: #2F5E72;
+  font: 600 .75rem/1 var(--wu-font-body); cursor: pointer;
+  transition: background-color .15s, color .15s;
+}
+.wu-pager-num { padding: 0; }
+.wu-pager-btn:hover:not(:disabled):not(.is-current) { background: #DCEBF2; }
+.wu-pager-btn.is-current { background: var(--wu-accent-strong); color: #fff; cursor: default; }
+.wu-pager-btn:disabled { background: transparent; color: #8AA5B1; cursor: default; }
+.wu-pager-dots { min-width: 16px; text-align: center; color: var(--wu-text-muted); }
+/* Baris di luar halaman aktif disembunyikan walau tabel memakai display khusus. */
+tbody > tr[hidden] { display: none !important; }
+@media (max-width: 480px) {
+  .wu-pager { gap: 6px; }
+  .wu-pager-btn { padding: 0 10px; }
+  .wu-pager-num { min-width: 32px; }
+}
+
+/* ---------- Tombol "+ Tambahkan Data" (admin) — sama dengan tombol Kasir ---------- */
+:root:root body.master-page .dashboard-action#master-add {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  gap: 7px !important; flex: 0 0 auto !important; width: auto !important;
+  min-width: 142px !important; height: 40px !important; min-height: 40px !important; padding: 0 13px !important;
+  border: 1px solid var(--wu-text) !important; border-radius: 6px !important;
+  background: var(--wu-text) !important; color: #fff !important;
+  font: 600 13px/1 var(--wu-font-body) !important; letter-spacing: .01em !important; white-space: nowrap !important;
+}
+:root:root body.master-page .dashboard-action#master-add:hover { background: #143C4A !important; border-color: #143C4A !important; }
+:root:root body.master-page .dashboard-action#master-add .btn-icon { display: inline-flex !important; margin: 0 !important; line-height: 0 !important; font-size: 0 !important; }
+:root:root body.master-page .dashboard-action#master-add .btn-icon svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* =========================================================
+   HIERARKI TIPOGRAFI & JARAK HEADER (semua role)
+   Judul halaman 21.6px > judul kartu 17px > eyebrow 11.2px.
+   Kelas dipasang otomatis oleh markHeadings() di js/components.js.
+   ========================================================= */
+:root:root body main .eyebrow { font-size: .7rem !important; font-weight: 600 !important; line-height: 1.3 !important; }
+:root:root body main h2.wu-page-title { font-size: 1.35rem !important; line-height: 1.25 !important; margin: 0 !important; }
+:root:root body main h2.wu-card-title { font-size: 1.0625rem !important; line-height: 1.3 !important; margin: 0 !important; }
+:root:root body main .wu-page-head > .eyebrow,
+:root:root body main :is(.section-heading, .admin-panel-heading, .queue-list-heading, .payment-panel-heading, .expense-panel-heading) > div > .eyebrow,
+:root:root body main :is(.queue-list-heading, .payment-panel-heading, .expense-panel-heading) > .eyebrow { margin: 0 0 4px !important; }
+/* Chip tanggal selalu berjarak 10px dari judul */
+:root:root body main .wu-page-head > :is(.admin-date-chip, .date-chip) { margin-top: 10px !important; }
+/* Jarak header halaman → konten pertama seragam */
+:root:root body main .wu-page-header { margin: 0 0 20px !important; }
+
+/* =========================================================
+   LEBAR KONTEN SERAGAM (semua role, sidebar terbuka maupun ciut)
+   Konten mengisi ruang di samping sidebar dengan padding 32px,
+   lalu dibatasi 1280px dan diratakan tengah pada layar sangat lebar.
+   ========================================================= */
+@media (min-width: 769px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-main {
+    width: 100% !important; max-width: 1280px !important; margin: 0 auto !important;
+    padding: 24px 32px 32px !important; box-sizing: border-box !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-main > * {
+    width: 100% !important; max-width: none !important; margin-left: 0 !important; margin-right: 0 !important; box-sizing: border-box !important;
+  }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-main { padding: 20px 24px 28px !important; }
+}
+
+/* ---------- Avatar pengguna: ikon orang bergaya garis di lingkaran abu-abu ---------- */
+:root:root body .user-avatar-circle svg { fill: none !important; stroke: #fff !important; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Keterangan kecil di kolom pelanggan Pembayaran: kontras AA. */
+:root:root body.kasir-payment-page .payment-customer-cell small { color: var(--wu-text-muted) !important; font-size: 11px !important; }
+
+/* Kartu ringkasan Petugas mengisi lebar penuh (sama seperti role lain). */
+@media (min-width: 769px) {
+  :root:root body.petugas-page .summary-grid { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 12px !important; }
+  :root:root body.petugas-page .summary-grid > .summary-card { width: auto !important; max-width: none !important; min-width: 0 !important; }
+}
+@media (min-width: 769px) and (max-width: 1100px) {
+  :root:root body.petugas-page .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+
+/* =========================================================
+   TOMBOL AKSI TABEL — satu gaya untuk semua role (acuan: Antrean Kasir)
+   Detail/Tinjau/Periksa/Struk = biru, Edit = hijau, Hapus = merah.
+   ========================================================= */
+:root:root body main tbody :is(.table-action, .payment-table-action, .verification-row-action, .expense-action-button) {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  width: auto !important; min-width: 52px !important; height: 26px !important; min-height: 26px !important;
+  padding: 4px 10px !important; margin: 0 !important; box-sizing: border-box !important;
+  border: 1px solid #1D4A5A !important; border-radius: 7px !important;
+  background: rgba(166, 206, 230, .44) !important; color: #1D4A5A !important;
+  font: 600 11.9px/1 var(--wu-font-body) !important; letter-spacing: .01em !important; white-space: nowrap !important;
+  box-shadow: none !important; cursor: pointer; transition: filter .15s ease;
+}
+:root:root body main tbody :is(.table-action-edit, .expense-action-edit) {
+  border-color: #007A18 !important; background: rgba(172, 230, 166, .44) !important; color: #00631A !important;
+}
+:root:root body main tbody :is(.table-action-delete, .expense-action-delete) {
+  border-color: #930002 !important; background: rgba(255, 121, 124, .44) !important; color: #930002 !important;
+}
+:root:root body main tbody :is(.table-action, .payment-table-action, .verification-row-action, .expense-action-button):hover:not(:disabled) { filter: brightness(.94); }
+:root:root body main tbody .verification-row-action.is-selected { background: #1D4A5A !important; color: #fff !important; }
+:root:root body main tbody :is(.table-action, .payment-table-action):disabled { opacity: .45 !important; cursor: not-allowed !important; }
+:root:root body main tbody :is(.queue-action-buttons, .history-action-group, .expense-actions) { gap: 8px !important; }
+:root:root body main tbody td > :is(.table-action, .payment-table-action, .verification-row-action) + :is(.table-action, .payment-table-action, .verification-row-action) { margin-left: 8px !important; }
+
+
+/* =========================================================
+   IKON "DATA KOSONG" — satu gaya di semua tabel
+   ========================================================= */
+:root:root body .wu-empty-icon {
+  display: grid !important; place-items: center !important; flex: 0 0 auto !important;
+  width: 76px !important; height: 72px !important; min-width: 76px !important; max-width: 76px !important;
+  margin: 0 auto 14px !important; padding: 0 !important; border: 0 !important; border-radius: 14px !important;
+  background: #E5F3F8 !important; color: var(--wu-accent-text) !important; box-shadow: none !important;
+  font-size: 0 !important;
+}
+:root:root body .wu-empty-icon::before, :root:root body .wu-empty-icon::after { content: none !important; display: none !important; }
+:root:root body .wu-empty-icon svg {
+  display: block !important; width: 38px !important; height: 38px !important; margin: 0 !important;
+  fill: none !important; stroke: currentColor !important; stroke-width: 1.8 !important; stroke-linecap: round; stroke-linejoin: round;
+}
+:root:root body .attendance-recap-empty:not([hidden]) { display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; padding: 28px 16px !important; }
+
+/* =========================================================
+   HEADER TABEL — satu warna & tema untuk semua tabel
+   ========================================================= */
+:root:root body main table thead tr { background: transparent !important; }
+:root:root body main table thead th {
+  background: #E5F1F7 !important; color: var(--wu-text) !important;
+  font-family: var(--wu-font-body) !important; font-size: 11px !important; font-weight: 700 !important;
+  letter-spacing: .05em !important; text-transform: uppercase !important;
+  border-bottom: 1px solid #C9DCE5 !important; box-shadow: none !important;
+}
+:root:root body main table thead th:first-child { border-top-left-radius: 8px !important; }
+:root:root body main table thead th:last-child { border-top-right-radius: 8px !important; }
+
+/* =========================================================
+   DROPDOWN — panah tidak menempel ke pinggir kolom
+   ========================================================= */
+:root:root body :is(main, dialog) select {
+  -webkit-appearance: none !important; appearance: none !important;
+  padding-right: 44px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23436D8A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important; background-position: right 16px center !important; background-size: 16px 16px !important;
+}
+
+/* =========================================================
+   PROFIL DI TOPBAR (HP) — avatar & teks tetap jelas seperti desktop
+   ========================================================= */
+@media (max-width: 768px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-avatar-circle {
+    width: 40px !important; height: 40px !important; min-width: 40px !important; max-width: 40px !important; flex: 0 0 40px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-avatar-circle svg { width: 24px !important; height: 24px !important; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-summary { gap: 10px !important; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-info strong { font-size: 15px !important; line-height: 1.2 !important; }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-info small { font-size: 12px !important; line-height: 1.3 !important; color: var(--wu-text-on-dark) !important; }
+}
+@media (max-width: 400px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar h1 { font-size: 15px !important; }
+}
+@media (max-width: 480px) {
+  :root:root body :is(main, dialog) select { padding-right: 34px !important; background-position: right 12px center !important; background-size: 14px 14px !important; }
+}
+
+/* =========================================================
+   DATA KOSONG — isi selalu di tengah area tabel
+   ========================================================= */
+:root:root body main :is(.queue-empty, .payment-empty, .history-empty, .expense-empty, .queue-empty-state):not([hidden]) {
+  display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important;
+  text-align: center !important; padding: 40px 16px !important; gap: 0 !important;
+}
+:root:root body main :is(.queue-empty, .payment-empty, .history-empty, .expense-empty, .queue-empty-state) :is(h3, p) { margin: 0 0 6px !important; }
+:root:root body.kasir-payment-page .payment-list-column { display: flex !important; flex-direction: column !important; }
+:root:root body.kasir-payment-page .payment-list-column > .payment-empty:not([hidden]) { flex: 1 1 auto !important; }
+
+/* =========================================================
+   PEMBAYARAN — panel "Pemeriksaan pembayaran" lebih rapi & terbaca
+   ========================================================= */
+:root:root body.kasir-payment-page .payment-check-panel { padding: 18px !important; }
+:root:root body.kasir-payment-page .payment-check-panel h3 { font-size: 16px !important; margin: 0 0 4px !important; }
+:root:root body.kasir-payment-page .payment-check-panel h3 + p,
+:root:root body.kasir-payment-page .payment-check-panel header p { font-size: 12px !important; line-height: 1.45 !important; color: var(--wu-text-muted) !important; }
+:root:root body.kasir-payment-page .payment-check-panel .payment-method-pill { font-size: 12px !important; padding: 4px 12px !important; }
+:root:root body.kasir-payment-page .payment-check-panel h4 { font-size: 13.5px !important; margin: 18px 0 10px !important; }
+:root:root body.kasir-payment-page .payment-check-panel :is(span, strong):not(.sr-only):not(.payment-method-pill) { font-size: 13px !important; line-height: 1.4 !important; }
+:root:root body.kasir-payment-page .payment-check-panel .payment-check-notice { font-size: 12px !important; line-height: 1.5 !important; margin: 14px 0 0 !important; }
+:root:root body.kasir-payment-page .payment-check-panel .payment-button-primary {
+  width: 100% !important; max-width: none !important; min-width: 0 !important;
+}
+:root:root body.kasir-payment-page .payment-check-panel input { font-size: 14px !important; }
+
+/* =========================================================
+   ABSENSI MASUK / KELUAR PETUGAS — bentuk kartu tegak, tidak melebar
+   ========================================================= */
+/* Absensi (acuan Figma): satu kartu ramping memanjang ke bawah, rata kiri sejajar judul halaman. */
+@media (min-width: 769px) {
+  :root:root body.petugas-attendance-page .dashboard-main > .attendance-card {
+    width: 100% !important; max-width: 480px !important; margin-left: 0 !important; margin-right: auto !important;
+  }
+}
+:root:root body.petugas-attendance-page .attendance-card > .attendance-photo-section { margin-top: 18px !important; }
+:root:root body.petugas-attendance-page .attendance-card > .attendance-button { width: 100% !important; margin: 14px 0 0 !important; }
+:root:root body.petugas-attendance-page .attendance-card > .attendance-notice { margin: 10px 0 0 !important; }
+:root:root body.petugas-attendance-page .attendance-card { padding: 24px !important; }
+:root:root body.petugas-attendance-page .attendance-list :is(dt, dd) { font-size: 13px !important; line-height: 1.4 !important; }
+:root:root body.petugas-attendance-page .attendance-list > div { padding: 11px 0 !important; }
+:root:root body.petugas-attendance-page :is(.photo-picker-button, .attendance-card button[type="submit"], .attendance-card .primary-button) { min-height: 42px !important; font-size: 13.5px !important; }
+:root:root body.petugas-attendance-page .attendance-photo-section :is(h3, p) { font-size: 12px !important; }
+:root:root body.kasir-payment-page .payment-list-column tbody td { font-size: 12px !important; }
+:root:root body.kasir-payment-page .payment-list-column tbody td :is(strong, small, span:not([class*="badge"]):not([class*="status"])) { font-size: 12px !important; }
+:root:root body.kasir-payment-page .payment-list-column tbody td :is([class*="badge"], [class*="status"]) { font-size: 11px !important; }
+/* Kartu ringkasan Laporan Transaksi: jarak ikon → label sama dengan halaman Owner lain */
+:root:root body.owner-page .owner-report-summary-grid .summary-card { justify-content: space-between !important; min-height: 134px !important; }
+
+/* Header halaman selalu setinggi isinya (chip tanggal tidak menimpa kartu di HP). */
+:root:root body main .wu-page-header { height: auto !important; min-height: 0 !important; max-height: none !important; }
+
+/* Pembayaran: kolom daftar setinggi panel supaya "data kosong" benar-benar di tengah. */
+:root:root body.kasir-payment-page .payment-workspace > .payment-list-column { align-self: stretch !important; }
+
+
+/* Header tabel lebih lega: judul kolom satu baris, jarak antarkolom seragam. */
+:root:root body main table thead th { white-space: nowrap !important; padding: 13px 14px !important; line-height: 1.3 !important; letter-spacing: .04em !important; }
+:root:root body main table tbody td { padding-left: 14px !important; padding-right: 14px !important; }
+/* Tabel sempit (Transaksi Terbaru Admin, setengah lebar): jarak kolom sedikit lebih rapat agar muat tanpa geser. */
+:root:root body.admin-dashboard-page #admin-recent-body td, :root:root body.admin-dashboard-page #admin-recent-body ~ * td,
+:root:root body.admin-dashboard-page table:has(#admin-recent-body) th { padding-left: 10px !important; padding-right: 10px !important; }
+
+/* Footer: garis & tulisan sejajar dengan tepi kiri-kanan kartu di atasnya (semua role). */
+@media (min-width: 769px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-content > .dashboard-footer {
+    width: calc(100% - 64px) !important; max-width: 1216px !important; margin-left: auto !important; margin-right: auto !important; box-sizing: border-box !important;
+  }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-content > .dashboard-footer { width: calc(100% - 48px) !important; }
+}
+
+/* =========================================================
+   VERIFIKASI ABSENSI (Admin) — panel tinjau di dalam kartu daftar
+   ========================================================= */
+:root:root body.admin-verification-page .verification-table tbody td:first-child { font-weight: 700 !important; }
+:root:root body.admin-verification-page .verification-table tbody tr.is-selected td { background: #EAF4F9 !important; }
+:root:root body.admin-verification-page .verification-status {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  min-width: 112px !important; padding: 5px 12px !important; border-radius: 6px !important; font-size: 11.5px !important; font-weight: 700 !important;
+}
+:root:root body.admin-verification-page .verification-status-verified { background: #DFF5EB !important; color: #1C7B51 !important; }
+:root:root body.admin-verification-page .verification-status-pending { background: #FFF1D6 !important; color: #754B03 !important; }
+:root:root body.admin-verification-page .verification-status-unsubmitted { background: #EDF1F3 !important; color: #4E6470 !important; }
+:root:root body.admin-verification-page tbody .verification-row-action { min-width: 60px !important; }
+:root:root body.admin-verification-page tbody .verification-row-action.is-selected { background: #1D4A5A !important; border-color: #1D4A5A !important; color: #fff !important; }
+:root:root body.admin-verification-page .verification-unavailable { color: #5C7480 !important; font-size: 12px !important; }
+
+:root:root body.admin-verification-page .verification-review:not([hidden]) {
+  display: grid !important; margin: 18px 0 0 !important; padding: 16px 18px !important;
+  grid-template-columns: auto minmax(0, 1fr) auto !important;
+  grid-template-areas: "photo title action" "photo info action" "photo partner action" "photo hint hint" "notice notice notice" !important;
+  column-gap: 16px !important; row-gap: 4px !important; align-items: center !important;
+  border: 1px solid #DCE9EF !important; border-radius: 10px !important; background: #F3F8FB !important; box-shadow: none !important;
+}
+:root:root body.admin-verification-page .verification-review :is(.verification-review-content, .verification-review-action) { display: contents !important; }
+:root:root body.admin-verification-page .verification-review-title { grid-area: title !important; margin: 0 !important; font-size: 14.5px !important; font-weight: 700 !important; color: var(--wu-text) !important; }
+:root:root body.admin-verification-page .verification-review-info { grid-area: info !important; margin: 0 !important; font-size: 12px !important; color: var(--wu-text-muted) !important; }
+:root:root body.admin-verification-page .verification-partner-status { grid-area: partner !important; margin: 0 !important; font-size: 11.5px !important; color: var(--wu-text-muted) !important; text-align: left !important; }
+:root:root body.admin-verification-page .verification-action-hint:not([hidden]) { grid-area: hint !important; margin: 4px 0 0 !important; font-size: 11.5px !important; text-align: left !important; }
+:root:root body.admin-verification-page .verification-photo-wrap {
+  grid-area: photo !important; width: 76px !important; height: 76px !important; margin: 0 !important; padding: 0 !important;
+  border-radius: 8px !important; overflow: hidden !important; background: #E5F1F7 !important; display: grid !important; place-items: center !important;
+}
+:root:root body.admin-verification-page .verification-photo-wrap img { width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 0 !important; }
+:root:root body.admin-verification-page .verification-photo-wrap p { margin: 0 !important; padding: 6px !important; font-size: 10px !important; text-align: center !important; }
+:root:root body.admin-verification-page .verification-confirm-button:not([hidden]) {
+  grid-area: action !important; margin: 0 !important; min-width: 168px !important; height: 40px !important; padding: 0 18px !important;
+  border: 0 !important; border-radius: 8px !important; background: #1D4A5A !important; color: #fff !important; font-size: 13px !important; font-weight: 700 !important;
+}
+:root:root body.admin-verification-page .verification-confirm-button:disabled { background: #B9C9D1 !important; }
+:root:root body.admin-verification-page .verification-notice { grid-area: notice !important; margin: 6px 0 0 !important; font-size: 12px !important; }
+:root:root body.admin-verification-page .verification-notice:empty { display: none !important; }
+@media (max-width: 640px) {
+  :root:root body.admin-verification-page .verification-review:not([hidden]) {
+    grid-template-columns: auto minmax(0, 1fr) !important;
+    grid-template-areas: "photo title" "photo info" "partner partner" "hint hint" "action action" "notice notice" !important;
+  }
+  :root:root body.admin-verification-page .verification-confirm-button:not([hidden]) { width: 100% !important; margin-top: 8px !important; }
+}
+
+/* Pembayaran: kotak metode (Metode / Nominal diterima / Kembalian) + dua tombol. */
+:root:root body.kasir-payment-page .payment-method-box {
+  margin: 0 !important; padding: 2px 14px !important; border: 1px solid #DCE9EF !important; border-radius: 10px !important; background: #fff !important;
+}
+:root:root body.kasir-payment-page .payment-method-box :is(.payment-method-row, #payment-cash-fields > div) {
+  display: grid !important; grid-template-columns: minmax(0, 1fr) auto !important; align-items: center !important;
+  gap: 12px !important; min-height: 46px !important; padding: 4px 0 !important; margin: 0 !important; background: none !important; border: 0 !important;
+}
+:root:root body.kasir-payment-page .payment-method-box #payment-cash-fields > div,
+:root:root body.kasir-payment-page .payment-method-box #payment-qris-fields { border-top: 1px solid #E5EEF2 !important; }
+:root:root body.kasir-payment-page .payment-method-box #payment-cash-fields:not([hidden]) { display: block !important; margin: 0 !important; padding: 0 !important; border: 0 !important; background: none !important; }
+:root:root body.kasir-payment-page .payment-method-box #payment-qris-fields:not([hidden]) { display: block !important; margin: 0 !important; padding: 10px 0 !important; background: none !important; }
+:root:root body.kasir-payment-page .payment-method-box #payment-qris-fields p { margin: 0 0 8px !important; font-size: 12px !important; }
+:root:root body.kasir-payment-page .payment-method-box .payment-method-picker { margin: 0 !important; width: auto !important; }
+:root:root body.kasir-payment-page .payment-method-box select { width: 140px !important; height: 34px !important; font-size: 13px !important; border-radius: 7px !important; }
+:root:root body.kasir-payment-page .payment-method-box .payment-amount-input { width: 170px !important; margin: 0 !important; }
+:root:root body.kasir-payment-page .payment-method-box input[type="number"] {
+  width: 100% !important; height: 36px !important; padding: 0 12px !important; box-sizing: border-box !important; text-align: right !important; font-size: 14px !important; border-radius: 7px !important;
+}
+:root:root body.kasir-payment-page .payment-method-box #payment-change { padding-right: 13px !important; font-size: 14px !important; }
+:root:root body.kasir-payment-page .payment-check-panel .payment-check-actions {
+  display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 12px !important; margin-top: 16px !important;
+}
+:root:root body.kasir-payment-page .payment-check-panel .payment-check-actions :is(.payment-button-primary, .payment-button-secondary) {
+  width: 100% !important; max-width: none !important; min-width: 0 !important; height: 44px !important; min-height: 44px !important; margin: 0 !important;
+  border-radius: 8px !important; font-size: 13.5px !important; font-weight: 700 !important;
+}
+:root:root body.kasir-payment-page .payment-check-panel .payment-button-secondary { background: #fff !important; border: 1px solid #1D4A5A !important; color: #1D4A5A !important; }
+:root:root body.kasir-payment-page .payment-check-panel .payment-button-secondary:disabled { opacity: .5 !important; }
+
+/* =========================================================
+   PENGELUARAN — bukti nota: tombol "Nota" di tabel + kotak unggah di form
+   ========================================================= */
+:root:root body.kasir-expense-page tbody .expense-proof-link {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  min-width: 56px !important; height: 26px !important; padding: 0 12px !important; border-radius: 6px !important;
+  border: 1px solid #A9C2D2 !important; background: #DCE9F0 !important; color: #1D4A5A !important;
+  font-size: 11.9px !important; font-weight: 600 !important; text-decoration: none !important;
+}
+:root:root body.kasir-expense-page tbody .expense-proof-link:hover { background: #CDE0EA !important; }
+:root:root body.kasir-expense-page .expense-proof-field { display: flex !important; flex-direction: column !important; gap: 6px !important; }
+:root:root body.kasir-expense-page .expense-proof-drop {
+  position: relative !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important;
+  gap: 4px !important; min-height: 76px !important; padding: 12px !important; box-sizing: border-box !important;
+  border: 1px dashed #88AFC7 !important; border-radius: 8px !important; background: #EAF4F9 !important;
+  color: #1D4A5A !important; font-size: 13px !important; font-weight: 600 !important; cursor: pointer !important; text-align: center !important;
+}
+:root:root body.kasir-expense-page .expense-proof-drop:hover { background: #DFEEF6 !important; }
+:root:root body.kasir-expense-page .expense-proof-drop:focus-within { outline: 3px solid var(--wu-focus) !important; outline-offset: 2px !important; }
+:root:root body.kasir-expense-page .expense-proof-icon svg { width: 22px !important; height: 22px !important; fill: none !important; stroke: currentColor !important; stroke-width: 1.8 !important; stroke-linecap: round; stroke-linejoin: round; }
+:root:root body.kasir-expense-page .expense-proof-text { max-width: 100% !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
+:root:root body.kasir-expense-page .expense-proof-input {
+  position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important;
+  overflow: hidden !important; clip: rect(0 0 0 0) !important; white-space: nowrap !important; border: 0 !important; opacity: 0 !important;
+}
+
+/* Rekap Absensi: judul "Periode Absensi" dengan ikon kalender */
+:root:root body.petugas-page .attendance-period-title { display: inline-flex !important; align-items: center !important; gap: 10px !important; }
+:root:root body.petugas-page .period-title-icon { display: inline-grid !important; place-items: center !important; width: 30px !important; height: 30px !important; border-radius: 8px !important; background: #E5F3F8 !important; color: var(--wu-accent-text) !important; }
+:root:root body.petugas-page .period-title-icon svg { width: 17px !important; height: 17px !important; fill: none !important; stroke: currentColor !important; stroke-width: 2 !important; stroke-linecap: round; stroke-linejoin: round; }
+:root:root body.petugas-page .attendance-period-title { font-size: 15px !important; font-weight: 700 !important; color: var(--wu-text) !important; }
+
+/* =========================================================
+   PENGELUARAN (Kasir) — form ringkas & tombol Nota (revisi 11 Nov)
+   ========================================================= */
+:root:root body.kasir-expense-page .expense-dialog-actions { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 16px !important; margin-top: 20px !important; padding-top: 18px !important; border-top: 1px solid #C9DCE5 !important; }
+:root:root body.kasir-expense-page .expense-dialog-actions button { width: 100% !important; height: 44px !important; min-height: 44px !important; font-size: 15px !important; border-radius: 8px !important; }
+:root:root body.kasir-expense-page .expense-dialog-actions .expense-button-secondary { border: 1.5px solid var(--wu-text) !important; color: var(--wu-text) !important; }
+:root:root body.kasir-expense-page .expense-form-field { font-size: 14px !important; font-weight: 600 !important; }
+:root:root body.kasir-expense-page .expense-form-field input { height: 42px !important; font-size: 14px !important; }
+:root:root body.kasir-expense-page tbody .expense-proof-link { text-decoration: none !important; }
+:root:root body.kasir-expense-page .expense-proof-dialog { width: min(560px, calc(100vw - 32px)) !important; }
+:root:root body.kasir-expense-page .expense-proof-image { display: block; width: 100%; max-height: 70vh; object-fit: contain; border-radius: 10px; background: #F3F8FB; }
+:root:root body.kasir-expense-page .expense-table tbody td { font-size: 13px !important; }
+/* Pembayaran: isian nominal tanpa panah naik-turun bawaan browser. */
+:root:root body.kasir-payment-page #payment-cash-fields input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+:root:root body.kasir-payment-page #payment-cash-fields input[type="number"]::-webkit-inner-spin-button,
+:root:root body.kasir-payment-page #payment-cash-fields input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }

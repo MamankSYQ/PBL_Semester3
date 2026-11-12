@@ -9,11 +9,66 @@ document.addEventListener("click", (event) => {
   if (event.target.closest('[id$="logout"], #logout-button')) sessionStorage.removeItem("washupUsername");
 }, true);
 
+const shellLogout = document.getElementById(document.body.dataset.logoutId);
+shellLogout?.addEventListener("click", () => {
+  sessionStorage.removeItem("washupRole");
+  sessionStorage.removeItem("washupUsername");
+  window.location.href = appUrl("login.html");
+});
+
+// Sidebar yang bisa diciutkan. Dipakai halaman yang memuat css/sidebar-collapse.css
+// dan menyediakan tombol #sidebar-collapse-toggle. Preferensi disimpan per peramban.
+function setupCollapsibleSidebar() {
+  const shell = document.querySelector(".dashboard-shell");
+  const toggle = document.querySelector("#sidebar-collapse-toggle");
+  if (!shell || !toggle) return;
+
+  const storageKey = "washupSidebarCollapsed";
+
+  function readPreference() {
+    try {
+      return localStorage.getItem(storageKey) === "true";
+    } catch {
+      return false;
+    }
+  }
+
+  function savePreference(collapsed) {
+    try {
+      localStorage.setItem(storageKey, String(collapsed));
+    } catch {
+      /* Penyimpanan boleh tidak tersedia, fitur tetap jalan untuk kunjungan ini. */
+    }
+  }
+
+  function syncToggleLabel() {
+    const collapsed = shell.classList.contains("sidebar-collapsed");
+    const label = collapsed ? "Perluas menu samping" : "Ciutkan menu samping";
+    toggle.setAttribute("aria-expanded", String(!collapsed));
+    toggle.setAttribute("aria-label", label);
+    toggle.title = label;
+  }
+
+  shell.classList.toggle("sidebar-collapsed", readPreference());
+  syncToggleLabel();
+
+  toggle.addEventListener("click", () => {
+    const collapsed = shell.classList.toggle("sidebar-collapsed");
+    savePreference(collapsed);
+    syncToggleLabel();
+  });
+}
+
+setupCollapsibleSidebar();
+
 const currentYear = document.querySelector("#current-year");
 
 if (currentYear) {
   currentYear.textContent = new Date().getFullYear();
 }
+
+// Jumlah baris per halaman untuk semua tabel (paginasi seragam: Sebelumnya 1 2 Selanjutnya).
+const TABLE_PAGE_SIZE = 5;
 
 const accounts = {
   admin: { password: "admin123", role: "Admin" },
@@ -24,12 +79,7 @@ const accounts = {
 
 const transactionStorageKey = "washupTransactions";
 const attendanceStorageKey = "washupPetugasAttendance";
-const baseDashboardData = {
-  vehicles: 45,
-  transactions: 38,
-  queue: 7,
-  revenue: 2850000,
-};
+const baseDashboardData = { vehicles: 0, transactions: 0, queue: 0, revenue: 0 };
 
 // Tarif berdasarkan ukuran kendaraan (revisi kelompok, Oktober 2026), menggantikan sistem cuci paket.
 const serviceOptions = {
@@ -46,31 +96,6 @@ const serviceOptions = {
 };
 
 const masterDefinitions = {
-  customers: {
-    key: "washupCustomers",
-    title: "Data Pelanggan",
-    fields: [
-      { key: "name", label: "Nama pelanggan", type: "text", required: true },
-      { key: "phone", label: "Nomor telepon", type: "tel", required: true },
-      { key: "address", label: "Alamat", type: "text", required: false },
-    ],
-    columns: ["name", "phone", "address", "status"],
-    labels: { name: "Nama", phone: "Telepon", address: "Alamat", status: "Status" },
-    detailLabels: { name: "Nama", phone: "Nomor Telepon", address: "Alamat", status: "Status" },
-    detailTitle: "Detail Data Pelanggan",
-  },
-  vehicles: {
-    key: "washupVehicles",
-    title: "Data Kendaraan",
-    fields: [
-      { key: "plateNumber", label: "Nomor plat", type: "text", required: true },
-      { key: "vehicleType", label: "Jenis kendaraan", type: "select", options: ["Mobil", "Motor"], required: true },
-      { key: "customerName", label: "Nama pelanggan", type: "text", required: true },
-      { key: "status", label: "Status", type: "select", options: ["Aktif", "Nonaktif"], required: true },
-    ],
-    columns: ["plateNumber", "vehicleType", "customerName", "status"],
-    labels: { plateNumber: "Plat", vehicleType: "Jenis", customerName: "Pelanggan", status: "Status" },
-  },
   services: {
     key: "washupServices",
     title: "Layanan dan Tarif",
@@ -84,21 +109,6 @@ const masterDefinitions = {
     labels: { name: "Layanan", vehicleType: "Jenis", price: "Harga", status: "Status" },
     detailTitle: "Layanan dan Tarif",
     deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?!",
-  },
-  employees: {
-    key: "washupEmployees",
-    title: "Data Karyawan",
-    fields: [
-      { key: "name", label: "Nama karyawan", type: "text", required: true },
-      { key: "position", label: "Jabatan", type: "text", required: true },
-      { key: "phone", label: "Nomor telepon", type: "tel", required: true },
-      { key: "status", label: "Status", type: "select", options: ["Aktif", "Nonaktif"], required: true },
-    ],
-    columns: ["name", "position", "phone", "status"],
-    labels: { name: "Nama", position: "Jabatan", phone: "Telepon", status: "Status" },
-    detailLabels: { name: "Nama", position: "Jabatan", phone: "Nomor Telepon", status: "Status" },
-    detailTitle: "Detail Karyawan",
-    deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?",
   },
   shifts: {
     key: "washupShifts",
@@ -128,32 +138,7 @@ const masterDefinitions = {
     detailTitle: "Detail Akun",
     deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?",
   },
-  // Absensi & Lembur yang dicatat Admin (Figma: Data Absensi). Terpisah dari absen foto Petugas (washupPetugasAttendance).
-  attendance: {
-    key: "washupAttendanceRecords",
-    title: "Data Absensi",
-    actions: false,
-    searchColumns: ["employeeName"],
-    fields: [
-      { key: "employeeName", label: "Nama karyawan", type: "text", required: true },
-      { key: "date", label: "Tanggal", type: "date", required: true },
-      { key: "presence", label: "Kehadiran", type: "select", options: ["Masuk", "Izin", "Tanpa Keterangan"], required: true },
-      // Pilihan shift diambil dari Data Shift yang berstatus Aktif.
-      { key: "shift", label: "Shift", type: "select", get options() { return getActiveShiftNames(); }, required: true },
-      { key: "overtimeHours", label: "Lembur", type: "number", min: 0, step: 0.5, placeholder: "-- Jam", required: false },
-      { key: "incentive", label: "Insentif", type: "number", min: 0, step: 1000, placeholder: "Rp", required: false },
-    ],
-    columns: ["employeeName", "date", "presence", "shift", "overtimeHours", "incentive"],
-    labels: { employeeName: "Karyawan", date: "Tanggal", presence: "Kehadiran", shift: "Shift", overtimeHours: "Lembur", incentive: "Insentif" },
-  },
 };
-
-function getActiveShiftNames() {
-  const names = ensureMasterDefaults("shifts", masterDefinitions.shifts)
-    .filter((shift) => shift.status === "Aktif" && shift.name)
-    .map((shift) => shift.name);
-  return names;
-}
 
 const masterDefaults = {
   services: [
@@ -164,8 +149,11 @@ const masterDefaults = {
     { id: "service-motor-sedang", name: "Cuci Motor Sedang", vehicleType: "Motor", price: 15000, status: "Aktif" },
     { id: "service-motor-besar", name: "Cuci Motor Besar", vehicleType: "Motor", price: 17000, status: "Aktif" },
   ],
-  shifts: [{ id: "shift-pagi", name: "Shift Pagi", start: "08:00", end: "16:00", status: "Aktif" }],
-  users: Object.entries(accounts).map(([username, account]) => ({ id: `user-${username}`, username, password: account.password, role: account.role, status: "Aktif", protected: true })),
+  shifts: [
+    { id: "shift-pagi", name: "Shift Pagi", start: "08:00", end: "16:00", status: "Aktif" },
+    { id: "shift-malam", name: "Shift Malam", start: "16:00", end: "00:00", status: "Aktif" },
+  ],
+  users: Object.entries(accounts).map(([username, account]) => ({ id: `user-${username}`, username, password: account.password, role: account.role, status: "Aktif" })),
 };
 
 function readMasterRecords(definition) {
@@ -193,8 +181,21 @@ function ensureMasterDefaults(type, definition) {
     records = records.filter((record) => !retiredServiceIds.includes(record.id));
     saveMasterRecords(definition, records);
   }
-  const existingKeys = new Set(records.map((record) => type === "users" ? record.username : record.id));
-  const missing = defaults.filter((record) => !existingKeys.has(type === "users" ? record.username : record.id));
+  if (type === "users") {
+    if (localStorage.getItem(definition.key) === null) {
+      records = defaults.map((record) => ({ ...record }));
+      saveMasterRecords(definition, records);
+    } else if (!records.some((record) => String(record?.username || "").trim().toLowerCase() === "admin")) {
+      const admin = defaults.find((record) => record.username === "admin");
+      if (admin) {
+        records.push({ ...admin });
+        saveMasterRecords(definition, records);
+      }
+    }
+    return records;
+  }
+  const existingKeys = new Set(records.map((record) => record.id));
+  const missing = defaults.filter((record) => !existingKeys.has(record.id));
   if (missing.length) {
     records.push(...missing.map((record) => ({ ...record })));
     saveMasterRecords(definition, records);
@@ -204,6 +205,21 @@ function ensureMasterDefaults(type, definition) {
 
 function getUserAccounts() {
   return ensureMasterDefaults("users", masterDefinitions.users);
+}
+
+function getActiveEmployees() {
+  return getUserAccounts()
+    .filter((account) => account && account.status === "Aktif" &&
+      (account.role === "Kasir" || account.role === "Petugas") && String(account.username || "").trim())
+    .map((account) => ({ name: String(account.username || "").trim(), role: account.role }));
+}
+
+// Shift bawaan disimpan sejak awal agar dashboard, laporan, dan absensi tidak menunggu
+// Admin membuka halaman Data Shift terlebih dahulu.
+try {
+  ensureMasterDefaults("shifts", masterDefinitions.shifts);
+} catch {
+  // localStorage tidak tersedia; halaman tetap berjalan dengan data kosong.
 }
 
 function getActiveServiceOptions() {
@@ -227,8 +243,8 @@ function getTransactions() {
 
     const normalizedTransactions = storedTransactions.map((transaction) => ({
       ...transaction,
-      serviceStatus: transaction.serviceStatus || "Menunggu",
-      paymentStatus: transaction.paymentStatus || "Belum Dibayar",
+      serviceStatus: transaction.serviceStatus || transaction.statusPengerjaan || transaction.workStatus || "Menunggu",
+      paymentStatus: transaction.paymentStatus || transaction.statusPembayaran || "Belum Dibayar",
     }));
 
     if (JSON.stringify(normalizedTransactions) !== JSON.stringify(storedTransactions)) {
@@ -251,8 +267,11 @@ function isValidServiceStatusTransition(currentStatus, nextStatus) {
   return currentIndex >= 0 && nextIndex >= currentIndex && nextIndex <= currentIndex + 1;
 }
 
+// Satu format Rupiah untuk seluruh aplikasi, contoh: Rp 30.000 dan -Rp 20.000.
 function formatCurrency(value) {
-  return `Rp ${Number(value).toLocaleString("id-ID")}`;
+  const amount = Number(value) || 0;
+  const sign = amount < 0 ? "-" : "";
+  return `${sign}Rp ${Math.abs(amount).toLocaleString("id-ID")}`;
 }
 
 function formatDateKey(date) {
@@ -385,9 +404,10 @@ if (passwordToggle && passwordInput) {
   passwordToggle.addEventListener("click", () => {
     const shouldShowPassword = passwordInput.type === "password";
     passwordInput.type = shouldShowPassword ? "text" : "password";
-    passwordToggle.textContent = shouldShowPassword ? "Sembunyikan" : "Lihat";
-    passwordToggle.setAttribute("aria-label", `${shouldShowPassword ? "Sembunyikan" : "Tampilkan"} password`);
+    const label = `${shouldShowPassword ? "Sembunyikan" : "Tampilkan"} password`;
+    passwordToggle.setAttribute("aria-label", label);
     passwordToggle.setAttribute("aria-pressed", String(shouldShowPassword));
+    passwordToggle.setAttribute("title", label);
   });
 }
 
@@ -505,28 +525,14 @@ if (logoutButton) {
 
 const dashboardLogout = document.querySelector("#dashboard-logout");
 const petugasDashboardLogout = document.querySelector("#petugas-dashboard-logout");
-const dashboardNotice = document.querySelector("#dashboard-notice");
-const placeholderLinks = document.querySelectorAll("[data-placeholder-link]");
 const transactionLogout = document.querySelector("#transaction-logout");
 
-if (document.querySelector(".dashboard-page")) {
+if (document.querySelector(".kasir-page")) {
   const role = sessionStorage.getItem("washupRole");
 
   if (role !== "Kasir") {
     window.location.replace(appUrl(role ? "role.html" : "login.html"));
   }
-}
-
-if (document.querySelector(".transaction-page") && sessionStorage.getItem("washupRole") !== "Kasir") {
-  window.location.replace(appUrl("login.html"));
-}
-
-if (document.querySelector(".payment-page") && sessionStorage.getItem("washupRole") !== "Kasir") {
-  window.location.replace(appUrl("login.html"));
-}
-
-if (document.querySelector(".history-page") && sessionStorage.getItem("washupRole") !== "Kasir") {
-  window.location.replace(appUrl("login.html"));
 }
 
 if (document.querySelector(".owner-dashboard-page") && sessionStorage.getItem("washupRole") !== "Owner") {
@@ -537,11 +543,23 @@ if (document.querySelector(".owner-report-page") && sessionStorage.getItem("wash
   window.location.replace(appUrl("login.html"));
 }
 
+if (document.querySelector(".owner-finance-page") && sessionStorage.getItem("washupRole") !== "Owner") {
+  window.location.replace(appUrl("login.html"));
+}
+
+if (document.querySelector(".owner-employee-page") && sessionStorage.getItem("washupRole") !== "Owner") {
+  window.location.replace(appUrl("login.html"));
+}
+
+if (document.querySelector(".owner-service-stats-page") && sessionStorage.getItem("washupRole") !== "Owner") {
+  window.location.replace(appUrl("login.html"));
+}
+
 if (document.querySelector(".admin-dashboard-page") && sessionStorage.getItem("washupRole") !== "Admin") {
   window.location.replace(appUrl("login.html"));
 }
 
-if (document.querySelector(".petugas-dashboard-page") && sessionStorage.getItem("washupRole") !== "Petugas") {
+if (document.querySelector(".petugas-page") && sessionStorage.getItem("washupRole") !== "Petugas") {
   window.location.replace(appUrl("login.html"));
 }
 
@@ -558,15 +576,6 @@ if (petugasDashboardLogout) {
     window.location.href = appUrl("login.html");
   });
 }
-
-placeholderLinks.forEach((link) => {
-  link.addEventListener("click", (event) => {
-    event.preventDefault();
-    if (dashboardNotice) {
-      dashboardNotice.textContent = "Riwayat Transaksi akan tersedia pada tahap berikutnya.";
-    }
-  });
-});
 
 function renderDashboardData() {
   const vehicleCount = document.querySelector("#vehicle-count");
@@ -586,10 +595,12 @@ function renderDashboardData() {
   const queueRecords = transactions;
   const activeQueue = transactions.filter((transaction) => transaction.serviceStatus !== "Selesai");
   const statistics = {
-    vehicles: baseDashboardData.vehicles + transactions.length,
-    transactions: baseDashboardData.transactions + transactions.length,
+    vehicles: transactions.length,
+    transactions: transactions.length,
     queue: activeQueue.length,
-    revenue: baseDashboardData.revenue + transactions.filter((transaction) => transaction.paymentStatus === "Lunas").reduce((total, transaction) => total + Number(transaction.price || 0), 0),
+    revenue: transactions
+      .filter((transaction) => transaction.paymentStatus === "Lunas")
+      .reduce((total, transaction) => total + Number(transaction.price || 0), 0),
   };
 
   vehicleCount.textContent = String(statistics.vehicles);
@@ -782,19 +793,38 @@ function setupQueuePage() {
   const filterInput = document.querySelector("#queue-filter");
   const queueEmpty = document.querySelector("#queue-empty");
   const queueResultCount = document.querySelector("#queue-result-count");
+  const queuePager = document.querySelector("#queue-pager");
   const activeQueueCount = document.querySelector("#active-queue-count");
   const dialog = document.querySelector("#queue-dialog");
   const dialogClose = document.querySelector("#dialog-close");
+  const dialogCancel = document.querySelector("#dialog-cancel");
   const updateStatusButton = document.querySelector("#update-status");
   const detailStatus = document.querySelector("#detail-status");
   const dialogNotice = document.querySelector("#dialog-notice");
   const queueLogout = document.querySelector("#queue-logout");
+  const editDialog = document.querySelector("#queue-edit-dialog");
+  const editClose = document.querySelector("#queue-edit-close");
+  const editCancel = document.querySelector("#queue-edit-cancel");
+  const editSave = document.querySelector("#queue-edit-save");
+  const editNotice = document.querySelector("#queue-edit-notice");
+  const editCustomer = document.querySelector("#edit-customer");
+  const editPhone = document.querySelector("#edit-phone");
+  const editPlate = document.querySelector("#edit-plate");
+  const editVehicle = document.querySelector("#edit-vehicle");
+  const editService = document.querySelector("#edit-service");
+  const editPrice = document.querySelector("#edit-price");
 
   if (!queueBody || !searchInput || !filterInput || !queueEmpty || !queueResultCount || !activeQueueCount) {
     return;
   }
 
   let selectedTransactionId = null;
+  let editingTransactionKey = null;
+  let currentPage = 1;
+
+  function queueTransactionKey(transaction) {
+    return String(transaction?.id ?? transaction?.transactionNumber ?? transaction?.queueNumber ?? "");
+  }
 
   function statusClass(status) {
     if (status === "Selesai") return "status-done";
@@ -824,39 +854,72 @@ function setupQueuePage() {
     const allTransactions = getTransactions();
     const activeTransactions = allTransactions.filter((transaction) => transaction.serviceStatus !== "Selesai");
     const transactions = filteredTransactions();
+    const pageSize = TABLE_PAGE_SIZE;
+    const totalPages = Math.max(1, Math.ceil(transactions.length / pageSize));
+
+    // Pertahankan halaman yang valid saat hasil pencarian/filter atau jumlah data berubah.
+    currentPage = Math.min(Math.max(1, currentPage), totalPages);
+    const startIndex = transactions.length ? (currentPage - 1) * pageSize : 0;
+    const visibleTransactions = transactions.slice(startIndex, startIndex + pageSize);
+    const endIndex = Math.min(startIndex + pageSize, transactions.length);
+
     activeQueueCount.textContent = `${activeTransactions.length} kendaraan`;
     queueResultCount.textContent = `${transactions.length} data`;
     queueBody.replaceChildren();
     queueEmpty.hidden = transactions.length > 0;
 
-    transactions.forEach((transaction) => {
+    if (queuePager) {
+      window.WashupPager.renderPager(queuePager, {
+        page: currentPage,
+        total: totalPages,
+        onChange: (target) => { currentPage = target; renderQueuePage(); },
+      });
+    }
+
+    visibleTransactions.forEach((transaction) => {
       const row = document.createElement("tr");
       [transaction.queueNumber, transaction.plateNumber, transaction.customerName, transaction.vehicleType, transaction.service].forEach((value) => {
         const cell = document.createElement("td");
-        cell.textContent = value;
+        cell.textContent = value ?? "-";
         row.append(cell);
       });
 
       const serviceStatusCell = document.createElement("td");
       serviceStatusCell.append(makeStatusBadge(transaction.serviceStatus));
       row.append(serviceStatusCell);
-      const paymentStatusCell = document.createElement("td");
-      paymentStatusCell.append(makeStatusBadge(transaction.paymentStatus));
-      row.append(paymentStatusCell);
+      // Tombol aksi mengikuti desain Figma: Detail (biru), Edit (hijau), Hapus (merah).
       const actionCell = document.createElement("td");
+      actionCell.className = "queue-action-cell";
+      const actionGroup = document.createElement("div");
+      actionGroup.className = "queue-action-buttons";
+
       const detailButton = document.createElement("button");
-      detailButton.className = "table-action";
+      detailButton.className = "table-action table-action-detail";
       detailButton.type = "button";
       detailButton.textContent = "Detail";
       detailButton.addEventListener("click", () => openDetail(transaction));
-      actionCell.append(detailButton);
+
+      const editButton = document.createElement("button");
+      editButton.className = "table-action table-action-edit";
+      editButton.type = "button";
+      editButton.textContent = "Edit";
+      editButton.addEventListener("click", () => openEdit(transaction));
+
+      const deleteButton = document.createElement("button");
+      deleteButton.className = "table-action table-action-delete";
+      deleteButton.type = "button";
+      deleteButton.textContent = "Hapus";
+      deleteButton.addEventListener("click", () => deleteTransaction(transaction));
+
+      actionGroup.append(detailButton, editButton, deleteButton);
+      actionCell.append(actionGroup);
       row.append(actionCell);
       queueBody.append(row);
     });
   }
 
   function openDetail(transaction) {
-    selectedTransactionId = transaction.id;
+    selectedTransactionId = queueTransactionKey(transaction);
     const details = {
       "detail-queue": transaction.queueNumber,
       "detail-transaction": transaction.transactionNumber,
@@ -881,6 +944,96 @@ function setupQueuePage() {
     }
   }
 
+  function updateEditServiceOptions(selectedServiceName = "") {
+    const vehicleType = editVehicle?.value || "Mobil";
+    const services = getActiveServiceOptions()[vehicleType] || [];
+    editService.replaceChildren();
+    services.forEach((service) => {
+      const option = document.createElement("option");
+      option.value = service.name;
+      option.textContent = service.name;
+      option.dataset.price = String(service.price);
+      editService.append(option);
+    });
+    if (services.some((service) => service.name === selectedServiceName)) {
+      editService.value = selectedServiceName;
+    }
+    if (!editService.value && services.length) editService.selectedIndex = 0;
+    const selected = services.find((service) => service.name === editService.value);
+    editPrice.textContent = formatCurrency(selected?.price || 0);
+  }
+
+  function openEdit(transaction) {
+    if (!editDialog || !editCustomer || !editPhone || !editPlate || !editVehicle || !editService || !editPrice) return;
+    if (transaction.paymentStatus === "Lunas") {
+      window.alert("Transaksi yang sudah Lunas tidak dapat diedit.");
+      return;
+    }
+    editingTransactionKey = queueTransactionKey(transaction);
+    editCustomer.value = transaction.customerName || "";
+    editPhone.value = transaction.customerPhone || "";
+    editPlate.value = transaction.plateNumber || "";
+    editVehicle.value = transaction.vehicleType === "Motor" ? "Motor" : "Mobil";
+    updateEditServiceOptions(transaction.service || "");
+    if (editNotice) editNotice.textContent = "";
+    if (typeof editDialog.showModal === "function") editDialog.showModal();
+    else editDialog.setAttribute("open", "");
+  }
+
+  function closeEdit() {
+    if (!editDialog) return;
+    if (typeof editDialog.close === "function") editDialog.close();
+    else editDialog.removeAttribute("open");
+    editingTransactionKey = null;
+  }
+
+  function deleteTransaction(transaction) {
+    const description = `${transaction.queueNumber || "Antrean"} — ${transaction.plateNumber || transaction.customerName || "transaksi"}`;
+    if (!window.confirm(`Hapus ${description} dari daftar antrean? Tindakan ini tidak dapat dibatalkan.`)) return;
+    const transactions = getTransactions();
+    const targetKey = queueTransactionKey(transaction);
+    const remaining = transactions.filter((item) => queueTransactionKey(item) !== targetKey);
+    if (remaining.length === transactions.length) return;
+    saveTransactions(remaining);
+    if (selectedTransactionId && queueTransactionKey(transaction) === String(selectedTransactionId) && dialog?.open) closeDetail();
+    renderQueuePage();
+  }
+
+  function saveEdit() {
+    if (!editingTransactionKey || !editCustomer || !editPhone || !editPlate || !editVehicle || !editService) return;
+    const customerName = editCustomer.value.trim();
+    const customerPhone = editPhone.value.trim();
+    const plateNumber = editPlate.value.trim().toUpperCase();
+    if (!customerName || !customerPhone || !plateNumber || !editService.value) {
+      if (editNotice) editNotice.textContent = "Lengkapi nama pelanggan, nomor telepon, nomor plat, dan layanan.";
+      return;
+    }
+    const transactions = getTransactions();
+    const transaction = transactions.find((item) => queueTransactionKey(item) === editingTransactionKey);
+    if (!transaction) {
+      if (editNotice) editNotice.textContent = "Data transaksi tidak ditemukan. Muat ulang daftar antrean.";
+      return;
+    }
+    if (transaction.paymentStatus === "Lunas") {
+      if (editNotice) editNotice.textContent = "Transaksi yang sudah Lunas tidak dapat diedit.";
+      return;
+    }
+    const selectedService = (getActiveServiceOptions()[editVehicle.value] || []).find((service) => service.name === editService.value);
+    if (!selectedService) {
+      if (editNotice) editNotice.textContent = "Layanan yang dipilih sudah tidak tersedia.";
+      return;
+    }
+    transaction.customerName = customerName;
+    transaction.customerPhone = customerPhone;
+    transaction.plateNumber = plateNumber;
+    transaction.vehicleType = editVehicle.value;
+    transaction.service = selectedService.name;
+    transaction.price = selectedService.price;
+    saveTransactions(transactions);
+    closeEdit();
+    renderQueuePage();
+  }
+
   function closeDetail() {
     if (typeof dialog.close === "function") {
       dialog.close();
@@ -890,15 +1043,33 @@ function setupQueuePage() {
     selectedTransactionId = null;
   }
 
-  searchInput.addEventListener("input", renderQueuePage);
-  filterInput.addEventListener("change", renderQueuePage);
+  searchInput.addEventListener("input", () => {
+    currentPage = 1;
+    renderQueuePage();
+  });
+  filterInput.addEventListener("change", () => {
+    currentPage = 1;
+    renderQueuePage();
+  });
   dialogClose?.addEventListener("click", closeDetail);
+  dialogCancel?.addEventListener("click", closeDetail);
+  editClose?.addEventListener("click", closeEdit);
+  editCancel?.addEventListener("click", closeEdit);
+  editSave?.addEventListener("click", saveEdit);
+  editVehicle?.addEventListener("change", () => updateEditServiceOptions());
+  editService?.addEventListener("change", () => {
+    const service = (getActiveServiceOptions()[editVehicle?.value || "Mobil"] || []).find((item) => item.name === editService.value);
+    if (editPrice) editPrice.textContent = formatCurrency(service?.price || 0);
+  });
+  editDialog?.addEventListener("click", (event) => {
+    if (event.target === editDialog) closeEdit();
+  });
   dialog?.addEventListener("click", (event) => {
     if (event.target === dialog) closeDetail();
   });
   updateStatusButton?.addEventListener("click", () => {
     const transactions = getTransactions();
-    const transaction = transactions.find((item) => item.id === selectedTransactionId);
+    const transaction = transactions.find((item) => queueTransactionKey(item) === String(selectedTransactionId ?? ""));
     if (!transaction) return;
     if (transaction.paymentStatus === "Lunas") {
       dialogNotice.textContent = "Status pengerjaan tidak dapat diubah setelah transaksi Lunas.";
@@ -942,25 +1113,38 @@ function setupTransactionHistory() {
   const empty = document.querySelector("#history-empty");
   const emptyTitle = document.querySelector("#history-empty-title");
   const emptyMessage = document.querySelector("#history-empty-message");
-  const dialog = document.querySelector("#history-dialog");
+  const detailDialog = document.querySelector("#history-dialog");
+  const filterToggle = document.querySelector("#history-filter-toggle");
+  const filterOptions = document.querySelector("#history-filter-options");
+  const pager = document.querySelector("#history-pager");
+  const receiptOverlay = document.querySelector("#history-receipt-overlay");
+  const receiptDialogTitle = document.querySelector("#history-receipt-dialog-title");
+  const receiptCaption = document.querySelector("#history-receipt-caption");
 
-  if (!body || !search || !serviceFilter || !paymentFilter || !dateFilter || !resultCount || !empty || !emptyTitle || !emptyMessage || !dialog) {
-    return;
-  }
+  if (!body || !search || !serviceFilter || !paymentFilter || !dateFilter || !resultCount || !empty || !emptyTitle || !emptyMessage || !detailDialog || !pager || !receiptOverlay) return;
 
-  const formatDateTime = (createdAt) => {
-    const date = new Date(createdAt);
+  let currentPage = 1;
+  let currentReceiptType = "transaction";
+  let lastFocusedElement = null;
+
+  const setText = (id, value) => {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value == null || value === "" ? "-" : String(value);
+  };
+  const formatDateTime = (value) => {
+    const date = new Date(value);
     return Number.isNaN(date.getTime()) ? "-" : date.toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" });
   };
   const makeStatusBadge = (status, type) => {
     const badge = document.createElement("span");
-    const isDone = type === "payment" ? status === "Lunas" : status === "Selesai";
-    badge.className = `status-badge ${isDone ? "status-done" : status === "Sedang Dicuci" ? "status-washing" : "status-waiting"}`;
-    badge.textContent = status || (type === "payment" ? "Belum Dibayar" : "Menunggu");
+    const normalized = status || (type === "payment" ? "Belum Dibayar" : "Menunggu");
+    const isDone = type === "payment" ? normalized === "Lunas" : normalized === "Selesai";
+    badge.className = `status-badge ${isDone ? "status-done" : normalized === "Sedang Dicuci" ? "status-washing" : "status-waiting"}`;
+    badge.textContent = normalized;
     return badge;
   };
   const closeDetail = () => {
-    if (typeof dialog.close === "function") dialog.close(); else dialog.removeAttribute("open");
+    if (typeof detailDialog.close === "function") detailDialog.close(); else detailDialog.removeAttribute("open");
   };
   const openDetail = (transaction) => {
     const details = {
@@ -977,8 +1161,8 @@ function setupTransactionHistory() {
       "history-detail-payment-method": transaction.paymentMethod || "-",
       "history-detail-created-at": formatDateTime(transaction.createdAt),
     };
-    Object.entries(details).forEach(([id, value]) => { document.querySelector(`#${id}`).textContent = value || "-"; });
-    if (typeof dialog.showModal === "function") dialog.showModal(); else dialog.setAttribute("open", "");
+    Object.entries(details).forEach(([id, value]) => setText(id, value));
+    if (typeof detailDialog.showModal === "function") detailDialog.showModal(); else detailDialog.setAttribute("open", "");
   };
   const filteredTransactions = () => {
     const query = search.value.trim().toLowerCase();
@@ -992,15 +1176,80 @@ function setupTransactionHistory() {
       return matchesSearch && matchesService && matchesPayment && matchesDate;
     }).sort((first, second) => (new Date(second.createdAt).getTime() || 0) - (new Date(first.createdAt).getTime() || 0));
   };
+
+  const setReceiptVisibility = (type) => {
+    receiptOverlay.querySelectorAll(".history-receipt-transaction-only").forEach((element) => { element.hidden = type !== "transaction"; });
+    receiptOverlay.querySelectorAll(".history-receipt-payment-only").forEach((element) => { element.hidden = type !== "payment"; });
+    const paidStatus = document.querySelector("#history-receipt-paid-status");
+    if (paidStatus) paidStatus.hidden = type !== "payment";
+    setText("history-receipt-total-label", type === "payment" ? "Total dibayar" : "Total tagihan");
+    if (receiptDialogTitle) receiptDialogTitle.textContent = type === "payment" ? "Struk Pembayaran" : "Struk Transaksi";
+    if (receiptCaption) receiptCaption.textContent = type === "payment" ? "STRUK PEMBAYARAN" : "STRUK TRANSAKSI";
+  };
+  const openReceipt = (transaction, type) => {
+    if (!transaction) return;
+    if (type === "payment" && transaction.paymentStatus !== "Lunas") return;
+    currentReceiptType = type;
+    lastFocusedElement = document.activeElement;
+    setReceiptVisibility(type);
+    const total = Math.max(0, Number(transaction.price) || 0);
+    const received = Math.max(0, Number(transaction.amountReceived ?? total) || 0);
+    const change = Math.max(0, Number(transaction.change ?? Math.max(0, received - total)) || 0);
+    const fields = {
+      "history-receipt-transaction-number": transaction.transactionNumber || "-",
+      "history-receipt-queue-number": transaction.queueNumber || "-",
+      "history-receipt-transaction-date": formatDateTime(transaction.createdAt),
+      "history-receipt-paid-date": transaction.paidAt ? formatDateTime(transaction.paidAt) : "-",
+      "history-receipt-customer": transaction.customerName || "-",
+      "history-receipt-phone": transaction.customerPhone || "-",
+      "history-receipt-plate": transaction.plateNumber || "-",
+      "history-receipt-vehicle": transaction.vehicleType || "-",
+      "history-receipt-service": transaction.service || "-",
+      "history-receipt-service-price": formatCurrency(total),
+      "history-receipt-subtotal": formatCurrency(total),
+      "history-receipt-total": formatCurrency(total),
+      "history-receipt-method": transaction.paymentMethod || "Tunai",
+      "history-receipt-received": formatCurrency(received),
+      "history-receipt-change": formatCurrency(change),
+      "history-receipt-service-status": transaction.serviceStatus || "Menunggu",
+      "history-receipt-payment-status": transaction.paymentStatus || "Belum Dibayar",
+    };
+    Object.entries(fields).forEach(([id, value]) => setText(id, value));
+    setText("history-receipt-note", type === "payment"
+      ? "Struk ini adalah bukti pembayaran yang telah dikonfirmasi."
+      : "Struk ini adalah bukti transaksi, bukan bukti pembayaran.");
+    receiptOverlay.hidden = false;
+    receiptOverlay.setAttribute("aria-hidden", "false");
+    document.body.classList.remove("history-receipt-printing");
+    document.querySelector("#history-receipt-close")?.focus();
+  };
+  const closeReceipt = () => {
+    receiptOverlay.hidden = true;
+    receiptOverlay.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("history-receipt-printing");
+    if (lastFocusedElement && typeof lastFocusedElement.focus === "function") lastFocusedElement.focus();
+  };
   const render = () => {
     const allTransactions = getTransactions();
     const transactions = filteredTransactions();
+    const pageSize = TABLE_PAGE_SIZE;
+    const totalPages = transactions.length ? Math.ceil(transactions.length / pageSize) : 0;
+    currentPage = totalPages ? Math.min(Math.max(1, currentPage), totalPages) : 1;
+    const startIndex = transactions.length ? (currentPage - 1) * pageSize : 0;
+    const visibleTransactions = transactions.slice(startIndex, startIndex + pageSize);
+
     resultCount.textContent = `${transactions.length} data`;
     empty.hidden = transactions.length > 0;
     emptyTitle.textContent = allTransactions.length ? "Transaksi tidak ditemukan." : "Belum ada riwayat transaksi.";
     emptyMessage.textContent = allTransactions.length ? "Ubah pencarian atau filter untuk melihat transaksi lain." : "Transaksi yang dibuat Kasir akan tampil di sini.";
     body.replaceChildren();
-    transactions.forEach((transaction) => {
+    window.WashupPager.renderPager(pager, {
+      page: currentPage,
+      total: totalPages || 1,
+      onChange: (target) => { currentPage = target; render(); },
+    });
+
+    visibleTransactions.forEach((transaction) => {
       const row = document.createElement("tr");
       [transaction.transactionNumber, transaction.queueNumber, formatDateTime(transaction.createdAt), transaction.customerName, transaction.plateNumber, transaction.vehicleType, transaction.service, formatCurrency(transaction.price)].forEach((value) => {
         const cell = document.createElement("td");
@@ -1016,25 +1265,55 @@ function setupTransactionHistory() {
       const methodCell = document.createElement("td");
       methodCell.textContent = transaction.paymentMethod || "-";
       row.append(methodCell);
+
       const actionCell = document.createElement("td");
-      const detailButton = document.createElement("button");
-      detailButton.className = "table-action";
-      detailButton.type = "button";
-      detailButton.textContent = "Detail";
-      detailButton.addEventListener("click", () => openDetail(transaction));
-      actionCell.append(detailButton);
+      actionCell.className = "history-action-cell";
+      const actionGroup = document.createElement("div");
+      actionGroup.className = "history-action-group";
+      const makeAction = (label, className, onClick, disabled = false, title = "") => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `table-action ${className}`;
+        button.textContent = label;
+        button.disabled = disabled;
+        if (title) button.title = title;
+        button.addEventListener("click", onClick);
+        return button;
+      };
+      actionGroup.append(
+        makeAction("Detail", "history-action-detail", () => openDetail(transaction)),
+        makeAction("Struk Transaksi", "history-action-transaction", () => openReceipt(transaction, "transaction")),
+        makeAction("Struk Pembayaran", "history-action-payment", () => openReceipt(transaction, "payment"), transaction.paymentStatus !== "Lunas", transaction.paymentStatus !== "Lunas" ? "Struk pembayaran tersedia setelah transaksi berstatus Lunas." : "Lihat struk pembayaran")
+      );
+      actionCell.append(actionGroup);
       row.append(actionCell);
       body.append(row);
     });
   };
 
-  search.addEventListener("input", render);
-  serviceFilter.addEventListener("change", render);
-  paymentFilter.addEventListener("change", render);
-  dateFilter.addEventListener("change", render);
+  search.addEventListener("input", () => { currentPage = 1; render(); });
+  serviceFilter.addEventListener("change", () => { currentPage = 1; render(); });
+  paymentFilter.addEventListener("change", () => { currentPage = 1; render(); });
+  dateFilter.addEventListener("change", () => { currentPage = 1; render(); });
+  filterToggle?.addEventListener("click", () => {
+    const wasExpanded = filterToggle.getAttribute("aria-expanded") === "true";
+    filterToggle.setAttribute("aria-expanded", String(!wasExpanded));
+    filterToggle.classList.toggle("is-open", !wasExpanded);
+    if (filterOptions) filterOptions.hidden = wasExpanded;
+  });
   document.querySelector("#history-dialog-close")?.addEventListener("click", closeDetail);
-  dialog.addEventListener("click", (event) => { if (event.target === dialog) closeDetail(); });
-  document.querySelector("#history-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = appUrl("login.html"); });
+  detailDialog.addEventListener("click", (event) => { if (event.target === detailDialog) closeDetail(); });
+  document.querySelector("#history-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); sessionStorage.removeItem("washupUsername"); window.location.href = appUrl("login.html"); });
+  document.querySelector("#history-receipt-close")?.addEventListener("click", closeReceipt);
+  document.querySelector("#history-receipt-done")?.addEventListener("click", closeReceipt);
+  document.querySelector("#history-receipt-print")?.addEventListener("click", () => {
+    document.body.classList.add("history-receipt-printing");
+    window.requestAnimationFrame(() => window.print());
+  });
+  receiptOverlay.addEventListener("click", (event) => { if (event.target === receiptOverlay) closeReceipt(); });
+  document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !receiptOverlay.hidden) closeReceipt(); });
+  window.addEventListener("afterprint", () => document.body.classList.remove("history-receipt-printing"));
+  window.addEventListener("storage", (event) => { if (event.key === transactionStorageKey) render(); });
   render();
 }
 
@@ -1044,129 +1323,346 @@ function setupPaymentPage() {
   const body = document.querySelector("#payment-table-body");
   const empty = document.querySelector("#payment-empty");
   const resultCount = document.querySelector("#payment-result-count");
+  const unpaidCount = document.querySelector("#payment-unpaid-count");
   const readyCount = document.querySelector("#payment-ready-count");
+  const pendingTotalElement = document.querySelector("#payment-pending-total");
+  const pendingDescription = document.querySelector("#payment-pending-description");
   const notice = document.querySelector("#payment-notice");
-  const dialog = document.querySelector("#payment-dialog");
-  const dialogNotice = document.querySelector("#payment-dialog-notice");
+  const detailNotice = document.querySelector("#payment-dialog-notice");
   const paymentMethod = document.querySelector("#payment-method");
   const confirmButton = document.querySelector("#confirm-payment");
+  const notMatchButton = document.querySelector("#payment-not-match");
+  const pager = document.querySelector("#payment-pager");
+  const cashFields = document.querySelector("#payment-cash-fields");
+  const cashReceived = document.querySelector("#payment-cash-received");
+  const changeLabel = document.querySelector("#payment-change");
+  const qrisFields = document.querySelector("#payment-qris-fields");
+  const qrisVerified = document.querySelector("#payment-qris-verified");
+  const receiptOverlay = document.querySelector("#payment-receipt-overlay");
 
-  if (!body || !empty || !resultCount || !readyCount || !notice || !dialog || !dialogNotice || !paymentMethod || !confirmButton) {
-    return;
-  }
+  if (!body || !empty || !resultCount || !unpaidCount || !readyCount || !pendingTotalElement || !pendingDescription || !notice || !detailNotice || !paymentMethod || !confirmButton) return;
 
   let selectedTransactionId = null;
+  let currentPage = 1;
+  const money = (value) => formatCurrency(Math.max(0, Number(value) || 0));
+  const safeDateTime = (value) => {
+    const date = new Date(value || Date.now());
+    if (Number.isNaN(date.getTime())) return "-";
+    return new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Jakarta" }).format(date) + " WIB";
+  };
+  const normalizeStatus = (value) => String(value || "").trim().toLocaleLowerCase("id-ID").replace(/\s+/g, " ");
+  const isPaid = (transaction) => normalizeStatus(transaction.paymentStatus || transaction.statusPembayaran) === "lunas";
+  const isReady = (transaction) => {
+    const status = normalizeStatus(transaction.serviceStatus || transaction.statusPengerjaan || transaction.workStatus);
+    return ["selesai", "selesai dicuci", "sudah selesai", "completed", "complete", "done", "finished"].includes(status);
+  };
+  const transactionKey = (transaction) => transaction?.id ?? transaction?.transactionNumber ?? null;
+  const getSelectedTransaction = () => getTransactions().find((item) => transactionKey(item) === selectedTransactionId) || null;
 
-  const makePaymentBadge = (paymentStatus) => {
+  const makePaymentBadge = (transaction) => {
     const badge = document.createElement("span");
-    badge.className = `status-badge ${paymentStatus === "Lunas" ? "status-done" : "status-waiting"}`;
-    badge.textContent = paymentStatus || "Belum Dibayar";
+    let className = "status-waiting";
+    let label = "Belum dibayar";
+    if (isPaid(transaction)) {
+      className = "status-done";
+      label = "Lunas";
+    } else if (isReady(transaction)) {
+      className = "status-washing";
+      label = "Perlu konfirmasi";
+    }
+    badge.className = `status-badge ${className}`;
+    badge.textContent = label;
     return badge;
   };
 
-  const makeServiceBadge = (serviceStatus) => {
-    const badge = document.createElement("span");
-    badge.className = `status-badge ${serviceStatus === "Selesai" ? "status-done" : serviceStatus === "Sedang Dicuci" ? "status-washing" : "status-waiting"}`;
-    badge.textContent = serviceStatus;
-    return badge;
+  const setText = (selector, value) => {
+    const node = document.querySelector(selector);
+    if (node) node.textContent = value == null || value === "" ? "-" : String(value);
   };
 
-  const closeDialog = () => {
-    if (typeof dialog.close === "function") dialog.close(); else dialog.removeAttribute("open");
-    selectedTransactionId = null;
+  const updateChange = () => {
+    const transaction = getSelectedTransaction();
+    const total = transaction ? Math.max(0, Number(transaction.price) || 0) : 0;
+    const received = Math.max(0, Number(cashReceived?.value) || 0);
+    if (changeLabel) changeLabel.textContent = money(Math.max(0, received - total));
+    // Panduan kasir untuk pembayaran tunai yang siap dikonfirmasi.
+    if (transaction && !isPaid(transaction) && isReady(transaction) && paymentMethod.value !== "QRIS") {
+      detailNotice.textContent = received >= total
+        ? `Hitung uang yang diterima dan serahkan kembalian ${money(received - total)} sebelum konfirmasi lunas.`
+        : `Nominal diterima masih kurang ${money(total - received)}.`;
+    }
   };
 
-  const openPaymentDetail = (transaction) => {
-    selectedTransactionId = transaction.id;
-    const details = {
-      "payment-detail-transaction": transaction.transactionNumber,
-      "payment-detail-customer": transaction.customerName,
-      "payment-detail-plate": transaction.plateNumber,
-      "payment-detail-vehicle": transaction.vehicleType,
-      "payment-detail-service": transaction.service,
-      "payment-detail-total": formatCurrency(transaction.price),
-    };
-    Object.entries(details).forEach(([id, value]) => { document.querySelector(`#${id}`).textContent = value; });
-    paymentMethod.value = "Tunai";
-    dialogNotice.textContent = "";
-    if (typeof dialog.showModal === "function") dialog.showModal(); else dialog.setAttribute("open", "");
+  const renderMethod = () => {
+    const isQris = paymentMethod.value === "QRIS";
+    if (cashFields) cashFields.hidden = isQris;
+    if (qrisFields) qrisFields.hidden = !isQris;
+    setText("#payment-method-section-title", isQris ? "Pembayaran QRIS" : "Pembayaran tunai");
+    setText("#payment-method-pill", paymentMethod.value || "Tunai");
+    updateChange();
   };
 
-  const requestPayment = (transaction) => {
+  const renderSelectedTransaction = () => {
+    const transaction = getSelectedTransaction();
+    const hasTransaction = Boolean(transaction);
+    const canChoosePayment = hasTransaction && !isPaid(transaction);
+    // Tombol aktif untuk transaksi belum lunas. Validasi status pengerjaan,
+    // nominal tunai, dan verifikasi QRIS dijalankan saat tombol ditekan.
+    confirmButton.disabled = !canChoosePayment;
+    if (notMatchButton) notMatchButton.disabled = !canChoosePayment;
+    paymentMethod.disabled = !canChoosePayment;
+    if (cashReceived) cashReceived.disabled = !canChoosePayment;
+    if (qrisVerified) qrisVerified.disabled = !canChoosePayment;
+
     if (!transaction) {
-      notice.textContent = "Transaksi tidak ditemukan.";
+      setText("#payment-selected-meta", "Pilih transaksi dari daftar untuk memeriksa tagihan.");
+      setText("#payment-subtotal", "Rp 0");
+      setText("#payment-discount", "− Rp 0");
+      setText("#payment-detail-total", "Rp 0");
+      if (cashReceived) cashReceived.value = "";
+      if (qrisVerified) qrisVerified.checked = false;
+      detailNotice.textContent = "Pilih transaksi yang sudah selesai dicuci untuk mengonfirmasi pembayaran.";
+      renderMethod();
       return;
     }
-    if (transaction.serviceStatus !== "Selesai") {
-      notice.textContent = "Pembayaran dapat dilakukan setelah kendaraan selesai dicuci.";
-      return;
+
+    setText("#payment-selected-meta", `${transaction.customerName || "Pelanggan"} · ${transaction.plateNumber || "-"} · ${transaction.transactionNumber || "-"}`);
+    const total = Math.max(0, Number(transaction.price) || 0);
+    setText("#payment-subtotal", money(total));
+    setText("#payment-discount", "− Rp 0");
+    setText("#payment-detail-total", money(total));
+    paymentMethod.value = transaction.paymentMethod === "QRIS" ? "QRIS" : "Tunai";
+    if (cashReceived) cashReceived.value = String(Math.max(total, Number(transaction.amountReceived) || 0));
+    if (qrisVerified) qrisVerified.checked = false;
+    if (isPaid(transaction)) {
+      detailNotice.textContent = "Transaksi ini sudah lunas. Pilih Lihat Struk pada daftar untuk membuka bukti pembayaran.";
+    } else if (!isReady(transaction)) {
+      detailNotice.textContent = "Transaksi hanya dapat dibayar setelah kendaraan selesai dicuci.";
+    } else {
+      detailNotice.textContent = "Pastikan nominal dan metode pembayaran sesuai sebelum mengonfirmasi lunas.";
     }
-    if (transaction.paymentStatus === "Lunas") {
-      notice.textContent = "Transaksi ini sudah dibayar.";
-      return;
-    }
-    notice.textContent = "";
-    openPaymentDetail(transaction);
+    renderMethod();
+  };
+
+  const setReceiptFields = (transaction) => {
+    const total = Math.max(0, Number(transaction.price) || 0);
+    const received = Math.max(0, Number(transaction.amountReceived ?? total) || 0);
+    const change = Math.max(0, Number(transaction.change ?? Math.max(0, received - total)) || 0);
+    const values = {
+      "receipt-transaction-number": transaction.transactionNumber || "-",
+      "receipt-transaction-date": safeDateTime(transaction.createdAt),
+      "receipt-paid-date": safeDateTime(transaction.paidAt),
+      "receipt-customer": transaction.customerName || "-",
+      "receipt-phone": transaction.customerPhone || "-",
+      "receipt-plate": transaction.plateNumber || "-",
+      "receipt-vehicle": transaction.vehicleType || "-",
+      "receipt-queue-number": transaction.queueNumber || "-",
+      "receipt-service": transaction.service || "-",
+      "receipt-service-price": money(total),
+      "receipt-subtotal": money(total),
+      "receipt-discount": "− Rp 0",
+      "receipt-total": money(total),
+      "receipt-method": transaction.paymentMethod || "Tunai",
+      "receipt-received": money(received),
+      "receipt-change": money(change),
+    };
+    Object.entries(values).forEach(([id, value]) => setText(`#${id}`, value));
+  };
+
+  const openReceipt = (transaction) => {
+    if (!transaction || !isPaid(transaction) || !receiptOverlay) return;
+    setReceiptFields(transaction);
+    receiptOverlay.hidden = false;
+    receiptOverlay.setAttribute("aria-hidden", "false");
+    document.body.classList.add("payment-receipt-open");
+    document.querySelector("#payment-receipt-close")?.focus();
+  };
+  const closeReceipt = () => {
+    if (!receiptOverlay) return;
+    receiptOverlay.hidden = true;
+    receiptOverlay.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("payment-receipt-open");
+  };
+
+  const renderPagination = (rows) => {
+    if (!pager) return;
+    const pageSize = TABLE_PAGE_SIZE;
+    const total = rows.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    currentPage = Math.min(Math.max(1, currentPage), totalPages);
+    const startIndex = total ? (currentPage - 1) * pageSize : 0;
+    const endIndex = Math.min(startIndex + pageSize, total);
+    rows.forEach((row, index) => { row.hidden = index < startIndex || index >= endIndex; });
+    window.WashupPager.renderPager(pager, {
+      page: currentPage,
+      total: totalPages,
+      onChange: (target) => { currentPage = target; render(); },
+    });
   };
 
   const render = () => {
     const transactions = getTransactions();
-    const readyTransactions = transactions.filter((transaction) => transaction.serviceStatus === "Selesai" && transaction.paymentStatus !== "Lunas");
-    readyCount.textContent = `${readyTransactions.length} transaksi`;
-    resultCount.textContent = `${transactions.length} data`;
+    const unpaidTransactions = transactions.filter((transaction) => !isPaid(transaction));
+    const readyTransactions = unpaidTransactions.filter(isReady);
+    const notReadyTransactions = unpaidTransactions.filter((transaction) => !isReady(transaction));
+    const pendingAmount = unpaidTransactions.reduce((sum, transaction) => sum + Math.max(0, Number(transaction.price) || 0), 0);
+
+    unpaidCount.textContent = String(notReadyTransactions.length);
+    readyCount.textContent = String(readyTransactions.length);
+    pendingTotalElement.textContent = money(pendingAmount);
+    pendingDescription.textContent = `${unpaidTransactions.length} tagihan belum dikonfirmasi`;
+    resultCount.textContent = `${transactions.length} transaksi`;
     empty.hidden = transactions.length > 0;
+    if (!selectedTransactionId || !transactions.some((item) => transactionKey(item) === selectedTransactionId)) {
+      const candidate = readyTransactions[0] || unpaidTransactions[0] || null;
+      selectedTransactionId = candidate ? transactionKey(candidate) : null;
+    }
     body.replaceChildren();
+
     transactions.forEach((transaction) => {
       const row = document.createElement("tr");
-      [transaction.transactionNumber, transaction.queueNumber, transaction.customerName, transaction.plateNumber, transaction.vehicleType, transaction.service, formatCurrency(transaction.price)].forEach((value) => {
-        const cell = document.createElement("td");
-        cell.textContent = value;
-        row.append(cell);
-      });
-      const serviceCell = document.createElement("td");
-      serviceCell.append(makeServiceBadge(transaction.serviceStatus));
-      row.append(serviceCell);
-      const paymentCell = document.createElement("td");
-      paymentCell.append(makePaymentBadge(transaction.paymentStatus));
-      row.append(paymentCell);
+      row.dataset.transactionId = String(transaction.id || transaction.transactionNumber || "");
+      if (transactionKey(transaction) === selectedTransactionId) row.classList.add("is-selected");
+
+      const numberCell = document.createElement("td");
+      numberCell.textContent = transaction.transactionNumber || "-";
+      row.append(numberCell);
+
+      const customerCell = document.createElement("td");
+      customerCell.className = "payment-customer-cell";
+      const customerName = document.createElement("strong"); customerName.textContent = transaction.customerName || "-";
+      const customerPlate = document.createElement("small"); customerPlate.textContent = transaction.plateNumber || "-";
+      customerCell.append(customerName, customerPlate); row.append(customerCell);
+
+      const totalCell = document.createElement("td"); totalCell.textContent = money(transaction.price); row.append(totalCell);
+      const statusCell = document.createElement("td"); statusCell.append(makePaymentBadge(transaction)); row.append(statusCell);
+
       const actionCell = document.createElement("td");
-      const payButton = document.createElement("button");
-      payButton.className = "table-action";
-      payButton.type = "button";
-      payButton.textContent = "Bayar";
-      payButton.addEventListener("click", () => requestPayment(transaction));
-      actionCell.append(payButton);
-      row.append(actionCell);
-      body.append(row);
+      const action = document.createElement("button");
+      action.type = "button";
+      action.className = "payment-table-action table-action-detail";
+      action.textContent = isPaid(transaction) ? "Lihat Struk" : "Periksa";
+      action.dataset.transactionKey = String(transactionKey(transaction) ?? "");
+      action.setAttribute("aria-label", `${isPaid(transaction) ? "Lihat struk" : "Periksa pembayaran"} ${transaction.transactionNumber || "transaksi"}`);
+      actionCell.append(action); row.append(actionCell); body.append(row);
     });
+
+    renderPagination(Array.from(body.querySelectorAll("tr")));
+    renderSelectedTransaction();
   };
 
-  document.querySelector("#payment-dialog-close")?.addEventListener("click", closeDialog);
-  dialog.addEventListener("click", (event) => { if (event.target === dialog) closeDialog(); });
+  // Event delegation keeps the Periksa/Lihat Struk buttons interactive even
+  // when render() rebuilds the transaction table rows.
+  body.addEventListener("click", (event) => {
+    const action = event.target.closest(".payment-table-action");
+    if (!action || !body.contains(action)) return;
+    event.preventDefault();
+
+    const key = action.dataset.transactionKey;
+    const transaction = getTransactions().find((item) => String(transactionKey(item) ?? "") === key);
+    if (!transaction) {
+      notice.textContent = "Data transaksi tidak ditemukan. Muat ulang halaman lalu coba lagi.";
+      render();
+      return;
+    }
+
+    selectedTransactionId = transactionKey(transaction);
+    notice.textContent = isPaid(transaction)
+      ? "Transaksi sudah lunas. Struk pembayaran dibuka."
+      : `Transaksi ${transaction.transactionNumber || "terpilih"} dipilih untuk pemeriksaan pembayaran.`;
+    render();
+
+    if (isPaid(transaction)) {
+      openReceipt(transaction);
+    } else {
+      // On mobile, bring the details card into view after selecting a row.
+      const checkPanel = document.querySelector("#payment-check-title");
+      if (checkPanel && window.matchMedia("(max-width: 900px)").matches) {
+        checkPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  });
+
+  paymentMethod.addEventListener("change", () => {
+    if (qrisVerified) qrisVerified.checked = false;
+    renderMethod();
+    detailNotice.textContent = paymentMethod.value === "QRIS"
+      ? "Pilih QRIS, lalu centang verifikasi setelah pembayaran benar-benar diterima."
+      : "Masukkan nominal uang diterima sebelum mengonfirmasi lunas.";
+  });
+  cashReceived?.addEventListener("input", updateChange);
+  // "Belum Sesuai": pembayaran tidak dikonfirmasi; isian dikosongkan agar kasir memeriksa ulang.
+  notMatchButton?.addEventListener("click", () => {
+    if (!getSelectedTransaction()) return;
+    if (cashReceived) cashReceived.value = "";
+    if (qrisVerified) qrisVerified.checked = false;
+    if (changeLabel) changeLabel.textContent = money(0);
+    detailNotice.textContent = "Pembayaran ditandai belum sesuai dan tidak dikonfirmasi. Periksa ulang nominal atau metode, lalu konfirmasi bila sudah sesuai.";
+    (paymentMethod.value === "QRIS" ? qrisVerified : cashReceived)?.focus();
+  });
+  qrisVerified?.addEventListener("change", () => {
+    if (qrisVerified.checked) detailNotice.textContent = "Verifikasi QRIS dicentang. Pastikan status pengerjaan sudah Selesai sebelum mengonfirmasi.";
+  });
   confirmButton.addEventListener("click", () => {
     const transactions = getTransactions();
-    const transaction = transactions.find((item) => item.id === selectedTransactionId);
-    if (!transaction) {
-      dialogNotice.textContent = "Transaksi tidak ditemukan.";
+    const transaction = transactions.find((item) => transactionKey(item) === selectedTransactionId);
+    if (!transaction) { detailNotice.textContent = "Pilih transaksi terlebih dahulu."; return; }
+    if (isPaid(transaction)) { detailNotice.textContent = "Transaksi ini sudah lunas. Pilih Lihat Struk pada daftar transaksi."; return; }
+    if (!isReady(transaction)) {
+      detailNotice.textContent = `Status pengerjaan masih “${transaction.serviceStatus || "Menunggu"}”. Pembayaran baru dapat dikonfirmasi setelah status kendaraan menjadi Selesai.`;
       return;
     }
-    if (transaction.serviceStatus !== "Selesai") {
-      dialogNotice.textContent = "Pembayaran dapat dilakukan setelah kendaraan selesai dicuci.";
+
+    const total = Math.max(0, Number(transaction.price) || 0);
+    const method = paymentMethod.value;
+    let received = total;
+    let change = 0;
+    if (method === "Tunai") {
+      received = Math.max(0, Number(cashReceived?.value) || 0);
+      if (received < total) {
+        detailNotice.textContent = `Nominal diterima masih kurang ${money(total - received)}.`;
+        cashReceived?.focus();
+        return;
+      }
+      change = received - total;
+    } else if (method === "QRIS" && !qrisVerified?.checked) {
+      detailNotice.textContent = "Pastikan pembayaran QRIS benar-benar diterima sebelum mengonfirmasi.";
+      qrisVerified?.focus();
       return;
     }
-    if (transaction.paymentStatus === "Lunas") {
-      dialogNotice.textContent = "Transaksi ini sudah dibayar.";
-      return;
-    }
+
     transaction.paymentStatus = "Lunas";
-    transaction.paymentMethod = paymentMethod.value;
+    transaction.paymentMethod = method;
+    transaction.amountReceived = received;
+    transaction.change = change;
     transaction.paidAt = new Date().toISOString();
-    saveTransactions(transactions);
-    closeDialog();
-    notice.textContent = "Pembayaran berhasil dikonfirmasi.";
+    try {
+      saveTransactions(transactions);
+    } catch {
+      detailNotice.textContent = "Pembayaran belum berhasil disimpan. Periksa penyimpanan browser lalu coba kembali.";
+      return;
+    }
+
+    const confirmedTransaction = { ...transaction };
+    notice.textContent = "Pembayaran berhasil dikonfirmasi. Struk pembayaran ditampilkan.";
     render();
+    openReceipt(confirmedTransaction);
   });
-  document.querySelector("#payment-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = appUrl("login.html"); });
+
+  document.querySelector("#payment-logout")?.addEventListener("click", () => {
+    sessionStorage.removeItem("washupRole");
+    sessionStorage.removeItem("washupUsername");
+    window.location.href = appUrl("login.html");
+  });
+  document.querySelector("#payment-receipt-print")?.addEventListener("click", () => {
+    // Beri browser satu frame untuk merender struk sebelum membuka dialog cetak.
+    window.requestAnimationFrame(() => window.print());
+  });
+  document.querySelector("#payment-receipt-close")?.addEventListener("click", closeReceipt);
+  document.querySelector("#payment-receipt-done")?.addEventListener("click", closeReceipt);
+  receiptOverlay?.addEventListener("click", (event) => { if (event.target === receiptOverlay) closeReceipt(); });
+  document.addEventListener("keydown", (event) => { if (event.key === "Escape" && receiptOverlay && !receiptOverlay.hidden) closeReceipt(); });
+  window.addEventListener("storage", (event) => { if (event.key === transactionStorageKey) render(); });
   render();
 }
 
@@ -1201,8 +1697,8 @@ function setupOwnerDashboard() {
     return Number.isNaN(createdAt.getTime()) ? null : createdAt;
   };
   const validPaidAt = (transaction) => {
-    const paidAt = new Date(transaction.paidAt);
-    return Number.isNaN(paidAt.getTime()) ? null : paidAt;
+    const paidAt = transaction.paidAt ? new Date(transaction.paidAt) : null;
+    return paidAt && !Number.isNaN(paidAt.getTime()) ? paidAt : validCreatedAt(transaction);
   };
   const sumPaid = (transactions) => transactions
     .filter((transaction) => transaction.paymentStatus === "Lunas")
@@ -1233,7 +1729,10 @@ function setupOwnerDashboard() {
       return transaction.paymentStatus === "Lunas" && paidAt && paidAt.getFullYear() === year && paidAt.getMonth() === month;
     });
 
-    vehicleCount.textContent = String(todayTransactions.length);
+    const uniqueVehiclesToday = new Set(todayTransactions
+      .map((transaction) => String(transaction.plateNumber || "").trim().replace(/\s+/g, " ").toUpperCase())
+      .filter(Boolean));
+    vehicleCount.textContent = String(uniqueVehiclesToday.size);
     transactionCount.textContent = String(todayTransactions.length);
     revenueTotal.textContent = formatCurrency(sumPaid(todayPaidTransactions));
     unpaidCount.textContent = String(transactions.filter((transaction) => transaction.paymentStatus === "Belum Dibayar").length);
@@ -1252,7 +1751,7 @@ function setupOwnerDashboard() {
     recentCount.textContent = `${recentTransactions.length} data`;
     recentTransactions.forEach((transaction) => {
       const row = document.createElement("tr");
-      [transaction.transactionNumber, transaction.customerName, transaction.plateNumber, transaction.service, formatCurrency(transaction.price)].forEach((value) => {
+      [transaction.queueNumber, transaction.customerName, transaction.plateNumber, transaction.service, formatCurrency(transaction.price)].forEach((value) => {
         const cell = document.createElement("td");
         cell.textContent = value;
         row.append(cell);
@@ -1286,8 +1785,11 @@ function setupOwnerTransactionReport() {
   const emptyMessage = document.querySelector("#owner-report-empty-message");
   const resultCount = document.querySelector("#owner-report-result-count");
   const dialog = document.querySelector("#owner-report-dialog");
-  const fields = ["total-count", "paid-count", "unpaid-count", "revenue", "cash", "qris"];
+  const morningShiftCount = document.querySelector("#owner-report-shift-morning");
+  const nightShiftCount = document.querySelector("#owner-report-shift-night");
+  const fields = ["total-count", "revenue", "cash", "qris"];
   if (!search || !period || !body || !empty || !emptyTitle || !emptyMessage || !resultCount || !dialog || fields.some((field) => !document.querySelector(`#owner-report-${field}`))) return;
+  if (!morningShiftCount || !nightShiftCount) return;
 
   const now = new Date();
   const todayKey = getTodayKey();
@@ -1305,6 +1807,34 @@ function setupOwnerTransactionReport() {
   const formatDateTime = (value) => {
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? "-" : date.toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" });
+  };
+  const readShifts = () => {
+    try {
+      const shifts = JSON.parse(localStorage.getItem("washupShifts") || "[]");
+      return Array.isArray(shifts) ? shifts : [];
+    } catch (error) {
+      console.error("Tidak dapat membaca data shift untuk laporan owner.", error);
+      return [];
+    }
+  };
+  const activeShifts = readShifts().filter((shift) => shift.status === "Aktif" && shift.name);
+  const timeToMinutes = (value) => {
+    const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(String(value || ""));
+    return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+  };
+  const isWithinShift = (date, shift) => {
+    const start = timeToMinutes(shift.start);
+    const end = shift.end === "00:00" ? 1440 : timeToMinutes(shift.end);
+    if (start === null || end === null) return false;
+    const time = date.getHours() * 60 + date.getMinutes();
+    return end > start ? time >= start && time < end : time >= start || time < end;
+  };
+  const countShiftTransactions = (transactions, shiftName) => {
+    const matchingShifts = activeShifts.filter((shift) => shift.name.toLowerCase().includes(shiftName.toLowerCase()));
+    return transactions.filter((transaction) => {
+      const createdAt = new Date(transaction.createdAt);
+      return !Number.isNaN(createdAt.getTime()) && matchingShifts.some((shift) => isWithinShift(createdAt, shift));
+    }).length;
   };
   const setDetail = (transaction) => {
     const detail = { "owner-report-detail-transaction": transaction.transactionNumber, "owner-report-detail-queue": transaction.queueNumber, "owner-report-detail-customer": transaction.customerName, "owner-report-detail-phone": transaction.customerPhone, "owner-report-detail-plate": transaction.plateNumber, "owner-report-detail-vehicle": transaction.vehicleType, "owner-report-detail-service": transaction.service, "owner-report-detail-price": formatCurrency(transaction.price), "owner-report-detail-service-status": transaction.serviceStatus, "owner-report-detail-payment-status": transaction.paymentStatus, "owner-report-detail-payment-method": transaction.paymentMethod || "-", "owner-report-detail-created-at": formatDateTime(transaction.createdAt) };
@@ -1324,22 +1854,24 @@ function setupOwnerTransactionReport() {
       return `${records.length} transaksi · ${formatCurrency(records.reduce((total, transaction) => total + Number(transaction.price || 0), 0))}`;
     };
     document.querySelector("#owner-report-total-count").textContent = String(periodTransactions.length);
-    document.querySelector("#owner-report-paid-count").textContent = String(paidTransactions.length);
-    document.querySelector("#owner-report-unpaid-count").textContent = String(periodTransactions.filter((transaction) => transaction.paymentStatus === "Belum Dibayar").length);
     document.querySelector("#owner-report-revenue").textContent = formatCurrency(totalPaid);
+    morningShiftCount.textContent = String(countShiftTransactions(periodTransactions, "Pagi"));
+    nightShiftCount.textContent = String(countShiftTransactions(periodTransactions, "Malam"));
     document.querySelector("#owner-report-cash").textContent = paymentSummary("Tunai");
     document.querySelector("#owner-report-qris").textContent = paymentSummary("QRIS");
     resultCount.textContent = `${transactions.length} data`;
     empty.hidden = transactions.length > 0;
     emptyTitle.textContent = allTransactions.length ? "Transaksi tidak ditemukan." : "Belum ada transaksi.";
-    emptyMessage.textContent = allTransactions.length ? "Ubah pencarian atau periode untuk melihat transaksi lain." : "Data transaksi akan tampil di sini.";
+    emptyMessage.textContent = allTransactions.length
+      ? "Ubah pencarian atau periode untuk melihat transaksi lain."
+      : "Data Transaksi Kasir Akan Tampil Disini";
     body.replaceChildren();
     transactions.forEach((transaction) => {
       const row = document.createElement("tr");
-      [transaction.transactionNumber, formatDateTime(transaction.createdAt), transaction.customerName, transaction.plateNumber, transaction.vehicleType, transaction.service, formatCurrency(transaction.price), transaction.serviceStatus, transaction.paymentStatus, transaction.paymentMethod || "-"].forEach((value) => { const cell = document.createElement("td"); cell.textContent = value || "-"; row.append(cell); });
+      [transaction.transactionNumber, formatDateTime(transaction.createdAt), transaction.customerName, transaction.plateNumber, transaction.vehicleType, transaction.service, formatCurrency(transaction.price), transaction.serviceStatus].forEach((value) => { const cell = document.createElement("td"); cell.textContent = value || "-"; row.append(cell); });
       const action = document.createElement("td");
       const detailButton = document.createElement("button");
-      detailButton.className = "table-action";
+      detailButton.className = "table-action table-action-detail";
       detailButton.type = "button";
       detailButton.textContent = "Detail";
       detailButton.addEventListener("click", () => setDetail(transaction));
@@ -1353,74 +1885,581 @@ function setupOwnerTransactionReport() {
   document.querySelector("#owner-report-dialog-close")?.addEventListener("click", closeDialog);
   dialog.addEventListener("click", (event) => { if (event.target === dialog) closeDialog(); });
   document.querySelectorAll("[data-owner-report-placeholder]").forEach((link) => link.addEventListener("click", (event) => { event.preventDefault(); document.querySelector("#owner-report-notice").textContent = "Menu laporan belum tersedia."; }));
-  document.querySelector("#owner-report-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = appUrl("login.html"); });
+  const logout = () => {
+    sessionStorage.removeItem("washupRole");
+    window.location.href = appUrl("login.html");
+  };
+  document.querySelector("#owner-report-logout")?.addEventListener("click", logout);
+  document.querySelector("#owner-logout")?.addEventListener("click", logout);
   render();
 }
 
 if (document.querySelector(".owner-report-page")) setupOwnerTransactionReport();
+
+function setupOwnerLogout() {
+  document.querySelector("#owner-logout")?.addEventListener("click", () => {
+    sessionStorage.removeItem("washupRole");
+    window.location.href = appUrl("login.html");
+  });
+}
+
+function setupOwnerFinanceReport() {
+  const incomeTotal = document.querySelector("#owner-finance-income");
+  const expenseTotal = document.querySelector("#owner-finance-expense");
+  const netBalance = document.querySelector("#owner-finance-balance");
+  const transactionCount = document.querySelector("#owner-finance-count");
+  const incomeBody = document.querySelector("#owner-income-body");
+  const incomeEmpty = document.querySelector("#owner-income-empty");
+  const expenseBody = document.querySelector("#owner-expense-body");
+  const expenseEmpty = document.querySelector("#owner-expense-empty");
+  if (!incomeTotal || !expenseTotal || !netBalance || !transactionCount || !incomeBody || !incomeEmpty || !expenseBody || !expenseEmpty) return;
+
+  const readExpenses = () => {
+    try {
+      const expenses = JSON.parse(localStorage.getItem("washupExpenses") || "[]");
+      return Array.isArray(expenses) ? expenses : [];
+    } catch (error) {
+      console.error("Tidak dapat membaca data pengeluaran WASHUP.", error);
+      return [];
+    }
+  };
+  const formatDate = (value) => {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(value || ""))) {
+      const [year, month, day] = value.split("-").map(Number);
+      return new Date(year, month - 1, day).toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric" });
+    }
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? "-" : date.toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric" });
+  };
+  const paidTransactions = getTransactions().filter((transaction) => transaction.paymentStatus === "Lunas");
+  const incomeGroups = new Map();
+  paidTransactions.forEach((transaction) => {
+    const date = new Date(transaction.createdAt);
+    const dateKey = Number.isNaN(date.getTime()) ? "-" : formatDateKey(date);
+    const service = String(transaction.service || "-");
+    const key = `${dateKey}\u0000${service}`;
+    const group = incomeGroups.get(key) || {
+      dateKey,
+      date: Number.isNaN(date.getTime()) ? "-" : formatDate(date),
+      service,
+      count: 0,
+      total: 0,
+    };
+    group.count += 1;
+    group.total += Number(transaction.price || 0);
+    incomeGroups.set(key, group);
+  });
+  const incomeRecords = [...incomeGroups.values()].sort((first, second) => second.dateKey.localeCompare(first.dateKey) || first.service.localeCompare(second.service));
+  const expenses = readExpenses()
+    .filter((expense) => expense && typeof expense === "object" && !Array.isArray(expense))
+    .map((expense) => {
+      // Halaman Pengeluaran Kasir menyimpan total di field "amount" (jumlah barang opsional);
+      // data lama memakai quantity x price. Keduanya didukung.
+      const rawQuantity = Number(expense.quantity);
+      const amount = Number(expense.amount);
+      const hasAmount = expense.amount !== undefined && expense.amount !== null && expense.amount !== "" && Number.isFinite(amount);
+      const quantity = Number.isFinite(rawQuantity) && rawQuantity > 0 ? rawQuantity : (hasAmount ? 1 : 0);
+      const price = hasAmount ? (quantity > 0 ? amount / quantity : amount) : Number(expense.price);
+      return {
+        date: formatDate(expense.date),
+        description: String(expense.description || "-"),
+        quantity,
+        price: Number.isFinite(price) ? price : 0,
+      };
+    });
+  const totalIncome = paidTransactions.reduce((total, transaction) => total + Number(transaction.price || 0), 0);
+  const totalExpenses = expenses.reduce((total, expense) => total + expense.quantity * expense.price, 0);
+  incomeTotal.textContent = formatCurrency(totalIncome);
+  expenseTotal.textContent = formatCurrency(totalExpenses);
+  netBalance.textContent = formatCurrency(totalIncome - totalExpenses);
+  transactionCount.textContent = String(paidTransactions.length);
+
+  const appendCell = (row, value) => {
+    const cell = document.createElement("td");
+    cell.textContent = String(value);
+    row.append(cell);
+  };
+  incomeBody.replaceChildren();
+  incomeEmpty.hidden = incomeRecords.length > 0;
+  incomeRecords.forEach((record) => {
+    const row = document.createElement("tr");
+    appendCell(row, record.date);
+    appendCell(row, record.service);
+    appendCell(row, record.count);
+    appendCell(row, formatCurrency(record.total / record.count));
+    appendCell(row, formatCurrency(record.total));
+    incomeBody.append(row);
+  });
+  expenseBody.replaceChildren();
+  expenseEmpty.hidden = expenses.length > 0;
+  expenses.forEach((expense) => {
+    const row = document.createElement("tr");
+    appendCell(row, expense.date);
+    appendCell(row, expense.description);
+    appendCell(row, expense.quantity);
+    appendCell(row, formatCurrency(expense.price));
+    appendCell(row, formatCurrency(expense.quantity * expense.price));
+    expenseBody.append(row);
+  });
+  setupOwnerLogout();
+}
+
+function setupOwnerEmployeeReport() {
+  const totalEmployees = document.querySelector("#owner-employee-total");
+  const presentTotal = document.querySelector("#owner-employee-present");
+  const absentTotal = document.querySelector("#owner-employee-absent");
+  const lateTotal = document.querySelector("#owner-employee-late");
+  const attendanceBody = document.querySelector("#owner-attendance-body");
+  const attendanceEmpty = document.querySelector("#owner-attendance-empty");
+  const attendanceTableWrap = document.querySelector(".owner-employee-table-wrap");
+  if (!totalEmployees || !presentTotal || !absentTotal || !lateTotal || !attendanceBody || !attendanceEmpty || !attendanceTableWrap) return;
+
+  const readRecords = (key) => {
+    try {
+      const records = JSON.parse(localStorage.getItem(key) || "[]");
+      return Array.isArray(records) ? records.filter((record) => record && typeof record === "object") : [];
+    } catch (error) {
+      console.error(`Tidak dapat membaca ${key} untuk laporan owner.`, error);
+      return [];
+    }
+  };
+  const now = new Date();
+  const monthKey = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const dateKey = (value) => String(value || "").replace(/\D/g, "").slice(0, 8);
+  const normalizeName = (name) => String(name || "").trim().toLocaleLowerCase("id-ID");
+  const activeEmployees = getActiveEmployees();
+  const employeeKeys = new Set(activeEmployees.map((employee) => normalizeName(employee.name)));
+  const shifts = readRecords("washupShifts");
+  const attendance = getAttendanceRecords();
+  const attendanceEmployeeKey = (record) => [record.employeeName, record.employeeId]
+    .map(normalizeName)
+    .find((key) => employeeKeys.has(key));
+  const todayKey = getTodayKey();
+  const shiftByName = new Map(shifts.map((shift) => [normalizeName(shift.name), shift]));
+  const toMinutes = (time) => {
+    const match = String(time || "").trim().match(/^(\d{1,2})[.:](\d{2})$/);
+    if (!match) return null;
+    const hours = Number(match[1]);
+    const minutes = Number(match[2]);
+    return hours <= 23 && minutes <= 59 ? hours * 60 + minutes : null;
+  };
+  const isLate = (record) => {
+    const shift = shiftByName.get(normalizeName(record.shift));
+    if (!shift) return false;
+    const checkInMinutes = toMinutes(record.checkIn);
+    const shiftStartMinutes = toMinutes(shift.start);
+    return checkInMinutes !== null && shiftStartMinutes !== null && checkInMinutes > shiftStartMinutes;
+  };
+  const todayAttendance = attendance.filter((record) => dateKey(record.date) === todayKey && record.checkIn);
+  const checkedInNames = new Set(todayAttendance.map(attendanceEmployeeKey).filter(Boolean));
+  const lateNamesToday = new Set(todayAttendance
+    .filter(isLate)
+    .map(attendanceEmployeeKey)
+    .filter(Boolean));
+  totalEmployees.textContent = String(activeEmployees.length);
+  presentTotal.textContent = String(checkedInNames.size);
+  absentTotal.textContent = String(activeEmployees.filter((employee) => !checkedInNames.has(normalizeName(employee.name))).length);
+  lateTotal.textContent = String(lateNamesToday.size);
+
+  const appendCell = (row, value) => {
+    const cell = document.createElement("td");
+    cell.textContent = String(value);
+    row.append(cell);
+  };
+  const monthlyAttendance = attendance.filter((record) => dateKey(record.date).startsWith(monthKey));
+  const monthlySummaries = new Map();
+  activeEmployees.forEach((employee) => {
+    const key = normalizeName(employee.name);
+    monthlySummaries.set(key, { presentDates: new Set(), lateDates: new Set() });
+  });
+  monthlyAttendance.forEach((record) => {
+    const key = attendanceEmployeeKey(record);
+    if (!key) return;
+    if (!record.checkIn) return;
+    const summary = monthlySummaries.get(key) || { presentDates: new Set(), lateDates: new Set() };
+    const recordDateKey = dateKey(record.date);
+    summary.presentDates.add(recordDateKey);
+    if (isLate(record)) summary.lateDates.add(recordDateKey);
+    monthlySummaries.set(key, summary);
+  });
+  attendanceBody.replaceChildren();
+  const sortedEmployees = [...activeEmployees].sort((first, second) => first.name.localeCompare(second.name, "id-ID"));
+  attendanceEmpty.hidden = sortedEmployees.length > 0;
+  attendanceTableWrap.hidden = sortedEmployees.length === 0;
+  sortedEmployees.forEach((employee) => {
+    const key = normalizeName(employee.name);
+    const summary = monthlySummaries.get(key) || { presentDates: new Set(), lateDates: new Set() };
+    const row = document.createElement("tr");
+    // Izin dan insentif belum memiliki sumber data yang dapat dipercaya.
+    [employee.name, summary.presentDates.size, summary.lateDates.size, "-", "-"].forEach((value) => appendCell(row, value));
+    attendanceBody.append(row);
+  });
+  setupOwnerLogout();
+}
+
+function setupOwnerServiceStats() {
+  const monthSelect = document.querySelector("#owner-stats-month");
+  const yearSelect = document.querySelector("#owner-stats-year");
+  const applyButton = document.querySelector("#owner-stats-apply");
+  const typesTotal = document.querySelector("#owner-stats-types");
+  const usageTotal = document.querySelector("#owner-stats-usage");
+  const topService = document.querySelector("#owner-stats-top");
+  const revenueTotal = document.querySelector("#owner-stats-revenue");
+  const chart = document.querySelector("#owner-stats-chart");
+  const empty = document.querySelector("#owner-stats-empty");
+  if (!monthSelect || !yearSelect || !applyButton || !typesTotal || !usageTotal || !topService || !revenueTotal || !chart || !empty) return;
+
+  const transactions = getTransactions();
+  const validTransactions = transactions.filter((transaction) => {
+    const date = new Date(transaction.createdAt);
+    return !Number.isNaN(date.getTime());
+  });
+  const now = new Date();
+  const years = new Set([now.getFullYear()]);
+  validTransactions.forEach((transaction) => years.add(new Date(transaction.createdAt).getFullYear()));
+  const yearPlaceholder = yearSelect.querySelector('option[value=""]');
+  if (!yearPlaceholder) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "Pilih periode tahun";
+    yearSelect.prepend(option);
+  }
+  const monthPlaceholder = monthSelect.querySelector('option[value=""]');
+  if (!monthPlaceholder) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "Pilih periode bulan";
+    monthSelect.prepend(option);
+  }
+  [...years].sort((first, second) => second - first).forEach((year) => {
+    const option = document.createElement("option");
+    option.value = String(year);
+    option.textContent = String(year);
+    yearSelect.append(option);
+  });
+  const monthNames = Array.from({ length: 12 }, (_, index) =>
+    new Date(2000, index, 1).toLocaleDateString("id-ID", { month: "long" }));
+  monthNames.forEach((month, index) => {
+    const option = document.createElement("option");
+    option.value = String(index + 1);
+    option.textContent = month.charAt(0).toUpperCase() + month.slice(1);
+    monthSelect.append(option);
+  });
+
+  const render = () => {
+    const month = Number(monthSelect.value) || now.getMonth() + 1;
+    const year = Number(yearSelect.value) || now.getFullYear();
+    const paidTransactions = getTransactions().filter((transaction) => {
+      if (transaction.paymentStatus !== "Lunas") return false;
+      const date = new Date(transaction.createdAt);
+      return !Number.isNaN(date.getTime()) && date.getMonth() + 1 === month && date.getFullYear() === year;
+    });
+    const services = new Map();
+    paidTransactions.forEach((transaction) => {
+      const name = String(transaction.service || "").trim();
+      if (!name) return;
+      const service = services.get(name) || { name, count: 0, revenue: 0 };
+      service.count += 1;
+      service.revenue += Number(transaction.price || 0);
+      services.set(name, service);
+    });
+    const popularServices = [...services.values()].sort((first, second) =>
+      second.count - first.count || first.name.localeCompare(second.name));
+    const totalRevenue = paidTransactions.reduce((total, transaction) => total + Number(transaction.price || 0), 0);
+    typesTotal.textContent = String(services.size);
+    usageTotal.textContent = String(paidTransactions.length);
+    topService.textContent = popularServices[0]?.name || "-";
+    revenueTotal.textContent = formatCurrency(totalRevenue);
+    chart.replaceChildren();
+    empty.hidden = popularServices.length > 0;
+    if (popularServices.length) {
+      const maxUsage = Math.max(...popularServices.map((service) => service.count));
+      const scale = Math.ceil(maxUsage / 5) * 5;
+      const plot = document.createElement("div");
+      plot.className = "owner-chart-plot";
+      plot.setAttribute("role", "img");
+      plot.setAttribute("aria-label", "Grafik jumlah penggunaan tiap layanan");
+      const axisTitle = document.createElement("span");
+      axisTitle.className = "owner-chart-axis-title";
+      axisTitle.textContent = "Jumlah Penggunaan";
+      const ticks = document.createElement("div");
+      ticks.className = "owner-chart-ticks";
+      for (let index = 5; index >= 0; index -= 1) {
+        const tick = document.createElement("span");
+        tick.textContent = String(Math.round((scale * index) / 5));
+        ticks.append(tick);
+      }
+      const bars = document.createElement("div");
+      bars.className = "owner-chart-bars";
+      popularServices.forEach((service) => {
+        const column = document.createElement("div");
+        column.className = "owner-chart-column";
+        const value = document.createElement("span");
+        value.className = "owner-chart-value";
+        value.textContent = String(service.count);
+        const barTrack = document.createElement("div");
+        barTrack.className = "owner-chart-bar-track";
+        const bar = document.createElement("div");
+        bar.className = "owner-chart-bar";
+        bar.style.height = `${Math.max((service.count / scale) * 100, 4)}%`;
+        barTrack.append(value, bar);
+        const label = document.createElement("span");
+        label.className = "owner-chart-label";
+        label.textContent = service.name;
+        label.title = service.name;
+        column.append(barTrack, label);
+        bars.append(column);
+      });
+      plot.append(axisTitle, ticks, bars);
+      const scroller = document.createElement("div");
+      scroller.className = "owner-chart-scroll";
+      scroller.tabIndex = 0;
+      scroller.setAttribute("role", "region");
+      scroller.setAttribute("aria-label", "Grafik popularitas layanan, dapat digeser");
+      scroller.append(plot);
+      chart.append(scroller);
+    }
+  };
+  applyButton.addEventListener("click", render);
+  render();
+  setupOwnerLogout();
+}
+
+if (document.querySelector(".owner-finance-page")) setupOwnerFinanceReport();
+if (document.querySelector(".owner-employee-page")) setupOwnerEmployeeReport();
+if (document.querySelector(".owner-service-stats-page")) setupOwnerServiceStats();
 
 function setupAdminDashboard() {
   const customerCount = document.querySelector("#admin-customer-count");
   const vehicleCount = document.querySelector("#admin-vehicle-count");
   const serviceCount = document.querySelector("#admin-service-count");
   const employeeCount = document.querySelector("#admin-employee-count");
+  const todayTransactionsCount = document.querySelector("#admin-today-transactions");
+  const todayRevenue = document.querySelector("#admin-today-revenue");
+  const activeQueueCount = document.querySelector("#admin-active-queue");
+  const activeBadge = document.querySelector("#admin-active-badge");
+  const popularServices = document.querySelector("#admin-popular-services");
+  const monitoringQueue = document.querySelector("#admin-monitoring-queue");
+  const waitingCashier = document.querySelector("#admin-waiting-cashier");
+  const monitoringEmployees = document.querySelector("#admin-monitoring-employees");
+  const checkInCount = document.querySelector("#admin-check-in-count");
+  const currentShift = document.querySelector("#admin-current-shift");
+  const currentShiftTime = document.querySelector("#admin-current-shift-time");
+  const targetProgress = document.querySelector("#admin-target-progress");
+  const targetPercent = document.querySelector("#admin-target-percent");
+  const targetCount = document.querySelector("#admin-target-count");
+  const activityList = document.querySelector("#admin-activity-list");
   const recentBody = document.querySelector("#admin-recent-body");
   const recentEmpty = document.querySelector("#admin-recent-empty");
   const recentCount = document.querySelector("#admin-recent-count");
   const notice = document.querySelector("#admin-notice");
 
-  if (!customerCount || !vehicleCount || !serviceCount || !employeeCount || !recentBody || !recentEmpty || !recentCount || !notice) {
+  if (!customerCount || !vehicleCount || !serviceCount || !employeeCount || !todayTransactionsCount || !todayRevenue || !activeQueueCount || !activeBadge || !popularServices || !monitoringQueue || !waitingCashier || !monitoringEmployees || !checkInCount || !currentShift || !currentShiftTime || !targetProgress || !targetPercent || !targetCount || !activityList || !recentBody || !recentEmpty || !recentCount || !notice) {
     return;
   }
 
-  const paymentBadge = (paymentStatus) => {
-    const badge = document.createElement("span");
-    badge.className = `status-badge ${paymentStatus === "Lunas" ? "status-done" : "status-waiting"}`;
-    badge.textContent = paymentStatus || "Belum Dibayar";
-    return badge;
+  const adminDailyTarget = 160; // target sementara, belum ada pengaturan target
+  const readDashboardRecords = (key, label) => {
+    try {
+      const value = JSON.parse(localStorage.getItem(key) || "[]");
+      if (!Array.isArray(value)) {
+        notice.textContent = `Format data ${label} tidak valid.`;
+        return [];
+      }
+      return value.filter((item) => item && typeof item === "object");
+    } catch {
+      notice.textContent = `Data ${label} tidak dapat dibaca.`;
+      return [];
+    }
+  };
+  const validDate = (value) => {
+    if (!value) return null;
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date;
+  };
+  const isToday = (value, todayKey) => {
+    const date = validDate(value);
+    return Boolean(date && formatDateKey(date) === todayKey);
+  };
+  const timeInWib = (value) => {
+    const date = validDate(value);
+    return date ? `${date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: "Asia/Jakarta" })} WIB` : "-";
+  };
+  const displayShortCurrency = (value) => {
+    const amount = Number(value);
+    if (!Number.isFinite(amount)) return formatCurrency(0);
+    if (amount >= 1000000) {
+      const shortAmount = new Intl.NumberFormat("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount / 1000000);
+      return `Rp ${shortAmount} jt`;
+    }
+    return formatCurrency(amount);
+  };
+  const createActivity = (title, detail, iconType) => {
+    const item = document.createElement("div");
+    item.className = "admin-activity-item";
+    const icon = document.createElement("span");
+    icon.className = "admin-activity-icon";
+    icon.setAttribute("aria-hidden", "true");
+    const activityIcons = { payment: "credit-card", transaction: "receipt", attendance: "user" };
+    icon.innerHTML = window.renderIcon(activityIcons[iconType] || "list", "wu-icon");
+    const copy = document.createElement("span");
+    copy.className = "admin-activity-copy";
+    const heading = document.createElement("strong");
+    heading.textContent = title;
+    const description = document.createElement("span");
+    description.textContent = detail;
+    copy.append(heading, description);
+    item.append(icon, copy);
+    return item;
   };
 
   const render = () => {
+    notice.textContent = "";
     const transactions = getTransactions();
-    // Gabungan Data Pelanggan/Kendaraan (master Admin) dan data dari transaksi Kasir, dihitung unik.
-    const customers = new Set([
-      ...readMasterRecords(masterDefinitions.customers).map((customer) => String(customer.name || "").trim().toLowerCase()),
-      ...transactions.map((transaction) => String(transaction.customerName || "").trim().toLowerCase()),
-    ].filter(Boolean));
-    const vehicles = new Set([
-      ...readMasterRecords(masterDefinitions.vehicles).map((vehicle) => String(vehicle.plateNumber || "").replace(/\s+/g, "").toUpperCase()),
-      ...transactions.map((transaction) => String(transaction.plateNumber || "").replace(/\s+/g, "").toUpperCase()),
-    ].filter(Boolean));
-    const services = ensureMasterDefaults("services", masterDefinitions.services).length;
-    const employees = readMasterRecords(masterDefinitions.employees).filter((employee) => employee.status === "Aktif").length;
+    const todayKey = getTodayKey();
+    const todayTransactions = transactions.filter((transaction) => isToday(transaction.createdAt, todayKey));
+    const activeEmployees = getActiveEmployees();
+    const todayAttendance = getAttendanceRecords().filter((record) => String(record.date || "").replace(/\D/g, "").slice(0, 8) === todayKey && record.checkIn);
+    const shifts = readDashboardRecords(masterDefinitions.shifts.key, "shift").filter((shift) => shift.status === "Aktif");
+
+    const uniqueCustomerNames = new Set(transactions.map((transaction) => String(transaction.customerName || "").trim().toLowerCase()).filter(Boolean));
+    const uniqueVehiclePlates = new Set(transactions.map((transaction) => String(transaction.plateNumber || "").replace(/\s+/g, " ").trim().toUpperCase()).filter(Boolean));
+    let services = [];
+    try {
+      services = ensureMasterDefaults("services", masterDefinitions.services);
+    } catch {
+      notice.textContent = "Data layanan tidak dapat diperbarui.";
+      services = readMasterRecords(masterDefinitions.services);
+    }
+    const activeEmployeeCount = activeEmployees.length;
     const recentTransactions = [...transactions].sort((first, second) => {
-      const firstTime = new Date(first.createdAt).getTime() || 0;
-      const secondTime = new Date(second.createdAt).getTime() || 0;
+      const firstTime = validDate(first.createdAt)?.getTime() || 0;
+      const secondTime = validDate(second.createdAt)?.getTime() || 0;
       return secondTime - firstTime;
     }).slice(0, 5);
+    const activeQueue = transactions.filter((transaction) => transaction.serviceStatus === "Menunggu" || transaction.serviceStatus === "Sedang Dicuci").length;
+    const waitingForCashier = transactions.filter((transaction) => transaction.serviceStatus === "Selesai" && transaction.paymentStatus === "Belum Dibayar").length;
+    const verifiedCheckIns = todayAttendance.filter((record) => record.checkInVerified === true).length;
+    const totalRevenue = transactions.reduce((sum, transaction) => {
+      const paymentDate = transaction.paidAt || transaction.createdAt;
+      if (transaction.paymentStatus !== "Lunas" || !isToday(paymentDate, todayKey)) return sum;
+      const price = Number(transaction.price);
+      return Number.isFinite(price) ? sum + price : sum;
+    }, 0);
+    const serviceCounts = new Map();
+    todayTransactions.forEach((transaction) => {
+      const serviceName = String(transaction.service || "").trim();
+      if (serviceName) serviceCounts.set(serviceName, (serviceCounts.get(serviceName) || 0) + 1);
+    });
+    const topServices = [...serviceCounts.entries()].sort((first, second) => second[1] - first[1]).slice(0, 3);
 
-    customerCount.textContent = String(customers.size);
-    vehicleCount.textContent = String(vehicles.size);
-    serviceCount.textContent = String(services);
-    employeeCount.textContent = String(employees);
-    recentCount.textContent = `${recentTransactions.length} data`;
+    customerCount.textContent = String(uniqueCustomerNames.size);
+    vehicleCount.textContent = String(uniqueVehiclePlates.size);
+    serviceCount.textContent = String(services.length);
+    employeeCount.textContent = String(activeEmployeeCount);
+    todayTransactionsCount.textContent = String(todayTransactions.length);
+    todayRevenue.textContent = displayShortCurrency(totalRevenue);
+    activeQueueCount.textContent = String(activeQueue);
+    activeBadge.textContent = `${activeEmployeeCount} aktif`;
+    monitoringQueue.textContent = String(activeQueue);
+    waitingCashier.textContent = String(waitingForCashier);
+    monitoringEmployees.textContent = String(activeEmployeeCount);
+    checkInCount.textContent = String(todayAttendance.length);
+    popularServices.replaceChildren();
+    Array.from({ length: 3 }, (_, index) => topServices[index] || ["-", 0]).forEach(([name, count]) => {
+      const column = document.createElement("div");
+      const serviceName = document.createElement("span");
+      serviceName.textContent = name;
+      const serviceCount = document.createElement("strong");
+      serviceCount.textContent = String(count);
+      column.append(serviceName, serviceCount);
+      popularServices.append(column);
+    });
+
+    const currentTime = new Date();
+    const currentMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
+    const shiftMinute = (time) => {
+      const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(String(time || ""));
+      return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+    };
+    const runningShift = shifts.find((shift) => {
+      const start = shiftMinute(shift.start);
+      const end = shift.end === "00:00" ? 1440 : shiftMinute(shift.end);
+      if (start === null || end === null) return false;
+      if (start < end) return currentMinutes >= start && currentMinutes < end;
+      return currentMinutes >= start || currentMinutes < end;
+    });
+    currentShift.textContent = runningShift?.name || "Tidak ada shift berjalan";
+    currentShiftTime.textContent = runningShift
+      ? `${String(runningShift.start).replace(":", ".")}–${runningShift.end === "00:00" ? "24.00" : String(runningShift.end).replace(":", ".")}`
+      : "-";
+
+    const targetCompletion = Math.min(100, Math.round((todayTransactions.length / adminDailyTarget) * 100));
+    targetProgress.style.width = `${targetCompletion}%`;
+    targetProgress.parentElement.setAttribute("aria-valuenow", String(targetCompletion));
+    targetPercent.textContent = `${targetCompletion}% target tercapai`;
+    targetCount.textContent = `${todayTransactions.length} / ${adminDailyTarget}`;
+
+    activityList.replaceChildren();
+    const latestPayment = transactions
+      .filter((transaction) => transaction.paymentStatus === "Lunas" && isToday(transaction.paidAt || transaction.createdAt, todayKey))
+      .sort((first, second) => (validDate(second.paidAt || second.createdAt)?.getTime() || 0) - (validDate(first.paidAt || first.createdAt)?.getTime() || 0))[0];
+    if (latestPayment) {
+      activityList.append(createActivity(
+        `Pembayaran ${latestPayment.transactionNumber || "-"}`,
+        `Lunas · ${timeInWib(latestPayment.paidAt || latestPayment.createdAt)}`,
+        "payment",
+      ));
+    }
+    const latestTransaction = [...todayTransactions].sort((first, second) => (validDate(second.createdAt)?.getTime() || 0) - (validDate(first.createdAt)?.getTime() || 0))[0];
+    if (latestTransaction) {
+      activityList.append(createActivity(
+        `Transaksi baru ${latestTransaction.transactionNumber || "-"}`,
+        `${latestTransaction.customerName || "-"} · ${timeInWib(latestTransaction.createdAt)}`,
+        "transaction",
+      ));
+    }
+    if (todayAttendance.length) {
+      activityList.append(createActivity(
+        "Absensi karyawan terverifikasi",
+        `${verifiedCheckIns} dari ${todayAttendance.length}`,
+        "attendance",
+      ));
+    }
+    if (!activityList.childElementCount) {
+      const emptyActivity = document.createElement("p");
+      emptyActivity.className = "admin-activity-empty";
+      emptyActivity.textContent = "Belum ada aktivitas hari ini.";
+      activityList.append(emptyActivity);
+    }
+
+    const latestTransactionDate = validDate(recentTransactions[0]?.createdAt);
+    if (latestTransactionDate) {
+      const minutesAgo = Math.max(0, Math.floor((Date.now() - latestTransactionDate.getTime()) / 60000));
+      recentCount.textContent = minutesAgo < 1 ? "baru saja" : `${minutesAgo} menit lalu`;
+      recentCount.hidden = false;
+    } else {
+      recentCount.textContent = "";
+      recentCount.hidden = true;
+    }
     recentEmpty.hidden = recentTransactions.length > 0;
     recentBody.replaceChildren();
     recentTransactions.forEach((transaction) => {
       const row = document.createElement("tr");
-      [transaction.transactionNumber, transaction.customerName, transaction.plateNumber, transaction.service, formatCurrency(transaction.price)].forEach((value) => {
+      const price = transaction.price;
+      const formattedPrice = price !== "" && price !== null && price !== undefined && Number.isFinite(Number(price)) ? formatCurrency(price) : "-";
+      [transaction.transactionNumber || "-", transaction.customerName || "-", transaction.plateNumber || "-", transaction.service || "-", formattedPrice].forEach((value) => {
         const cell = document.createElement("td");
         cell.textContent = value;
         row.append(cell);
       });
-      const paymentCell = document.createElement("td");
-      paymentCell.append(paymentBadge(transaction.paymentStatus));
-      row.append(paymentCell);
       recentBody.append(row);
     });
   };
 
   document.querySelector("#admin-date").textContent = getTodayLabel();
+  const currentYear = document.querySelector("#current-year");
+  if (currentYear) currentYear.textContent = String(new Date().getFullYear());
   document.querySelectorAll("[data-admin-placeholder]").forEach((link) => {
     link.addEventListener("click", (event) => {
       event.preventDefault();
@@ -1432,6 +2471,245 @@ function setupAdminDashboard() {
 }
 
 if (document.querySelector(".admin-dashboard-page")) setupAdminDashboard();
+
+function setupAdminVerificationPage() {
+  const page = document.querySelector(".admin-verification-page");
+  if (!page) return;
+
+  if (sessionStorage.getItem("washupRole") !== "Admin") {
+    window.location.replace(appUrl("login.html"));
+    return;
+  }
+
+  const search = document.querySelector("#verification-search");
+  const pendingCount = document.querySelector("#verification-pending-count");
+  const tableBody = document.querySelector("#verification-table-body");
+  const emptyState = document.querySelector("#verification-empty");
+  const review = document.querySelector("#verification-review");
+  const reviewTitle = document.querySelector("#verification-review-title");
+  const reviewInfo = document.querySelector("#verification-review-info");
+  const photoWrap = document.querySelector("#verification-photo-wrap");
+  const partnerStatus = document.querySelector("#verification-partner-status");
+  const confirmButton = document.querySelector("#verification-confirm");
+  const actionHint = document.querySelector("#verification-action-hint");
+  const notice = document.querySelector("#verification-notice");
+  if (!search || !pendingCount || !tableBody || !emptyState || !review || !reviewTitle || !reviewInfo || !photoWrap || !partnerStatus || !confirmButton || !actionHint || !notice) return;
+
+  const kindLabels = { checkIn: "Masuk", checkOut: "Keluar" };
+  const verificationFields = {
+    checkIn: { time: "checkIn", photo: "checkInPhoto", verified: "checkInVerified", verifiedAt: "checkInVerifiedAt" },
+    checkOut: { time: "checkOut", photo: "checkOutPhoto", verified: "checkOutVerified", verifiedAt: "checkOutVerifiedAt" },
+  };
+  let selected = null;
+  const setNotice = (message, isError = false) => {
+    notice.textContent = message;
+    notice.classList.toggle("is-error", isError);
+  };
+
+  const normalizedDate = (value) => String(value || "").replace(/\D/g, "").slice(0, 8);
+  const formatDate = (value) => {
+    const digits = normalizedDate(value);
+    if (digits.length !== 8) return "—";
+    const date = new Date(Number(digits.slice(0, 4)), Number(digits.slice(4, 6)) - 1, Number(digits.slice(6, 8)));
+    return Number.isNaN(date.getTime()) ? "—" : date.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+  };
+  const formatTime = (value) => {
+    const time = String(value || "").trim();
+    return time ? `${time.replace(":", ".")} WIB` : "—";
+  };
+  const formatShift = (value) => String(value || "").replace(/^Shift\s+/i, "").trim() || "—";
+  const statusFor = (record, kind) => {
+    const fields = verificationFields[kind];
+    if (!record[fields.time]) return "Belum diajukan";
+    return record[fields.verified] === true ? "Terverifikasi" : "Perlu verifikasi";
+  };
+  const shiftDetails = (record) => {
+    const shift = readMasterRecords(masterDefinitions.shifts).find((item) => item.name === record.shift);
+    if (!shift) return "";
+    const start = String(shift.start || "").replace(":", ".");
+    const end = shift.end === "00:00" ? "24.00" : String(shift.end || "").replace(":", ".");
+    return start && end ? `${start}–${end}` : "";
+  };
+  const currentSelectedRecord = (records) => selected && records[selected.recordIndex] ? records[selected.recordIndex] : null;
+
+  function renderReview(records) {
+    const record = currentSelectedRecord(records);
+    if (!record || !selected || !verificationFields[selected.kind]) {
+      review.hidden = true;
+      return;
+    }
+
+    const fields = verificationFields[selected.kind];
+    const kindLabel = kindLabels[selected.kind];
+    const time = record[fields.time];
+    const shift = formatShift(record.shift);
+    const schedule = shiftDetails(record);
+    const shiftInfo = [shift, schedule].filter(Boolean).join(" ");
+    const dateLabel = formatDate(record.date);
+    const employeeName = String(record.employeeName || "Petugas");
+    const partnerKind = selected.kind === "checkIn" ? "checkOut" : "checkIn";
+    const partnerFields = verificationFields[partnerKind];
+    const partnerLabel = kindLabels[partnerKind].toLowerCase();
+    const partnerTime = record[partnerFields.time];
+
+    review.hidden = false;
+    reviewTitle.textContent = `Tinjau absensi ${kindLabel.toLowerCase()} · ${employeeName}`;
+    reviewInfo.textContent = `${dateLabel} • ${shiftInfo} • ${kindLabel} ${formatTime(time)}`;
+    photoWrap.replaceChildren();
+    if (record[fields.photo]) {
+      const photo = document.createElement("img");
+      photo.src = record[fields.photo];
+      photo.alt = `Foto absen ${kindLabel.toLowerCase()} ${employeeName}`;
+      photoWrap.append(photo);
+    } else {
+      const missingPhoto = document.createElement("p");
+      missingPhoto.textContent = "Foto bukti tidak tersedia.";
+      photoWrap.append(missingPhoto);
+    }
+    partnerStatus.textContent = !partnerTime
+      ? `Absensi ${partnerLabel} belum diajukan.`
+      : `Absensi ${partnerLabel} ${formatTime(partnerTime)}${record[partnerFields.verified] === true ? " sudah terverifikasi." : " belum terverifikasi."}`;
+
+    const isVerified = record[fields.verified] === true;
+    const isAvailable = Boolean(time);
+    const checkoutBlocked = selected.kind === "checkOut" && record.checkInVerified !== true;
+    confirmButton.hidden = !isAvailable || isVerified;
+    confirmButton.disabled = checkoutBlocked;
+    confirmButton.textContent = `Verifikasi ${kindLabel}`;
+    actionHint.hidden = !checkoutBlocked;
+    actionHint.textContent = checkoutBlocked ? "Verifikasi absensi masuk terlebih dahulu sebelum memverifikasi absensi keluar." : "";
+  }
+
+  function render() {
+    const records = getAttendanceRecords();
+    const tableWrap = tableBody.closest(".verification-table-wrap");
+    const scrollLeft = tableWrap?.scrollLeft || 0;
+    const query = search.value.trim().toLowerCase();
+    const pending = records.reduce((total, record) => total + ["checkIn", "checkOut"].filter((kind) => record[verificationFields[kind].time] && record[verificationFields[kind].verified] !== true).length, 0);
+    pendingCount.textContent = `${pending} perlu verifikasi`;
+
+    const filteredRecords = records
+      .map((record, recordIndex) => ({ record, recordIndex }))
+      .filter(({ record }) => String(record.employeeName || "").toLowerCase().includes(query))
+      .sort((first, second) => normalizedDate(second.record.date).localeCompare(normalizedDate(first.record.date)));
+
+    tableBody.replaceChildren();
+    emptyState.hidden = filteredRecords.length > 0;
+    const emptyHeading = emptyState.querySelector("h3");
+    const emptyDescription = emptyState.querySelector("p");
+    if (!records.length) {
+      if (emptyHeading) emptyHeading.textContent = "Belum ada absensi petugas.";
+      if (emptyDescription) emptyDescription.textContent = "Data absensi akan muncul setelah petugas melakukan absen.";
+    } else if (!filteredRecords.length) {
+      if (emptyHeading) emptyHeading.textContent = "Absensi tidak ditemukan.";
+      if (emptyDescription) emptyDescription.textContent = "Coba kata kunci nama karyawan yang lain.";
+    }
+
+    filteredRecords.forEach(({ record, recordIndex }) => {
+      ["checkIn", "checkOut"].forEach((kind) => {
+        const status = statusFor(record, kind);
+        const row = document.createElement("tr");
+        if (selected?.recordIndex === recordIndex && selected.kind === kind) row.classList.add("is-selected");
+        const values = [
+          String(record.employeeName || "Petugas"),
+          formatDate(record.date),
+          formatShift(record.shift),
+          kindLabels[kind],
+          formatTime(record[verificationFields[kind].time]),
+        ];
+        values.forEach((value) => {
+          const cell = document.createElement("td");
+          cell.textContent = value;
+          row.append(cell);
+        });
+
+        const statusCell = document.createElement("td");
+        const statusBadge = document.createElement("span");
+        statusBadge.className = `verification-status verification-status-${status === "Terverifikasi" ? "verified" : status === "Perlu verifikasi" ? "pending" : "unsubmitted"}`;
+        statusBadge.textContent = status;
+        statusCell.append(statusBadge);
+        row.append(statusCell);
+
+        const actionCell = document.createElement("td");
+        if (status === "Belum diajukan") {
+          const unavailable = document.createElement("span");
+          unavailable.className = "verification-unavailable";
+          unavailable.textContent = "Tidak tersedia";
+          actionCell.append(unavailable);
+        } else {
+          const action = document.createElement("button");
+          action.type = "button";
+          action.className = "verification-row-action table-action-detail";
+          action.dataset.recordIndex = String(recordIndex);
+          action.dataset.kind = kind;
+          action.textContent = status === "Terverifikasi" ? "Detail" : "Tinjau";
+          if (selected?.recordIndex === recordIndex && selected.kind === kind) action.classList.add("is-selected");
+          actionCell.append(action);
+        }
+        row.append(actionCell);
+        tableBody.append(row);
+      });
+    });
+
+    renderReview(records);
+    if (tableWrap) tableWrap.scrollLeft = scrollLeft;
+  }
+
+  tableBody.addEventListener("click", (event) => {
+    const action = event.target.closest("button.verification-row-action");
+    if (!action) return;
+    selected = { recordIndex: Number(action.dataset.recordIndex), kind: action.dataset.kind };
+    setNotice("");
+    render();
+  });
+  search.addEventListener("input", () => {
+    selected = null;
+    setNotice("");
+    render();
+  });
+  confirmButton.addEventListener("click", () => {
+    if (!selected || !verificationFields[selected.kind]) return;
+    const records = getAttendanceRecords();
+    const record = records[selected.recordIndex];
+    if (!record) {
+      setNotice("Catatan absensi tidak ditemukan. Muat ulang halaman dan coba lagi.", true);
+      return;
+    }
+    const fields = verificationFields[selected.kind];
+    if (!record[fields.time]) {
+      setNotice("Absensi belum diajukan dan tidak dapat diverifikasi.", true);
+      return;
+    }
+    if (record[fields.verified] === true) {
+      setNotice("Absensi ini sudah terverifikasi.");
+      render();
+      return;
+    }
+    if (selected.kind === "checkOut" && record.checkInVerified !== true) {
+      setNotice("Verifikasi absensi masuk terlebih dahulu sebelum memverifikasi absensi keluar.", true);
+      render();
+      return;
+    }
+
+    records[selected.recordIndex] = { ...record, [fields.verified]: true, [fields.verifiedAt]: new Date().toISOString() };
+    try {
+      localStorage.setItem(attendanceStorageKey, JSON.stringify(records));
+      setNotice(`Absensi ${kindLabels[selected.kind].toLowerCase()} ${String(record.employeeName || "Petugas")} berhasil diverifikasi.`);
+      render();
+    } catch {
+      setNotice("Verifikasi tidak dapat disimpan. Periksa ruang penyimpanan browser dan coba lagi.", true);
+    }
+  });
+  document.querySelector("#verification-logout")?.addEventListener("click", () => {
+    sessionStorage.removeItem("washupRole");
+    sessionStorage.removeItem("washupUsername");
+    window.location.href = appUrl("login.html");
+  });
+
+  render();
+}
+
+if (document.querySelector(".admin-verification-page")) setupAdminVerificationPage();
 
 function statusClassForPetugas(status) {
   if (status === "Selesai" || status === "Lunas") return "status-done";
@@ -1449,45 +2727,43 @@ function makePetugasStatusBadge(status) {
 function setupPetugasDashboard() {
   const body = document.querySelector("#petugas-dashboard-body");
   const empty = document.querySelector("#petugas-dashboard-empty");
-  if (!body || !empty) return;
+  const dialog = document.querySelector("#petugas-dialog");
+  if (!body || !empty || !dialog) return;
 
-  const search = document.querySelector("#petugas-search");
-  const filter = document.querySelector("#petugas-filter");
-
-  const transactions = getTransactions();
-  const counts = {
-    waiting: transactions.filter((transaction) => transaction.serviceStatus === "Menunggu").length,
-    washing: transactions.filter((transaction) => transaction.serviceStatus === "Sedang Dicuci").length,
-    done: transactions.filter((transaction) => transaction.serviceStatus === "Selesai").length,
-  };
+  let selectedId = null;
   const waitingCount = document.querySelector("#waiting-count");
   const washingCount = document.querySelector("#washing-count");
   const doneCount = document.querySelector("#done-count");
   const vehicleCount = document.querySelector("#petugas-vehicle-count");
-  const queueBadge = document.querySelector("#petugas-queue-badge");
   const dateEl = document.querySelector("#petugas-date");
-
-  if (waitingCount) waitingCount.textContent = counts.waiting;
-  if (washingCount) washingCount.textContent = counts.washing;
-  if (doneCount) doneCount.textContent = counts.done;
-  if (vehicleCount) vehicleCount.textContent = transactions.length;
-  if (queueBadge) queueBadge.textContent = `${transactions.filter((transaction) => transaction.serviceStatus !== "Selesai").length} kendaraan aktif`;
   if (dateEl) dateEl.textContent = getTodayLabel();
 
   const render = () => {
-    const query = search && search.value ? search.value.trim().toLowerCase() : "";
-    const selectedFilter = filter && filter.value ? filter.value : "Semua";
-    const filtered = transactions.filter((transaction) => {
-      const matchesQuery = [transaction.plateNumber, transaction.queueNumber, transaction.customerName].some((value) => String(value || "").toLowerCase().includes(query));
-      return matchesQuery && (selectedFilter === "Semua" || transaction.serviceStatus === selectedFilter);
+    const transactions = getTransactions();
+    const today = getTodayKey();
+    const todayTransactions = transactions.filter((transaction) => {
+      const createdAt = new Date(transaction.createdAt);
+      return !Number.isNaN(createdAt.getTime()) && formatDateKey(createdAt) === today;
     });
+    const completedToday = todayTransactions.filter((transaction) => transaction.serviceStatus === "Selesai");
+    const uniquePlatesToday = new Set(todayTransactions
+      .map((transaction) => String(transaction.plateNumber || "").trim().toUpperCase())
+      .filter(Boolean));
+    if (waitingCount) waitingCount.textContent = transactions.filter((transaction) => transaction.serviceStatus === "Menunggu").length;
+    if (washingCount) washingCount.textContent = transactions.filter((transaction) => transaction.serviceStatus === "Sedang Dicuci").length;
+    if (doneCount) doneCount.textContent = completedToday.length;
+    if (vehicleCount) vehicleCount.textContent = uniquePlatesToday.size;
 
+    const visibleTransactions = transactions.slice().sort((first, second) => {
+      const firstDone = first.serviceStatus === "Selesai";
+      const secondDone = second.serviceStatus === "Selesai";
+      return Number(firstDone) - Number(secondDone);
+    });
     body.replaceChildren();
-    empty.hidden = filtered.length > 0;
-
-    filtered.forEach((transaction) => {
+    empty.hidden = visibleTransactions.length > 0;
+    visibleTransactions.forEach((transaction) => {
       const row = document.createElement("tr");
-      [transaction.queueNumber, transaction.plateNumber, transaction.customerName || "-", transaction.vehicleType, transaction.service].forEach((value) => {
+      [transaction.queueNumber || "-", transaction.plateNumber || "-", transaction.customerName || "-", transaction.vehicleType || "-", transaction.service || "-"].forEach((value) => {
         const cell = document.createElement("td");
         cell.textContent = value;
         row.append(cell);
@@ -1500,60 +2776,9 @@ function setupPetugasDashboard() {
       paymentCell.append(makePetugasStatusBadge(transaction.paymentStatus));
       row.append(paymentCell);
 
-      const actionCell = document.createElement("td");
-      const link = document.createElement("a");
-      link.className = "table-action table-action-link";
-      link.href = appUrl("pages/petugas/antrean-petugas.html");
-      link.textContent = "Detail";
-      actionCell.append(link);
-      row.append(actionCell);
-
-      body.append(row);
-    });
-  };
-
-  if (search) search.addEventListener("input", render);
-  if (filter) filter.addEventListener("change", render);
-  render();
-}
-
-function setupPetugasQueue() {
-  const body = document.querySelector("#petugas-queue-body");
-  const search = document.querySelector("#petugas-search");
-  const filter = document.querySelector("#petugas-filter");
-  const empty = document.querySelector("#petugas-queue-empty");
-  const dialog = document.querySelector("#petugas-dialog");
-  if (!body || !search || !filter || !empty || !dialog) return;
-
-  let selectedId = null;
-  const render = () => {
-    const query = search.value.trim().toLowerCase();
-    const selectedFilter = filter.value;
-    const transactions = getTransactions().filter((transaction) => {
-      const matchesQuery = [transaction.plateNumber, transaction.queueNumber, transaction.customerName].some((value) => String(value || "").toLowerCase().includes(query));
-      return matchesQuery && (selectedFilter === "Semua" || transaction.serviceStatus === selectedFilter);
-    });
-    const activeCount = getTransactions().filter((transaction) => transaction.serviceStatus !== "Selesai").length;
-    document.querySelector("#petugas-active-count").textContent = `${activeCount} kendaraan`;
-    document.querySelector("#petugas-result-count").textContent = `${transactions.length} data`;
-    body.replaceChildren();
-    empty.hidden = transactions.length > 0;
-    transactions.forEach((transaction) => {
-      const row = document.createElement("tr");
-      [transaction.queueNumber, transaction.plateNumber, transaction.customerName, transaction.vehicleType, transaction.service].forEach((value) => {
-        const cell = document.createElement("td");
-        cell.textContent = value;
-        row.append(cell);
-      });
-      const serviceCell = document.createElement("td");
-      serviceCell.append(makePetugasStatusBadge(transaction.serviceStatus));
-      row.append(serviceCell);
-      const paymentCell = document.createElement("td");
-      paymentCell.append(makePetugasStatusBadge(transaction.paymentStatus));
-      row.append(paymentCell);
       const actionCell = document.createElement("td");
       const button = document.createElement("button");
-      button.className = "table-action";
+      button.className = "table-action table-action-detail";
       button.type = "button";
       button.textContent = "Detail";
       button.addEventListener("click", () => openDetail(transaction));
@@ -1577,44 +2802,267 @@ function setupPetugasQueue() {
       "petugas-detail-service-status": transaction.serviceStatus,
       "petugas-detail-payment-status": transaction.paymentStatus,
     };
-    Object.entries(values).forEach(([id, value]) => { document.querySelector(`#${id}`).textContent = value; });
+    Object.entries(values).forEach(([id, value]) => {
+      document.querySelector(`#${id}`).textContent = value || "-";
+    });
     document.querySelector("#petugas-detail-status").value = transaction.serviceStatus;
     document.querySelector("#petugas-dialog-notice").textContent = "";
-    if (typeof dialog.showModal === "function") dialog.showModal(); else dialog.setAttribute("open", "");
+    if (typeof dialog.showModal === "function") dialog.showModal();
+    else dialog.setAttribute("open", "");
   }
 
-  const close = () => { if (typeof dialog.close === "function") dialog.close(); else dialog.removeAttribute("open"); selectedId = null; };
-  search.addEventListener("input", render);
-  filter.addEventListener("change", render);
+  const close = () => {
+    if (typeof dialog.close === "function") dialog.close();
+    else dialog.removeAttribute("open");
+    selectedId = null;
+  };
   document.querySelector("#petugas-dialog-close")?.addEventListener("click", close);
-  dialog.addEventListener("click", (event) => { if (event.target === dialog) close(); });
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) close();
+  });
   document.querySelector("#petugas-update-status")?.addEventListener("click", () => {
     const transactions = getTransactions();
     const transaction = transactions.find((item) => item.id === selectedId);
     if (!transaction) return;
+    const notice = document.querySelector("#petugas-dialog-notice");
     if (transaction.paymentStatus === "Lunas") {
-      document.querySelector("#petugas-dialog-notice").textContent = "Status pengerjaan tidak dapat diubah setelah transaksi Lunas.";
+      notice.textContent = "Status pengerjaan tidak dapat diubah setelah transaksi Lunas.";
       return;
     }
     const nextStatus = document.querySelector("#petugas-detail-status").value;
     if (!isValidServiceStatusTransition(transaction.serviceStatus, nextStatus)) {
-      document.querySelector("#petugas-dialog-notice").textContent = "Status harus mengikuti urutan Menunggu, Sedang Dicuci, lalu Selesai.";
+      notice.textContent = "Status harus mengikuti urutan Menunggu, Sedang Dicuci, lalu Selesai.";
       return;
     }
     transaction.serviceStatus = nextStatus;
     saveTransactions(transactions);
     document.querySelector("#petugas-detail-service-status").textContent = transaction.serviceStatus;
-    document.querySelector("#petugas-dialog-notice").textContent = "Status pengerjaan berhasil diperbarui.";
+    notice.textContent = "Status pengerjaan berhasil diperbarui.";
     render();
   });
-  document.querySelector("#petugas-queue-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = appUrl("login.html"); });
   render();
 }
 
 function setupPetugasAttendance() {
+  document.querySelector("#attendance-logout")?.addEventListener("click", () => {
+    sessionStorage.removeItem("washupRole");
+    sessionStorage.removeItem("washupUsername");
+    window.location.href = appUrl("login.html");
+  });
+
+  const employeeId = sessionStorage.getItem("washupUsername") || "petugas";
+  const employeeName = employeeId === "petugas" ? "Petugas" : employeeId;
+  const employeeRecords = () => getAttendanceRecords().filter((record) =>
+    record.employeeId === employeeId || (!record.employeeId && record.employeeName === employeeName));
+  const parseAttendanceDate = (value) => {
+    const digits = String(value || "").replace(/\D/g, "");
+    if (digits.length !== 8) return null;
+    const date = new Date(Number(digits.slice(0, 4)), Number(digits.slice(4, 6)) - 1, Number(digits.slice(6, 8)));
+    if (date.getFullYear() !== Number(digits.slice(0, 4)) ||
+        date.getMonth() !== Number(digits.slice(4, 6)) - 1 ||
+        date.getDate() !== Number(digits.slice(6, 8))) return null;
+    return date;
+  };
+  const formatAttendanceDate = (date, options = { weekday: "long", day: "numeric", month: "short", year: "numeric" }) =>
+    date.toLocaleDateString("id-ID", options);
+  const timeToMinutes = (value) => {
+    const match = /^(\d{1,2})[:.](\d{2})/.exec(String(value || "").trim());
+    if (!match) return null;
+    const hours = Number(match[1]);
+    const minutes = Number(match[2]);
+    return hours <= 23 && minutes <= 59 ? hours * 60 + minutes : null;
+  };
+  const shifts = ensureMasterDefaults("shifts", masterDefinitions.shifts);
+  const getActiveShifts = () => shifts.filter((shift) => shift.status === "Aktif");
+  const getShifts = () => shifts;
+  const findShiftForTime = (date = new Date()) => {
+    const activeShifts = getActiveShifts();
+    const now = date.getHours() * 60 + date.getMinutes();
+    const runningShift = activeShifts.find((shift) => {
+      const start = timeToMinutes(shift.start);
+      const end = timeToMinutes(shift.end);
+      if (start === null || end === null) return false;
+      if (end === 0) return now >= start;
+      return end < start ? now >= start || now < end : now >= start && now < end;
+    });
+    return runningShift || activeShifts[0] || null;
+  };
+  const isLateAttendance = (record) => {
+    if (record?.status === "Terlambat") return true;
+    const checkInMinutes = timeToMinutes(record?.checkIn);
+    if (checkInMinutes === null) return false;
+    const shift = getShifts().find((item) => item.name === record.shift);
+    const shiftStart = timeToMinutes(shift?.start);
+    const shiftEnd = timeToMinutes(shift?.end);
+    if (shiftStart === null) return false;
+    let adjustedCheckIn = checkInMinutes;
+    if (shiftEnd !== null && shiftEnd > 0 && shiftEnd < shiftStart && adjustedCheckIn < shiftEnd) adjustedCheckIn += 1440;
+    return adjustedCheckIn > shiftStart;
+  };
+
+  if (document.body.dataset.page === "recap") {
+    const form = document.querySelector("#attendance-period-form");
+    const monthSelect = document.querySelector("#attendance-month");
+    const yearSelect = document.querySelector("#attendance-year");
+    const body = document.querySelector("#petugas-attendance-history-body");
+    const empty = document.querySelector("#petugas-attendance-history-empty");
+    const pagination = document.querySelector("#attendance-pagination");
+    if (!form || !monthSelect || !yearSelect || !body || !empty || !pagination) return;
+
+    const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    const now = new Date();
+    let currentPage = 1;
+    for (let month = 0; month < monthNames.length; month += 1) {
+      const option = document.createElement("option");
+      option.value = String(month);
+      option.textContent = monthNames[month];
+      monthSelect.append(option);
+    }
+    monthSelect.value = String(now.getMonth());
+
+    const records = employeeRecords();
+    const years = new Set([now.getFullYear()]);
+    records.forEach((record) => {
+      const date = parseAttendanceDate(record.date);
+      if (date) years.add(date.getFullYear());
+    });
+    [...years].sort((first, second) => second - first).forEach((year) => {
+      const option = document.createElement("option");
+      option.value = String(year);
+      option.textContent = String(year);
+      yearSelect.append(option);
+    });
+    yearSelect.value = String(now.getFullYear());
+
+    const makeCell = (label, value) => {
+      const cell = document.createElement("td");
+      cell.dataset.label = label;
+      cell.textContent = value;
+      return cell;
+    };
+    const formatDuration = (record) => {
+      let start = timeToMinutes(record.checkIn);
+      let end = timeToMinutes(record.checkOut);
+      if (start === null || end === null) return "—";
+      if (end < start) end += 1440;
+      const duration = end - start;
+      const hours = Math.floor(duration / 60);
+      const minutes = duration % 60;
+      if (!hours) return `${minutes} mnt`;
+      return minutes ? `${hours} jam ${minutes} mnt` : `${hours} jam`;
+    };
+
+    function renderRecap() {
+      const selectedMonth = Number(monthSelect.value);
+      const selectedYear = Number(yearSelect.value);
+      const monthStart = new Date(selectedYear, selectedMonth, 1);
+      const monthEnd = new Date(selectedYear, selectedMonth + 1, 0);
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const endDate = monthEnd < today ? monthEnd : today;
+      const monthRecords = employeeRecords().filter((record) => {
+        const recordDate = parseAttendanceDate(record.date);
+        return recordDate && recordDate >= monthStart && recordDate <= endDate;
+      });
+      const recordsByDay = new Map();
+      monthRecords.forEach((record) => {
+        const recordDate = parseAttendanceDate(record.date);
+        if (recordDate) recordsByDay.set(formatDateKey(recordDate), record);
+      });
+
+      const rows = [];
+      if (endDate >= monthStart) {
+        for (let day = new Date(monthStart); day <= endDate; day.setDate(day.getDate() + 1)) {
+          const record = recordsByDay.get(formatDateKey(day));
+          const isWorkday = day.getDay() !== 0;
+          if (record) {
+            const reportStatus = record.status === "Izin" || record.status === "Sakit"
+              ? record.status
+              : record.checkIn
+                ? isLateAttendance(record) ? "Terlambat" : "Hadir"
+                : "Tanpa Keterangan";
+            rows.push({ date: new Date(day), record, status: reportStatus });
+          } else if (isWorkday) {
+            rows.push({ date: new Date(day), record: null, status: "Tanpa Keterangan" });
+          }
+        }
+      }
+
+      const attendedRecords = monthRecords.filter((record) => Boolean(record.checkIn));
+      const lateCount = attendedRecords.filter(isLateAttendance).length;
+      // Form izin dan sakit belum tersedia; kedua jumlah tetap nol sampai ada sumber data resmi.
+      const izinCount = 0;
+      const sakitCount = 0;
+      const absentCount = rows.filter((row) => row.status === "Tanpa Keterangan").length;
+      const setDayCount = (id, count) => {
+        const element = document.querySelector(id);
+        const value = document.createElement("span");
+        value.textContent = String(count);
+        const unit = document.createElement("small");
+        unit.textContent = "hari";
+        element.replaceChildren(value, document.createTextNode(" "), unit);
+      };
+      setDayCount("#recap-present-count", attendedRecords.length);
+      setDayCount("#recap-late-count", lateCount);
+      document.querySelector("#recap-late-detail").textContent = `Dari ${attendedRecords.length} hari hadir`;
+      setDayCount("#recap-leave-count", izinCount + sakitCount);
+      document.querySelector("#recap-leave-detail").textContent = `${izinCount} hari izin · ${sakitCount} hari sakit`;
+      setDayCount("#recap-absent-count", absentCount);
+      document.querySelector("#recap-period-label").textContent = `${monthNames[selectedMonth]} ${selectedYear}`;
+      document.querySelector("#recap-employee-period").textContent =
+        `${employeeName} · Data s.d. ${formatAttendanceDate(endDate, { day: "numeric", month: "long", year: "numeric" })}`;
+
+      rows.sort((first, second) => second.date - first.date);
+      const pageCount = Math.max(1, Math.ceil(rows.length / TABLE_PAGE_SIZE));
+      currentPage = Math.min(currentPage, pageCount);
+      const visibleRows = rows.slice((currentPage - 1) * TABLE_PAGE_SIZE, currentPage * TABLE_PAGE_SIZE);
+      body.replaceChildren();
+      visibleRows.forEach(({ date, record, status: rowStatus }) => {
+        const row = document.createElement("tr");
+        row.append(
+          makeCell("Tanggal", formatAttendanceDate(date)),
+          makeCell("Shift", record?.shift || "—"),
+          makeCell("Jam Masuk", record?.checkIn || "—"),
+          makeCell("Jam Keluar", record?.checkOut || "—"),
+          makeCell("Durasi Kerja", record ? formatDuration(record) : "—"),
+        );
+        const statusCell = document.createElement("td");
+        statusCell.dataset.label = "Status";
+        const badge = document.createElement("span");
+        badge.className = `attendance-status-badge ${
+          rowStatus === "Terlambat" ? "attendance-status-late"
+            : rowStatus === "Izin" || rowStatus === "Sakit" ? "attendance-status-leave"
+              : rowStatus === "Tanpa Keterangan" ? "attendance-status-absent" : "attendance-status-present"
+        }`;
+        badge.textContent = rowStatus;
+        statusCell.append(badge);
+        row.append(statusCell);
+        body.append(row);
+      });
+      empty.hidden = rows.length > 0;
+
+      pagination.classList.add("wu-pager");
+      window.WashupPager.renderPager(pagination, {
+        page: currentPage,
+        total: pageCount,
+        onChange: (target) => { currentPage = target; renderRecap(); },
+      });
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      currentPage = 1;
+      renderRecap();
+    });
+    renderRecap();
+    return;
+  }
+
   const action = document.querySelector("#attendance-action");
   if (!action) return;
+  const isCheckOutPage = document.body.dataset.attendanceMode === "out";
   const date = document.querySelector("#attendance-date");
+  const name = document.querySelector("#attendance-name");
+  const shift = document.querySelector("#attendance-shift");
   const checkIn = document.querySelector("#check-in-time");
   const checkOut = document.querySelector("#check-out-time");
   const status = document.querySelector("#attendance-status");
@@ -1628,39 +3076,48 @@ function setupPetugasAttendance() {
   const photoConfirmedIndicator = document.querySelector("#photo-confirmed-indicator");
   const usePhoto = document.querySelector("#use-photo");
   const replacePhoto = document.querySelector("#replace-photo");
-  const photoPurpose = document.querySelector("#photo-purpose");
   const checkInPhotoCard = document.querySelector("#check-in-photo-card");
   const checkOutPhotoCard = document.querySelector("#check-out-photo-card");
   const checkInPhoto = document.querySelector("#check-in-photo");
   const checkOutPhoto = document.querySelector("#check-out-photo");
-  const employeeId = sessionStorage.getItem("washupUsername") || "petugas";
-  const employeeName = employeeId === "petugas" ? "Petugas" : employeeId;
+  if (!date || !name || !shift || !checkIn || !checkOut || !status || !notice ||
+      !photoInput || !photoPicker || !photoPreview || !photoPreviewImage || !photoFileName ||
+      !photoPreviewStatus || !photoConfirmedIndicator || !usePhoto || !replacePhoto ||
+      !checkInPhotoCard || !checkOutPhotoCard || !checkInPhoto || !checkOutPhoto) return;
+
   let selectedPhoto = null;
   let selectedPhotoName = "";
   let confirmedPhoto = null;
   const render = () => {
     const attendance = getAttendance(employeeId);
     date.textContent = getTodayLabel();
+    name.textContent = employeeName;
+    shift.textContent = attendance?.shift || findShiftForTime()?.name || "—";
     checkIn.textContent = attendance?.checkIn || "--";
     checkOut.textContent = attendance?.checkOut || "--";
-    status.textContent = attendance?.status || "Belum Absen";
-    const isCheckOut = Boolean(attendance?.checkIn && !attendance?.checkOut);
-    photoPurpose.textContent = isCheckOut ? "Absen Keluar" : "Absen Masuk";
-    action.textContent = attendance?.checkOut ? "Absensi Selesai" : isCheckOut ? "Absen Keluar" : "Absen Masuk";
-    action.disabled = Boolean(attendance?.checkOut);
+    const hasCheckedIn = Boolean(attendance?.checkIn);
+    const hasCheckedOut = Boolean(attendance?.checkOut);
+    status.textContent = hasCheckedOut ? "Selesai"
+      : hasCheckedIn ? isLateAttendance(attendance) ? "Terlambat" : "Hadir"
+        : "Belum Absen";
+    action.textContent = isCheckOutPage ? "Absen Keluar" : "Absen Masuk";
+    action.disabled = isCheckOutPage ? !hasCheckedIn || hasCheckedOut : hasCheckedIn;
     photoConfirmedIndicator.hidden = !confirmedPhoto;
     photoPreview.classList.toggle("photo-preview-confirmed", Boolean(confirmedPhoto));
     usePhoto.disabled = !selectedPhoto || Boolean(confirmedPhoto);
     photoPreviewStatus.textContent = confirmedPhoto ? "Foto ini siap digunakan untuk absensi." : "Periksa foto sebelum digunakan.";
-    notice.textContent = attendance?.checkOut ? "Absensi hari ini sudah selesai." : notice.textContent;
-    if (attendance?.checkInPhoto) {
-      checkInPhotoCard.hidden = false;
-      checkInPhoto.src = attendance.checkInPhoto;
-    }
-    if (attendance?.checkOutPhoto) {
-      checkOutPhotoCard.hidden = false;
-      checkOutPhoto.src = attendance.checkOutPhoto;
-    }
+    const stateNotice = isCheckOutPage
+      ? !hasCheckedIn ? "Lakukan Absen Masuk terlebih dahulu."
+        : hasCheckedOut ? "Absen Keluar sudah tercatat." : ""
+      : hasCheckedOut ? "Absensi hari ini sudah selesai."
+        : hasCheckedIn ? "Absen Masuk sudah tercatat." : "";
+    if (stateNotice) notice.textContent = stateNotice;
+    checkInPhotoCard.hidden = !attendance?.checkInPhoto;
+    checkOutPhotoCard.hidden = !attendance?.checkOutPhoto;
+    if (attendance?.checkInPhoto) checkInPhoto.src = attendance.checkInPhoto;
+    else checkInPhoto.removeAttribute("src");
+    if (attendance?.checkOutPhoto) checkOutPhoto.src = attendance.checkOutPhoto;
+    else checkOutPhoto.removeAttribute("src");
   };
 
   function resetPhotoSelection() {
@@ -1711,19 +3168,29 @@ function setupPetugasAttendance() {
       notice.textContent = "Pilih foto terlebih dahulu.";
       return;
     }
-
     confirmedPhoto = selectedPhoto;
-    const attendance = getAttendance(employeeId);
-    notice.textContent = `Foto sudah dikonfirmasi. Anda dapat melakukan ${attendance?.checkIn ? "Absen Keluar" : "Absen Masuk"}.`;
+    notice.textContent = `Foto sudah dikonfirmasi. Anda dapat melakukan ${isCheckOutPage ? "Absen Keluar" : "Absen Masuk"}.`;
     render();
   });
 
   action.addEventListener("click", () => {
-    const attendance = getAttendance(employeeId) || { employeeId, employeeName, date: getTodayKey(), shift: "Shift Pagi", checkIn: null, checkInPhoto: null, checkOut: null, checkOutPhoto: null, status: "Belum Absen" };
+    const activeShift = findShiftForTime();
+    const attendance = getAttendance(employeeId) || {
+      employeeId, employeeName, date: getTodayKey(), shift: activeShift?.name || "Shift Pagi",
+      checkIn: null, checkInPhoto: null, checkOut: null, checkOutPhoto: null, status: "Belum Absen",
+    };
     if (!attendance.employeeId) attendance.employeeId = employeeId;
     if (!attendance.employeeName) attendance.employeeName = employeeName;
     if (attendance.checkOut) {
       notice.textContent = "Absensi hari ini sudah selesai.";
+      return;
+    }
+    if (isCheckOutPage && !attendance.checkIn) {
+      notice.textContent = "Lakukan Absen Masuk terlebih dahulu.";
+      return;
+    }
+    if (!isCheckOutPage && attendance.checkIn) {
+      notice.textContent = "Absen Masuk sudah tercatat. Gunakan menu Absensi Keluar untuk melanjutkan.";
       return;
     }
     if (!confirmedPhoto) {
@@ -1731,40 +3198,40 @@ function setupPetugasAttendance() {
       return;
     }
     const now = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
-    if (!attendance.checkIn) {
+    if (!isCheckOutPage && !attendance.checkIn) {
+      attendance.shift = activeShift?.name || attendance.shift;
       attendance.checkIn = now;
       attendance.checkInPhoto = confirmedPhoto;
-      attendance.status = "Hadir";
-    } else if (!attendance.checkOut) {
+      attendance.status = isLateAttendance({ ...attendance, checkIn: now, shift: attendance.shift }) ? "Terlambat" : "Hadir";
+    } else if (isCheckOutPage && attendance.checkIn && !attendance.checkOut) {
       if (confirmedPhoto === attendance.checkInPhoto) {
         notice.textContent = "Gunakan foto baru untuk Absen Keluar.";
         return;
       }
       attendance.checkOut = now;
       attendance.checkOutPhoto = confirmedPhoto;
+      attendance.status = "Selesai";
     }
     if (!saveAttendance(attendance)) {
-      notice.textContent = "Foto tidak dapat disimpan. Gunakan foto yang lebih kecil atau coba lagi.";
+      notice.textContent = "Absensi tidak dapat disimpan. Coba lagi.";
       return;
     }
     resetPhotoSelection();
-    notice.textContent = attendance.checkOut ? "Absensi hari ini sudah selesai." : "Absen masuk berhasil disimpan.";
+    notice.textContent = isCheckOutPage ? "Absen keluar berhasil disimpan." : "Absen masuk berhasil disimpan.";
     render();
   });
-  document.querySelector("#attendance-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); sessionStorage.removeItem("washupUsername"); window.location.href = appUrl("login.html"); });
   render();
 }
 
-if (document.querySelector(".petugas-dashboard-page") || document.querySelector(".petugas-queue-page") || document.querySelector(".petugas-attendance-page")) {
+if (document.querySelector(".petugas-page")) {
   if (sessionStorage.getItem("washupRole") !== "Petugas") window.location.replace(appUrl("login.html"));
 }
 if (document.querySelector(".petugas-dashboard-page")) setupPetugasDashboard();
-if (document.querySelector(".petugas-queue-page")) setupPetugasQueue();
-if (document.querySelector(".petugas-attendance-page")) setupPetugasAttendance();
+if (document.querySelector(".petugas-attendance-page, .petugas-recap-page")) setupPetugasAttendance();
 
-// Dropdown kustom untuk form data master (Figma: Data Kendaraan tambah 2).
+// Dropdown kustom untuk form data master.
 // <select> asli tetap ada tetapi disembunyikan, jadi nilai form dan validasi tetap bekerja seperti biasa.
-const customSelectTypes = ["vehicles", "services", "employees", "shifts", "attendance", "users"];
+const customSelectTypes = ["services", "shifts", "users"];
 const customSelectLabels = { Nonaktif: "Non Aktif" };
 
 function enhanceSelect(select) {
@@ -1879,7 +3346,7 @@ function normalizePhone(value) {
 }
 
 function setupMasterPage() {
-  const page = document.querySelector(".master-page");
+  const page = document.querySelector(".master-page[data-master]");
   if (!page) return;
 
   if (sessionStorage.getItem("washupRole") !== "Admin") {
@@ -1912,17 +3379,12 @@ function setupMasterPage() {
   // Validasi ditangani validate() agar pesan selalu tampil di dialog (termasuk untuk dropdown kustom yang <select>-nya tersembunyi).
   if (form) form.noValidate = true;
 
-  const isProtectedRecord = (record) => (type === "users" && (record.builtIn || record.protected)) || (type === "services" && masterDefaults.services.some((item) => item.id === record.id)) || (type === "shifts" && record.id === "shift-pagi");
+  const isProtectedRecord = (record) => (type === "users" && String(record.username || "").trim().toLowerCase() === "admin") || (type === "services" && masterDefaults.services.some((item) => item.id === record.id)) || (type === "shifts" && masterDefaults.shifts.some((item) => item.id === record.id));
   // Jam shift ditampilkan dengan titik seperti Figma (08.00); jam selesai 00:00 berarti tengah malam (24.00).
   const formatShiftTime = (key, value) => (key === "end" && value === "00:00" ? "24.00" : String(value).replace(":", "."));
   const valueForDisplay = (key, value) => {
     if (key === "price") return formatCurrency(value);
     if (type === "shifts" && (key === "start" || key === "end") && value) return formatShiftTime(key, value);
-    if (type === "attendance") {
-      if (key === "date" && /^\d{4}-\d{2}-\d{2}$/.test(String(value))) return String(value).split("-").reverse().join(" / ");
-      if (key === "overtimeHours") return Number(value) > 0 ? `${String(Number(value)).replace(".", ",")} Jam` : "-";
-      if (key === "incentive") return Number(value) > 0 ? formatCurrency(value) : "-";
-    }
     return (customSelectTypes.includes(type) && customSelectLabels[value]) || String(value || "-");
   };
   const createId = () => `${type}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -1959,7 +3421,7 @@ function setupMasterPage() {
       });
       const actions = document.createElement("td");
       const detailButton = document.createElement("button");
-      detailButton.className = "table-action table-action-link";
+      detailButton.className = "table-action table-action-link table-action-detail";
       detailButton.type = "button";
       detailButton.dataset.action = "detail";
       detailButton.dataset.id = record.id;
@@ -1967,14 +3429,14 @@ function setupMasterPage() {
       actions.append(detailButton);
       if (!(type === "users" && isProtectedRecord(record))) {
         const editButton = document.createElement("button");
-        editButton.className = "table-action";
+        editButton.className = "table-action table-action-edit";
         editButton.type = "button";
         editButton.dataset.action = "edit";
         editButton.dataset.id = record.id;
         editButton.textContent = "Edit";
         actions.append(editButton);
         const deleteButton = document.createElement("button");
-        deleteButton.className = "table-action";
+        deleteButton.className = "table-action table-action-delete";
         deleteButton.type = "button";
         deleteButton.dataset.action = "delete";
         deleteButton.dataset.id = record.id;
@@ -2056,28 +3518,21 @@ function setupMasterPage() {
   function validate(record, records) {
     const requiredField = definition.fields.find((field) => field.required && !(field.type === "password" && editingId) && !String(record[field.key] || "").trim());
     if (requiredField) {
-      if (type === "attendance" && requiredField.key === "shift") return "Belum ada shift aktif. Aktifkan shift di halaman Data Shift.";
       return `${requiredField.label} wajib diisi.`;
     }
     const invalidPhone = definition.fields.find((field) => field.type === "tel" && record[field.key] && !/^\+?\d{8,15}$/.test(record[field.key]));
     if (invalidPhone) return `${invalidPhone.label} hanya boleh berisi angka (8–15 digit).`;
-    if (type === "attendance" && !getActiveShiftNames().includes(record.shift)) return "Shift yang dipilih tidak aktif.";
     if (type === "services" && (!Number.isFinite(Number(record.price)) || Number(record.price) <= 0)) return "Harga harus lebih besar dari 0.";
     if (type === "shifts" && record.end !== "00:00" && record.start >= record.end) return "Jam selesai harus setelah jam mulai.";
-    if (type === "attendance" && (Number(record.overtimeHours) < 0 || Number(record.incentive) < 0)) return "Lembur dan insentif tidak boleh bernilai negatif.";
     const duplicate = records.some((existing) => existing.id !== editingId && (
-      (type === "customers" && normalizePhone(existing.phone) === record.phone) ||
-      (type === "vehicles" && String(existing.plateNumber).replace(/\s+/g, " ").trim().toUpperCase() === record.plateNumber) ||
       (type === "services" && String(existing.name).trim().toLowerCase() === record.name.toLowerCase() && existing.vehicleType === record.vehicleType) ||
-      (type === "employees" && normalizePhone(existing.phone) === record.phone) ||
       (type === "shifts" && String(existing.name).trim().toLowerCase() === record.name.toLowerCase()) ||
-      (type === "users" && existing.username.toLowerCase() === record.username.toLowerCase()) ||
-      (type === "attendance" && existing.date === record.date && String(existing.employeeName).trim().toLowerCase() === String(record.employeeName).trim().toLowerCase())
+      (type === "users" && String(existing.username || "").trim().toLowerCase() === record.username.toLowerCase())
     ));
     return duplicate ? "Data duplikat tidak diperbolehkan." : "";
   }
 
-  // Dialog konfirmasi hapus (Figma: Data Pelanggan Hapus). Dibuat lewat JS agar keenam halaman master tidak perlu diubah.
+  // Dialog konfirmasi hapus dibuat lewat JS agar halaman master tidak perlu diubah.
   const deleteDialog = document.createElement("dialog");
   deleteDialog.className = "queue-dialog master-delete-dialog";
   deleteDialog.id = "master-delete-dialog";
@@ -2146,14 +3601,8 @@ function setupMasterPage() {
       record[field.key] = field.type === "tel" ? normalizePhone(record[field.key]) : record[field.key].replace(/\s+/g, " ").trim();
     });
     if (type === "users" && editingId && !record.password) delete record.password;
-    if (type === "vehicles") record.plateNumber = record.plateNumber.trim().toUpperCase();
     if (type === "users") record.username = record.username.trim().toLowerCase();
     if (type === "services") record.price = Number(record.price);
-    if (type === "attendance") {
-      record.employeeName = record.employeeName.trim();
-      record.overtimeHours = record.overtimeHours === "" ? 0 : Number(record.overtimeHours);
-      record.incentive = record.incentive === "" ? 0 : Number(record.incentive);
-    }
     const records = getRecords();
     const error = validate(record, records);
     notice.textContent = error;
@@ -2177,3 +3626,825 @@ function setupMasterPage() {
 }
 
 setupMasterPage();
+
+/* ===== Modul Kasir dari branch Nindya (digabung 5 Nov 2026) ===== */
+
+/* =========================================================
+   MODUL HALAMAN TRANSAKSI BARU
+   Digabung ke app.js sesuai struktur aset per role WASHUP.
+   Hanya berjalan jika #transaction-form ditemukan.
+   ========================================================= */
+(() => {
+  "use strict";
+
+  // Jalankan modul ini hanya pada halaman Transaksi Baru agar app.js aman dipakai bersama.
+  const transactionPageForm = document.querySelector("#transaction-form");
+  if (!transactionPageForm) return;
+
+  // Halaman transaksi hanya untuk pengguna ber-role Kasir.
+  if (sessionStorage.getItem("washupRole") !== "Kasir") {
+    window.location.replace(appUrl("login.html"));
+    return;
+  }
+  const form = transactionPageForm;
+  const layout = document.querySelector("#transaction-layout");
+  const result = document.querySelector("#transaction-result");
+  const heading = document.querySelector("#transaction-title");
+  const eyebrow = document.querySelector("#transaction-eyebrow");
+  const printButton = document.querySelector("#print-receipt-button");
+  const noPrintButton = document.querySelector("#no-print-receipt-button");
+
+  const currency = formatCurrency;
+
+  function safeTransactions() {
+    try {
+      const value = JSON.parse(localStorage.getItem("washupTransactions") || "[]");
+      return Array.isArray(value) ? value : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function formatReceiptDate(value) {
+    const date = new Date(value || Date.now());
+    const dateLabel = new Intl.DateTimeFormat("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      timeZone: "Asia/Jakarta",
+    }).format(date);
+    const timeLabel = new Intl.DateTimeFormat("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+      timeZone: "Asia/Jakarta",
+    }).format(date);
+    return `${dateLabel} · ${timeLabel} WIB`;
+  }
+
+  function getLatestTransaction() {
+    const transactions = safeTransactions();
+    if (!transactions.length) return null;
+    return transactions[transactions.length - 1];
+  }
+
+  function fillReceipt(transaction) {
+    if (!transaction) return;
+
+    const queueDigits = String(transaction.queueNumber || "01").replace(/\D/g, "").padStart(2, "0");
+    const setText = (selector, value) => {
+      const element = document.querySelector(selector);
+      if (element) element.textContent = value == null || value === "" ? "-" : String(value);
+    };
+
+    // Beberapa ID result-... dipertahankan agar tetap kompatibel dengan app.js lama.
+    setText("#result-transaction-number", transaction.transactionNumber || "-");
+    setText("#result-queue-number", queueDigits);
+    setText("#result-service-status", transaction.serviceStatus === "Menunggu" ? "Menunggu pencucian" : transaction.serviceStatus || "Menunggu pencucian");
+    setText("#result-payment-status", transaction.paymentStatus || "Belum Dibayar");
+    setText("#result-customer", transaction.customerName || "-");
+    setText("#result-vehicle", transaction.vehicleType || "-");
+    setText("#result-service", transaction.service || "-");
+    setText("#result-price", currency(transaction.price));
+    setText("#receipt-date", formatReceiptDate(transaction.createdAt));
+    setText("#receipt-cashier", "Kasir");
+    setText("#receipt-phone", transaction.customerPhone || "-");
+    setText("#receipt-plate", transaction.plateNumber || "-");
+    setText("#receipt-service-price", currency(transaction.price));
+    setText("#receipt-service-detail", `1 × ${currency(transaction.price)}`);
+    setText("#receipt-success-message", `Nomor antrean ${queueDigits} sudah dibuat. Transaksi masuk ke antrean dan belum dibayar.`);
+
+    if (layout) layout.hidden = true;
+    if (result) result.hidden = false;
+    if (eyebrow) eyebrow.textContent = "RINGKASAN PENGERJAAN";
+    if (heading) heading.textContent = "Cetak Struk Transaksi";
+  }
+
+  // app.js menangani validasi dan penyimpanan transaksi terlebih dahulu.
+  // Listener ini berjalan sesudahnya untuk menampilkan rincian struk.
+  form?.addEventListener("submit", () => {
+    window.setTimeout(() => {
+      if (!result || result.hidden) return;
+      fillReceipt(getLatestTransaction());
+      result.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
+  });
+
+  printButton?.addEventListener("click", () => window.print());
+  noPrintButton?.addEventListener("click", () => {
+    window.location.href = "dashboard-kasir.html";
+  });
+
+})();
+
+/* =========================================================
+   MODUL DASHBOARD KASIR — PAGINATION
+   Seluruh JavaScript tetap berada di app.js sesuai struktur WASHUP.
+   ========================================================= */
+(() => {
+  "use strict";
+
+  // Modul ini hanya berjalan di Dashboard Kasir, bukan halaman Transaksi Baru.
+  if (!document.body.classList.contains("kasir-dashboard-page") ||
+      document.body.classList.contains("kasir-transaction-page") ||
+      document.body.classList.contains("kasir-payment-page")) return;
+
+  // Paginasi seragam: Sebelumnya, nomor halaman, Selanjutnya (komponen WashupPager).
+  const tableBody = document.querySelector("#queue-table-body");
+  const pager = document.querySelector("#queue-pager");
+
+  if (!tableBody || !pager) return;
+
+  let currentPage = 1;
+
+  function getDataRows() {
+    return Array.from(tableBody.querySelectorAll("tr"))
+      .filter((row) => !row.classList.contains("queue-empty-row"));
+  }
+
+  function ensureEmptyState() {
+    let emptyRow = tableBody.querySelector(".queue-empty-row");
+    if (getDataRows().length === 0) {
+      if (!emptyRow) {
+        emptyRow = document.createElement("tr");
+        emptyRow.className = "queue-empty-row";
+        const cell = document.createElement("td");
+        cell.colSpan = 5;
+
+        const emptyState = document.createElement("div");
+        emptyState.className = "queue-empty-state";
+        const iconWrap = document.createElement("div");
+        iconWrap.className = "queue-empty-icon wu-empty-icon";
+        iconWrap.setAttribute("aria-hidden", "true");
+        iconWrap.innerHTML = window.renderIcon("inbox", "wu-icon");
+
+        const title = document.createElement("h3");
+        title.className = "queue-empty-title";
+        title.textContent = "Belum ada antrean.";
+        const description = document.createElement("p");
+        description.className = "queue-empty-description";
+        description.textContent = "Transaksi Kasir akan tampil setelah dibuat.";
+        emptyState.append(iconWrap, title, description);
+        cell.appendChild(emptyState);
+        emptyRow.appendChild(cell);
+        tableBody.appendChild(emptyRow);
+      }
+    } else if (emptyRow) {
+      emptyRow.remove();
+    }
+  }
+
+  function renderPagination() {
+    const rows = getDataRows();
+    ensureEmptyState();
+
+    const pageSize = TABLE_PAGE_SIZE;
+    const totalRows = rows.length;
+    const totalPages = Math.max(1, Math.ceil(totalRows / pageSize));
+    currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, totalRows);
+
+    rows.forEach((row, index) => {
+      row.hidden = index < startIndex || index >= endIndex;
+    });
+
+    window.WashupPager.renderPager(pager, {
+      page: currentPage,
+      total: totalPages,
+      onChange: (target) => { currentPage = target; renderPagination(); },
+    });
+  }
+
+  // Menjaga pagination sinkron ketika app.js menambah atau mengubah baris antrean.
+  const tableObserver = new MutationObserver(() => renderPagination());
+  tableObserver.observe(tableBody, { childList: true });
+  renderPagination();
+})();
+
+/* =========================================================
+   MODUL PENGELUARAN KASIR
+   Fungsi halaman Pengeluaran digabung di sini agar cukup memuat satu app.js.
+   Mendukung filter tahun/bulan, jumlah barang, edit, hapus, dan bukti nota.
+   ========================================================= */
+(() => {
+  "use strict";
+
+  const form = document.querySelector("#expense-form");
+  const dialog = document.querySelector("#expense-dialog");
+  if (!form || !dialog) return;
+
+  const storageKey = "washupExpenses";
+  const tableBody = document.querySelector("#expense-table-body");
+  const emptyState = document.querySelector("#expense-empty");
+  const todayTotal = document.querySelector("#expense-today-total");
+  const monthTotal = document.querySelector("#expense-month-total");
+  const dateInput = document.querySelector("#expense-date");
+  const descriptionInput = document.querySelector("#expense-description");
+  const amountInput = document.querySelector("#expense-amount");
+  const proofInput = document.querySelector("#expense-proof");
+  const proofText = document.querySelector("#expense-proof-text");
+  // Kotak "Unggah Foto Nota" menampilkan nama file yang dipilih.
+  const syncProofText = () => {
+    if (proofText) proofText.textContent = proofInput?.files?.[0]?.name || "Unggah Foto Nota";
+  };
+  proofInput?.addEventListener("change", syncProofText);
+  const currentProofNote = document.querySelector("#expense-current-proof");
+  const message = document.querySelector("#expense-form-message");
+  const dialogTitle = document.querySelector("#expense-dialog-title");
+  const submitButton = form.querySelector('button[type="submit"]');
+  const yearFilter = document.querySelector("#expense-year-filter");
+  const monthFilter = document.querySelector("#expense-month-filter");
+  const monthLabel = document.querySelector("#expense-month-label");
+  const emptyTitle = document.querySelector("#expense-empty-title");
+  const emptyMessage = document.querySelector("#expense-empty-message");
+
+  if (!tableBody || !emptyState || !todayTotal || !monthTotal ||
+      !dateInput || !descriptionInput || !amountInput ||
+      !proofInput || !message) return;
+
+  let editingExpenseId = null;
+
+  const monthNames = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+  ];
+
+  const todayKey = () => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  };
+  const money = formatCurrency;
+
+  function readExpenses() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+      return Array.isArray(saved) ? saved : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveExpenses(records) {
+    localStorage.setItem(storageKey, JSON.stringify(records));
+  }
+
+  function fileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => resolve(String(reader.result || "")), { once: true });
+      reader.addEventListener("error", () => reject(new Error("Bukti nota tidak dapat dibaca.")), { once: true });
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function createCell(text) {
+    const cell = document.createElement("td");
+    cell.textContent = text;
+    return cell;
+  }
+
+  function formatDate(dateValue) {
+    const date = new Date(`${dateValue}T00:00:00`);
+    if (Number.isNaN(date.getTime())) return dateValue || "-";
+    return date.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+  }
+
+  function getValidYear(dateValue) {
+    const match = /^(\d{4})-\d{2}-\d{2}$/.exec(String(dateValue || ""));
+    return match ? Number(match[1]) : null;
+  }
+
+  function populateYearFilter(records) {
+    if (!yearFilter) return;
+    const currentYear = String(new Date().getFullYear());
+    const previousSelection = yearFilter.value;
+    const years = new Set([currentYear]);
+
+    records.forEach((record) => {
+      const year = getValidYear(record.date);
+      if (year) years.add(String(year));
+    });
+
+    const sortedYears = [...years].sort((a, b) => Number(b) - Number(a));
+    yearFilter.replaceChildren();
+    sortedYears.forEach((year) => {
+      const option = document.createElement("option");
+      option.value = year;
+      option.textContent = year;
+      yearFilter.append(option);
+    });
+
+    yearFilter.value = sortedYears.includes(previousSelection)
+      ? previousSelection
+      : currentYear;
+  }
+
+  function getSelectedPeriod() {
+    const year = yearFilter?.value || String(new Date().getFullYear());
+    const month = monthFilter?.value || "";
+    return { year, month };
+  }
+
+  function render() {
+    const allRecords = readExpenses().sort((a, b) =>
+      String(b.date).localeCompare(String(a.date)) ||
+      Number(b.createdAt || 0) - Number(a.createdAt || 0)
+    );
+
+    populateYearFilter(allRecords);
+    const { year, month } = getSelectedPeriod();
+    const periodRecords = allRecords.filter((record) => {
+      const date = String(record.date || "");
+      const matchesYear = date.startsWith(`${year}-`);
+      const matchesMonth = !month || date.startsWith(`${year}-${month}-`);
+      return matchesYear && matchesMonth;
+    });
+
+    tableBody.replaceChildren();
+    periodRecords.forEach((record) => {
+      const row = document.createElement("tr");
+      row.append(createCell(formatDate(record.date)));
+      row.append(createCell(record.description || "-"));
+      row.append(createCell(money(record.amount)));
+
+      const proofCell = document.createElement("td");
+      if (record.proofData) {
+        const link = document.createElement("button");
+        link.type = "button";
+        link.className = "table-action table-action-detail expense-proof-link";
+        link.dataset.expenseAction = "proof";
+        link.dataset.expenseId = String(record.id || "");
+        link.textContent = "Nota";
+        link.setAttribute("aria-label", `Lihat nota ${record.description || record.proofName || "pengeluaran"}`);
+        proofCell.append(link);
+      } else {
+        proofCell.textContent = "—";
+      }
+      row.append(proofCell);
+
+      tableBody.append(row);
+    });
+
+    emptyState.hidden = periodRecords.length > 0;
+    if (emptyTitle) {
+      emptyTitle.textContent = allRecords.length
+        ? "Tidak ada pengeluaran pada periode ini."
+        : "Belum ada Pengeluaran.";
+    }
+    if (emptyMessage) {
+      emptyMessage.textContent = allRecords.length
+        ? "Pilih tahun atau bulan lain untuk melihat data pengeluaran."
+        : "Data pengeluaran akan muncul setelah input pengeluaran dilakukan.";
+    }
+
+    const today = todayKey();
+    const todayValue = allRecords
+      .filter((record) => record.date === today)
+      .reduce((sum, record) => sum + Number(record.amount || 0), 0);
+    const periodValue = periodRecords
+      .reduce((sum, record) => sum + Number(record.amount || 0), 0);
+
+    todayTotal.textContent = money(todayValue);
+    monthTotal.textContent = money(periodValue);
+
+    if (monthLabel) {
+      monthLabel.textContent = month
+        ? `Pengeluaran ${monthNames[Number(month) - 1]} ${year}`
+        : `Pengeluaran Tahun ${year}`;
+    }
+  }
+
+  function setDialogMode(mode) {
+    const isEditing = mode === "edit";
+    if (dialogTitle) dialogTitle.textContent = isEditing ? "Edit Pengeluaran" : "Tambah Pengeluaran";
+    if (submitButton) submitButton.textContent = isEditing ? "Simpan Perubahan" : "Simpan";
+  }
+
+  function openAddDialog() {
+    editingExpenseId = null;
+    form.reset();
+    syncProofText();
+    setDialogMode("add");
+    message.textContent = "";
+    if (currentProofNote) {
+      currentProofNote.hidden = true;
+      currentProofNote.textContent = "";
+    }
+    dateInput.value = todayKey();
+    if (typeof dialog.showModal === "function") dialog.showModal();
+  }
+
+  function openEditDialog(record) {
+    editingExpenseId = String(record.id || "");
+    form.reset();
+    syncProofText();
+    setDialogMode("edit");
+    message.textContent = "";
+    dateInput.value = record.date || "";
+    descriptionInput.value = record.description || "";
+    // Catatan lama yang belum memiliki field jumlah tetap bisa diedit:
+    // pengguna diminta mengisi jumlahnya sebelum menyimpan perubahan.
+    amountInput.value = record.amount ? money(record.amount) : "";
+    if (currentProofNote) {
+      currentProofNote.hidden = !record.proofData;
+      currentProofNote.textContent = record.proofData
+        ? `Bukti saat ini: ${record.proofName || "Nota terlampir"}. Unggah file baru hanya jika ingin menggantinya.`
+        : "";
+    }
+    if (typeof dialog.showModal === "function") dialog.showModal();
+    else dialog.setAttribute("open", "");
+  }
+
+  function closeDialog() {
+    if (dialog.open && typeof dialog.close === "function") dialog.close();
+    else dialog.removeAttribute("open");
+    editingExpenseId = null;
+    message.textContent = "";
+    form.reset();
+    syncProofText();
+    setDialogMode("add");
+    if (currentProofNote) {
+      currentProofNote.hidden = true;
+      currentProofNote.textContent = "";
+    }
+  }
+
+  yearFilter?.addEventListener("change", render);
+  monthFilter?.addEventListener("change", render);
+  document.querySelector("#expense-add-button")?.addEventListener("click", openAddDialog);
+  document.querySelector("#expense-dialog-close")?.addEventListener("click", closeDialog);
+  document.querySelector("#expense-cancel-button")?.addEventListener("click", closeDialog);
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) closeDialog();
+  });
+
+  tableBody.addEventListener("click", (event) => {
+    const button = event.target.closest?.("button[data-expense-action]");
+    if (!button || !tableBody.contains(button)) return;
+
+    const expenseId = button.dataset.expenseId;
+    const record = readExpenses().find((item) => String(item.id || "") === expenseId);
+    if (!record) {
+      window.alert("Data pengeluaran tidak ditemukan. Muat ulang halaman lalu coba kembali.");
+      render();
+      return;
+    }
+
+    if (button.dataset.expenseAction === "proof") {
+      openProof(record);
+      return;
+    }
+
+    if (button.dataset.expenseAction === "edit") {
+      openEditDialog(record);
+      return;
+    }
+
+    if (button.dataset.expenseAction === "delete") {
+      const confirmed = window.confirm(
+        `Hapus catatan pengeluaran "${record.description || "Tanpa keterangan"}" sebesar ${money(record.amount)}? Tindakan ini tidak dapat dibatalkan.`
+      );
+      if (!confirmed) return;
+
+      const records = readExpenses();
+      const remaining = records.filter((item) => String(item.id || "") !== expenseId);
+      try {
+        saveExpenses(remaining);
+        render();
+      } catch {
+        window.alert("Pengeluaran tidak dapat dihapus. Periksa penyimpanan browser lalu coba lagi.");
+      }
+    }
+  });
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    message.textContent = "";
+
+    const formData = new FormData(form);
+    const date = String(formData.get("date") || "");
+    const description = String(formData.get("description") || "").trim();
+    const amount = Number(String(formData.get("amount") || "").replace(/[^\d]/g, ""));
+    const proofFile = proofInput.files?.[0] || null;
+
+    if (!date || !description || !Number.isSafeInteger(amount) || amount <= 0) {
+      message.textContent = "Lengkapi tanggal, keterangan, dan nominal dengan benar.";
+      return;
+    }
+    if (proofFile && proofFile.size > 1024 * 1024) {
+      message.textContent = "Ukuran bukti nota maksimal 1 MB.";
+      return;
+    }
+
+    try {
+      const proofData = proofFile ? await fileAsDataUrl(proofFile) : "";
+      const records = readExpenses();
+      const existingIndex = editingExpenseId
+        ? records.findIndex((item) => String(item.id || "") === editingExpenseId)
+        : -1;
+
+      if (editingExpenseId && existingIndex < 0) {
+        message.textContent = "Data pengeluaran tidak ditemukan. Tutup formulir lalu coba kembali.";
+        return;
+      }
+
+      const existing = existingIndex >= 0 ? records[existingIndex] : null;
+      const updatedRecord = {
+        ...(existing || {}),
+        id: existing?.id || `expense-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        date,
+        description,
+        quantity: existing?.quantity ?? 1,
+        amount,
+        proofName: proofFile ? proofFile.name : (existing?.proofName || ""),
+        proofData: proofFile ? proofData : (existing?.proofData || ""),
+        createdAt: existing?.createdAt || Date.now(),
+        updatedAt: Date.now(),
+      };
+
+      if (existingIndex >= 0) records[existingIndex] = updatedRecord;
+      else records.push(updatedRecord);
+
+      saveExpenses(records);
+      // Arahkan filter ke tahun/bulan dari catatan yang baru dibuat atau diedit.
+      populateYearFilter(records);
+      if (yearFilter) yearFilter.value = date.slice(0, 4);
+      if (monthFilter) monthFilter.value = date.slice(5, 7);
+      render();
+      closeDialog();
+    } catch (error) {
+      message.textContent = error instanceof Error
+        ? error.message
+        : "Pengeluaran tidak dapat disimpan. Coba lagi.";
+    }
+  });
+
+  // Nominal ditulis sebagai Rupiah saat diketik (contoh: "Rp 185.000").
+  amountInput.addEventListener("input", () => {
+    const digits = amountInput.value.replace(/[^\d]/g, "").replace(/^0+/, "").slice(0, 12);
+    amountInput.value = digits ? money(Number(digits)) : "";
+  });
+
+  // Lihat bukti nota: gambar ditampilkan di dialog, PDF dibuka di tab baru.
+  const proofDialog = document.querySelector("#expense-proof-dialog");
+  const proofImage = document.querySelector("#expense-proof-image");
+  const proofTitle = document.querySelector("#expense-proof-title");
+  function openProof(record) {
+    const data = String(record.proofData || "");
+    if (data.startsWith("data:application/pdf")) {
+      // Ubah data PDF menjadi file sementara (blob) agar bisa dibuka browser.
+      try {
+        const bytes = Uint8Array.from(atob(data.split(",")[1] || ""), (char) => char.charCodeAt(0));
+        window.open(URL.createObjectURL(new Blob([bytes], { type: "application/pdf" })), "_blank", "noopener");
+      } catch {
+        window.alert("Nota tidak dapat dibuka.");
+      }
+      return;
+    }
+    if (!proofDialog || !proofImage) return;
+    proofImage.src = data;
+    proofImage.alt = `Foto nota ${record.description || ""}`.trim();
+    if (proofTitle) proofTitle.textContent = record.description ? `Nota · ${record.description}` : "Foto Nota";
+    if (typeof proofDialog.showModal === "function") proofDialog.showModal();
+    else proofDialog.setAttribute("open", "");
+  }
+  document.querySelector("#expense-proof-close")?.addEventListener("click", () => proofDialog?.close());
+  proofDialog?.addEventListener("click", (event) => { if (event.target === proofDialog) proofDialog.close(); });
+
+  window.addEventListener("storage", (event) => {
+    if (event.key === storageKey) render();
+  });
+
+  render();
+})();
+
+
+function setupProfileEditor() {
+  const trigger = document.querySelector("#profile-edit-trigger");
+  const dialog = document.querySelector("#profile-edit-dialog");
+  const form = document.querySelector("#profile-edit-form");
+  if (!trigger || !dialog || !form) return;
+
+  const usernameInput = document.querySelector("#profile-username");
+  const usernameNote = document.querySelector("#profile-username-note");
+  const currentPasswordInput = document.querySelector("#profile-current-password");
+  const newPasswordInput = document.querySelector("#profile-password");
+  const displayUsername = document.querySelector("#profile-display-username");
+  const displayRole = document.querySelector("#profile-display-role");
+  const message = document.querySelector("#profile-form-message");
+  const saveButton = document.querySelector("#profile-edit-save");
+  const closeButton = document.querySelector("#profile-edit-close");
+  const cancelButton = document.querySelector("#profile-edit-cancel");
+  let editingAccountId = null;
+  let protectedAdmin = false;
+
+  const normalized = (value) => String(value || "").trim().toLowerCase();
+  const activeRole = () => sessionStorage.getItem("washupRole") || document.body.dataset.role || "Pengguna";
+
+  function currentAccount(records = getUserAccounts()) {
+    const username = normalized(sessionStorage.getItem("washupUsername"));
+    const role = activeRole();
+    return records.find((account) =>
+      normalized(account.username) === username && account.role === role
+    ) || records.find((account) => account.protected && account.role === role) || null;
+  }
+
+  function setHeaderProfile(account) {
+    const role = sessionStorage.getItem("washupRole") || account?.role || document.body.dataset.role || "Pengguna";
+    const username = sessionStorage.getItem("washupUsername") || account?.username || role;
+    if (displayUsername) displayUsername.textContent = username;
+    if (displayRole) displayRole.textContent = `Role: ${role}`;
+    trigger.setAttribute("aria-label", `Edit profil ${username || "pengguna"}`);
+    trigger.title = `Edit profil ${username || "pengguna"}`;
+  }
+
+  function positionPopover() {
+    if (!dialog.open) return;
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const viewportPadding = 12;
+    const popoverWidth = Math.min(340, window.innerWidth - viewportPadding * 2);
+    const measuredWidth = dialog.getBoundingClientRect().width || popoverWidth;
+    const width = Math.min(measuredWidth, window.innerWidth - viewportPadding * 2);
+    const preferredLeft = triggerRect.right - width + 14;
+    const left = Math.max(
+      viewportPadding,
+      Math.min(preferredLeft, window.innerWidth - width - viewportPadding)
+    );
+    const top = triggerRect.bottom + 8;
+    const availableHeight = Math.max(220, window.innerHeight - top - viewportPadding);
+    const maxHeight = Math.min(Math.round(window.innerHeight * 0.78), availableHeight);
+
+    dialog.style.setProperty("--profile-popover-left", `${Math.round(left)}px`);
+    dialog.style.setProperty("--profile-popover-top", `${Math.round(top)}px`);
+    dialog.style.setProperty("--profile-popover-max-height", `${Math.round(maxHeight)}px`);
+  }
+
+  function resetPasswordVisibility() {
+    dialog.querySelectorAll("[data-password-toggle]").forEach((button) => {
+      const target = document.getElementById(button.dataset.passwordToggle);
+      if (target) target.type = "password";
+      button.setAttribute("aria-pressed", "false");
+      const label = target?.id === "profile-current-password" ? "password lama" : "password baru";
+      button.setAttribute("aria-label", `Tampilkan ${label}`);
+    });
+  }
+
+  function showPopover() {
+    if (typeof dialog.show === "function") {
+      if (!dialog.open) dialog.show();
+    } else {
+      dialog.setAttribute("open", "");
+    }
+    trigger.setAttribute("aria-expanded", "true");
+    positionPopover();
+  }
+
+  function openDialog() {
+    const account = currentAccount();
+    if (!account) {
+      editingAccountId = null;
+      protectedAdmin = false;
+      message.textContent = "Akun tidak ditemukan. Silakan keluar dan masuk kembali.";
+      showPopover();
+      return;
+    }
+
+    editingAccountId = account.id;
+    protectedAdmin = normalized(account.username) === "admin";
+    usernameInput.value = account.username || "";
+    usernameInput.disabled = protectedAdmin;
+    if (usernameNote) usernameNote.hidden = !protectedAdmin;
+    currentPasswordInput.value = String(account.password || "");
+    newPasswordInput.value = "";
+    message.textContent = "";
+    saveButton.disabled = false;
+    resetPasswordVisibility();
+
+    showPopover();
+    (protectedAdmin ? newPasswordInput : usernameInput).focus({ preventScroll: true });
+  }
+
+  function closeDialog({ restoreFocus = false } = {}) {
+    if (typeof dialog.close === "function" && dialog.open) dialog.close();
+    else dialog.removeAttribute("open");
+
+    form.reset();
+    syncProofText();
+    editingAccountId = null;
+    protectedAdmin = false;
+    usernameInput.disabled = false;
+    if (usernameNote) usernameNote.hidden = true;
+    message.textContent = "";
+    saveButton.disabled = false;
+    resetPasswordVisibility();
+    trigger.setAttribute("aria-expanded", "false");
+    if (restoreFocus) trigger.focus();
+  }
+
+  trigger.addEventListener("click", () => {
+    if (dialog.open) closeDialog();
+    else openDialog();
+  });
+
+  dialog.querySelectorAll("[data-password-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const target = document.getElementById(button.dataset.passwordToggle);
+      if (!target) return;
+
+      const shouldShow = target.type === "password";
+      target.type = shouldShow ? "text" : "password";
+      const label = target.id === "profile-current-password" ? "password lama" : "password baru";
+      button.setAttribute("aria-pressed", String(shouldShow));
+      button.setAttribute("aria-label", `${shouldShow ? "Sembunyikan" : "Tampilkan"} ${label}`);
+    });
+  });
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const username = normalized(usernameInput.value);
+    const newPassword = String(newPasswordInput.value || "");
+
+    if (!protectedAdmin && !username) {
+      message.textContent = "Username wajib diisi.";
+      usernameInput.focus();
+      return;
+    }
+    if (!protectedAdmin && username.length > 40) {
+      message.textContent = "Username maksimal 40 karakter.";
+      usernameInput.focus();
+      return;
+    }
+    if (newPassword && newPassword.length < 6) {
+      message.textContent = "Password baru minimal 6 karakter.";
+      newPasswordInput.focus();
+      return;
+    }
+
+    try {
+      const records = getUserAccounts();
+      const accountIndex = records.findIndex((account) => account.id === editingAccountId);
+      if (accountIndex < 0) {
+        message.textContent = "Akun tidak ditemukan. Tutup formulir lalu coba kembali.";
+        return;
+      }
+
+      const current = records[accountIndex];
+      const nextUsername = normalized(current.username) === "admin" ? current.username : username;
+      const duplicate = records.some((account, index) =>
+        index !== accountIndex && normalized(account.username) === nextUsername
+      );
+      if (duplicate) {
+        message.textContent = "Username sudah digunakan akun lain. Gunakan username yang berbeda.";
+        usernameInput.focus();
+        return;
+      }
+
+      const updated = {
+        ...current,
+        username: nextUsername,
+        password: newPassword || current.password,
+        updatedAt: Date.now(),
+      };
+
+      delete updated.profilePhoto;
+      records[accountIndex] = updated;
+      saveMasterRecords(masterDefinitions.users, records);
+      sessionStorage.setItem("washupUsername", nextUsername);
+      setHeaderProfile(updated);
+      closeDialog();
+    } catch (error) {
+      message.textContent = error instanceof Error
+        ? error.message
+        : "Profil tidak dapat disimpan. Periksa penyimpanan browser lalu coba kembali.";
+    }
+  });
+
+  closeButton?.addEventListener("click", () => closeDialog({ restoreFocus: true }));
+  cancelButton?.addEventListener("click", () => closeDialog({ restoreFocus: true }));
+
+  document.addEventListener("pointerdown", (event) => {
+    if (!dialog.open) return;
+    if (!dialog.contains(event.target) && !trigger.contains(event.target)) closeDialog();
+  });
+
+  dialog.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeDialog({ restoreFocus: true });
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && dialog.open) {
+      event.preventDefault();
+      closeDialog({ restoreFocus: true });
+    }
+  });
+
+  window.addEventListener("resize", positionPopover);
+  window.addEventListener("scroll", positionPopover, true);
+  setHeaderProfile(currentAccount());
+}
+
+setupProfileEditor();

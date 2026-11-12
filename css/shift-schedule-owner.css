@@ -1,0 +1,54 @@
+/* =========================================================
+   JADWAL SHIFT KARYAWAN (Owner) — hanya lihat
+   Data dari jadwal yang sudah ditampilkan Admin (js/shift-schedule-owner.js).
+   ========================================================= */
+:root:root body.owner-schedule-page .page-subtitle { margin: 6px 0 0 !important; color: var(--wu-text-muted) !important; font-size: 13px !important; line-height: 1.5 !important; }
+:root:root body.owner-schedule-page .dashboard-main > section + section { margin-top: 16px !important; }
+
+/* Filter */
+:root:root body.owner-schedule-page .sched-filters {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, .7fr); gap: 16px; align-items: end; padding: 18px 20px !important;
+}
+:root:root body.owner-schedule-page .sched-filters label,
+:root:root body.owner-schedule-page .sched-day-pick { display: grid; gap: 6px; margin: 0; color: var(--wu-text); font-size: 13px; font-weight: 600; }
+:root:root body.owner-schedule-page .sched-filters :is(select, input),
+:root:root body.owner-schedule-page .sched-day-pick select {
+  width: 100%; height: 40px; border: 1px solid #C9DCE5; border-radius: 8px; padding-left: 12px;
+  font: 13.5px var(--wu-font-body); color: var(--wu-text); background-color: #fff; box-sizing: border-box;
+}
+
+/* Kartu jadwal */
+:root:root body.owner-schedule-page .sched-card .section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.sched-status { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.sched-status-view { background: #E5F1F7; color: #1D4A5A; }
+.sched-table-wrap { overflow-x: auto; border: 1px solid #D4E2E8; border-radius: 10px; }
+.sched-table-wrap[hidden] { display: none !important; }
+:root:root body main table.sched-day-table { width: 100%; min-width: 600px; border-collapse: collapse; }
+:root:root body main table.sched-day-table thead th { text-transform: none !important; letter-spacing: 0 !important; font-size: 13px !important; vertical-align: bottom !important; border-radius: 0 !important; white-space: normal !important; }
+:root:root body main table.sched-day-table thead th:first-child { width: 24%; text-transform: uppercase !important; letter-spacing: .04em !important; font-size: 11px !important; }
+:root:root body main table.sched-day-table tbody th { padding: 10px 14px !important; text-align: left !important; font-weight: 400 !important; border-top: 1px solid #E5EEF2 !important; white-space: nowrap; }
+:root:root body main table.sched-day-table tbody td { padding: 8px 14px !important; border-top: 1px solid #E5EEF2 !important; vertical-align: middle !important; }
+:root:root body main table.sched-day-table tbody tr.is-today { background: #F3F8FB; }
+.sched-col-title { display: block; font-weight: 700; }
+.sched-col-time { display: block; margin-top: 2px; color: var(--wu-text-muted); font-size: 11px; font-weight: 400; }
+.sched-day-table tbody th strong { color: var(--wu-text); font-size: 14px; }
+.sched-day-date { margin-left: 8px; color: var(--wu-text-muted); font-size: 12px; }
+.sched-chip-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.sched-chip { display: inline-flex; padding: 5px 10px; border-radius: 6px; font-size: 12.5px; font-weight: 600; }
+.sched-chip-on { background: #E5F1F7; color: #1D4A5A; }
+.sched-chip-off { background: #EDF1F3; color: #4E6470; }
+.sched-dash { color: #6F8A97; }
+.sched-footnote { margin: 12px 0 0; color: var(--wu-text-muted); font-size: 12.5px; }
+
+/* Karyawan bertugas per hari */
+:root:root body.owner-schedule-page .sched-day-heading { flex-wrap: wrap; }
+.sched-day-pick { min-width: 220px; }
+.owner-duty-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.owner-duty-box { display: grid; gap: 4px; padding: 12px 14px; border-radius: 10px; background: #EAF4F9; }
+.owner-duty-box span { color: var(--wu-text-muted); font-size: 12px; }
+.owner-duty-box strong { color: var(--wu-text); font-size: 14px; }
+
+@media (max-width: 768px) {
+  :root:root body.owner-schedule-page .sched-filters { grid-template-columns: 1fr; }
+  .sched-day-pick { width: 100%; min-width: 0; }
+}
