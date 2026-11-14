@@ -3986,7 +3986,9 @@ setupMasterPage();
   const monthTotal = document.querySelector("#expense-month-total");
   const dateInput = document.querySelector("#expense-date");
   const descriptionInput = document.querySelector("#expense-description");
+  const quantityInput = document.querySelector("#expense-quantity");
   const amountInput = document.querySelector("#expense-amount");
+  const totalPreview = document.querySelector("#expense-total-preview");
   const proofInput = document.querySelector("#expense-proof");
   const proofText = document.querySelector("#expense-proof-text");
   // Kotak "Unggah Foto Nota" menampilkan nama file yang dipilih.
@@ -4005,7 +4007,7 @@ setupMasterPage();
   const emptyMessage = document.querySelector("#expense-empty-message");
 
   if (!tableBody || !emptyState || !todayTotal || !monthTotal ||
-      !dateInput || !descriptionInput || !amountInput ||
+      !dateInput || !descriptionInput || !quantityInput || !amountInput ||
       !proofInput || !message) return;
 
   let editingExpenseId = null;
@@ -4020,6 +4022,21 @@ setupMasterPage();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   };
   const money = formatCurrency;
+  const getQuantity = (record) => Math.max(1, Number.parseInt(record?.quantity, 10) || 1);
+  const getUnitPrice = (record) => {
+    const storedUnitPrice = Number(record?.unitPrice);
+    if (Number.isSafeInteger(storedUnitPrice) && storedUnitPrice > 0) return storedUnitPrice;
+    // Kompatibilitas catatan lama: sebelum harga satuan tersedia, amount adalah total untuk 1 barang.
+    return Math.max(0, Math.round(Number(record?.amount || 0) / getQuantity(record)));
+  };
+
+  function updateTotalPreview() {
+    if (!totalPreview) return;
+    const quantity = Math.max(0, Number.parseInt(quantityInput.value, 10) || 0);
+    const unitPrice = Number(String(amountInput.value || "").replace(/[^\d]/g, "")) || 0;
+    const total = quantity * unitPrice;
+    totalPreview.textContent = Number.isSafeInteger(total) ? money(total) : "Nilai terlalu besar";
+  }
 
   function readExpenses() {
     try {
@@ -4109,9 +4126,14 @@ setupMasterPage();
     tableBody.replaceChildren();
     periodRecords.forEach((record) => {
       const row = document.createElement("tr");
+      const quantity = getQuantity(record);
+      const unitPrice = getUnitPrice(record);
+      const totalAmount = Number(record.amount || (quantity * unitPrice));
       row.append(createCell(formatDate(record.date)));
       row.append(createCell(record.description || "-"));
-      row.append(createCell(money(record.amount)));
+      row.append(createCell(new Intl.NumberFormat("id-ID").format(quantity)));
+      row.append(createCell(money(unitPrice)));
+      row.append(createCell(money(totalAmount)));
 
       const proofCell = document.createElement("td");
       if (record.proofData) {
@@ -4127,6 +4149,27 @@ setupMasterPage();
         proofCell.textContent = "—";
       }
       row.append(proofCell);
+
+      const actionCell = document.createElement("td");
+      const actionGroup = document.createElement("div");
+      actionGroup.className = "expense-actions";
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.className = "expense-action-button expense-action-edit";
+      editButton.dataset.expenseAction = "edit";
+      editButton.dataset.expenseId = String(record.id || "");
+      editButton.textContent = "Edit";
+      editButton.setAttribute("aria-label", `Edit pengeluaran ${record.description || "tanpa keterangan"}`);
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "expense-action-button expense-action-delete";
+      deleteButton.dataset.expenseAction = "delete";
+      deleteButton.dataset.expenseId = String(record.id || "");
+      deleteButton.textContent = "Hapus";
+      deleteButton.setAttribute("aria-label", `Hapus pengeluaran ${record.description || "tanpa keterangan"}`);
+      actionGroup.append(editButton, deleteButton);
+      actionCell.append(actionGroup);
+      row.append(actionCell);
 
       tableBody.append(row);
     });
@@ -4177,6 +4220,8 @@ setupMasterPage();
       currentProofNote.textContent = "";
     }
     dateInput.value = todayKey();
+    quantityInput.value = "1";
+    updateTotalPreview();
     if (typeof dialog.showModal === "function") dialog.showModal();
   }
 
@@ -4188,9 +4233,9 @@ setupMasterPage();
     message.textContent = "";
     dateInput.value = record.date || "";
     descriptionInput.value = record.description || "";
-    // Catatan lama yang belum memiliki field jumlah tetap bisa diedit:
-    // pengguna diminta mengisi jumlahnya sebelum menyimpan perubahan.
-    amountInput.value = record.amount ? money(record.amount) : "";
+    quantityInput.value = String(getQuantity(record));
+    amountInput.value = getUnitPrice(record) ? money(getUnitPrice(record)) : "";
+    updateTotalPreview();
     if (currentProofNote) {
       currentProofNote.hidden = !record.proofData;
       currentProofNote.textContent = record.proofData
@@ -4209,6 +4254,7 @@ setupMasterPage();
     form.reset();
     syncProofText();
     setDialogMode("add");
+    updateTotalPreview();
     if (currentProofNote) {
       currentProofNote.hidden = true;
       currentProofNote.textContent = "";
@@ -4248,7 +4294,7 @@ setupMasterPage();
 
     if (button.dataset.expenseAction === "delete") {
       const confirmed = window.confirm(
-        `Hapus catatan pengeluaran "${record.description || "Tanpa keterangan"}" sebesar ${money(record.amount)}? Tindakan ini tidak dapat dibatalkan.`
+        `Hapus catatan pengeluaran "${record.description || "Tanpa keterangan"}" (${getQuantity(record)} barang × ${money(getUnitPrice(record))}, total ${money(record.amount)})? Tindakan ini tidak dapat dibatalkan.`
       );
       if (!confirmed) return;
 
@@ -4270,11 +4316,14 @@ setupMasterPage();
     const formData = new FormData(form);
     const date = String(formData.get("date") || "");
     const description = String(formData.get("description") || "").trim();
-    const amount = Number(String(formData.get("amount") || "").replace(/[^\d]/g, ""));
+    const quantity = Number(formData.get("quantity"));
+    const unitPrice = Number(String(formData.get("unitPrice") || "").replace(/[^\d]/g, ""));
+    const amount = quantity * unitPrice;
     const proofFile = proofInput.files?.[0] || null;
 
-    if (!date || !description || !Number.isSafeInteger(amount) || amount <= 0) {
-      message.textContent = "Lengkapi tanggal, keterangan, dan nominal dengan benar.";
+    if (!date || !description || !Number.isSafeInteger(quantity) || quantity <= 0 ||
+        !Number.isSafeInteger(unitPrice) || unitPrice <= 0 || !Number.isSafeInteger(amount)) {
+      message.textContent = "Lengkapi tanggal, keterangan, jumlah barang, dan harga satuan dengan benar.";
       return;
     }
     if (proofFile && proofFile.size > 1024 * 1024) {
@@ -4300,7 +4349,8 @@ setupMasterPage();
         id: existing?.id || `expense-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
         date,
         description,
-        quantity: existing?.quantity ?? 1,
+        quantity,
+        unitPrice,
         amount,
         proofName: proofFile ? proofFile.name : (existing?.proofName || ""),
         proofData: proofFile ? proofData : (existing?.proofData || ""),
@@ -4329,7 +4379,9 @@ setupMasterPage();
   amountInput.addEventListener("input", () => {
     const digits = amountInput.value.replace(/[^\d]/g, "").replace(/^0+/, "").slice(0, 12);
     amountInput.value = digits ? money(Number(digits)) : "";
+    updateTotalPreview();
   });
+  quantityInput.addEventListener("input", updateTotalPreview);
 
   // Lihat bukti nota: gambar ditampilkan di dialog, PDF dibuka di tab baru.
   const proofDialog = document.querySelector("#expense-proof-dialog");

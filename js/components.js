@@ -372,7 +372,7 @@ function ensurePager(anchor, id, label) {
 function paginateTable(tbody, { pageSize = 5, label } = {}) {
   const table = tbody?.closest("table");
   if (!table) return;
-  const anchor = table.closest(".table-wrap, .queue-table-wrap, .history-table-wrap, .payment-table-wrap") || table;
+  const anchor = table.closest(".table-wrap, .queue-table-wrap, .history-table-wrap, .payment-table-wrap, .expense-table-wrap") || table;
   const nav = ensurePager(anchor, "", label || "Navigasi halaman tabel");
   let page = 1;
   const apply = () => {
