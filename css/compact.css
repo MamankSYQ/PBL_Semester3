@@ -379,7 +379,10 @@ tbody > tr[hidden] { display: none !important; }
   border: 1px solid #1D4A5A !important; border-radius: 7px !important;
   background: rgba(166, 206, 230, .44) !important; color: #1D4A5A !important;
   font: 600 11.9px/1 var(--wu-font-body) !important; letter-spacing: .01em !important; white-space: nowrap !important;
-  box-shadow: none !important; cursor: pointer; transition: filter .15s ease;
+  box-shadow: 0 1px 2px rgba(16, 47, 59, .08) !important;
+  transform: translateY(0) !important;
+  cursor: pointer;
+  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease !important;
 }
 :root:root body main tbody :is(.table-action-edit, .expense-action-edit) {
   border-color: #007A18 !important; background: rgba(172, 230, 166, .44) !important; color: #00631A !important;
@@ -387,7 +390,27 @@ tbody > tr[hidden] { display: none !important; }
 :root:root body main tbody :is(.table-action-delete, .expense-action-delete) {
   border-color: #930002 !important; background: rgba(255, 121, 124, .44) !important; color: #930002 !important;
 }
-:root:root body main tbody :is(.table-action, .payment-table-action, .verification-row-action, .expense-action-button):hover:not(:disabled) { filter: brightness(.94); }
+/* Efek timbul berlaku untuk tombol aksi di tabel maupun dialog seluruh role. */
+:root:root body :is(.table-action, .payment-table-action, .verification-row-action, .expense-action-button):not(:disabled) {
+  box-shadow: 0 1px 2px rgba(16, 47, 59, .08) !important;
+  transform: translateY(0) !important;
+  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease !important;
+}
+:root:root body :is(.table-action, .payment-table-action, .verification-row-action, .expense-action-button):hover:not(:disabled) {
+  filter: brightness(.98) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 5px 10px rgba(16, 47, 59, .18) !important;
+}
+:root:root body :is(.table-action, .payment-table-action, .verification-row-action, .expense-action-button):active:not(:disabled) {
+  filter: brightness(.96) !important;
+  transform: translateY(0) scale(.98) !important;
+  box-shadow: 0 1px 3px rgba(16, 47, 59, .14) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:root body :is(.table-action, .payment-table-action, .verification-row-action, .expense-action-button) {
+    transition: none !important;
+  }
+}
 :root:root body main tbody .verification-row-action.is-selected { background: #1D4A5A !important; color: #fff !important; }
 :root:root body main tbody :is(.table-action, .payment-table-action):disabled { opacity: .45 !important; cursor: not-allowed !important; }
 :root:root body main tbody :is(.queue-action-buttons, .history-action-group, .expense-actions) { gap: 8px !important; }
@@ -654,3 +677,813 @@ tbody > tr[hidden] { display: none !important; }
 :root:root body.kasir-payment-page #payment-cash-fields input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 :root:root body.kasir-payment-page #payment-cash-fields input[type="number"]::-webkit-inner-spin-button,
 :root:root body.kasir-payment-page #payment-cash-fields input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* =========================================================
+   PENYEMPURNAAN GLOBAL — logout, footer, header HP, sidebar
+   Berlaku untuk Admin, Kasir, Petugas, dan Owner.
+   ========================================================= */
+
+/* Warna tombol Logout mengikuti referensi merah marun. Ukuran dan bentuk tetap. */
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-logout {
+  background-color: rgba(100, 11, 11, .60) !important;
+  border-color: #FF7272 !important;
+  color: #F8FCFD !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-logout:hover {
+  background-color: rgba(100, 11, 11, .84) !important;
+  border-color: #FF7272 !important;
+  color: #FFFFFF !important;
+}
+
+/* Tombol ciut sidebar memakai ikon panel + panah, dengan bidang kotak membulat. */
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-collapse-toggle {
+  display: inline-flex !important;
+  position: fixed !important;
+  top: 18px !important;
+  left: calc(var(--wu-sidebar-w) - 42px) !important;
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  padding: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid rgba(136, 175, 199, .50) !important;
+  border-radius: 9px !important;
+  background: rgba(255, 255, 255, .08) !important;
+  color: #D6F0FF !important;
+  box-shadow: none !important;
+  z-index: 60 !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-collapse-toggle:hover {
+  background: rgba(128, 225, 255, .16) !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-collapse-toggle svg {
+  display: block !important;
+  width: 19px !important;
+  height: 19px !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell.sidebar-collapsed .sidebar-collapse-toggle {
+  top: 52px !important;
+  left: calc((var(--wu-sidebar-w-collapsed) - 34px) / 2) !important;
+}
+/* Pada HP sidebar dibuka melalui tombol hamburger; tombol ciut desktop tidak dipakai. */
+@media (max-width: 768px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-collapse-toggle {
+    display: none !important;
+  }
+}
+
+/* Footer mengecil mengikuti ruang yang tersedia, bukan memaksa teks satu baris. */
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px 18px !important;
+  width: min(100%, 936px) !important;
+  max-width: 936px !important;
+  min-width: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: 20px !important;
+  padding: 12px clamp(14px, 2.6vw, 24px) 14px !important;
+  box-sizing: border-box !important;
+  font-size: clamp(9px, .76vw, 11px) !important;
+  line-height: 1.5 !important;
+  letter-spacing: .035em !important;
+  text-align: left !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .footer-copy {
+  display: flex !important;
+  flex: 1 1 250px !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 4px 8px !important;
+  min-width: 0 !important;
+  line-height: 1.5 !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .footer-copy span:last-child {
+  min-width: 0 !important;
+  overflow-wrap: anywhere !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .c-icon-circle {
+  flex: 0 0 21px !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .footer-location {
+  flex: 0 1 285px !important;
+  min-width: 0 !important;
+  overflow-wrap: anywhere !important;
+  text-align: right !important;
+  line-height: 1.5 !important;
+}
+
+/* Profil header lebih ringkas agar judul dan identitas tidak saling menumpuk di HP. */
+@media (max-width: 768px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar .user-summary {
+    display: flex !important;
+    flex: 0 1 auto !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: auto !important;
+    max-width: 112px !important;
+    min-width: 0 !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-avatar-circle {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px !important;
+    flex: 0 0 28px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-avatar-circle svg {
+    width: 17px !important;
+    height: 17px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-summary .user-info {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: 76px !important;
+    overflow: hidden !important;
+    line-height: 1.1 !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-summary strong {
+    display: block !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    font-size: 10.5px !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0 !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-summary small {
+    display: block !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    font-size: 8px !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0 !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer {
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 7px 14px !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin-top: 24px !important;
+    margin-right: 0 !important;
+    margin-bottom: 18px !important;
+    margin-left: 0 !important;
+    padding: 10px 16px 13px !important;
+    font-size: 9px !important;
+    letter-spacing: .02em !important;
+    text-align: left !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .footer-copy {
+    flex: 1 1 155px !important;
+    gap: 4px 6px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .footer-location {
+    flex: 1 1 155px !important;
+    text-align: left !important;
+  }
+}
+
+@media (max-width: 420px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar {
+    gap: 7px !important;
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .topbar-menu-button {
+    width: 34px !important;
+    height: 34px !important;
+    flex-basis: 34px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-topbar .user-summary {
+    gap: 4px !important;
+    max-width: 98px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-avatar-circle {
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    max-width: 26px !important;
+    flex-basis: 26px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-avatar-circle svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-summary .user-info {
+    max-width: 66px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .user-summary small {
+    font-size: 7.5px !important;
+  }
+}
+
+
+/* =========================================================
+   SIDEBAR — ikon lebih ringkas dan jarak menu lebih lega
+   Berlaku konsisten untuk Admin, Kasir, Petugas, dan Owner.
+   Ukuran tombol menu dipertahankan agar area klik tetap nyaman.
+   ========================================================= */
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-nav {
+  gap: 10px !important;
+}
+
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-nav .nav-item :is(.nav-icon-svg, svg) {
+  width: 12px !important;
+  height: 12px !important;
+  flex: 0 0 12px !important;
+}
+
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-nav .nav-item .nav-icon-rp {
+  width: 12px !important;
+  flex: 0 0 12px !important;
+  font-size: 9px !important;
+}
+
+/* Saat sidebar ciut: ikon lebih kecil, jarak antartombol ditambah. */
+@media (min-width: 769px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell.sidebar-collapsed .dashboard-nav {
+    align-items: center !important;
+    gap: 11px !important;
+  }
+
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell.sidebar-collapsed .dashboard-nav .nav-item :is(.nav-icon-svg, svg) {
+    width: 13px !important;
+    height: 13px !important;
+    flex: 0 0 13px !important;
+  }
+
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell.sidebar-collapsed .dashboard-nav .nav-item .nav-icon-rp {
+    width: 13px !important;
+    flex: 0 0 13px !important;
+    font-size: 10px !important;
+  }
+}
+
+/* =========================================================
+   PENYESUAIAN LANJUTAN — tombol ciut sidebar & footer responsif
+   ========================================================= */
+
+/* Tombol ciut diperkecil agar tidak memenuhi area logo/menu. */
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-collapse-toggle {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  left: calc(var(--wu-sidebar-w) - 38px) !important;
+  border-radius: 8px !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .sidebar-collapse-toggle svg {
+  width: 15px !important;
+  height: 15px !important;
+  stroke-width: 1.7 !important;
+}
+
+/* Saat sidebar ciut, posisikan tombol dengan jarak lebih lega dari menu pertama. */
+@media (min-width: 769px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell.sidebar-collapsed .sidebar-collapse-toggle {
+    top: 53px !important;
+    left: calc((var(--wu-sidebar-w-collapsed) - 30px) / 2) !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-shell.sidebar-collapsed .dashboard-brand {
+    margin-bottom: 54px !important;
+  }
+}
+
+/* Footer desktop/tablet: ukuran normal tetap 12px, lalu mengecil bertahap
+   mengikuti lebar viewport tanpa memaksa elemen saling bertumpuk. */
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px 18px !important;
+  width: min(100%, 932px) !important;
+  max-width: 932px !important;
+  min-width: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 12px 0 14px !important;
+  box-sizing: border-box !important;
+  font-size: clamp(9px, calc(.7vw + 3px), 12px) !important;
+  line-height: 1.45 !important;
+  letter-spacing: clamp(.02em, .06vw, .1em) !important;
+  text-align: left !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer .footer-copy {
+  display: flex !important;
+  flex: 1 1 260px !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 4px 8px !important;
+  min-width: 0 !important;
+  line-height: 1.45 !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer .footer-copy > span {
+  min-width: 0 !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer .footer-copy > span:last-child {
+  overflow-wrap: anywhere !important;
+}
+:root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer .footer-location {
+  flex: 0 1 285px !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  overflow-wrap: anywhere !important;
+  text-align: right !important;
+  line-height: 1.45 !important;
+}
+
+/* Mobile: dua kelompok footer disusun bertingkat, font mengecil proporsional,
+   dan semua teks boleh membungkus agar tidak saling menimpa. */
+@media (max-width: 768px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 7px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 22px 0 18px !important;
+    padding: 11px 0 13px !important;
+    font-size: clamp(9px, calc(1vw + 6px), 12px) !important;
+    line-height: 1.4 !important;
+    letter-spacing: .025em !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer .footer-copy {
+    flex: 0 1 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 4px 7px !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer .footer-location {
+    flex: 0 1 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    text-align: left !important;
+  }
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer .c-icon-circle {
+    flex: 0 0 21px !important;
+    width: 21px !important;
+    height: 21px !important;
+  }
+}
+
+
+/* =========================================================
+   FOOTER MOBILE — pertahankan dua sisi kiri dan kanan.
+   Kedua kelompok tetap sejajar; teks boleh mengecil/membungkus
+   di dalam kolom masing-masing, bukan pindah ke bawah kelompok lain.
+   ========================================================= */
+@media (max-width: 768px) {
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: clamp(6px, 1.6vw, 12px) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 10px clamp(8px, 2vw, 16px) 12px !important;
+    font-size: clamp(9px, calc(.7vw + 6px), 12px) !important;
+    line-height: 1.4 !important;
+    letter-spacing: clamp(0em, .035vw, .08em) !important;
+    text-align: left !important;
+    box-sizing: border-box !important;
+  }
+
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer .footer-copy {
+    display: flex !important;
+    flex: 1 1 58% !important;
+    width: auto !important;
+    max-width: 58% !important;
+    min-width: 0 !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: clamp(3px, .7vw, 7px) !important;
+    text-align: left !important;
+  }
+
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer .footer-copy > span {
+    min-width: 0 !important;
+  }
+
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer .footer-copy > .c-icon-circle {
+    flex: 0 0 21px !important;
+  }
+
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer .footer-copy > span:nth-child(2) {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+  }
+
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer .footer-copy > span:last-child {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+    line-height: 1.35 !important;
+  }
+
+  :root:root body:is(.admin-dashboard-page, .master-page, .owner-page, .petugas-page, .kasir-page) .dashboard-footer .footer-location {
+    flex: 0 1 42% !important;
+    width: auto !important;
+    max-width: 42% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    text-align: right !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    line-height: 1.35 !important;
+  }
+}
+
+
+/* ADMIN VERIFIKASI ABSENSI — ukuran empty state disamakan dengan halaman role lain */
+:root:root body.admin-verification-page #verification-empty.queue-empty h3 {
+  font-size: 18px !important;
+  line-height: 1.4 !important;
+  font-weight: 600 !important;
+  letter-spacing: .02em !important;
+  margin: 0 0 6px !important;
+}
+:root:root body.admin-verification-page #verification-empty.queue-empty p {
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+  font-weight: 500 !important;
+  letter-spacing: .01em !important;
+  margin: 0 !important;
+}
+
+
+/* Efek hover timbul khusus tombol Tambahkan Data di Layanan & Tarif dan Akun Pengguna. */
+:root:root body.master-page:is([data-master="services"], [data-master="users"]) .queue-heading > .dashboard-action#master-add {
+  box-shadow: none !important;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease !important;
+}
+:root:root body.master-page:is([data-master="services"], [data-master="users"]) .queue-heading > .dashboard-action#master-add:not(:disabled):hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 7px 16px rgba(16, 47, 59, .18) !important;
+  background-color: #266078 !important;
+  border-color: #266078 !important;
+}
+:root:root body.master-page:is([data-master="services"], [data-master="users"]) .queue-heading > .dashboard-action#master-add:not(:disabled):active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 5px rgba(16, 47, 59, .12) !important;
+}
+:root:root body.master-page:is([data-master="services"], [data-master="users"]) .queue-heading > .dashboard-action#master-add:focus-visible {
+  outline: 3px solid rgba(128, 225, 255, .85) !important;
+  outline-offset: 3px !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:root body.master-page:is([data-master="services"], [data-master="users"]) .queue-heading > .dashboard-action#master-add {
+    transition: none !important;
+  }
+  :root:root body.master-page:is([data-master="services"], [data-master="users"]) .queue-heading > .dashboard-action#master-add:not(:disabled):is(:hover, :active) {
+    transform: none !important;
+  }
+}
+
+/* =========================================================
+   KASIR — efek hover timbul untuk dialog, pembayaran, dan filter riwayat
+   Efek visual saja; ukuran, warna dasar, dan fungsi kontrol dipertahankan.
+   ========================================================= */
+:root:root body.kasir-queue-page .queue-dialog-actions .queue-dialog-secondary,
+:root:root body.kasir-queue-page .queue-dialog-actions .queue-dialog-primary,
+:root:root body.kasir-payment-page .payment-check-actions .payment-button-secondary,
+:root:root body.kasir-payment-page .payment-check-actions .payment-button-primary,
+:root:root body.kasir-payment-page .payment-receipt-dialog-actions .payment-button-secondary,
+:root:root body.kasir-payment-page .payment-receipt-dialog-actions .payment-button-primary {
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease !important;
+  transform: translateY(0);
+}
+
+:root:root body.kasir-queue-page .queue-dialog-actions .queue-dialog-secondary:not(:disabled):hover,
+:root:root body.kasir-queue-page .queue-dialog-actions .queue-dialog-primary:not(:disabled):hover,
+:root:root body.kasir-payment-page .payment-check-actions .payment-button-secondary:not(:disabled):hover,
+:root:root body.kasir-payment-page .payment-check-actions .payment-button-primary:not(:disabled):hover,
+:root:root body.kasir-payment-page .payment-receipt-dialog-actions .payment-button-secondary:not(:disabled):hover,
+:root:root body.kasir-payment-page .payment-receipt-dialog-actions .payment-button-primary:not(:disabled):hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 7px 16px rgba(16, 47, 59, .18) !important;
+}
+
+:root:root body.kasir-queue-page .queue-dialog-actions .queue-dialog-secondary:not(:disabled):active,
+:root:root body.kasir-queue-page .queue-dialog-actions .queue-dialog-primary:not(:disabled):active,
+:root:root body.kasir-payment-page .payment-check-actions .payment-button-secondary:not(:disabled):active,
+:root:root body.kasir-payment-page .payment-check-actions .payment-button-primary:not(:disabled):active,
+:root:root body.kasir-payment-page .payment-receipt-dialog-actions .payment-button-secondary:not(:disabled):active,
+:root:root body.kasir-payment-page .payment-receipt-dialog-actions .payment-button-primary:not(:disabled):active {
+  transform: translateY(0) scale(.99) !important;
+  box-shadow: 0 2px 5px rgba(16, 47, 59, .12) !important;
+}
+
+:root:root body.kasir-queue-page .queue-dialog-actions button:focus-visible,
+:root:root body.kasir-payment-page .payment-check-actions button:focus-visible,
+:root:root body.kasir-payment-page .payment-receipt-dialog-actions button:focus-visible {
+  outline: 3px solid rgba(128, 225, 255, .8) !important;
+  outline-offset: 3px !important;
+}
+
+/* Tombol titik tiga pada filter Riwayat Transaksi. */
+:root:root body.kasir-history-page .history-filter-toggle {
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease !important;
+  transform: translateY(0);
+}
+:root:root body.kasir-history-page .history-filter-toggle:not(:disabled):hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 7px 15px rgba(16, 47, 59, .16) !important;
+}
+:root:root body.kasir-history-page .history-filter-toggle:not(:disabled):active {
+  transform: translateY(0) scale(.98) !important;
+  box-shadow: 0 2px 5px rgba(16, 47, 59, .12) !important;
+}
+:root:root body.kasir-history-page .history-filter-toggle:focus-visible {
+  outline: 3px solid rgba(128, 225, 255, .8) !important;
+  outline-offset: 3px !important;
+}
+
+/* Kolom pencarian, status pengerjaan, status pembayaran, dan tanggal transaksi. */
+:root:root body.kasir-history-page .history-search-card .history-search-field input,
+:root:root body.kasir-history-page .history-search-card .history-filter-field input,
+:root:root body.kasir-history-page .history-search-card .history-filter-field select {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease !important;
+  transform: translateY(0);
+}
+:root:root body.kasir-history-page .history-search-card .history-search-field input:not(:disabled):hover:not(:focus),
+:root:root body.kasir-history-page .history-search-card .history-filter-field input:not(:disabled):hover:not(:focus),
+:root:root body.kasir-history-page .history-search-card .history-filter-field select:not(:disabled):hover:not(:focus) {
+  transform: translateY(-2px) !important;
+  border-color: #8DC8DC !important;
+  box-shadow: 0 7px 15px rgba(16, 47, 59, .12) !important;
+}
+:root:root body.kasir-history-page .history-search-card .history-search-field input:focus,
+:root:root body.kasir-history-page .history-search-card .history-filter-field input:focus,
+:root:root body.kasir-history-page .history-search-card .history-filter-field select:focus {
+  transform: translateY(0) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:root body.kasir-queue-page .queue-dialog-actions button,
+  :root:root body.kasir-payment-page .payment-check-actions button,
+  :root:root body.kasir-payment-page .payment-receipt-dialog-actions button,
+  :root:root body.kasir-history-page .history-filter-toggle,
+  :root:root body.kasir-history-page .history-search-card input,
+  :root:root body.kasir-history-page .history-search-card select {
+    transition: none !important;
+  }
+  :root:root body.kasir-queue-page .queue-dialog-actions button:hover,
+  :root:root body.kasir-payment-page .payment-check-actions button:hover,
+  :root:root body.kasir-payment-page .payment-receipt-dialog-actions button:hover,
+  :root:root body.kasir-history-page .history-filter-toggle:hover,
+  :root:root body.kasir-history-page .history-search-card input:hover,
+  :root:root body.kasir-history-page .history-search-card select:hover {
+    transform: none !important;
+  }
+}
+
+/* =========================================================
+   GLOBAL FORM FIELDS — efek hover timbul lintas role
+   Mencakup input, select, textarea, tanggal, pencarian, dan field edit.
+   Hanya efek visual; ukuran, isi, warna latar, dan fungsi form dipertahankan.
+   ========================================================= */
+:root:root body:is(
+  .admin-dashboard-page,
+  .master-page,
+  .admin-verification-page,
+  .kasir-page,
+  .petugas-page,
+  .owner-page
+) :is(
+  input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="image"]),
+  select,
+  textarea,
+  [contenteditable="true"]
+) {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease !important;
+  transform: translateY(0);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :root:root body:is(
+    .admin-dashboard-page,
+    .master-page,
+    .admin-verification-page,
+    .kasir-page,
+    .petugas-page,
+    .owner-page
+  ) :is(
+    input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="image"]),
+    select,
+    textarea,
+    [contenteditable="true"]
+  ):not(:disabled):not([readonly]):not(:focus):hover {
+    transform: translateY(-2px) !important;
+    border-color: #8DC8DC !important;
+    box-shadow: 0 7px 15px rgba(16, 47, 59, .12) !important;
+  }
+}
+
+:root:root body:is(
+  .admin-dashboard-page,
+  .master-page,
+  .admin-verification-page,
+  .kasir-page,
+  .petugas-page,
+  .owner-page
+) :is(
+  input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="image"]),
+  select,
+  textarea,
+  [contenteditable="true"]
+):not(:disabled):not([readonly]):focus {
+  transform: translateY(-1px) !important;
+  border-color: #69BBD3 !important;
+  box-shadow: 0 0 0 3px rgba(128, 225, 255, .20), 0 5px 12px rgba(16, 47, 59, .10) !important;
+}
+
+:root:root body:is(
+  .admin-dashboard-page,
+  .master-page,
+  .admin-verification-page,
+  .kasir-page,
+  .petugas-page,
+  .owner-page
+) :is(
+  input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="image"]),
+  select,
+  textarea,
+  [contenteditable="true"]
+):not(:disabled):not([readonly]):active {
+  transform: translateY(0) scale(.998) !important;
+  box-shadow: 0 2px 5px rgba(16, 47, 59, .10) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:root body:is(
+    .admin-dashboard-page,
+    .master-page,
+    .admin-verification-page,
+    .kasir-page,
+    .petugas-page,
+    .owner-page
+  ) :is(
+    input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="image"]),
+    select,
+    textarea,
+    [contenteditable="true"]
+  ) {
+    transition: none !important;
+  }
+  :root:root body:is(
+    .admin-dashboard-page,
+    .master-page,
+    .admin-verification-page,
+    .kasir-page,
+    .petugas-page,
+    .owner-page
+  ) :is(
+    input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="image"]),
+    select,
+    textarea,
+    [contenteditable="true"]
+  ):is(:hover, :focus, :active) {
+    transform: none !important;
+  }
+}
+
+
+
+/* =========================================================
+   EDIT PROFILE — efek hover timbul tombol Batal & Simpan
+   Dibagikan oleh komponen profil pada seluruh role.
+   ========================================================= */
+:root:root body .profile-edit-dialog .profile-edit-actions button:not(:disabled) {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 5px rgba(16, 47, 59, .10) !important;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease !important;
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :root:root body .profile-edit-dialog .profile-edit-actions button:not(:disabled):hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 7px 15px rgba(16, 47, 59, .18) !important;
+    filter: brightness(1.025);
+  }
+}
+
+:root:root body .profile-edit-dialog .profile-edit-actions button:not(:disabled):active {
+  transform: translateY(0) scale(.985) !important;
+  box-shadow: 0 2px 5px rgba(16, 47, 59, .12) !important;
+  filter: none;
+}
+
+:root:root body .profile-edit-dialog .profile-edit-actions button:focus-visible {
+  outline: 3px solid rgba(128, 225, 255, .82) !important;
+  outline-offset: 3px !important;
+}
+
+:root:root body .profile-edit-dialog .profile-edit-actions button:disabled {
+  transform: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:root body .profile-edit-dialog .profile-edit-actions button {
+    transition: none !important;
+    will-change: auto;
+  }
+  :root:root body .profile-edit-dialog .profile-edit-actions button:is(:hover, :active) {
+    transform: none !important;
+  }
+}
+
+
+/* =========================================================
+   PETUGAS — status hanya dapat diperbarui oleh Kasir
+   dan seluruh tombol memakai efek hover timbul yang konsisten.
+   ========================================================= */
+:root:root body.petugas-page .petugas-status-readonly-note {
+  margin: 0 0 4px !important;
+  padding: 12px 14px !important;
+  border: 1px solid rgba(47, 106, 140, .22) !important;
+  border-radius: 9px !important;
+  background: #F3F9FC !important;
+  color: #54727E !important;
+  font-size: 12px !important;
+  line-height: 1.55 !important;
+}
+
+:root:root body.petugas-page button:not(:disabled) {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 4px rgba(16, 47, 59, .10) !important;
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease, background-color 180ms ease !important;
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :root:root body.petugas-page button:not(:disabled):hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 7px 14px rgba(16, 47, 59, .18) !important;
+    filter: brightness(1.025);
+  }
+}
+
+:root:root body.petugas-page button:not(:disabled):active {
+  transform: translateY(0) scale(.985) !important;
+  box-shadow: 0 2px 5px rgba(16, 47, 59, .12) !important;
+  filter: none;
+}
+
+:root:root body.petugas-page button:focus-visible {
+  outline: 3px solid rgba(128, 225, 255, .82) !important;
+  outline-offset: 3px !important;
+}
+
+:root:root body.petugas-page button:disabled {
+  transform: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:root body.petugas-page button {
+    transition: none !important;
+    will-change: auto;
+  }
+  :root:root body.petugas-page button:is(:hover, :active) {
+    transform: none !important;
+  }
+}

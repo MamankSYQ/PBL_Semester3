@@ -257,6 +257,7 @@
 .ss-grid tbody th strong {
   color: var(--wu-text);
   font-size: 0.9375rem;
+  font-weight: 600;
 }
 
 .ss-grid tbody th small {
@@ -840,3 +841,122 @@
 }
 :root:root body.master-page .sd-times-dialog #master-add .btn-icon { display: inline-flex; line-height: 0; }
 :root:root body.master-page .sd-times-dialog #master-add .btn-icon svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+/* Aksi utama Data Shift Admin: teks SemiBold dan efek terangkat saat hover. */
+:root:root body.master-page :is(#ss-copy-week, #ss-open-bulk) {
+  font-weight: 600 !important;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+:root:root body.master-page .sd-header-actions > button {
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+:root:root body.master-page :is(#ss-copy-week, #ss-open-bulk, .sd-header-actions > button):not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 16px rgba(16, 47, 59, .16);
+}
+
+:root:root body.master-page :is(#ss-copy-week, #ss-open-bulk, .sd-header-actions > button):not(:disabled):active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(16, 47, 59, .12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:root body.master-page :is(#ss-copy-week, #ss-open-bulk, .sd-header-actions > button) {
+    transition: none;
+  }
+  :root:root body.master-page :is(#ss-copy-week, #ss-open-bulk, .sd-header-actions > button):not(:disabled):hover,
+  :root:root body.master-page :is(#ss-copy-week, #ss-open-bulk, .sd-header-actions > button):not(:disabled):active {
+    transform: none;
+  }
+}
+
+
+
+/* Rentang minggu dan tautan kembali dikelompokkan agar tautan berada tepat di bawah card periode. */
+.ss-week-group {
+  display: flex;
+  flex: 0 1 auto;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.ss-week-group .ss-link-button {
+  margin: 0;
+  padding: 2px 6px;
+  text-align: left;
+}
+@media (max-width: 768px) {
+  .ss-week-group {
+    width: 100%;
+  }
+  .ss-week-group .ss-week-nav {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* Efek timbul pada tombol Tambahkan Data dan aksi Hapus di dialog Atur Jam Shift. */
+:root:root body.master-page .sd-times-dialog #master-add {
+  transform: translateY(0) !important;
+  box-shadow: 0 1px 2px rgba(16, 47, 59, .08) !important;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease, filter 180ms ease !important;
+}
+:root:root body.master-page .sd-times-dialog #master-add:not(:disabled):hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 7px 16px rgba(16, 47, 59, .18) !important;
+  background: #143C4A !important;
+  border-color: #143C4A !important;
+}
+:root:root body.master-page .sd-times-dialog #master-add:not(:disabled):active {
+  transform: translateY(0) scale(.98) !important;
+  box-shadow: 0 2px 5px rgba(16, 47, 59, .12) !important;
+}
+:root:root body.master-page .sd-times-dialog tbody .table-action {
+  transform: translateY(0) !important;
+  box-shadow: 0 1px 2px rgba(16, 47, 59, .08) !important;
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease !important;
+}
+:root:root body.master-page .sd-times-dialog tbody .table-action:not(:disabled):hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 5px 10px rgba(16, 47, 59, .18) !important;
+  filter: brightness(.98) !important;
+}
+:root:root body.master-page .sd-times-dialog tbody .table-action:not(:disabled):active {
+  transform: translateY(0) scale(.98) !important;
+  box-shadow: 0 1px 3px rgba(16, 47, 59, .14) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:root body.master-page .sd-times-dialog :is(#master-add, tbody .table-action) { transition: none !important; }
+}
+
+
+
+/* Tombol Tampilkan ke Owner: font SemiBold dan efek hover timbul. */
+:root:root body.master-page .ss-publish #ss-publish-button {
+  font-weight: 600 !important;
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease, background-color .18s ease;
+  will-change: transform;
+}
+@media (hover: hover) and (pointer: fine) {
+  :root:root body.master-page .ss-publish #ss-publish-button:not(:disabled):hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 7px 16px rgba(16, 47, 59, .2) !important;
+    filter: brightness(1.04);
+  }
+}
+:root:root body.master-page .ss-publish #ss-publish-button:not(:disabled):active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 5px rgba(16, 47, 59, .14) !important;
+  filter: brightness(.98);
+}
+:root:root body.master-page .ss-publish #ss-publish-button:focus-visible {
+  outline: 3px solid rgba(128, 225, 255, .9);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:root body.master-page .ss-publish #ss-publish-button { transition: none; }
+  :root:root body.master-page .ss-publish #ss-publish-button:not(:disabled):is(:hover, :active) { transform: none !important; box-shadow: none !important; }
+}

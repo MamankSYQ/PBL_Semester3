@@ -81,19 +81,7 @@ const transactionStorageKey = "washupTransactions";
 const attendanceStorageKey = "washupPetugasAttendance";
 const baseDashboardData = { vehicles: 0, transactions: 0, queue: 0, revenue: 0 };
 
-// Tarif berdasarkan ukuran kendaraan (revisi kelompok, Oktober 2026), menggantikan sistem cuci paket.
-const serviceOptions = {
-  Mobil: [
-    { name: "Cuci Mobil Kecil", price: 30000 },
-    { name: "Cuci Mobil Sedang", price: 35000 },
-    { name: "Cuci Mobil Besar", price: 40000 },
-  ],
-  Motor: [
-    { name: "Cuci Motor Kecil", price: 12000 },
-    { name: "Cuci Motor Sedang", price: 15000 },
-    { name: "Cuci Motor Besar", price: 17000 },
-  ],
-};
+// Daftar layanan aktif dibaca dari master layanan agar penghapusan berlaku juga untuk transaksi baru.
 
 const masterDefinitions = {
   services: {
@@ -122,19 +110,22 @@ const masterDefinitions = {
     columns: ["name", "start", "end", "status"],
     labels: { name: "Shift", start: "Mulai", end: "Selesai", status: "Status" },
     detailTitle: "Detail Shift",
-    deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?",
+    deleteMessage: "Shift ini akan dihapus dari daftar pilihan baru. Jadwal lama tetap tersimpan, tetapi penugasan yang memakai shift ini perlu diatur ulang.",
   },
   users: {
     key: "washupUsers",
     title: "Akun Pengguna",
     fields: [
-      { key: "username", label: "Username", type: "text", required: true },
-      { key: "password", label: "Password", type: "password", required: true },
+      { key: "fullName", label: "Nama Lengkap", type: "text", placeholder: "Masukkan nama lengkap", required: true },
+      { key: "username", label: "Username", type: "text", placeholder: "Masukkan username", required: true },
+      { key: "phone", label: "Nomor Telepon", type: "tel", placeholder: "Masukkan nomor telepon", required: false },
+      { key: "password", label: "Password", type: "password", placeholder: "Masukkan password", required: true },
       { key: "role", label: "Role", type: "select", options: ["Admin", "Kasir", "Petugas", "Owner"], required: true },
       { key: "status", label: "Status", type: "select", options: ["Aktif", "Nonaktif"], required: true },
     ],
-    columns: ["username", "role", "status"],
-    labels: { username: "Username", role: "Role", status: "Status" },
+    columns: ["fullName", "username", "role", "status"],
+    searchColumns: ["fullName", "username", "role", "status"],
+    labels: { fullName: "Nama Lengkap", username: "Username", phone: "Nomor Telepon", role: "Role", status: "Status" },
     detailTitle: "Detail Akun",
     deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?",
   },
@@ -153,7 +144,7 @@ const masterDefaults = {
     { id: "shift-pagi", name: "Shift Pagi", start: "08:00", end: "16:00", status: "Aktif" },
     { id: "shift-malam", name: "Shift Malam", start: "16:00", end: "00:00", status: "Aktif" },
   ],
-  users: Object.entries(accounts).map(([username, account]) => ({ id: `user-${username}`, username, password: account.password, role: account.role, status: "Aktif" })),
+  users: Object.entries(accounts).map(([username, account]) => ({ id: `user-${username}`, fullName: account.fullName || "", username, phone: account.phone || "", password: account.password, role: account.role, status: "Aktif" })),
 };
 
 function readMasterRecords(definition) {
@@ -169,6 +160,51 @@ function saveMasterRecords(definition, records) {
   localStorage.setItem(definition.key, JSON.stringify(records));
 }
 
+// ID layanan bawaan yang dihapus disimpan sebagai penanda agar layanan tersebut
+// tidak ditambahkan kembali saat master data diinisialisasi pada kunjungan berikutnya.
+const deletedDefaultServiceStorageKey = "washupDeletedServiceIds";
+
+function readDeletedDefaultServiceIds() {
+  try {
+    const value = JSON.parse(localStorage.getItem(deletedDefaultServiceStorageKey) || "[]");
+    return Array.isArray(value) ? value.map(String) : [];
+  } catch {
+    return [];
+  }
+}
+
+function rememberDeletedDefaultServiceId(id) {
+  if (!id) return;
+  const deletedIds = readDeletedDefaultServiceIds();
+  const normalizedId = String(id);
+  if (!deletedIds.includes(normalizedId)) {
+    deletedIds.push(normalizedId);
+    localStorage.setItem(deletedDefaultServiceStorageKey, JSON.stringify(deletedIds));
+  }
+}
+
+// ID shift bawaan yang dihapus disimpan agar tidak muncul kembali saat master shift diinisialisasi.
+const deletedDefaultShiftStorageKey = "washupDeletedShiftIds";
+
+function readDeletedDefaultShiftIds() {
+  try {
+    const value = JSON.parse(localStorage.getItem(deletedDefaultShiftStorageKey) || "[]");
+    return Array.isArray(value) ? value.map(String) : [];
+  } catch {
+    return [];
+  }
+}
+
+function rememberDeletedDefaultShiftId(id) {
+  if (!id) return;
+  const deletedIds = readDeletedDefaultShiftIds();
+  const normalizedId = String(id);
+  if (!deletedIds.includes(normalizedId)) {
+    deletedIds.push(normalizedId);
+    localStorage.setItem(deletedDefaultShiftStorageKey, JSON.stringify(deletedIds));
+  }
+}
+
 // Layanan paket lama yang sudah tidak dipakai. Dihapus otomatis dari localStorage agar tidak muncul lagi
 // di Layanan & Tarif maupun Transaksi Baru. Transaksi lama tetap menyimpan nama dan harga aslinya.
 const retiredServiceIds = ["service-mobil-1", "service-mobil-2", "service-mobil-3", "service-motor-1", "service-motor-2"];
@@ -177,25 +213,49 @@ function ensureMasterDefaults(type, definition) {
   const defaults = masterDefaults[type];
   if (!defaults) return readMasterRecords(definition);
   let records = readMasterRecords(definition);
-  if (type === "services" && records.some((record) => retiredServiceIds.includes(record.id))) {
-    records = records.filter((record) => !retiredServiceIds.includes(record.id));
-    saveMasterRecords(definition, records);
+  const deletedServiceIds = type === "services" ? new Set(readDeletedDefaultServiceIds()) : new Set();
+  const deletedShiftIds = type === "shifts" ? new Set(readDeletedDefaultShiftIds()) : new Set();
+  if (type === "services" || type === "shifts") {
+    const filteredRecords = records.filter((record) => {
+      if (type === "services") return !retiredServiceIds.includes(record.id) && !deletedServiceIds.has(String(record.id));
+      return !deletedShiftIds.has(String(record.id));
+    });
+    if (filteredRecords.length !== records.length) {
+      records = filteredRecords;
+      saveMasterRecords(definition, records);
+    }
   }
   if (type === "users") {
     if (localStorage.getItem(definition.key) === null) {
       records = defaults.map((record) => ({ ...record }));
       saveMasterRecords(definition, records);
-    } else if (!records.some((record) => String(record?.username || "").trim().toLowerCase() === "admin")) {
-      const admin = defaults.find((record) => record.username === "admin");
-      if (admin) {
-        records.push({ ...admin });
-        saveMasterRecords(definition, records);
+    } else {
+      let changed = false;
+      records = records.map((record) => {
+        const updates = {};
+        if (!Object.prototype.hasOwnProperty.call(record, "fullName")) updates.fullName = "";
+        if (!Object.prototype.hasOwnProperty.call(record, "phone")) updates.phone = "";
+        if (!Object.keys(updates).length) return record;
+        changed = true;
+        return { ...record, ...updates };
+      });
+      if (!records.some((record) => String(record?.username || "").trim().toLowerCase() === "admin")) {
+        const admin = defaults.find((record) => record.username === "admin");
+        if (admin) {
+          records.push({ ...admin });
+          changed = true;
+        }
       }
+      if (changed) saveMasterRecords(definition, records);
     }
     return records;
   }
   const existingKeys = new Set(records.map((record) => record.id));
-  const missing = defaults.filter((record) => !existingKeys.has(record.id));
+  const missing = defaults.filter((record) =>
+    !existingKeys.has(record.id) &&
+    !(type === "services" && deletedServiceIds.has(String(record.id))) &&
+    !(type === "shifts" && deletedShiftIds.has(String(record.id)))
+  );
   if (missing.length) {
     records.push(...missing.map((record) => ({ ...record })));
     saveMasterRecords(definition, records);
@@ -211,7 +271,12 @@ function getActiveEmployees() {
   return getUserAccounts()
     .filter((account) => account && account.status === "Aktif" &&
       (account.role === "Kasir" || account.role === "Petugas") && String(account.username || "").trim())
-    .map((account) => ({ name: String(account.username || "").trim(), role: account.role }));
+    .map((account) => ({
+      // `name` tetap memakai username untuk pencocokan data absensi lama; `displayName` untuk UI.
+      name: String(account.username || "").trim(),
+      displayName: String(account.fullName || account.username || "").trim(),
+      role: account.role,
+    }));
 }
 
 // Shift bawaan disimpan sejak awal agar dashboard, laporan, dan absensi tidak menunggu
@@ -225,7 +290,6 @@ try {
 function getActiveServiceOptions() {
   const definition = masterDefinitions.services;
   const records = ensureMasterDefaults("services", definition);
-  if (!records.length) return serviceOptions;
   return records.reduce((grouped, service) => {
     if (service.status !== "Aktif" || !service.name || !service.vehicleType || !(Number(service.price) > 0)) return grouped;
     grouped[service.vehicleType] ||= [];
@@ -2083,7 +2147,7 @@ function setupOwnerEmployeeReport() {
     monthlySummaries.set(key, summary);
   });
   attendanceBody.replaceChildren();
-  const sortedEmployees = [...activeEmployees].sort((first, second) => first.name.localeCompare(second.name, "id-ID"));
+  const sortedEmployees = [...activeEmployees].sort((first, second) => first.displayName.localeCompare(second.displayName, "id-ID"));
   attendanceEmpty.hidden = sortedEmployees.length > 0;
   attendanceTableWrap.hidden = sortedEmployees.length === 0;
   sortedEmployees.forEach((employee) => {
@@ -2091,7 +2155,7 @@ function setupOwnerEmployeeReport() {
     const summary = monthlySummaries.get(key) || { presentDates: new Set(), lateDates: new Set() };
     const row = document.createElement("tr");
     // Izin dan insentif belum memiliki sumber data yang dapat dipercaya.
-    [employee.name, summary.presentDates.size, summary.lateDates.size, "-", "-"].forEach((value) => appendCell(row, value));
+    [employee.displayName, summary.presentDates.size, summary.lateDates.size, "-", "-"].forEach((value) => appendCell(row, value));
     attendanceBody.append(row);
   });
   setupOwnerLogout();
@@ -2146,6 +2210,36 @@ function setupOwnerServiceStats() {
     monthSelect.append(option);
   });
 
+  let chartRevealObserver = null;
+  const revealChartWhenVisible = () => {
+    chart.classList.remove("is-visible");
+    if (chartRevealObserver) {
+      chartRevealObserver.disconnect();
+      chartRevealObserver = null;
+    }
+    if (!chart.querySelector(".owner-chart-bar")) return;
+
+    const prefersReducedMotion = Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    if (prefersReducedMotion) {
+      chart.classList.add("is-visible");
+      return;
+    }
+
+    if (typeof IntersectionObserver === "function") {
+      chartRevealObserver = new IntersectionObserver((entries, observer) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          chart.classList.add("is-visible");
+          observer.disconnect();
+          chartRevealObserver = null;
+        }
+      }, { threshold: 0.12 });
+      chartRevealObserver.observe(chart);
+      return;
+    }
+
+    window.requestAnimationFrame(() => chart.classList.add("is-visible"));
+  };
+
   const render = () => {
     const month = Number(monthSelect.value) || now.getMonth() + 1;
     const year = Number(yearSelect.value) || now.getFullYear();
@@ -2171,6 +2265,7 @@ function setupOwnerServiceStats() {
     topService.textContent = popularServices[0]?.name || "-";
     revenueTotal.textContent = formatCurrency(totalRevenue);
     chart.replaceChildren();
+    chart.classList.remove("is-visible");
     empty.hidden = popularServices.length > 0;
     if (popularServices.length) {
       const maxUsage = Math.max(...popularServices.map((service) => service.count));
@@ -2191,7 +2286,7 @@ function setupOwnerServiceStats() {
       }
       const bars = document.createElement("div");
       bars.className = "owner-chart-bars";
-      popularServices.forEach((service) => {
+      popularServices.forEach((service, index) => {
         const column = document.createElement("div");
         column.className = "owner-chart-column";
         const value = document.createElement("span");
@@ -2202,6 +2297,7 @@ function setupOwnerServiceStats() {
         const bar = document.createElement("div");
         bar.className = "owner-chart-bar";
         bar.style.height = `${Math.max((service.count / scale) * 100, 4)}%`;
+        bar.style.setProperty("--owner-bar-index", String(index));
         barTrack.append(value, bar);
         const label = document.createElement("span");
         label.className = "owner-chart-label";
@@ -2218,6 +2314,7 @@ function setupOwnerServiceStats() {
       scroller.setAttribute("aria-label", "Grafik popularitas layanan, dapat digeser");
       scroller.append(plot);
       chart.append(scroller);
+      revealChartWhenVisible();
     }
   };
   applyButton.addEventListener("click", render);
@@ -2730,7 +2827,6 @@ function setupPetugasDashboard() {
   const dialog = document.querySelector("#petugas-dialog");
   if (!body || !empty || !dialog) return;
 
-  let selectedId = null;
   const waitingCount = document.querySelector("#waiting-count");
   const washingCount = document.querySelector("#washing-count");
   const doneCount = document.querySelector("#done-count");
@@ -2789,7 +2885,6 @@ function setupPetugasDashboard() {
   };
 
   function openDetail(transaction) {
-    selectedId = transaction.id;
     const values = {
       "petugas-detail-queue": transaction.queueNumber,
       "petugas-detail-transaction": transaction.transactionNumber,
@@ -2805,8 +2900,6 @@ function setupPetugasDashboard() {
     Object.entries(values).forEach(([id, value]) => {
       document.querySelector(`#${id}`).textContent = value || "-";
     });
-    document.querySelector("#petugas-detail-status").value = transaction.serviceStatus;
-    document.querySelector("#petugas-dialog-notice").textContent = "";
     if (typeof dialog.showModal === "function") dialog.showModal();
     else dialog.setAttribute("open", "");
   }
@@ -2814,31 +2907,10 @@ function setupPetugasDashboard() {
   const close = () => {
     if (typeof dialog.close === "function") dialog.close();
     else dialog.removeAttribute("open");
-    selectedId = null;
   };
   document.querySelector("#petugas-dialog-close")?.addEventListener("click", close);
   dialog.addEventListener("click", (event) => {
     if (event.target === dialog) close();
-  });
-  document.querySelector("#petugas-update-status")?.addEventListener("click", () => {
-    const transactions = getTransactions();
-    const transaction = transactions.find((item) => item.id === selectedId);
-    if (!transaction) return;
-    const notice = document.querySelector("#petugas-dialog-notice");
-    if (transaction.paymentStatus === "Lunas") {
-      notice.textContent = "Status pengerjaan tidak dapat diubah setelah transaksi Lunas.";
-      return;
-    }
-    const nextStatus = document.querySelector("#petugas-detail-status").value;
-    if (!isValidServiceStatusTransition(transaction.serviceStatus, nextStatus)) {
-      notice.textContent = "Status harus mengikuti urutan Menunggu, Sedang Dicuci, lalu Selesai.";
-      return;
-    }
-    transaction.serviceStatus = nextStatus;
-    saveTransactions(transactions);
-    document.querySelector("#petugas-detail-service-status").textContent = transaction.serviceStatus;
-    notice.textContent = "Status pengerjaan berhasil diperbarui.";
-    render();
   });
   render();
 }
@@ -3245,6 +3317,10 @@ function enhanceSelect(select) {
   trigger.setAttribute("aria-haspopup", "listbox");
   if (select.required) trigger.setAttribute("aria-required", "true");
   trigger.setAttribute("aria-expanded", "false");
+  if (select.disabled) {
+    trigger.disabled = true;
+    trigger.setAttribute("aria-disabled", "true");
+  }
   const valueText = document.createElement("span");
   valueText.id = `${select.id}-value`;
   trigger.append(valueText);
@@ -3286,7 +3362,7 @@ function enhanceSelect(select) {
     list.setAttribute("aria-activedescendant", items[activeIndex].id);
   };
   const open = () => {
-    if (!items.length) return;
+    if (!items.length || select.disabled) return;
     list.hidden = false;
     trigger.setAttribute("aria-expanded", "true");
     setActive(Math.max(0, select.selectedIndex));
@@ -3379,12 +3455,18 @@ function setupMasterPage() {
   // Validasi ditangani validate() agar pesan selalu tampil di dialog (termasuk untuk dropdown kustom yang <select>-nya tersembunyi).
   if (form) form.noValidate = true;
 
-  const isProtectedRecord = (record) => (type === "users" && String(record.username || "").trim().toLowerCase() === "admin") || (type === "services" && masterDefaults.services.some((item) => item.id === record.id)) || (type === "shifts" && masterDefaults.shifts.some((item) => item.id === record.id));
+  // Akun admin utama dan shift bawaan tetap dilindungi. Layanan bawaan boleh dihapus
+  // karena penghapusannya dicatat agar tidak muncul kembali setelah halaman dimuat ulang.
+  const isProtectedRecord = (record) =>
+    type === "users" && String(record.username || "").trim().toLowerCase() === "admin";
+  const isEditProtectedRecord = (record) =>
+    type === "shifts" && masterDefaults.shifts.some((item) => item.id === record.id);
   // Jam shift ditampilkan dengan titik seperti Figma (08.00); jam selesai 00:00 berarti tengah malam (24.00).
   const formatShiftTime = (key, value) => (key === "end" && value === "00:00" ? "24.00" : String(value).replace(":", "."));
   const valueForDisplay = (key, value) => {
     if (key === "price") return formatCurrency(value);
     if (type === "shifts" && (key === "start" || key === "end") && value) return formatShiftTime(key, value);
+    if (type === "users" && key === "fullName" && !String(value || "").trim()) return "-";
     return (customSelectTypes.includes(type) && customSelectLabels[value]) || String(value || "-");
   };
   const createId = () => `${type}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -3420,14 +3502,18 @@ function setupMasterPage() {
         row.append(cell);
       });
       const actions = document.createElement("td");
-      const detailButton = document.createElement("button");
-      detailButton.className = "table-action table-action-link table-action-detail";
-      detailButton.type = "button";
-      detailButton.dataset.action = "detail";
-      detailButton.dataset.id = record.id;
-      detailButton.textContent = "Detail";
-      actions.append(detailButton);
-      if (!(type === "users" && isProtectedRecord(record))) {
+      // Layanan & Tarif cukup menyediakan aksi Edit dan Hapus.
+      // Detail tetap tersedia pada master data lain yang masih membutuhkannya.
+      if (type !== "services" && type !== "shifts") {
+        const detailButton = document.createElement("button");
+        detailButton.className = "table-action table-action-link table-action-detail";
+        detailButton.type = "button";
+        detailButton.dataset.action = "detail";
+        detailButton.dataset.id = record.id;
+        detailButton.textContent = "Detail";
+        actions.append(detailButton);
+      }
+      if (!isEditProtectedRecord(record)) {
         const editButton = document.createElement("button");
         editButton.className = "table-action table-action-edit";
         editButton.type = "button";
@@ -3435,6 +3521,8 @@ function setupMasterPage() {
         editButton.dataset.id = record.id;
         editButton.textContent = "Edit";
         actions.append(editButton);
+      }
+      if (!isProtectedRecord(record)) {
         const deleteButton = document.createElement("button");
         deleteButton.className = "table-action table-action-delete";
         deleteButton.type = "button";
@@ -3452,7 +3540,10 @@ function setupMasterPage() {
 
   function renderForm(record = {}) {
     formFields.replaceChildren();
+    const isMainAdmin = type === "users" && String(record.username || "").trim().toLowerCase() === "admin";
     definition.fields.forEach((field) => {
+      // Password akun yang sudah ada hanya dapat diperbarui oleh pemilik akun melalui Edit Profil.
+      if (type === "users" && record.id && field.key === "password") return;
       const wrapper = document.createElement("div");
       wrapper.className = "form-field";
       const label = document.createElement("label");
@@ -3466,9 +3557,14 @@ function setupMasterPage() {
       input.name = field.key;
       input.type = field.type === "select" ? "text" : field.type;
       input.required = Boolean(field.required);
+      if (isMainAdmin && ["username", "role", "status"].includes(field.key)) input.disabled = true;
       if (field.min !== undefined) input.min = String(field.min);
       if (field.step !== undefined) input.step = String(field.step);
       if (field.placeholder) input.placeholder = field.placeholder;
+      if (field.type === "tel") {
+        input.inputMode = "tel";
+        input.autocomplete = "tel";
+      }
       if (field.type === "select") {
         field.options.forEach((optionValue) => {
           const option = document.createElement("option");
@@ -3487,6 +3583,14 @@ function setupMasterPage() {
       wrapper.append(input);
       formFields.append(wrapper);
     });
+    if (type === "users" && record.id) {
+      const note = document.createElement("p");
+      note.className = "master-admin-account-note";
+      note.textContent = isMainAdmin
+        ? "Akun Admin utama: username, role, dan status dikunci. Password hanya dapat diubah oleh pemilik akun melalui Edit Profil."
+        : "Password hanya dapat diubah oleh pemilik akun melalui menu Edit Profil.";
+      formFields.append(note);
+    }
     if (customSelectTypes.includes(type)) formFields.querySelectorAll("select").forEach(enhanceSelect);
   }
 
@@ -3503,15 +3607,43 @@ function setupMasterPage() {
     const detailTitle = detailDialog.querySelector(".dialog-heading h2");
     if (detailTitle && definition.detailTitle) detailTitle.textContent = definition.detailTitle;
     detailContent.replaceChildren();
-    definition.columns.forEach((column) => {
+    const detailColumns = type === "users"
+      ? ["fullName", "username", "phone", "role", "status"]
+      : definition.columns;
+    detailColumns.forEach((column) => {
       const wrapper = document.createElement("div");
       const label = document.createElement("span");
-      label.textContent = (definition.detailLabels || definition.labels)[column];
+      const labelText = (definition.detailLabels || definition.labels)[column];
+      // Detail Akun menggunakan format label: nilai agar setiap informasi mudah dibaca.
+      label.textContent = type === "users" ? `${labelText}:` : labelText;
       const value = document.createElement("strong");
       value.textContent = valueForDisplay(column, record[column]);
       wrapper.append(label, value);
       detailContent.append(wrapper);
     });
+
+    if (type === "users") {
+      const passwordPanel = document.createElement("section");
+      passwordPanel.className = "master-detail-password-panel";
+      const panelTitle = document.createElement("h3");
+      panelTitle.textContent = "Password Akun";
+
+      const currentPassword = document.createElement("p");
+      currentPassword.className = "master-detail-password-current";
+      const currentPasswordLabel = document.createElement("span");
+      currentPasswordLabel.textContent = "Password saat ini:";
+      const maskedPassword = document.createElement("strong");
+      maskedPassword.textContent = "••••••••";
+      currentPassword.append(currentPasswordLabel, maskedPassword);
+
+      const passwordNote = document.createElement("p");
+      passwordNote.className = "master-detail-password-note";
+      passwordNote.textContent = "Password hanya dapat diubah oleh pemilik akun melalui menu Edit Profil.";
+
+      passwordPanel.append(panelTitle, currentPassword, passwordNote);
+      detailContent.append(passwordPanel);
+    }
+
     if (typeof detailDialog.showModal === "function") detailDialog.showModal(); else detailDialog.setAttribute("open", "");
   }
 
@@ -3571,6 +3703,13 @@ function setupMasterPage() {
       return;
     }
     if (action === "confirm" && deletingId) {
+      const recordToDelete = getRecords().find((item) => item.id === deletingId);
+      if (type === "services" && recordToDelete && masterDefaults.services.some((item) => item.id === recordToDelete.id)) {
+        rememberDeletedDefaultServiceId(recordToDelete.id);
+      }
+      if (type === "shifts" && recordToDelete && masterDefaults.shifts.some((item) => item.id === recordToDelete.id)) {
+        rememberDeletedDefaultShiftId(recordToDelete.id);
+      }
       saveMasterRecords(definition, getRecords().filter((item) => item.id !== deletingId));
       deletingId = null;
       closeDialog(deleteDialog);
@@ -3595,6 +3734,12 @@ function setupMasterPage() {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     const record = Object.fromEntries(new FormData(form).entries());
+    const existingRecord = editingId ? getRecords().find((item) => item.id === editingId) : null;
+    if (existingRecord) {
+      formFields.querySelectorAll("[data-field]:disabled").forEach((input) => {
+        record[input.dataset.field] = existingRecord[input.dataset.field];
+      });
+    }
     // Rapikan isian: spasi di awal/akhir dibuang, spasi ganda dijadikan satu, nomor telepon tanpa spasi/tanda hubung.
     definition.fields.forEach((field) => {
       if (typeof record[field.key] !== "string" || field.type === "password") return;
@@ -3609,7 +3754,7 @@ function setupMasterPage() {
     if (error) return;
     if (editingId) {
       const current = records.find((item) => item.id === editingId);
-      if (type === "users" && isProtectedRecord(current)) return;
+      if (isEditProtectedRecord(current)) return;
       saveMasterRecords(definition, records.map((item) => item.id === editingId ? { ...item, ...record } : item));
     } else {
       saveMasterRecords(definition, [...records, { ...record, id: createId() }]);

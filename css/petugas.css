@@ -686,3 +686,38 @@
     max-width: none !important;
   }
 }
+
+/* =========================================================
+   PETUGAS — tombol preview foto & ukuran badge rekap
+   ========================================================= */
+.petugas-attendance-page .photo-preview-actions #use-photo,
+.petugas-attendance-page .photo-preview-actions #replace-photo {
+  font-weight: 600 !important;
+}
+
+/* Gunakan Foto memakai warna yang sama dengan tombol Absen Masuk/Keluar. */
+:root:root body.petugas-attendance-page .photo-preview-actions #use-photo {
+  color: #fff !important;
+  background-color: var(--wu-accent-strong) !important;
+  border-color: transparent !important;
+  border-radius: 7px !important;
+}
+
+:root:root body.petugas-attendance-page .photo-preview-actions #use-photo:not(:disabled):hover {
+  color: #fff !important;
+  background-color: #388dab !important;
+}
+
+/* Badge status rekap disamakan skala visualnya dengan badge status transaksi. */
+:root:root body.petugas-recap-page .attendance-recap-table .attendance-status-badge {
+  display: inline-flex !important;
+  min-height: 28px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 4px 10px !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}

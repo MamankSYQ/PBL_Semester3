@@ -52,3 +52,19 @@
   :root:root body.owner-schedule-page .sched-filters { grid-template-columns: 1fr; }
   .sched-day-pick { width: 100%; min-width: 0; }
 }
+
+
+/* Empty state Pembagian Shift Owner — ukuran teks diperkecil secara tegas. */
+:root:root:root html body.owner-schedule-page .dashboard-shell .dashboard-content main.dashboard-main .sched-card #owner-sched-empty.queue-empty > h3 {
+  font-size: 18px !important;
+  line-height: 1.35 !important;
+  letter-spacing: .01em !important;
+  font-weight: 600 !important;
+}
+:root:root:root html body.owner-schedule-page .dashboard-shell .dashboard-content main.dashboard-main .sched-card #owner-sched-empty.queue-empty > p {
+  max-width: 760px !important;
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+  letter-spacing: 0 !important;
+  font-weight: 500 !important;
+}

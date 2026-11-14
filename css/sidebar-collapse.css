@@ -197,7 +197,8 @@
   }
 }
 
-/* Saat dialog terbuka, tombol ciut disembunyikan agar tidak menutupi dialog. */
-body:has(dialog[open]) .sidebar-collapse-toggle {
+/* Dialog Edit Profil tidak menyembunyikan kontrol sidebar.
+   Dialog lain tetap menyembunyikannya agar kontrol tidak menutupi dialog. */
+body:has(dialog[open]:not(#profile-edit-dialog)) .sidebar-collapse-toggle {
   display: none !important;
 }

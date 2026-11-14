@@ -136,7 +136,7 @@ function renderSidebar(role, activePage, logoutId) {
 
 // Merender tombol ciut sidebar sebagai saudara langsung elemen aside.
 function renderSidebarToggle() {
-  return `<button class="sidebar-collapse-toggle" id="sidebar-collapse-toggle" type="button" aria-expanded="true" aria-label="Ciutkan menu samping" title="Ciutkan menu samping"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7" /></svg></button>`;
+  return `<button class="sidebar-collapse-toggle" id="sidebar-collapse-toggle" type="button" aria-expanded="true" aria-label="Ciutkan menu samping" title="Ciutkan menu samping"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M9 3v18" /><path d="m16 15-3-3 3-3" /></svg></button>`;
 }
 
 // Merender topbar dengan judul dan identitas role seperti halaman sumbernya.

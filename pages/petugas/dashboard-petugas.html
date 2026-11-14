@@ -13,9 +13,9 @@
     <link rel="stylesheet" href="../../css/tokens.css" />
     <link rel="stylesheet" href="../../css/style.css" />
     <link rel="stylesheet" href="../../css/base.css" />
-    <link rel="stylesheet" href="../../css/petugas.css" />
+    <link rel="stylesheet" href="../../css/petugas.css?v=20261114-photo-recap-v2" />
     <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
-    <link rel="stylesheet" href="../../css/compact.css" />
+    <link rel="stylesheet" href="../../css/compact.css?v=20261114-petugas-readonly-hover-v1" />
   </head>
   <body class="petugas-page petugas-dashboard-page" data-role="Petugas" data-page="dashboard" data-title="Dashboard Petugas" data-logout-id="petugas-dashboard-logout">
     <div class="dashboard-shell">
@@ -113,18 +113,9 @@
         <div><span>Status Pengerjaan</span><strong id="petugas-detail-service-status">-</strong></div>
         <div><span>Status Pembayaran</span><strong id="petugas-detail-payment-status">-</strong></div>
       </div>
-      <div class="dialog-actions">
-        <label for="petugas-detail-status">Update Status Pengerjaan</label>
-        <select id="petugas-detail-status">
-          <option value="Menunggu">Menunggu</option>
-          <option value="Sedang Dicuci">Sedang Dicuci</option>
-          <option value="Selesai">Selesai</option>
-        </select>
-        <button class="primary-button dashboard-action" id="petugas-update-status" type="button">Update Status</button>
-      </div>
-      <p class="dialog-notice" id="petugas-dialog-notice" role="status" aria-live="polite"></p>
+      <p class="petugas-status-readonly-note">Status pengerjaan diperbarui oleh Kasir.</p>
     </dialog>
     <script src="../../js/components.js"></script>
-    <script src="../../js/app.js"></script>
+    <script src="../../js/app.js?v=20261114-petugas-readonly-v1"></script>
   </body>
 </html>

@@ -13,10 +13,10 @@
     <link rel="stylesheet" href="../../css/tokens.css" />
     <link rel="stylesheet" href="../../css/style.css" />
     <link rel="stylesheet" href="../../css/base.css" />
-    <link rel="stylesheet" href="../../css/admin-master.css" />
+    <link rel="stylesheet" href="../../css/admin-master.css?v=20261113-account-phone-v1" />
     <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
-    <link rel="stylesheet" href="../../css/compact.css" />
-    <link rel="stylesheet" href="../../css/shift-schedule.css" />
+    <link rel="stylesheet" href="../../css/compact.css?v=20261114-profile-button-hover-v1" />
+    <link rel="stylesheet" href="../../css/shift-schedule.css?v=20261114-employee-name-semibold" />
     <link rel="stylesheet" href="../../css/shift-schedule-owner.css" />
   </head>
   <body class="master-page" data-master="shifts" data-role="Admin" data-page="shifts" data-title="Data Shift" data-footer="Kelola Data Shift" data-logout-id="master-logout">
@@ -42,12 +42,14 @@
           </div>
           <div id="ss-panel-schedule" role="tabpanel" aria-labelledby="ss-tab-schedule" data-tab-panel="schedule" class="ss-tabpanel" hidden>
             <section class="ss-toolbar" aria-label="Pilih minggu dan aksi jadwal">
-              <div class="ss-week-nav">
-                <button class="ss-icon-button" id="ss-week-prev" type="button" aria-label="Minggu sebelumnya"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg></button>
-                <span class="ss-week-label"><span data-icon="calendar" aria-hidden="true"></span><strong id="ss-week-label">-</strong></span>
-                <button class="ss-icon-button" id="ss-week-next" type="button" aria-label="Minggu berikutnya"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg></button>
+              <div class="ss-week-group">
+                <div class="ss-week-nav">
+                  <button class="ss-icon-button" id="ss-week-prev" type="button" aria-label="Minggu sebelumnya"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg></button>
+                  <span class="ss-week-label"><span data-icon="calendar" aria-hidden="true"></span><strong id="ss-week-label">-</strong></span>
+                  <button class="ss-icon-button" id="ss-week-next" type="button" aria-label="Minggu berikutnya"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg></button>
+                </div>
+                <button class="ss-link-button" id="ss-week-today" type="button" hidden>Kembali ke minggu ini</button>
               </div>
-              <button class="ss-link-button" id="ss-week-today" type="button" hidden>Kembali ke minggu ini</button>
               <div class="ss-toolbar-actions">
                 <button class="secondary-dashboard-button ss-copy-button" id="ss-copy-week" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" /></svg>Salin Minggu Sebelumnya</button>
                 <button class="primary-button dashboard-action" id="ss-open-bulk" type="button">Atur Jadwal</button>
@@ -137,7 +139,7 @@
       <div class="dialog-actions"><button class="secondary-dashboard-button" id="ss-confirm-cancel" type="button">Batal</button><button class="primary-button dashboard-action" id="ss-confirm-ok" type="button">Salin Jadwal</button></div>
     </dialog>
     <script src="../../js/components.js"></script>
-    <script src="../../js/app.js"></script>
+    <script src="../../js/app.js?v=20261114-shift-delete-action"></script>
     <script src="../../js/shift-schedule.js"></script>
     <script src="../../js/shift-schedule-day.js"></script>
   </body>
