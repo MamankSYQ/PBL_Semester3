@@ -13,7 +13,7 @@ const shellLogout = document.getElementById(document.body.dataset.logoutId);
 shellLogout?.addEventListener("click", () => {
   sessionStorage.removeItem("washupRole");
   sessionStorage.removeItem("washupUsername");
-  window.location.href = appUrl("login.html");
+  window.location.href = appUrl("logout.php");
 });
 
 // Sidebar yang bisa diciutkan. Dipakai halaman yang memuat css/sidebar-collapse.css
@@ -491,7 +491,7 @@ roleOptions.forEach((option) => {
   });
 });
 
-if (loginForm) {
+if (loginForm && !loginForm.hasAttribute("method")) {
   loginForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -534,13 +534,13 @@ if (loginForm) {
     sessionStorage.setItem("washupRole", account.role);
     sessionStorage.setItem("washupUsername", username);
     window.location.href = account.role === "Kasir"
-      ? appUrl("pages/kasir/dashboard-kasir.html")
+      ? appUrl("pages/kasir/dashboard-kasir.php")
       : account.role === "Petugas"
-        ? appUrl("pages/petugas/dashboard-petugas.html")
+        ? appUrl("pages/petugas/dashboard-petugas.php")
         : account.role === "Owner"
-          ? appUrl("pages/owner/dashboard-owner.html")
+          ? appUrl("pages/owner/dashboard-owner.php")
           : account.role === "Admin"
-            ? appUrl("pages/admin/dashboard-admin.html")
+            ? appUrl("pages/admin/dashboard-admin.php")
             : appUrl("role.html");
   });
 }
@@ -567,13 +567,13 @@ if (roleName) {
   const role = sessionStorage.getItem("washupRole");
 
   if (!role) {
-    window.location.replace(appUrl("login.html"));
+    window.location.replace(appUrl("logout.php"));
   } else if (role === "Kasir") {
-    window.location.replace(appUrl("pages/kasir/dashboard-kasir.html"));
+    window.location.replace(appUrl("pages/kasir/dashboard-kasir.php"));
   } else if (role === "Owner") {
-    window.location.replace(appUrl("pages/owner/dashboard-owner.html"));
+    window.location.replace(appUrl("pages/owner/dashboard-owner.php"));
   } else if (role === "Admin") {
-    window.location.replace(appUrl("pages/admin/dashboard-admin.html"));
+    window.location.replace(appUrl("pages/admin/dashboard-admin.php"));
   } else {
     roleName.textContent = role;
     roleMessage.textContent = `Halaman dashboard ${role} akan dikembangkan pada tahap berikutnya.`;
@@ -583,7 +583,7 @@ if (roleName) {
 if (logoutButton) {
   logoutButton.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
-    window.location.href = appUrl("login.html");
+    window.location.href = appUrl("logout.php");
   });
 }
 
@@ -595,49 +595,49 @@ if (document.querySelector(".kasir-page")) {
   const role = sessionStorage.getItem("washupRole");
 
   if (role !== "Kasir") {
-    window.location.replace(appUrl(role ? "role.html" : "login.html"));
+    window.location.replace(appUrl(role ? "role.html" : "logout.php"));
   }
 }
 
 if (document.querySelector(".owner-dashboard-page") && sessionStorage.getItem("washupRole") !== "Owner") {
-  window.location.replace(appUrl("login.html"));
+  window.location.replace(appUrl("logout.php"));
 }
 
 if (document.querySelector(".owner-report-page") && sessionStorage.getItem("washupRole") !== "Owner") {
-  window.location.replace(appUrl("login.html"));
+  window.location.replace(appUrl("logout.php"));
 }
 
 if (document.querySelector(".owner-finance-page") && sessionStorage.getItem("washupRole") !== "Owner") {
-  window.location.replace(appUrl("login.html"));
+  window.location.replace(appUrl("logout.php"));
 }
 
 if (document.querySelector(".owner-employee-page") && sessionStorage.getItem("washupRole") !== "Owner") {
-  window.location.replace(appUrl("login.html"));
+  window.location.replace(appUrl("logout.php"));
 }
 
 if (document.querySelector(".owner-service-stats-page") && sessionStorage.getItem("washupRole") !== "Owner") {
-  window.location.replace(appUrl("login.html"));
+  window.location.replace(appUrl("logout.php"));
 }
 
 if (document.querySelector(".admin-dashboard-page") && sessionStorage.getItem("washupRole") !== "Admin") {
-  window.location.replace(appUrl("login.html"));
+  window.location.replace(appUrl("logout.php"));
 }
 
 if (document.querySelector(".petugas-page") && sessionStorage.getItem("washupRole") !== "Petugas") {
-  window.location.replace(appUrl("login.html"));
+  window.location.replace(appUrl("logout.php"));
 }
 
 if (dashboardLogout) {
   dashboardLogout.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
-    window.location.href = appUrl("login.html");
+    window.location.href = appUrl("logout.php");
   });
 }
 
 if (petugasDashboardLogout) {
   petugasDashboardLogout.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
-    window.location.href = appUrl("login.html");
+    window.location.href = appUrl("logout.php");
   });
 }
 
@@ -836,7 +836,7 @@ function setupTransactionForm() {
   });
 
   document.querySelector("#cancel-transaction")?.addEventListener("click", () => {
-    window.location.href = appUrl("pages/kasir/dashboard-kasir.html");
+    window.location.href = appUrl("pages/kasir/dashboard-kasir.php");
   });
 
   updateServices();
@@ -847,7 +847,7 @@ setupTransactionForm();
 if (transactionLogout) {
   transactionLogout.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
-    window.location.href = appUrl("login.html");
+    window.location.href = appUrl("logout.php");
   });
 }
 
@@ -1152,7 +1152,7 @@ function setupQueuePage() {
   });
   queueLogout?.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
-    window.location.href = appUrl("login.html");
+    window.location.href = appUrl("logout.php");
   });
 
   renderQueuePage();
@@ -1161,7 +1161,7 @@ function setupQueuePage() {
 if (document.querySelector(".queue-page")) {
   const role = sessionStorage.getItem("washupRole");
   if (role !== "Kasir") {
-    window.location.replace(appUrl(role ? "role.html" : "login.html"));
+    window.location.replace(appUrl(role ? "role.html" : "logout.php"));
   } else {
     setupQueuePage();
   }
@@ -1367,7 +1367,7 @@ function setupTransactionHistory() {
   });
   document.querySelector("#history-dialog-close")?.addEventListener("click", closeDetail);
   detailDialog.addEventListener("click", (event) => { if (event.target === detailDialog) closeDetail(); });
-  document.querySelector("#history-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); sessionStorage.removeItem("washupUsername"); window.location.href = appUrl("login.html"); });
+  document.querySelector("#history-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); sessionStorage.removeItem("washupUsername"); window.location.href = appUrl("logout.php"); });
   document.querySelector("#history-receipt-close")?.addEventListener("click", closeReceipt);
   document.querySelector("#history-receipt-done")?.addEventListener("click", closeReceipt);
   document.querySelector("#history-receipt-print")?.addEventListener("click", () => {
@@ -1716,7 +1716,7 @@ function setupPaymentPage() {
   document.querySelector("#payment-logout")?.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
     sessionStorage.removeItem("washupUsername");
-    window.location.href = appUrl("login.html");
+    window.location.href = appUrl("logout.php");
   });
   document.querySelector("#payment-receipt-print")?.addEventListener("click", () => {
     // Beri browser satu frame untuk merender struk sebelum membuka dialog cetak.
@@ -1834,7 +1834,7 @@ function setupOwnerDashboard() {
       document.querySelector("#owner-notice").textContent = "Menu laporan belum tersedia.";
     });
   });
-  document.querySelector("#owner-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = appUrl("login.html"); });
+  document.querySelector("#owner-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = appUrl("logout.php"); });
   render();
 }
 
@@ -1951,7 +1951,7 @@ function setupOwnerTransactionReport() {
   document.querySelectorAll("[data-owner-report-placeholder]").forEach((link) => link.addEventListener("click", (event) => { event.preventDefault(); document.querySelector("#owner-report-notice").textContent = "Menu laporan belum tersedia."; }));
   const logout = () => {
     sessionStorage.removeItem("washupRole");
-    window.location.href = appUrl("login.html");
+    window.location.href = appUrl("logout.php");
   };
   document.querySelector("#owner-report-logout")?.addEventListener("click", logout);
   document.querySelector("#owner-logout")?.addEventListener("click", logout);
@@ -1963,7 +1963,7 @@ if (document.querySelector(".owner-report-page")) setupOwnerTransactionReport();
 function setupOwnerLogout() {
   document.querySelector("#owner-logout")?.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
-    window.location.href = appUrl("login.html");
+    window.location.href = appUrl("logout.php");
   });
 }
 
@@ -2563,7 +2563,7 @@ function setupAdminDashboard() {
       notice.textContent = "Menu ini belum tersedia.";
     });
   });
-  document.querySelector("#admin-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = appUrl("login.html"); });
+  document.querySelector("#admin-logout")?.addEventListener("click", () => { sessionStorage.removeItem("washupRole"); window.location.href = appUrl("logout.php"); });
   render();
 }
 
@@ -2574,7 +2574,7 @@ function setupAdminVerificationPage() {
   if (!page) return;
 
   if (sessionStorage.getItem("washupRole") !== "Admin") {
-    window.location.replace(appUrl("login.html"));
+    window.location.replace(appUrl("logout.php"));
     return;
   }
 
@@ -2800,7 +2800,7 @@ function setupAdminVerificationPage() {
   document.querySelector("#verification-logout")?.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
     sessionStorage.removeItem("washupUsername");
-    window.location.href = appUrl("login.html");
+    window.location.href = appUrl("logout.php");
   });
 
   render();
@@ -2919,7 +2919,7 @@ function setupPetugasAttendance() {
   document.querySelector("#attendance-logout")?.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
     sessionStorage.removeItem("washupUsername");
-    window.location.href = appUrl("login.html");
+    window.location.href = appUrl("logout.php");
   });
 
   const employeeId = sessionStorage.getItem("washupUsername") || "petugas";
@@ -3296,7 +3296,7 @@ function setupPetugasAttendance() {
 }
 
 if (document.querySelector(".petugas-page")) {
-  if (sessionStorage.getItem("washupRole") !== "Petugas") window.location.replace(appUrl("login.html"));
+  if (sessionStorage.getItem("washupRole") !== "Petugas") window.location.replace(appUrl("logout.php"));
 }
 if (document.querySelector(".petugas-dashboard-page")) setupPetugasDashboard();
 if (document.querySelector(".petugas-attendance-page, .petugas-recap-page")) setupPetugasAttendance();
@@ -3426,7 +3426,7 @@ function setupMasterPage() {
   if (!page) return;
 
   if (sessionStorage.getItem("washupRole") !== "Admin") {
-    window.location.replace(appUrl("login.html"));
+    window.location.replace(appUrl("logout.php"));
     return;
   }
 
@@ -3764,7 +3764,7 @@ function setupMasterPage() {
   });
   document.querySelector("#master-logout")?.addEventListener("click", () => {
     sessionStorage.removeItem("washupRole");
-    window.location.href = appUrl("login.html");
+    window.location.href = appUrl("logout.php");
   });
   renderHeaders();
   render();
@@ -3788,7 +3788,7 @@ setupMasterPage();
 
   // Halaman transaksi hanya untuk pengguna ber-role Kasir.
   if (sessionStorage.getItem("washupRole") !== "Kasir") {
-    window.location.replace(appUrl("login.html"));
+    window.location.replace(appUrl("logout.php"));
     return;
   }
   const form = transactionPageForm;
@@ -3877,7 +3877,7 @@ setupMasterPage();
 
   printButton?.addEventListener("click", () => window.print());
   noPrintButton?.addEventListener("click", () => {
-    window.location.href = "dashboard-kasir.html";
+    window.location.href = "dashboard-kasir.php";
   });
 
 })();

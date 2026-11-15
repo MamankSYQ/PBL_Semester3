@@ -19,3 +19,5 @@ build/
 # Log dan arsip sementara
 *.log
 *.zip
+config/config.local.php
+public/uploads/

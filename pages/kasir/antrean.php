@@ -1,6 +1,18 @@
+<?php
+require __DIR__ . '/../../includes/auth.php';
+$u = require_role('Kasir');
+?>
 <!doctype html>
 <html lang="id">
   <head>
+    <meta name="csrf-token" content="<?= csrf_token() ?>" />
+    <script>
+      // Sesi sebenarnya dijaga server (require_role). Nilai ini hanya untuk kode JS lama yang membaca sessionStorage.
+      sessionStorage.setItem("washupRole", <?= json_encode($u['role']) ?>);
+      sessionStorage.setItem("washupUsername", <?= json_encode($u['username']) ?>);
+      window.WASHUP_CSRF = <?= json_encode(csrf_token()) ?>;
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Antrean Kendaraan WASHUP - Sistem Informasi Car Wash" />
@@ -78,7 +90,7 @@
               </span>
               <h3>Belum ada antrean.</h3>
               <p>Buat transaksi baru untuk menambahkan kendaraan ke antrean.</p>
-              <a class="queue-new-transaction-button" href="transaksi-baru.html"><span aria-hidden="true">＋</span> Transaksi Baru</a>
+              <a class="queue-new-transaction-button" href="transaksi-baru.php"><span aria-hidden="true">＋</span> Transaksi Baru</a>
             </div>
             <nav class="wu-pager" id="queue-pager" aria-label="Navigasi halaman antrean" hidden></nav>
             <p class="queue-result-count" id="queue-result-count" aria-live="polite">0 data</p>

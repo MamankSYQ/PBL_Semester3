@@ -1,6 +1,18 @@
+<?php
+require __DIR__ . '/../../includes/auth.php';
+$u = require_role('Kasir');
+?>
 <!doctype html>
 <html lang="id">
   <head>
+    <meta name="csrf-token" content="<?= csrf_token() ?>" />
+    <script>
+      // Sesi sebenarnya dijaga server (require_role). Nilai ini hanya untuk kode JS lama yang membaca sessionStorage.
+      sessionStorage.setItem("washupRole", <?= json_encode($u['role']) ?>);
+      sessionStorage.setItem("washupUsername", <?= json_encode($u['username']) ?>);
+      window.WASHUP_CSRF = <?= json_encode(csrf_token()) ?>;
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Riwayat Transaksi WASHUP" />
