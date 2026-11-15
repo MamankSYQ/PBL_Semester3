@@ -1,0 +1,10 @@
+# WASHUP — hanya halaman publik yang boleh diindeks.
+User-agent: *
+Allow: /$
+Allow: /index.html
+Allow: /login.html
+Disallow: /pages/
+Disallow: /role.html
+Disallow: /sql/
+
+Sitemap: https://washup-pbl-2026.netlify.app/sitemap.xml

@@ -4,158 +4,74 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Dashboard Kasir WASHUP - Sistem Informasi Car Wash" />
+    <meta name="robots" content="noindex, nofollow" />
     <title>Dashboard Kasir | WASHUP</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="../../css/tokens.css" />
     <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/base.css" />
     <link rel="stylesheet" href="../../css/kasir.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
+    <link rel="stylesheet" href="../../css/compact.css" />
   </head>
-  <body class="dashboard-page kasir-dashboard-page">
+  <body class="dashboard-page kasir-dashboard-page kasir-page" data-role="Kasir" data-page="dashboard" data-title="Dashboard Kasir" data-logout-id="kasir-dashboard-logout">
     <div class="dashboard-shell">
-      <!-- A. SIDEBAR KASIR -->
-      <aside class="dashboard-sidebar" aria-label="Navigasi Kasir">
-        <a class="dashboard-brand" href="dashboard-kasir.html" aria-label="WASHUP Dashboard Kasir">
-          <img class="brand-logo-img" src="../../assets/logo-washup.png" alt="Logo mobil cuci WASHUP" />
-          <span class="brand-text">WASHUP</span>
-        </a>
-
-        <nav class="dashboard-nav" aria-label="Menu utama">
-          <p class="nav-label">MENU KASIR</p>
-          <a class="nav-item active" href="dashboard-kasir.html" aria-current="page">
-            <svg class="nav-icon-svg" viewBox="0 0 36 36" aria-hidden="true">
-              <path fill="currentColor" d="M33 19a1 1 0 0 1-.71-.29L18 4.41L3.71 18.71A1 1 0 0 1 2.3 17.3l15-15a1 1 0 0 1 1.41 0l15 15A1 1 0 0 1 33 19Z" />
-              <path fill="currentColor" d="M18 7.79L6 19.79V32a2 2 0 0 0 2 2h7V22h6v12h7a2 2 0 0 0 2-2V19.79ZM28 32h-3V20H11v12H8V19.38l10-10l10 10Z" />
-            </svg>
-            Dashboard
-          </a>
-          <a class="nav-item" href="transaksi-baru.html">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 20v-8m0 0V4m0 8h8m-8 0H4" />
-            </svg>
-            Transaksi Baru
-          </a>
-          <a class="nav-item" href="antrean.html">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M18 18H6c-.943 0-1.414 0-1.707-.293S4 16.943 4 16s0-1.414.293-1.707S5.057 14 6 14h12c.943 0 1.414 0 1.707.293S20 15.057 20 16s0 1.414-.293 1.707S18.943 18 18 18M4 10h16M4 6h16" />
-            </svg>
-            Antrean
-          </a>
-          <a class="nav-item" href="pembayaran.html">
-            <svg class="nav-icon-svg" viewBox="0 0 512 512" aria-hidden="true">
-              <path fill="currentColor" d="M0 64c0-17.7 14.3-32 32-32h80c79.5 0 144 64.5 144 144c0 58.8-35.2 109.3-85.7 131.7l51.4 128.4c6.6 16.4-1.4 35-17.8 41.6s-35-1.4-41.6-17.8l-56-139.9H64v128c0 17.7-14.3 32-32 32S0 465.7 0 448zm64 192h48c44.2 0 80-35.8 80-80s-35.8-80-80-80H64zm256-96h80c61.9 0 112 50.1 112 112s-50.1 112-112 112h-48v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V192c0-17.7 14.3-32 32-32m80 160c26.5 0 48-21.5 48-48s-21.5-48-48-48h-48v96z" />
-            </svg>
-            Pembayaran
-          </a>
-          <a class="nav-item" href="riwayat-transaksi.html">
-            <svg class="nav-icon-svg" viewBox="0 0 48 48" aria-hidden="true">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6" d="M8.09 4.5H19a2.05 2.05 0 0 1 2.05 2.05V17.2c0 1.72-1.91 2.74-3 1.65l-3.48-3.5A12.82 12.82 0 1 0 36.83 24c0-3.46-1-6.06-4.93-10c-.84-.84-.1-1.55.38-2l2.28-2.27c.94-.94 1.27-1.12 2.1-.29c4.86 4.86 6.83 8.52 6.84 14.63A19.5 19.5 0 1 1 9.86 10.63C8.69 9.44 8.32 9.06 6.35 7.09c-.77-.76-.08-2.59 1.74-2.59" />
-            </svg>
-            Riwayat Transaksi
-          </a>
-        </nav>
-
-        <div class="sidebar-bottom">
-          <p class="sidebar-note">Area Kerja Kasir</p>
-          <button class="sidebar-logout" id="dashboard-logout" type="button">Logout</button>
-        </div>
-      </aside>
-
-      <!-- B. HEADER & MAIN CONTENT -->
+      <div data-component="sidebar"></div>
       <div class="dashboard-content">
-        <header class="dashboard-topbar">
-          <div class="topbar-title-wrap">
-            <h1>Dashboard Kasir</h1>
-          </div>
-          <div class="user-summary" aria-label="Informasi pengguna">
-            <div class="user-avatar-circle" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-              </svg>
-            </div>
-            <div class="user-info">
-              <strong>Kasir</strong>
-              <small>Role: Kasir</small>
-            </div>
-          </div>
-        </header>
-
-        <main class="dashboard-main kasir-main">
+        <div data-component="topbar"></div>
+<main class="dashboard-main kasir-main">
           <!-- C. AREA SAMBUTAN -->
           <section class="dashboard-welcome" aria-labelledby="welcome-title">
             <p class="eyebrow">RINGKASAN PENGERJAAN</p>
             <h2 id="welcome-title">Selamat Datang, Kasir!</h2>
             <span class="admin-date-chip date-chip" id="kasir-date">17 Agustus 2026</span>
           </section>
-
           <!-- D. EMPAT KARTU STATISTIK -->
           <section class="summary-grid" aria-label="Ringkasan operasional hari ini">
             <!-- Kartu 1: Kendaraan Hari Ini (ant-design:car-outlined) -->
             <article class="summary-card">
               <div class="summary-card-top">
-                <div class="summary-icon-box" aria-hidden="true">
-                  <svg viewBox="0 0 1024 1024" aria-hidden="true">
-                    <path fill="currentColor" d="M380 704h264c4.4 0 8-3.6 8-8v-84c0-4.4-3.6-8-8-8h-40c-4.4 0-8 3.6-8 8v36H428v-36c0-4.4-3.6-8-8-8h-40c-4.4 0-8 3.6-8 8v84c0 4.4 3.6 8 8 8m340-123a40 40 0 1 0 80 0a40 40 0 1 0-80 0m239-167.6L935.3 372a8 8 0 0 0-10.9-2.9l-50.7 29.6l-78.3-216.2a63.9 63.9 0 0 0-60.9-44.4H301.2c-34.7 0-65.5 22.4-76.2 55.5l-74.6 205.2l-50.8-29.6a8 8 0 0 0-10.9 2.9L65 413.4c-2.2 3.8-.9 8.6 2.9 10.8l60.4 35.2l-14.5 40c-1.2 3.2-1.8 6.6-1.8 10v348.2c0 15.7 11.8 28.4 26.3 28.4h67.6c12.3 0 23-9.3 25.6-22.3l7.7-37.7h545.6l7.7 37.7c2.7 13 13.3 22.3 25.6 22.3h67.6c14.5 0 26.3-12.7 26.3-28.4V509.4c0-3.4-.6-6.8-1.8-10l-14.5-40l60.3-35.2a8 8 0 0 0 3-10.8M840 517v237H184V517l15.6-43h624.8zM292.7 218.1l.5-1.3l.4-1.3c1.1-3.3 4.1-5.5 7.6-5.5h427.6l75.4 208H220zM224 581a40 40 0 1 0 80 0a40 40 0 1 0-80 0" />
-                  </svg>
-                </div>
-                <span class="summary-trend">Hari Ini</span>
+                <div class="summary-icon-box" data-icon="car" aria-hidden="true"></div>
               </div>
               <div>
                 <p>Kendaraan Hari Ini</p>
-                <strong id="vehicle-count">45</strong>
+                <strong id="vehicle-count">0</strong>
               </div>
             </article>
-
             <!-- Kartu 2: Transaksi Hari Ini (akar-icons:check-box) -->
             <article class="summary-card">
               <div class="summary-card-top">
-                <div class="summary-icon-box" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                      <rect width="18" height="18" x="3" y="3" rx="4" />
-                      <path d="m9 12l2.25 2L15 10" />
-                    </g>
-                  </svg>
-                </div>
-                <span class="summary-trend">Hari Ini</span>
+                <div class="summary-icon-box" data-icon="receipt-calendar" aria-hidden="true"></div>
               </div>
               <div>
                 <p>Transaksi Hari Ini</p>
-                <strong id="transaction-count">38</strong>
+                <strong id="transaction-count">0</strong>
               </div>
             </article>
-
             <!-- Kartu 3: Transaksi Hari Ini (grommet-icons:transaction) -->
             <article class="summary-card">
               <div class="summary-card-top">
-                <div class="summary-icon-box" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 7h18m-4-5l5 5l-5 5m6 5H4m4-5l-5 5l5 5" />
-                  </svg>
-                </div>
-                <span class="summary-trend">Berjalan</span>
+                <div class="summary-icon-box" data-icon="car-queue" aria-hidden="true"></div>
               </div>
               <div>
-                <p>Transaksi Hari Ini</p>
+                <p>Antrean Berjalan</p>
                 <strong id="queue-count">0</strong>
               </div>
             </article>
-
             <!-- Kartu 4: Total Transaksi Hari Ini (fa7-solid:rupiah-sign) -->
             <article class="summary-card">
               <div class="summary-card-top">
-                <div class="summary-icon-box" aria-hidden="true">
-                  <svg viewBox="0 0 512 512" aria-hidden="true">
-                    <path fill="currentColor" d="M0 64c0-17.7 14.3-32 32-32h80c79.5 0 144 64.5 144 144c0 58.8-35.2 109.3-85.7 131.7l51.4 128.4c6.6 16.4-1.4 35-17.8 41.6s-35-1.4-41.6-17.8l-56-139.9H64v128c0 17.7-14.3 32-32 32S0 465.7 0 448zm64 192h48c44.2 0 80-35.8 80-80s-35.8-80-80-80H64zm256-96h80c61.9 0 112 50.1 112 112s-50.1 112-112 112h-48v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V192c0-17.7 14.3-32 32-32m80 160c26.5 0 48-21.5 48-48s-21.5-48-48-48h-48v96z" />
-                  </svg>
-                </div>
-                <span class="summary-trend">Hari Ini</span>
+                <div class="summary-icon-box" data-icon="rupiah" aria-hidden="true"></div>
               </div>
               <div>
-                <p>Transaksi Hari Ini</p>
-                <strong id="revenue-total">Rp 2.800.000</strong>
+                <p>Pendapatan Hari Ini</p>
+                <strong id="revenue-total">Rp 0</strong>
               </div>
             </article>
           </section>
-
           <!-- E. PANEL ANTREAN SAAT INI -->
           <section class="dashboard-section" id="antrean-section" aria-labelledby="queue-title">
             <div class="section-heading">
@@ -165,7 +81,7 @@
               </div>
               <span class="badge badge-blue hide-visual" id="queue-badge" hidden>0 kendaraan aktif</span>
             </div>
-            <div class="table-wrap">
+            <div class="table-wrap" tabindex="0">
               <table class="queue-table">
                 <caption class="sr-only">Daftar antrean kendaraan saat ini</caption>
                 <thead>
@@ -180,33 +96,14 @@
                 <tbody id="queue-table-body"></tbody>
               </table>
             </div>
+            <nav class="wu-pager" id="queue-pager" aria-label="Navigasi halaman antrean" hidden></nav>
           </section>
-
-          <!-- F. PANEL TINDAKAN ANTREAN (AKSI CEPAT) -->
-          <section class="quick-action-panel" id="aksi-cepat" aria-labelledby="quick-action-title">
-            <div class="quick-action-info">
-              <p class="eyebrow">Kendaraan Hari Ini</p>
-              <h2 id="quick-action-title">Antrean Saat Ini</h2>
-              <p id="dashboard-notice">Buat Transaksi Baru Untuk Menambahkan Pelanggan Ke Antrian</p>
-            </div>
-            <div class="quick-action-buttons">
-              <a class="btn-transaksi-baru dashboard-action" href="transaksi-baru.html">Transaksi Baru</a>
-              <a class="btn-lihat-antrean secondary-dashboard-button" href="antrean.html">Lihat Antrean</a>
-            </div>
-          </section>
-
-          <!-- G. FOOTER -->
-          <footer class="dashboard-footer">
-            <div class="footer-copy">
-              <span class="c-icon-circle">&copy;</span>
-              <span id="current-year">2026</span> WASHUP - Dashboard Kasir
-            </div>
-            <span>Maju Bersama Car Wash 2 &middot; Kota Malang</span>
-          </footer>
-        </main>
+          <!-- F. FOOTER -->
+</main>
+        <div data-component="footer"></div>
       </div>
     </div>
-
+<script src="../../js/components.js"></script>
     <script src="../../js/app.js"></script>
   </body>
 </html>

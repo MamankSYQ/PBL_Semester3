@@ -1,0 +1,59 @@
+/* =========================================================
+   WASHUP — Design tokens (satu sumber warna, font, jarak).
+   Semua file CSS lain memakai variabel di sini.
+   Warna teks sudah dicek kontras WCAG AA (>= 4.5:1) terhadap
+   latar putih dan latar halaman #E0EFF7.
+   ========================================================= */
+:root {
+  /* Warna merek (dari Figma) */
+  --wu-navy: #09191F;
+  --wu-teal: #043D52;
+  --wu-accent: #4E93AB;          /* garis, ikon, latar dekoratif */
+  --wu-background: #E0EFF7;      /* latar halaman */
+  --wu-surface: #FFFFFF;         /* kartu, tabel, dialog */
+  --wu-muted: #88AFC7;           /* garis/ikon dekoratif, BUKAN teks */
+
+  /* Warna teks (lolos kontras AA) */
+  --wu-text: #1D4A5A;            /* teks utama */
+  --wu-text-muted: #436D8A;      /* teks sekunder, label, keterangan */
+  --wu-accent-text: #1C7090;     /* eyebrow, tautan, angka aksen */
+  --wu-text-on-dark: #88AFC7;    /* teks sekunder di latar gelap (navy/teal) */
+  --wu-accent-strong: #357D94;   /* latar tombol dengan teks putih */
+  --wu-success-text: #1C7B51;
+  --wu-warning-text: #754B03;
+  --wu-danger: #B42318;
+
+  /* Tipografi: maksimal 2 keluarga font */
+  --wu-font-body: 'Open Sans', sans-serif;
+  --wu-font-brand: 'Emblema One', cursive;
+
+  /* Skala jarak */
+  --wu-space-1: 4px;
+  --wu-space-2: 8px;
+  --wu-space-3: 12px;
+  --wu-space-4: 16px;
+  --wu-space-5: 24px;
+  --wu-space-6: 32px;
+
+  /* Radius dan bayangan */
+  --wu-radius-sm: 6px;
+  --wu-radius-md: 10px;
+  --wu-radius-lg: 16px;
+  --wu-radius-pill: 999px;
+  --wu-shadow-card: 0 8px 24px rgba(11, 49, 65, .08);
+  --wu-shadow-pop: 0 12px 34px rgba(11, 49, 65, .22);
+
+  /* Fokus keyboard */
+  --wu-focus: #1C7090;
+
+  /* Layout shell */
+  --wu-sidebar-w: 266px;
+  --wu-topbar-h: 95px;
+  /* Breakpoint (dipakai di media query): 420px, 768px, 1024px, 1280px */
+}
+
+/* Fokus keyboard terlihat di semua halaman */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--wu-focus);
+  outline-offset: 2px;
+}
