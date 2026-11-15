@@ -1,0 +1,516 @@
+/* Aturan berikut berbeda dari base: tata letak halaman master, tabel, dan dialog. */
+
+.master-page .dashboard-main.master-main {
+  width: 100% !important; max-width: 936px !important; margin: 0 auto !important;
+  padding: 57px 0 0 0 !important; box-sizing: border-box !important; flex: 0 0 auto !important;
+  display: flex !important; flex-direction: column !important; background: transparent !important;
+}
+@media (min-width: 1400px) {
+  .master-page:is([data-master="services"], [data-master="shifts"], [data-master="users"]) .dashboard-main.master-main {
+    max-width: 1040px !important;
+  }
+}
+.master-page .queue-heading {
+  display: flex !important; align-items: flex-start !important; justify-content: space-between !important;
+  margin: 0 0 53px 0 !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important;
+}
+.master-page .queue-heading .eyebrow { margin: 0 0 6px 0 !important; }
+.master-page .queue-heading .primary-button {
+  width: 202px !important; height: 62px !important; padding: 0 !important; border: none !important; border-radius: 8px !important;
+  background: var(--wu-text) !important; color: #D6F0FF !important; box-shadow: none !important;
+  font-family: 'Open Sans', sans-serif !important; font-size: 20px !important; font-weight: 600 !important; letter-spacing: 0.05em !important; cursor: pointer;
+}
+.master-page .queue-heading .primary-button:hover { background: #266078 !important; }
+.master-page .queue-toolbar {
+  display: block !important; margin: 0 0 35px 0 !important; padding: 24px 24px 32px !important;
+  background: #FFFFFF !important; border: none !important; border-radius: 20px !important; box-shadow: none !important; box-sizing: border-box !important;
+}
+.master-page .queue-toolbar > div { width: 100% !important; }
+.master-page .queue-toolbar label {
+  display: block !important; margin: 0 0 12px 0 !important; font-family: 'Open Sans', sans-serif !important;
+  font-size: 15px !important; font-weight: 600 !important; line-height: 20px !important; letter-spacing: 0.05em !important; color: var(--wu-text) !important;
+}
+.master-page .queue-toolbar input {
+  width: 100% !important; height: 47px !important; padding: 0 13px !important; box-sizing: border-box !important;
+  background: #FFFFFF !important; border: 1px solid #ACACAC !important; border-radius: 8px !important;
+  font-family: 'Open Sans', sans-serif !important; font-size: 15px !important; color: var(--wu-text) !important;
+}
+.master-page .queue-toolbar input::placeholder { color: #9AA7AE !important; }
+.master-page .queue-panel {
+  margin: 0 !important; padding: 24px 24px 32px !important; background: #FFFFFF !important; border: none !important;
+  border-radius: 20px !important; box-shadow: none !important; box-sizing: border-box !important;
+}
+.master-page #master-result-count { display: none !important; }
+.master-page .queue-table-wrap { width: 100% !important; overflow-x: auto !important; }
+
+.master-page .master-table th:first-child, .master-page .master-table td:first-child { padding-left: 8px !important; }
+
+/* ===== Penyelarasan Figma 2009:8 (kerangka sidebar/topbar) ===== */
+.master-page .section-heading { margin-bottom: 16px !important; }
+.master-page .section-heading .eyebrow { margin-bottom: 14px !important; }
+.master-page .sidebar-note { margin-bottom: 36px !important; }
+
+@media (max-width: 992px) {
+
+  .master-page .dashboard-main.master-main {
+    padding: 28px 24px 24px !important;
+  }
+}
+
+/* ===== Koreksi setelah uji tampilan (Data Pelanggan) ===== */
+.master-page .queue-heading { margin-bottom: 48px !important; }
+.master-page .queue-toolbar { padding-top: 19px !important; }
+.master-page .queue-toolbar label { margin-bottom: 17px !important; }
+.master-page .master-table { min-width: 0 !important; table-layout: auto !important; }
+.master-page .master-table td { white-space: normal !important; }
+.master-page .queue-table-wrap { overflow-x: auto !important; }
+.master-page .queue-panel { min-height: 425px !important; }
+.master-page .queue-empty-box { height: 70px !important; flex: 0 0 70px !important; }
+.master-page .queue-empty h3 { line-height: 30px !important; margin-bottom: 1px !important; }
+
+/* ===== Dialog Tambah/Ubah Data (Figma: Data Pelanggan tambah data) ===== */
+.master-page .queue-dialog::backdrop { background: rgba(0, 0, 0, 0.33) !important; }
+.master-page .master-dialog {
+  width: 509px !important; max-width: calc(100vw - 32px) !important; padding: 30px 39px 33px !important;
+  background: #FFFFFF !important; border: 1px solid var(--wu-accent) !important; border-radius: 20px !important;
+  box-shadow: none !important; box-sizing: border-box !important; color: var(--wu-text) !important;
+  font-family: 'Open Sans', sans-serif !important;
+}
+.master-page .master-dialog .dialog-heading {
+  display: flex !important; align-items: flex-start !important; justify-content: space-between !important;
+  margin: 0 !important; padding: 0 0 10px 0 !important; border: none !important; border-bottom: 1px solid var(--wu-accent) !important;
+}
+.master-page .master-dialog .dialog-heading .eyebrow {
+  margin: 0 0 2px 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 12px !important;
+  font-weight: 400 !important; line-height: 14px !important; letter-spacing: 0.05em !important; color: var(--wu-accent-text) !important; text-transform: uppercase !important;
+}
+.master-page .master-dialog .dialog-heading h2 {
+  margin: 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 21px !important;
+  font-weight: 700 !important; line-height: 30px !important; letter-spacing: 0.05em !important; color: var(--wu-text) !important;
+}
+.master-page .master-dialog .dialog-close {
+  width: auto !important; height: auto !important; min-width: 0 !important; margin: 4px 0 0 0 !important; padding: 0 4px !important;
+  background: none !important; border: none !important; box-shadow: none !important; border-radius: 0 !important;
+  font-size: 28px !important; font-weight: 700 !important; line-height: 1 !important; color: var(--wu-text) !important; cursor: pointer;
+}
+.master-page .master-dialog .master-form-fields { display: flex !important; flex-direction: column !important; gap: 26px !important; margin: 21px 0 0 0 !important; }
+.master-page .master-dialog .form-field { display: flex !important; flex-direction: column !important; gap: 4px !important; margin: 0 !important; }
+.master-page .master-dialog .form-field label {
+  margin: 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 15px !important; font-weight: 600 !important;
+  line-height: 20px !important; letter-spacing: 0.05em !important; color: var(--wu-text) !important; text-transform: capitalize !important;
+}
+.master-page .master-dialog .form-field input,
+.master-page .master-dialog .form-field select {
+  width: 100% !important; height: 47px !important; padding: 0 13px !important; box-sizing: border-box !important;
+  background: #FFFFFF !important; border: 1px solid #ACACAC !important; border-radius: 8px !important;
+  font-family: 'Open Sans', sans-serif !important; font-size: 15px !important; color: var(--wu-text) !important;
+}
+.master-page .master-dialog .dialog-notice { margin: 12px 0 0 0 !important; font-size: 13px !important; color: #B3261E !important; }
+.master-page .master-dialog .dialog-notice:empty { display: none !important; }
+.master-page .master-dialog .dialog-actions {
+  display: flex !important; justify-content: center !important; align-items: center !important; gap: 52px !important;
+  margin: 46px 0 0 0 !important; padding: 30px 0 0 0 !important; border: none !important; border-top: 1px solid var(--wu-accent) !important;
+}
+.master-page .master-dialog .dialog-actions button {
+  width: 159px !important; height: 40px !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important;
+  border-radius: 6px !important; box-shadow: none !important; box-sizing: border-box !important;
+  font-family: 'Open Sans', sans-serif !important; font-size: 18px !important; font-weight: 600 !important; letter-spacing: 0.05em !important; cursor: pointer;
+}
+.master-page .master-dialog .dialog-actions .secondary-dashboard-button { background: #FFFFFF !important; border: 1px solid var(--wu-text) !important; color: var(--wu-text) !important; }
+.master-page .master-dialog .dialog-actions .primary-button { background: var(--wu-text) !important; border: 1px solid var(--wu-text) !important; color: #D6F0FF !important; }
+
+/* ===== Tabel berisi data (Figma: Data Pelanggan aksi) ===== */
+/* Baris data: tinggi 52px termasuk garis bawah abu-abu seperti garis header. */
+.master-page .master-table tbody td {
+  height: 51px !important; padding: 0 10px !important; vertical-align: middle !important;
+  border-bottom: 1px solid #ACACAC !important; letter-spacing: 0.05em !important;
+}
+.master-page .master-table tbody td:first-child { padding-left: 8px !important; }
+.master-page .master-table tbody tr:hover td { background: transparent !important; }
+
+/* Panel menyesuaikan isi saat ada data: jarak garis baris terakhir ke tepi bawah panel 70px.
+   Tinggi minimum 425px tetap dipakai untuk keadaan kosong. */
+.master-page .queue-panel:has(#master-empty[hidden]) { min-height: 0 !important; padding-bottom: 69px !important; }
+
+.master-page .master-table td:last-child { white-space: nowrap !important; }
+
+/* Lebar kolom khusus Data Pelanggan (posisi teks Figma: 417 / 595 / 758 / 976 / 1113). */
+
+/* Footer menempel di bawah layar saat isi halaman pendek (garis footer Figma di y = 953).
+   Jarak minimum dari panel ke footer 52px saat isi halaman panjang (Figma: Layanan & Tarif). */
+.master-page .dashboard-main.master-main { margin-bottom: 52px !important; }
+.master-page .dashboard-main.master-main + .dashboard-footer { margin-top: auto !important; margin-bottom: 33px !important; }
+
+/* ===== Dialog Detail Data (Figma: Data Pelanggan detail) ===== */
+.master-page .master-detail-dialog {
+  width: 542px !important; max-width: calc(100vw - 32px) !important; padding: 13px 24px 25px !important;
+  background: #FFFFFF !important; border: 1px solid var(--wu-accent) !important; border-radius: 15px !important;
+  box-shadow: none !important; box-sizing: border-box !important; color: var(--wu-text) !important;
+  font-family: 'Open Sans', sans-serif !important;
+}
+.master-page .master-detail-dialog .dialog-heading {
+  display: flex !important; align-items: center !important; justify-content: space-between !important;
+  margin: 0 !important; padding: 0 0 8px 0 !important; border: none !important; border-bottom: 1px solid var(--wu-accent) !important;
+}
+.master-page .master-detail-dialog .dialog-heading .eyebrow {
+  margin: 0 0 5px 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 12px !important;
+  font-weight: 400 !important; line-height: 16px !important; letter-spacing: 0.05em !important; color: var(--wu-accent-text) !important; text-transform: uppercase !important;
+}
+.master-page .master-detail-dialog .dialog-heading h2 {
+  margin: 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 21px !important;
+  font-weight: 700 !important; line-height: 29px !important; letter-spacing: 0.05em !important; color: var(--wu-text) !important;
+}
+.master-page .master-detail-dialog .dialog-close {
+  width: auto !important; height: auto !important; min-width: 0 !important; margin: 0 !important; padding: 0 4px !important;
+  background: none !important; border: none !important; box-shadow: none !important; border-radius: 0 !important;
+  font-size: 28px !important; font-weight: 700 !important; line-height: 1 !important; color: var(--wu-text) !important; cursor: pointer;
+}
+.master-page .master-detail-grid { display: block !important; margin: 9px 0 0 0 !important; padding: 0 !important; }
+.master-page .master-detail-grid > div { display: block !important; margin: 0 !important; padding: 0 !important; border: none !important; background: none !important; font-size: 13px !important; line-height: 21px !important; }
+.master-page .master-detail-grid span,
+.master-page .master-detail-grid strong {
+  display: inline !important; margin: 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 13px !important;
+  font-weight: 500 !important; line-height: 21px !important; letter-spacing: 0.05em !important; color: var(--wu-text) !important; text-transform: none !important;
+}
+.master-page .master-detail-grid span::after { content: " "; }
+
+/* ===== Dialog Konfirmasi Hapus (Figma: Data Pelanggan Hapus) ===== */
+.master-page .master-delete-dialog {
+  width: 542px !important; max-width: calc(100vw - 32px) !important; padding: 15px 27px 26px 17px !important;
+  background: #FFFFFF !important; border: 1px solid var(--wu-accent) !important; border-radius: 15px !important;
+  box-shadow: none !important; box-sizing: border-box !important; color: var(--wu-text) !important;
+  font-family: 'Open Sans', sans-serif !important; overflow: visible !important;
+}
+.master-page .master-delete-dialog .dialog-heading {
+  display: flex !important; align-items: flex-start !important; justify-content: space-between !important;
+  margin: 0 !important; padding: 0 0 5px 0 !important; border: none !important; border-bottom: 1px solid var(--wu-accent) !important;
+}
+.master-page .master-delete-dialog .dialog-heading h2 {
+  margin: 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 21px !important;
+  font-weight: 700 !important; line-height: 29px !important; letter-spacing: 0.05em !important; color: var(--wu-text) !important;
+}
+.master-page .master-delete-dialog .dialog-close {
+  width: auto !important; height: auto !important; min-width: 0 !important; margin: -6px -13px 0 0 !important; padding: 0 4px !important;
+  background: none !important; border: none !important; box-shadow: none !important; border-radius: 0 !important;
+  font-size: 28px !important; font-weight: 700 !important; line-height: 1 !important; color: var(--wu-text) !important; cursor: pointer;
+}
+.master-page .master-delete-message {
+  margin: 27px 0 0 0 !important; font-family: 'Open Sans', sans-serif !important; font-size: 13px !important;
+  font-weight: 600 !important; line-height: 18px !important; letter-spacing: 0.03em !important; color: var(--wu-text) !important;
+}
+.master-page .master-delete-dialog .dialog-actions {
+  display: flex !important; justify-content: flex-end !important; align-items: center !important; gap: 22px !important;
+  margin: 34px 0 0 0 !important; padding: 0 21px 0 0 !important; border: none !important;
+}
+.master-page .master-delete-dialog .dialog-actions button {
+  width: 85px !important; height: 22px !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important;
+  border-radius: 11px !important; box-shadow: none !important; box-sizing: border-box !important;
+  font-family: 'Open Sans', sans-serif !important; font-size: 11px !important; font-weight: 600 !important;
+  line-height: 1 !important; letter-spacing: 0.05em !important; cursor: pointer;
+}
+.master-page .master-delete-cancel { background: #FFFFFF !important; border: 1px solid var(--wu-text) !important; color: var(--wu-text) !important; }
+.master-page .master-delete-confirm { background: #FF7373 !important; border: 1px solid #FF7373 !important; color: #FFFFFF !important; }
+.master-page .master-delete-dialog .dialog-actions button:hover { filter: brightness(0.95); }
+.master-page .master-delete-dialog .dialog-actions button[hidden] { display: none !important; }
+
+/* Lebar kolom khusus Data Kendaraan (posisi teks Figma: 418 / 594 / 750 / 964 / 1124). */
+
+/* ===== Dialog Tambah/Edit Data Kendaraan dan Layanan & Tarif (Figma: Data Kendaraan tambah 1, Layanan tambah) =====
+   Lebih ramping dari dialog Data Pelanggan: input 280 x 40, pilihan (select) kecil 110 x 22. */
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog {
+  width: 407px !important; padding: 30px 30px 22px !important; border-radius: 15px !important;
+}
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog .dialog-heading { align-items: flex-start !important; padding-bottom: 11px !important; border-bottom-color: #76A8BA !important; }
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog .dialog-heading .eyebrow { margin-bottom: 11px !important; }
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog .dialog-heading h2 { font-size: 20px !important; line-height: 22px !important; }
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog .dialog-close { margin: -8px -4px 0 0 !important; }
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog .master-form-fields { gap: 11px !important; margin-top: 13px !important; }
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog .form-field { gap: 11px !important; }
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog .form-field input {
+  width: 280px !important; height: 40px !important; min-height: 0 !important; padding: 0 13px !important;
+  border: 1px solid #B3B3B3 !important; border-radius: 8px !important; font-size: 13px !important; letter-spacing: 0.03em !important;
+}
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog .form-field select {
+  width: 280px !important; height: 40px !important; padding: 0 34px 0 13px !important;
+  border: 1px solid #B3B3B3 !important; border-radius: 8px !important; background-color: #FFFFFF !important;
+  font-size: 13px !important; letter-spacing: 0.03em !important; color: var(--wu-text) !important;
+  -webkit-appearance: none !important; appearance: none !important; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='3' viewBox='0 0 5 3'%3E%3Cpath d='M0 0h5L2.5 3z' fill='%231D4A5A'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important; background-position: right 9px center !important; background-size: 5px 3px !important;
+}
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog .dialog-actions {
+  justify-content: space-between !important; gap: 0 !important; margin-top: 33px !important; padding-top: 13px !important; border-top-color: #76A8BA !important;
+}
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog .dialog-actions button { width: 159px !important; height: 40px !important; }
+
+/* ===== Dropdown kustom seluruh form master: lebar mengikuti field input ===== */
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog { overflow: visible !important; }
+.master-page .custom-select { position: relative !important; width: 100% !important; min-width: 0 !important; }
+.master-page .custom-select-native { display: none !important; }
+.master-page .custom-select-trigger {
+  display: block !important; width: 100% !important; height: 40px !important; min-height: 0 !important; margin: 0 !important; padding: 0 34px 0 13px !important;
+  border: 1px solid #B3B3B3 !important; border-radius: 8px !important; box-shadow: none !important; box-sizing: border-box !important;
+  background-color: #FFFFFF !important; color: var(--wu-text) !important; text-align: left !important; cursor: pointer;
+  font-family: 'Open Sans', sans-serif !important; font-size: 13px !important; font-weight: 400 !important; line-height: 1.4 !important; letter-spacing: 0.03em !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath d='M0 0h8L4 5z' fill='%231D4A5A'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important; background-position: right 13px center !important; background-size: 8px 5px !important;
+}
+.master-page .custom-select-trigger:focus-visible { outline: 2px solid #4395F7 !important; outline-offset: 1px !important; }
+.master-page .custom-select-list {
+  position: absolute !important; top: calc(100% + 2px) !important; left: 0 !important; z-index: 40 !important;
+  width: 100% !important; min-width: 100% !important; margin: 0 !important; padding: 3px 0 !important; list-style: none !important;
+  border: 1px solid #B3B3B3 !important; border-radius: 8px !important; box-sizing: border-box !important;
+  background: #FFFFFF !important; outline: none !important; box-shadow: 0 8px 18px rgba(14, 47, 60, .14) !important;
+}
+.master-page .custom-select-list[hidden] { display: none !important; }
+.master-page .custom-select-list li {
+  min-height: 36px !important; margin: 0 !important; padding: 8px 13px !important; box-sizing: border-box !important;
+  border: 0 !important; background: #FFFFFF !important; color: var(--wu-text) !important; cursor: pointer;
+  font-family: 'Open Sans', sans-serif !important; font-size: 13px !important; line-height: 20px !important; letter-spacing: 0.03em !important;
+}
+.master-page .custom-select-list li.is-active { background: #E5F1F7 !important; color: var(--wu-text) !important; }
+/* Pada Layanan & Tarif dan Akun Pengguna, input teks berukuran 280px; dropdown dibuat persis selebar input. */
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog .custom-select { width: 280px !important; max-width: 100% !important; }
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog .custom-select-trigger { width: 280px !important; max-width: 100% !important; }
+.master-page:is([data-master="services"], [data-master="users"]) .master-dialog .custom-select-list { width: 280px !important; max-width: 100% !important; }
+
+/* Data Kendaraan berisi data (Figma: Data Kendaraan data baru):
+   kolom Aksi mulai di 1113 seperti tombol pil, dan panel tetap setinggi keadaan kosong. */
+
+/* Lebar kolom khusus Layanan & Tarif (posisi teks Figma: 418 / 614 / 776 / 935 / 1090). */
+@media (min-width: 993px) {
+  .master-page[data-master="services"] .master-table { table-layout: fixed !important; }
+  .master-page[data-master="services"] .master-table th:nth-child(1) { width: 195px !important; }
+  .master-page[data-master="services"] .master-table th:nth-child(2) { width: 162px !important; }
+  .master-page[data-master="services"] .master-table th:nth-child(3) { width: 159px !important; }
+  .master-page[data-master="services"] .master-table th:nth-child(4) { width: 155px !important; }
+  .master-page[data-master="services"] .master-table th:last-child { width: 260px !important; }
+}
+/* Panel Layanan & Tarif berisi data berakhir di y = 901 seperti Figma. */
+.master-page[data-master="services"] .queue-panel:has(#master-empty[hidden]) { padding-bottom: 59px !important; }
+
+/* ===== Dialog Detail & Hapus Layanan dan Tarif (Figma: Layanan dan Tarif Detail / Hapus) ===== */
+.master-page[data-master="services"] .master-detail-dialog { padding: 23px 26px 14px 31px !important; }
+.master-page[data-master="services"] .master-detail-dialog .dialog-heading { padding-bottom: 10px !important; border-bottom-color: #76A8BA !important; }
+.master-page[data-master="services"] .master-detail-dialog .dialog-heading .eyebrow { margin-bottom: 0 !important; }
+.master-page[data-master="services"] .master-detail-dialog .dialog-close { margin: -21px -5px 0 0 !important; }
+.master-page[data-master="services"] .master-detail-grid { margin-top: 5px !important; }
+.master-page[data-master="services"] .master-detail-grid > div,
+.master-page[data-master="services"] .master-detail-grid span,
+.master-page[data-master="services"] .master-detail-grid strong { line-height: 26px !important; }
+.master-page:is([data-master="services"], [data-master="shifts"]) .master-delete-message { margin-top: 22px !important; }
+.master-page:is([data-master="services"], [data-master="shifts"]) .master-delete-dialog .dialog-actions { margin-top: 39px !important; }
+
+/* Dialog tambah/edit data shift. */
+.master-page[data-master="shifts"] .master-dialog { width: 509px !important; padding: 30px 43px 21px 38px !important; border-radius: 14px !important; }
+.master-page[data-master="shifts"] .master-dialog .dialog-close { margin-top: 2px !important; }
+.master-page[data-master="shifts"] .master-dialog .dialog-heading { padding-bottom: 2px !important; border-bottom-color: #76A8BA !important; }
+.master-page[data-master="shifts"] .master-dialog .master-form-fields { gap: 13px !important; margin-top: 12px !important; }
+.master-page[data-master="shifts"] .master-dialog .form-field { gap: 1px !important; }
+.master-page[data-master="shifts"] .master-dialog .dialog-actions { gap: 41px !important; margin-top: 62px !important; padding: 18px 12px 0 0 !important; border-top-color: #76A8BA !important; }
+
+/* ===== Data Shift (Figma: Data Shift awal / data baru) ===== */
+/* Posisi teks kolom sama dengan Layanan & Tarif: 418 / 615 / 776 / 935 / 1090. Baris lebih tinggi (63px). */
+@media (min-width: 993px) {
+  .master-page[data-master="shifts"] .master-table { table-layout: fixed !important; }
+  .master-page[data-master="shifts"] .master-table th:nth-child(1) { width: 195px !important; }
+  .master-page[data-master="shifts"] .master-table th:nth-child(2) { width: 162px !important; }
+  .master-page[data-master="shifts"] .master-table th:nth-child(3) { width: 159px !important; }
+  .master-page[data-master="shifts"] .master-table th:nth-child(4) { width: 155px !important; }
+  .master-page[data-master="shifts"] .master-table th:last-child { width: 260px !important; }
+}
+.master-page[data-master="shifts"] .master-table tbody td { height: 63px !important; }
+.master-page[data-master="shifts"] .queue-panel:has(#master-empty[hidden]) { padding-bottom: 22px !important; }
+
+/* ===== Akun Pengguna (Figma: Akun Pengguna awal / data baru / tambah / detail) ===== */
+/* Posisi teks kolom Figma: 418 / 683 / 908 / 1150; baris 63px. */
+@media (min-width: 993px) {
+  .master-page[data-master="users"] .master-table { table-layout: fixed !important; }
+  .master-page[data-master="users"] .master-table th:nth-child(1) { width: 230px !important; }
+  .master-page[data-master="users"] .master-table th:nth-child(2) { width: 190px !important; }
+  .master-page[data-master="users"] .master-table th:nth-child(3) { width: 170px !important; }
+  .master-page[data-master="users"] .master-table th:nth-child(4) { width: 135px !important; }
+  .master-page[data-master="users"] .master-table th:last-child { width: 260px !important; }
+}
+.master-page[data-master="users"] .master-table tbody td { height: 63px !important; }
+.master-page[data-master="users"] .queue-panel:has(#master-empty[hidden]) { min-height: 425px !important; padding-bottom: 25px !important; }
+/* Dialog Tambah/Edit Akun: label lebih rapat ke kotak; jarak Role -> Status memberi ruang daftar pilihan seperti Figma. */
+.master-page[data-master="users"] .master-dialog .master-form-fields { gap: 6px !important; margin-top: 10px !important; }
+.master-page[data-master="users"] .master-dialog .form-field { gap: 0 !important; }
+.master-page[data-master="users"] .master-dialog { padding-top: 26px !important; padding-bottom: 18px !important; }
+.master-page[data-master="users"] .master-dialog .master-form-fields > .form-field:has([data-field="status"]) { margin-top: 28px !important; }
+.master-page[data-master="users"] .master-dialog .dialog-actions { margin-top: 45px !important; }
+/* Dialog Detail Akun: informasi identitas dan password tersamarkan (read-only). */
+.master-page[data-master="users"] .master-detail-dialog {
+  width: 680px !important; max-height: min(88vh, 720px) !important; overflow-y: auto !important;
+  padding-bottom: 22px !important;
+}
+.master-page[data-master="users"] .master-detail-grid { margin-top: 8px !important; }
+.master-page[data-master="users"] .master-detail-grid > div:not(.master-detail-password-panel),
+.master-page[data-master="users"] .master-detail-grid span,
+.master-page[data-master="users"] .master-detail-grid strong { line-height: 29px !important; }
+.master-page[data-master="users"] .master-detail-password-panel {
+  display: block !important; margin-top: 13px !important; padding-top: 13px !important;
+  border-top: 1px solid #D6E5EC !important;
+}
+.master-page[data-master="users"] .master-detail-password-panel h3 {
+  margin: 0 0 7px !important; color: var(--wu-text) !important; font-size: 15px !important; font-weight: 700 !important;
+}
+.master-page[data-master="users"] .master-detail-password-current {
+  display: flex !important; align-items: center !important; justify-content: space-between !important;
+  gap: 12px !important; margin: 0 !important; color: #365C6D !important; font-size: 13px !important;
+}
+.master-page[data-master="users"] .master-detail-password-current strong { font-size: 14px !important; letter-spacing: .12em !important; }
+.master-page[data-master="users"] .master-detail-password-note {
+  margin: 7px 0 0 !important; color: var(--wu-text-muted) !important; font-size: 11px !important; line-height: 1.45 !important;
+}
+.master-page[data-master="users"] .master-admin-account-note {
+  margin: 5px 0 0 !important; color: var(--wu-text-muted) !important; font-size: 11px !important; line-height: 1.45 !important;
+}
+
+/* Layar sangat sempit (<= 360px): kotak input dialog mengikuti lebar dialog agar tidak meluber. */
+@media (max-width: 360px) {
+  .master-page .master-dialog { padding-left: 20px !important; padding-right: 20px !important; }
+  .master-page .master-dialog .form-field input,
+  .master-page:is([data-master="services"], [data-master="users"]) .master-dialog .form-field input { width: 100% !important; max-width: 280px !important; }
+  .master-page .custom-select, .master-page .custom-select-trigger, .master-page .custom-select-list { max-width: 100% !important; }
+  .master-page .master-dialog .dialog-actions { gap: 12px !important; }
+  .master-page .master-dialog .dialog-actions button { width: auto !important; flex: 1 1 0 !important; }
+}
+
+
+/* Tabel data master mengikuti lebar kartu (tidak tergulir di layar 1280 px).
+   Kolom Aksi tetap 260 px; kolom lain dibagi sesuai proporsi desain Figma. */
+@media (min-width: 993px) {
+  .master-page .master-table { width: 100% !important; }
+  .master-page .master-table th:last-child { width: 260px !important; }
+  .master-page[data-master="users"] .master-table th:nth-child(1) { width: calc((100% - 260px) * .362) !important; }
+  .master-page[data-master="users"] .master-table th:nth-child(2) { width: calc((100% - 260px) * .308) !important; }
+  .master-page[data-master="users"] .master-table th:nth-child(3) { width: calc((100% - 260px) * .330) !important; }
+  .master-page:is([data-master="services"], [data-master="shifts"]) .master-table th:nth-child(1) { width: calc((100% - 260px) * .291) !important; }
+  .master-page:is([data-master="services"], [data-master="shifts"]) .master-table th:nth-child(2) { width: calc((100% - 260px) * .241) !important; }
+  .master-page:is([data-master="services"], [data-master="shifts"]) .master-table th:nth-child(3) { width: calc((100% - 260px) * .237) !important; }
+  .master-page:is([data-master="services"], [data-master="shifts"]) .master-table th:nth-child(4) { width: calc((100% - 260px) * .231) !important; }
+}
+
+.master-page[data-master="users"] .custom-select-trigger:disabled {
+  opacity: .72 !important; cursor: not-allowed !important;
+}
+@media (max-width: 480px) {
+  .master-page[data-master="users"] .master-detail-dialog { padding: 18px 18px 20px !important; }
+  .master-page[data-master="users"] .master-detail-password-panel { margin-top: 10px !important; padding-top: 10px !important; }
+}
+
+
+/* ===== Penyempurnaan form Akun Pengguna ===== */
+.master-page[data-master="users"] .master-dialog .master-form-fields {
+  gap: 9px !important;
+}
+.master-page[data-master="users"] .master-dialog .form-field {
+  gap: 6px !important;
+}
+.master-page[data-master="users"] .master-dialog .form-field label {
+  margin-bottom: 0 !important;
+}
+.master-page[data-master="users"] .master-dialog .form-field :is(input, .custom-select-trigger):focus-visible {
+  outline-offset: 3px !important;
+}
+.master-page[data-master="users"] .master-dialog .dialog-actions {
+  justify-content: center !important;
+  gap: 28px !important;
+  margin-top: 36px !important;
+  padding-top: 17px !important;
+  padding-bottom: 2px !important;
+}
+.master-page[data-master="users"] .master-dialog .dialog-actions button {
+  width: 136px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  font-size: 16px !important;
+  letter-spacing: 0.035em !important;
+}
+@media (max-width: 480px) {
+  .master-page[data-master="users"] .master-dialog .master-form-fields { gap: 9px !important; }
+  .master-page[data-master="users"] .master-dialog .form-field { gap: 6px !important; }
+  .master-page[data-master="users"] .master-dialog .dialog-actions { gap: 18px !important; margin-top: 28px !important; }
+  .master-page[data-master="users"] .master-dialog .dialog-actions button { width: min(136px, calc((100% - 18px) / 2)) !important; }
+}
+
+/* ===== Akun Pengguna: tombol form tetap berada di dalam card modal ===== */
+.master-page[data-master="users"] .master-dialog {
+  max-height: calc(100vh - 24px) !important;
+  max-height: calc(100dvh - 24px) !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  padding-bottom: 24px !important;
+}
+.master-page[data-master="users"] .master-dialog form {
+  min-width: 0 !important;
+}
+.master-page[data-master="users"] .master-dialog .dialog-actions {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 14px !important;
+  margin-top: 24px !important;
+  padding: 14px 0 2px !important;
+  box-sizing: border-box !important;
+}
+.master-page[data-master="users"] .master-dialog .dialog-actions button {
+  width: 124px !important;
+  min-width: 0 !important;
+  max-width: calc((100% - 14px) / 2) !important;
+  flex: 0 1 124px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  margin: 0 !important;
+  padding: 0 8px !important;
+  box-sizing: border-box !important;
+  font-size: 15px !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.02em !important;
+  white-space: nowrap !important;
+}
+.master-page[data-master="users"] .master-dialog .dialog-actions button:hover {
+  transform: translateY(-1px);
+}
+.master-page[data-master="users"] .master-dialog .dialog-actions button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 480px) {
+  .master-page[data-master="users"] .master-dialog {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    padding: 22px 20px 20px !important;
+  }
+  .master-page[data-master="users"] .master-dialog .dialog-actions {
+    gap: 12px !important;
+    margin-top: 20px !important;
+    padding-top: 12px !important;
+  }
+  .master-page[data-master="users"] .master-dialog .dialog-actions button {
+    width: min(124px, calc((100% - 12px) / 2)) !important;
+    max-width: calc((100% - 12px) / 2) !important;
+    flex: 0 1 min(124px, calc((100% - 12px) / 2)) !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* Pagination master menggunakan komponen WashupPager yang juga dipakai tabel lain. */
+.master-page .queue-table-wrap + .wu-pager {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  margin: 14px 0 0 !important;
+  padding: 0 !important;
+}
+.master-page .queue-table-wrap + .wu-pager[hidden] {
+  display: none !important;
+}

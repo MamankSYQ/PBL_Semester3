@@ -1,0 +1,327 @@
+.login-page {
+  min-height: 100vh;
+  color: var(--wu-text);
+  font-family: "Open Sans", sans-serif;
+  background-color: var(--wu-navy);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='245' viewBox='0 0 280 245'%3E%3Cg fill='none' stroke='%2388AFC0' stroke-opacity='.20' stroke-width='1.2'%3E%3Cpath d='M0 0 L140 122.5 L280 0 M0 245 L140 122.5 L280 245 M0 0 L0 245 M140 0 L140 245 M280 0 L280 245 M0 122.5 L280 122.5 M0 0 L280 245 M280 0 L0 245'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(115deg, var(--wu-navy) 0%, #082b37 48%, var(--wu-teal) 100%);
+  background-repeat: repeat, no-repeat;
+  background-size: 280px 245px, cover;
+  background-position: center top, center;
+  background-attachment: fixed;
+}
+
+.login-page .login-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: min(100% - 32px, 480px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 24px 0;
+}
+
+.login-page .login-intro {
+  width: 100%;
+  color: #fff;
+  text-align: center;
+}
+
+.login-page .login-brand {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: #fff;
+  text-align: left;
+}
+
+.login-page .washup-logo-icon {
+  display: block;
+  width: 72px;
+  height: 56px;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.login-page .login-brand-copy {
+  min-width: 0;
+}
+
+.login-page .login-brand-copy strong {
+  display: block;
+  color: #fff;
+  font-family: "Emblema One", sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.15;
+}
+
+.login-page .login-brand-copy small {
+  display: block;
+  margin-top: 4px;
+  color: var(--wu-text-on-dark);
+  font-family: "Open Sans", sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.login-page .login-card {
+  width: 100%;
+  padding: 32px;
+  border: 0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .14);
+}
+
+.login-page .login-card-heading {
+  margin-bottom: 20px;
+}
+
+.login-page .login-card-heading .eyebrow {
+  margin: 0 0 8px;
+  color: var(--wu-text-muted);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.login-page .login-card-heading :is(h1, h2) {
+  margin: 0 0 8px;
+  color: var(--wu-text);
+  font-family: "Open Sans", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: .1em;
+}
+
+.login-page .login-card-heading > p:last-child {
+  margin: 0;
+  color: var(--wu-text);
+  font-size: 14px;
+  letter-spacing: .08em;
+}
+
+.login-page .role-selector {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin-bottom: 20px;
+  padding: 4px;
+  border-radius: 8px;
+  background: #E9E9E9;
+}
+
+.login-page .role-option {
+  min-width: 0;
+  height: 40px;
+  padding: 0 4px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--wu-text);
+  background: transparent;
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+  transition: color .18s ease, background-color .18s ease;
+}
+
+.login-page .role-option:hover {
+  background: rgba(29, 74, 90, .08);
+}
+
+.login-page .role-option.is-active {
+  color: #fff;
+  background: var(--wu-text);
+}
+
+.login-page .form-field {
+  margin: 0;
+}
+
+.login-page .form-field + .form-field {
+  margin-top: 20px;
+}
+
+.login-page .form-field label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--wu-text);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.login-page .form-field input {
+  width: 100%;
+  height: 46px;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid #A0A0A0;
+  border-radius: 8px;
+  color: var(--wu-text);
+  background: #fff;
+  font-family: "Open Sans", sans-serif;
+  font-size: 15px;
+}
+
+.login-page .form-field input::placeholder {
+  color: #9AA7AE;
+}
+
+.login-page .password-field input {
+  padding-right: 64px;
+}
+
+.login-page .password-toggle {
+  right: 10px;
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 7px;
+  color: #8A8A8A;
+  background: transparent;
+}
+
+.login-page .password-toggle:hover {
+  color: var(--wu-text);
+  background: transparent;
+}
+
+.login-page .password-toggle .eye-icon {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.login-page .password-toggle .eye-closed,
+.login-page .password-toggle[aria-pressed="true"] .eye-open {
+  display: none;
+}
+
+.login-page .password-toggle[aria-pressed="true"] .eye-closed {
+  display: block;
+}
+
+.login-page .field-error,
+.login-page .form-error {
+  margin: 6px 0 0;
+  color: #B10000;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.login-page .field-error:empty,
+.login-page .form-error:empty {
+  display: none;
+}
+
+.login-page .login-button {
+  width: 100%;
+  height: 48px;
+  min-height: 48px;
+  margin-top: 28px;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  background: var(--wu-text);
+  font-family: "Open Sans", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: .05em;
+}
+
+.login-page .login-button:hover {
+  background: #153e4b;
+}
+
+.login-page .login-footer {
+  margin: 14px 0 0;
+  color: var(--wu-text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+  letter-spacing: .08em;
+  text-align: center;
+}
+
+.login-page input:focus-visible,
+.login-page button:focus-visible,
+.login-page a:focus-visible {
+  outline: 3px solid #6ee3ff;
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .login-page {
+    background-attachment: scroll;
+    background-size: 260px 228px, cover;
+  }
+
+  .login-page .login-layout {
+    width: calc(100% - 32px);
+    gap: 20px;
+    padding: 24px 0;
+  }
+
+  .login-page .login-brand {
+    gap: 12px;
+  }
+
+  .login-page .washup-logo-icon {
+    width: 68px;
+    height: 56px;
+  }
+
+  .login-page .login-brand-copy strong {
+    font-size: 28px;
+  }
+
+  .login-page .login-brand-copy small {
+    font-size: 15px;
+  }
+
+  .login-page .login-card {
+    padding: 32px;
+  }
+
+  .login-page .login-card-heading :is(h1, h2) {
+    font-size: 28px;
+  }
+
+  .login-page .role-option {
+    font-size: 15px;
+  }
+
+  .login-page .login-footer {
+    font-size: 13px;
+  }
+}
+
+@media (max-height: 640px) {
+  .login-page .login-layout {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .login-page .login-card {
+    padding: 24px;
+  }
+
+  .login-page .form-field + .form-field {
+    margin-top: 14px;
+  }
+}

@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Import Demo WASHUP</title>
+</head>
+<body>
+  <h2>Import Data Simulasi WASHUP</h2>
+  <p>Klik tombol berikut untuk memasukkan data demo.</p>
+
+  <button id="importBtn">Import Data Demo</button>
+  <p id="status"></p>
+
+  <script>
+    document.getElementById('importBtn').addEventListener('click', async () => {
+      const status = document.getElementById('status');
+
+      try {
+        const response = await fetch('./washup-demo-data.json');
+
+        if (!response.ok) {
+          throw new Error('File JSON tidak ditemukan');
+        }
+
+        const data = await response.json();
+
+        Object.entries(data.localStorage).forEach(([key, value]) => {
+          localStorage.setItem(
+            key,
+            typeof value === 'string'
+              ? value
+              : JSON.stringify(value)
+          );
+        });
+
+        status.textContent = 'Berhasil! Data demo sudah diimpor.';
+      } catch (error) {
+        status.textContent = 'Gagal: ' + error.message;
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Pembayaran WASHUP" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Pembayaran | WASHUP</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="../../css/tokens.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/base.css" />
+    <link rel="stylesheet" href="../../css/kasir.css" />
+    <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
+    <link rel="stylesheet" href="../../css/compact.css?v=20261114-kasir-hover-fields" />
+  </head>
+  <body class="dashboard-page kasir-dashboard-page payment-page kasir-payment-page kasir-page" data-role="Kasir" data-page="payment" data-title="Pembayaran" data-logout-id="payment-logout">
+    <div class="dashboard-shell">
+      <div data-component="sidebar"></div>
+      <div class="dashboard-content">
+        <div data-component="topbar"></div>
+<main class="dashboard-main payment-main">
+          <section class="payment-heading" aria-labelledby="payment-page-title">
+            <p class="eyebrow">PEMBAYARAN TRANSAKSI</p>
+            <h2 id="payment-page-title">Daftar Pembayaran</h2>
+          </section>
+
+          <section class="payment-panel" aria-labelledby="payment-panel-title">
+            <header class="payment-panel-heading">
+              <p class="eyebrow">VERIFIKASI PEMBAYARAN</p>
+              <h2 id="payment-panel-title">Konfirmasi Pembayaran</h2>
+            </header>
+
+            <div class="payment-stat-grid" role="group" aria-label="Ringkasan pembayaran">
+              <article class="payment-stat-card">
+                <span>Belum dibayar</span>
+                <strong id="payment-unpaid-count">0</strong>
+                <small>Transaksi menunggu pembayaran</small>
+              </article>
+              <article class="payment-stat-card">
+                <span>Perlu konfirmasi</span>
+                <strong id="payment-ready-count">0</strong>
+                <small>Pembayaran menunggu verifikasi</small>
+              </article>
+              <article class="payment-stat-card payment-stat-card-total">
+                <span>Total tagihan tertunda</span>
+                <strong id="payment-pending-total">Rp 0</strong>
+                <small id="payment-pending-description">0 tagihan belum dikonfirmasi</small>
+              </article>
+            </div>
+
+            <div class="payment-workspace">
+              <section class="payment-list-column" aria-label="Daftar transaksi pembayaran">
+                <div class="payment-table-wrap" tabindex="0">
+                  <table class="payment-full-table payment-compact-table">
+                    <caption class="sr-only">Daftar transaksi yang dapat diperiksa pembayarannya</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">No. Transaksi</th>
+                        <th scope="col">Pelanggan &amp; Plat</th>
+                        <th scope="col">Total Tagihan</th>
+                        <th scope="col">Status Pembayaran</th>
+                        <th scope="col">Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody id="payment-table-body"></tbody>
+                  </table>
+                </div>
+                <div class="payment-empty" id="payment-empty" hidden>
+                  <span class="payment-empty-symbol" aria-hidden="true">₱</span>
+                  <h3>Belum ada transaksi.</h3>
+                  <p>Transaksi dari Kasir akan muncul setelah dibuat.</p>
+                </div>
+                <span class="sr-only" id="payment-result-count" aria-live="polite">0 transaksi</span>
+                <nav class="wu-pager" id="payment-pager" aria-label="Navigasi halaman pembayaran" hidden></nav>
+              </section>
+
+              <section class="payment-check-panel" aria-labelledby="payment-check-title">
+                <div class="payment-check-heading">
+                  <div>
+                    <h3 id="payment-check-title">Pemeriksaan pembayaran</h3>
+                    <p id="payment-selected-meta">Pilih transaksi dari daftar untuk memeriksa tagihan.</p>
+                  </div>
+                  <span class="payment-method-pill" id="payment-method-pill">Tunai</span>
+                </div>
+
+                <div class="payment-check-section">
+                  <h4>Ringkasan tagihan</h4>
+                  <div class="payment-breakdown">
+                    <div><span>Subtotal</span><strong id="payment-subtotal">Rp 0</strong></div>
+                    <div><span>Diskon</span><strong id="payment-discount">− Rp 0</strong></div>
+                    <div class="payment-breakdown-total"><span>Total tagihan</span><strong id="payment-detail-total">Rp 0</strong></div>
+                  </div>
+                </div>
+
+                <div class="payment-check-section payment-method-section">
+                  <h4 id="payment-method-section-title">Pembayaran tunai</h4>
+                  <div class="payment-method-box">
+                    <div class="payment-method-row">
+                      <span>Metode</span>
+                      <label class="payment-method-picker" for="payment-method">
+                        <span class="sr-only">Metode pembayaran</span>
+                        <select id="payment-method" aria-label="Metode pembayaran">
+                          <option value="Tunai">Tunai</option>
+                          <option value="QRIS">QRIS</option>
+                        </select>
+                      </label>
+                    </div>
+                    <div class="payment-method-breakdown" id="payment-cash-fields">
+                      <div><span>Nominal diterima</span><label class="payment-amount-input" for="payment-cash-received"><span class="sr-only">Nominal uang diterima</span><input type="number" id="payment-cash-received" min="0" step="1000" inputmode="numeric" placeholder="Rp 0" /></label></div>
+                      <div><span>Kembalian</span><strong id="payment-change">Rp 0</strong></div>
+                    </div>
+                    <div class="payment-qris-fields" id="payment-qris-fields" hidden>
+                      <p>Periksa pembayaran melalui aplikasi merchant sebelum mengonfirmasi.</p>
+                      <label class="payment-qris-check"><input type="checkbox" id="payment-qris-verified" /><span>Saya memastikan pembayaran QRIS telah diterima.</span></label>
+                    </div>
+                  </div>
+                </div>
+
+                <p class="payment-check-notice" id="payment-dialog-notice" role="status" aria-live="polite">Pilih transaksi yang sudah selesai dicuci untuk mengonfirmasi pembayaran.</p>
+                <div class="payment-check-actions">
+                  <button class="payment-button-secondary" id="payment-not-match" type="button" disabled>Belum Sesuai</button>
+                  <button class="payment-button-primary" id="confirm-payment" type="button" disabled>Konfirmasi Lunas</button>
+                </div>
+              </section>
+            </div>
+            <p class="payment-notice" id="payment-notice" role="status" aria-live="polite"></p>
+          </section>
+        </main>
+        <div data-component="footer"></div>
+</div>
+    </div>
+
+
+    <div class="payment-receipt-overlay" id="payment-receipt-overlay" hidden aria-hidden="true">
+      <div class="payment-receipt-dialog" role="dialog" aria-modal="true" aria-labelledby="payment-receipt-title">
+        <div class="payment-receipt-actions"><span class="payment-receipt-success"><span aria-hidden="true">✓</span> Pembayaran berhasil dikonfirmasi</span><button type="button" class="payment-receipt-close" id="payment-receipt-close" aria-label="Tutup struk">×</button></div>
+        <article class="payment-receipt-paper" id="payment-receipt-paper">
+          <header class="payment-receipt-brand" id="payment-receipt-title"><strong>WASHUP</strong><p>Maju Bersama Car Wash 2 · Kota Malang</p><span>STRUK PEMBAYARAN</span></header>
+          <div class="payment-receipt-status"><span>Status Pembayaran</span><strong>LUNAS</strong></div>
+          <div class="payment-receipt-lines"><div><span>No. Transaksi</span><strong id="receipt-transaction-number">-</strong></div><div><span>Tanggal Transaksi</span><strong id="receipt-transaction-date">-</strong></div><div><span>Tanggal Pembayaran</span><strong id="receipt-paid-date">-</strong></div><div><span>Pelanggan</span><strong id="receipt-customer">-</strong></div><div><span>No. Telepon</span><strong id="receipt-phone">-</strong></div><div><span>No. Plat</span><strong id="receipt-plate">-</strong></div><div><span>Kendaraan</span><strong id="receipt-vehicle">-</strong></div><div><span>No. Antrean</span><strong id="receipt-queue-number">-</strong></div></div>
+          <div class="payment-receipt-service"><span>Layanan Pencucian</span><strong id="receipt-service">-</strong><small>1 × <span id="receipt-service-price">Rp 0</span></small></div>
+          <div class="payment-receipt-lines payment-receipt-money"><div><span>Subtotal</span><strong id="receipt-subtotal">Rp 0</strong></div><div><span>Diskon</span><strong id="receipt-discount">− Rp 0</strong></div></div>
+          <div class="payment-receipt-grand-total"><span>Total Dibayar</span><strong id="receipt-total">Rp 0</strong></div>
+          <div class="payment-receipt-lines payment-receipt-money"><div><span>Metode Pembayaran</span><strong id="receipt-method">-</strong></div><div><span>Nominal Diterima</span><strong id="receipt-received">Rp 0</strong></div><div><span>Kembalian</span><strong id="receipt-change">Rp 0</strong></div></div>
+          <p class="payment-receipt-thanks">Terima kasih telah memilih WASHUP.<br />Simpan struk ini sebagai bukti pembayaran.</p>
+        </article>
+        <div class="payment-receipt-dialog-actions"><button type="button" class="payment-button-secondary" id="payment-receipt-done">Selesai</button><button type="button" class="payment-button-primary" id="payment-receipt-print">Cetak struk</button></div>
+      </div>
+    </div>
+<script src="../../js/components.js"></script>
+    <script src="../../js/app.js"></script>
+  </body>
+</html>
