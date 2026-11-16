@@ -70,12 +70,7 @@ if (currentYear) {
 // Jumlah baris per halaman untuk semua tabel (paginasi seragam: Sebelumnya 1 2 Selanjutnya).
 const TABLE_PAGE_SIZE = 5;
 
-const accounts = {
-  admin: { password: "admin123", role: "Admin" },
-  kasir: { password: "kasir123", role: "Kasir" },
-  petugas: { password: "petugas123", role: "Petugas" },
-  owner: { password: "owner123", role: "Owner" },
-};
+const accounts = {};   // akun sekarang dikelola server (tabel karyawan)
 
 const transactionStorageKey = "washupTransactions";
 const attendanceStorageKey = "washupPetugasAttendance";
@@ -239,7 +234,7 @@ function ensureMasterDefaults(type, definition) {
         changed = true;
         return { ...record, ...updates };
       });
-      if (!records.some((record) => String(record?.username || "").trim().toLowerCase() === "admin")) {
+      if (false) {
         const admin = defaults.find((record) => record.username === "admin");
         if (admin) {
           records.push({ ...admin });
@@ -346,6 +341,10 @@ function formatDateKey(date) {
 }
 
 function getNextNumber(prefix, transactions, baseNumber = 0) {
+  if (prefix === "queueNumber") {   // nomor antrean mulai dari 1 setiap hari (sama dengan server)
+    const today = new Date().toDateString();
+    transactions = transactions.filter((item) => new Date(item.createdAt).toDateString() === today);
+  }
   const numbers = transactions
     .map((transaction) => Number(String(transaction[prefix]).replace(/\D/g, "")))
     .filter((number) => Number.isFinite(number));
@@ -355,11 +354,12 @@ function getNextNumber(prefix, transactions, baseNumber = 0) {
 
 function getTransactionNumber(transactions) {
   const dateKey = formatDateKey(new Date());
-  const countForToday = transactions.filter((transaction) => {
-    const createdDate = new Date(transaction.createdAt);
-    return !Number.isNaN(createdDate.getTime()) && formatDateKey(createdDate) === dateKey;
-  }).length;
-  return `TRX-${dateKey}-${String(countForToday + 1).padStart(3, "0")}`;
+  // Nomor berikutnya = nomor terbesar hari ini + 1 (sama dengan aturan server; tidak bentrok bila ada yang dihapus).
+  const used = transactions
+    .filter((transaction) => String(transaction.transactionNumber || "").startsWith(`TRX-${dateKey}-`))
+    .map((transaction) => Number(String(transaction.transactionNumber).split("-").pop()))
+    .filter(Number.isFinite);
+  return `TRX-${dateKey}-${String(Math.max(0, ...used) + 1).padStart(3, "0")}`;
 }
 
 function getTodayKey() {
@@ -541,7 +541,7 @@ if (loginForm && !loginForm.hasAttribute("method")) {
           ? appUrl("pages/owner/dashboard-owner.php")
           : account.role === "Admin"
             ? appUrl("pages/admin/dashboard-admin.php")
-            : appUrl("role.html");
+            : appUrl("role.php");
   });
 }
 
@@ -595,7 +595,7 @@ if (document.querySelector(".kasir-page")) {
   const role = sessionStorage.getItem("washupRole");
 
   if (role !== "Kasir") {
-    window.location.replace(appUrl(role ? "role.html" : "logout.php"));
+    window.location.replace(appUrl(role ? "role.php" : "logout.php"));
   }
 }
 
@@ -1161,7 +1161,7 @@ function setupQueuePage() {
 if (document.querySelector(".queue-page")) {
   const role = sessionStorage.getItem("washupRole");
   if (role !== "Kasir") {
-    window.location.replace(appUrl(role ? "role.html" : "logout.php"));
+    window.location.replace(appUrl(role ? "role.php" : "logout.php"));
   } else {
     setupQueuePage();
   }
@@ -4513,7 +4513,8 @@ function setupProfileEditor() {
     usernameInput.value = account.username || "";
     usernameInput.disabled = protectedAdmin;
     if (usernameNote) usernameNote.hidden = !protectedAdmin;
-    currentPasswordInput.value = String(account.password || "");
+    // Password lama diperiksa di server (password_verify); browser tidak punya datanya.
+    currentPasswordInput.value = "";
     newPasswordInput.value = "";
     message.textContent = "";
     saveButton.disabled = false;
@@ -4528,7 +4529,6 @@ function setupProfileEditor() {
     else dialog.removeAttribute("open");
 
     form.reset();
-    syncProofText();
     editingAccountId = null;
     protectedAdmin = false;
     usernameInput.disabled = false;
@@ -4558,10 +4558,13 @@ function setupProfileEditor() {
     });
   });
 
-  form.addEventListener("submit", (event) => {
+  // Profil disimpan lewat api/profil.php (bukan sync.php): hanya pemilik akun yang bisa mengubah,
+  // password lama diverifikasi di server, dan role/status tidak bisa disentuh dari sini.
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const username = normalized(usernameInput.value);
+    const oldPassword = String(currentPasswordInput.value || "");
     const newPassword = String(newPasswordInput.value || "");
 
     if (!protectedAdmin && !username) {
@@ -4574,48 +4577,39 @@ function setupProfileEditor() {
       usernameInput.focus();
       return;
     }
+    if (!oldPassword) {
+      message.textContent = "Password lama wajib diisi.";
+      currentPasswordInput.focus();
+      return;
+    }
     if (newPassword && newPassword.length < 6) {
       message.textContent = "Password baru minimal 6 karakter.";
       newPasswordInput.focus();
       return;
     }
 
+    saveButton.disabled = true;
+    message.textContent = "";
     try {
-      const records = getUserAccounts();
-      const accountIndex = records.findIndex((account) => account.id === editingAccountId);
-      if (accountIndex < 0) {
-        message.textContent = "Akun tidak ditemukan. Tutup formulir lalu coba kembali.";
+      const response = await fetch((window.WASHUP_ROOT || "") + "/api/profil.php", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json", "X-CSRF-Token": window.WASHUP_CSRF || "" },
+        body: JSON.stringify({ username: usernameInput.value, passwordLama: oldPassword, passwordBaru: newPassword }),
+      });
+      let data = {};
+      try { data = await response.json(); } catch {}
+      if (!response.ok) {
+        message.textContent = data.error || `Profil tidak dapat disimpan (${response.status}).`;
+        saveButton.disabled = false;
         return;
       }
-
-      const current = records[accountIndex];
-      const nextUsername = normalized(current.username) === "admin" ? current.username : username;
-      const duplicate = records.some((account, index) =>
-        index !== accountIndex && normalized(account.username) === nextUsername
-      );
-      if (duplicate) {
-        message.textContent = "Username sudah digunakan akun lain. Gunakan username yang berbeda.";
-        usernameInput.focus();
-        return;
-      }
-
-      const updated = {
-        ...current,
-        username: nextUsername,
-        password: newPassword || current.password,
-        updatedAt: Date.now(),
-      };
-
-      delete updated.profilePhoto;
-      records[accountIndex] = updated;
-      saveMasterRecords(masterDefinitions.users, records);
-      sessionStorage.setItem("washupUsername", nextUsername);
-      setHeaderProfile(updated);
-      closeDialog();
-    } catch (error) {
-      message.textContent = error instanceof Error
-        ? error.message
-        : "Profil tidak dapat disimpan. Periksa penyimpanan browser lalu coba kembali.";
+      // Muat ulang agar nama di header, sesi, dan data akun ikut diperbarui dari server.
+      sessionStorage.setItem("washupUsername", data.username || username);
+      window.location.reload();
+    } catch {
+      message.textContent = "Tidak dapat terhubung ke server. Coba lagi.";
+      saveButton.disabled = false;
     }
   });
 

@@ -1,3 +1,7 @@
+<?php
+require __DIR__ . '/includes/security.php';
+http_response_code(404);
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -20,7 +24,7 @@
         <h1>Halaman tidak ditemukan</h1>
         <p>Alamat yang kamu buka tidak ada atau sudah dipindahkan. Periksa kembali alamatnya, atau kembali ke halaman utama WASHUP.</p>
         <div class="error-actions">
-            <a class="btn-login" href="/index.html">Ke Beranda</a>
+            <a class="btn-login" href="/">Ke Beranda</a>
             <a class="error-link" href="/login.php">Ke Halaman Login</a>
         </div>
     </main>

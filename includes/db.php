@@ -7,12 +7,21 @@ function cfg(): array {
   date_default_timezone_set($c['timezone']);
   return $c;
 }
+
 function db(): PDO {
   static $pdo; if ($pdo) return $pdo;
   $c = cfg();
-  $pdo = new PDO("mysql:host={$c['db_host']};dbname={$c['db_name']};charset=utf8mb4", $c['db_user'], $c['db_pass'], [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_EMULATE_PREPARES => false,
-  ]);
-  $pdo->exec("SET time_zone = '" . date('P') . "'");
+  $port = $c['db_port'] ?? '5432';
+  $pdo = new PDO(
+    "pgsql:host={$c['db_host']};port={$port};dbname={$c['db_name']}",
+    $c['db_user'],
+    $c['db_pass'],
+    [
+      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+      PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+      PDO::ATTR_EMULATE_PREPARES => false,
+    ]
+  );
+  $pdo->exec("SET TIME ZONE '" . $c['timezone'] . "'");
   return $pdo;
 }

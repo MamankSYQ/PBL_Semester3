@@ -20,4 +20,5 @@ build/
 *.log
 *.zip
 config/config.local.php
-public/uploads/
+uploads/*/*
+!uploads/*/.gitkeep

@@ -1,3 +1,7 @@
+<?php
+require __DIR__ . '/includes/auth.php';
+$user = current_user();   // sudah login: tombol menuju dashboard role-nya
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -52,8 +56,9 @@
                 </h2>
                 <p>WASHUP akan membantu menghubungkan pelayanan pelanggan, antrean pencucian, dan pemantauan usaha dalam sistem</p>
 
-                <a href="login.php" class="btn-login">
-                    <span>Login WASHUP</span>
+                <?php $dest = $user ? 'pages/' . HOME_BY_ROLE[$user['role']] : 'login.php'; ?>
+                <a href="<?= htmlspecialchars($dest) ?>" class="btn-login">
+                    <span><?= $user ? 'Buka Dashboard ' . htmlspecialchars($user['role']) : 'Login WASHUP' ?></span>
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M4.5 12h14m-6-6 6 6-6 6" />
                     </svg>

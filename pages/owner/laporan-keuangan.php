@@ -1,17 +1,12 @@
 <?php
 require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../includes/hydrate.php';
 $u = require_role('Owner');
 ?>
 <!doctype html>
 <html lang="id">
   <head>
-    <meta name="csrf-token" content="<?= csrf_token() ?>" />
-    <script>
-      // Sesi sebenarnya dijaga server (require_role). Nilai ini hanya untuk kode JS lama yang membaca sessionStorage.
-      sessionStorage.setItem("washupRole", <?= json_encode($u['role']) ?>);
-      sessionStorage.setItem("washupUsername", <?= json_encode($u['username']) ?>);
-      window.WASHUP_CSRF = <?= json_encode(csrf_token()) ?>;
-    </script>
+    <?php washup_bootstrap($u); ?>
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
