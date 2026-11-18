@@ -13,6 +13,14 @@ $WRITE = ['washupUsers' => ['Admin'], 'washupServices' => ['Admin'], 'washupShif
 if (!isset($WRITE[$key])) json_out(['error' => 'Kunci data tidak dikenal'], 400);
 if (!in_array($u['role'], $WRITE[$key], true)) json_out(['error' => 'Anda tidak punya akses untuk mengubah data ini.'], 403);
 if (count($ops) > 200) json_out(['error' => 'Terlalu banyak perubahan sekaligus'], 413);
+foreach ($ops as $operation) {
+  if (!is_array($operation) || !in_array($operation['op'] ?? '', ['create', 'update', 'delete'], true)) {
+    json_out(['error' => 'Jenis operasi tidak valid.'], 400);
+  }
+  if (($operation['op'] === 'create' || $operation['op'] === 'update') && !is_array($operation['record'] ?? null)) {
+    json_out(['error' => 'Data perubahan tidak valid.'], 400);
+  }
+}
 
 // ---------- helper ----------
 // PostgreSQL: ambil ID baru lewat RETURNING (pengganti lastInsertId()).
@@ -43,8 +51,7 @@ function need_text(?string $v, string $label): string {
   return trim($v);
 }
 function hhmm_ok(?string $v, string $label): string {
-  $v = str_replace('.', ':', trim((string)$v));   // locale id-ID menulis jam dengan titik (08.30)
-  if (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $v)) throw new UserError("$label tidak valid.");
+  if (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', (string)$v)) throw new UserError("$label tidak valid.");
   return $v;
 }
 function res(array $op, array $record, array $extra = []): array { return ['id' => $op['id'] ?? null, 'record' => $record] + $extra; }
@@ -58,36 +65,50 @@ function find_shift_id(PDO $db, ?string $name): ?int {
 function sync_users(PDO $db, array $u, array $ops): array {
   $out = []; $roles = ['Admin', 'Kasir', 'Petugas', 'Owner'];
   $map = ['fullName' => 'nama_karyawan', 'username' => 'username', 'phone' => 'no_telepon', 'role' => 'role', 'status' => 'status_akun'];
-  $protected = (int)$db->query("SELECT MIN(id_karyawan) FROM karyawan WHERE role='Admin' AND deleted_at IS NULL")->fetchColumn();
   try {
     foreach ($ops as $op) {
       if ($op['op'] === 'create') {
         $r = $op['record'];
         $role = $r['role'] ?? ''; if (!in_array($role, $roles, true)) throw new UserError('Role tidak valid.');
-        $pw = (string)($r['password'] ?? ''); if (strlen($pw) < 6) throw new UserError('Password minimal 6 karakter.');
+        $username = strtolower(need_text($r['username'] ?? null, 'Username'));
+        if (!preg_match('/^[a-z0-9._-]{3,40}$/', $username)) throw new UserError('Username harus 3–40 karakter dan hanya berisi huruf, angka, titik, garis bawah, atau tanda hubung.');
+        $status = $r['status'] ?? 'Aktif';
+        if (!in_array($status, ['Aktif', 'Nonaktif'], true)) throw new UserError('Status akun tidak valid.');
+        $pw = (string)($r['password'] ?? ''); if (strlen($pw) < 8) throw new UserError('Password minimal 8 karakter.');
         $newId = ins_id($db,
           'INSERT INTO karyawan (nama_karyawan, username, no_telepon, role, status_akun, password) VALUES (?,?,?,?,?,?)',
-          [need_text($r['fullName'] ?? null, 'Nama lengkap'), strtolower(need_text($r['username'] ?? null, 'Username')), trim($r['phone'] ?? ''),
-           $role, ($r['status'] ?? 'Aktif') === 'Nonaktif' ? 'Nonaktif' : 'Aktif', password_hash($pw, PASSWORD_DEFAULT)],
+          [need_text($r['fullName'] ?? null, 'Nama lengkap'), $username, trim((string)($r['phone'] ?? '')),
+           $role, $status, password_hash($pw, PASSWORD_DEFAULT)],
           'id_karyawan');
         $out[] = res($op, hy_users($db, $newId)[0]);
       } elseif ($op['op'] === 'update') {
         $id = real_id($op['id']); $cols = pick($op, $map);
-        if (isset($cols['username'])) $cols['username'] = strtolower(need_text($cols['username'], 'Username'));
+        if (isset($cols['username'])) {
+          $cols['username'] = strtolower(need_text($cols['username'], 'Username'));
+          if (!preg_match('/^[a-z0-9._-]{3,40}$/', $cols['username'])) throw new UserError('Username harus 3–40 karakter dan hanya berisi huruf, angka, titik, garis bawah, atau tanda hubung.');
+        }
         if (isset($cols['role']) && !in_array($cols['role'], $roles, true)) throw new UserError('Role tidak valid.');
-        if ($id === $protected && ((isset($cols['role']) && $cols['role'] !== 'Admin') || (isset($cols['status_akun']) && $cols['status_akun'] !== 'Aktif')))
-          throw new UserError('Akun Admin utama tidak boleh dinonaktifkan atau diubah rolenya.');
+        if (isset($cols['status_akun']) && !in_array($cols['status_akun'], ['Aktif', 'Nonaktif'], true)) throw new UserError('Status akun tidak valid.');
+        $check = $db->prepare('SELECT id_karyawan, is_system_account FROM karyawan WHERE id_karyawan = ? AND deleted_at IS NULL FOR UPDATE');
+        $check->execute([$id]);
+        $accountRow = $check->fetch();
+        if (!$accountRow) throw new UserError('Akun tidak ditemukan.');
+        $isSystemAccount = pg_true($accountRow['is_system_account']);
+        if ($isSystemAccount) throw new UserError('Akun Admin utama tidak dapat diedit melalui menu Akun Pengguna. Gunakan Edit Profil untuk mengganti password.');
         if ($id === $u['id'] && isset($cols['status_akun']) && $cols['status_akun'] !== 'Aktif') throw new UserError('Anda tidak bisa menonaktifkan akun sendiri.');
         $pw = (string)($op['record']['password'] ?? '');
         if (in_array('password', $op['changed'] ?? [], true) && $pw !== '') {
-          if (strlen($pw) < 6) throw new UserError('Password minimal 6 karakter.');
+          if (strlen($pw) < 8) throw new UserError('Password minimal 8 karakter.');
           $cols['password'] = password_hash($pw, PASSWORD_DEFAULT);
         }
         upd($db, 'karyawan', 'id_karyawan', $id, $cols);
         $out[] = res($op, hy_users($db, $id)[0]);
       } elseif ($op['op'] === 'delete') {
         $id = real_id($op['id']);
-        if ($id === $protected || $id === $u['id']) throw new UserError('Akun ini tidak boleh dihapus.');
+        $check = $db->prepare('SELECT id_karyawan, is_system_account FROM karyawan WHERE id_karyawan = ? AND deleted_at IS NULL FOR UPDATE');
+        $check->execute([$id]);
+        $accountRow = $check->fetch();
+        if ($id === $u['id'] || ($accountRow && pg_true($accountRow['is_system_account']))) throw new UserError('Akun ini tidak boleh dihapus.');
         soft($db, 'karyawan', 'id_karyawan', $id); $out[] = ['id' => $op['id']];
       }
     }
@@ -149,7 +170,7 @@ function antrean_set_status(PDO $db, int $idAntrean, string $to): void {
   if ($i === false || $j === false) throw new UserError('Status pengerjaan tidak valid.');
   if ($j === $i) return;
   if ($j !== $i + 1) throw new UserError("Status tidak bisa diubah dari $from ke $to.");
-  // waktu_perubahan_terakhir diisi otomatis oleh trigger trg_antrean_ubah (lihat washup_pg.sql);
+  // waktu_perubahan_terakhir diisi otomatis oleh trigger trg_antrean_ubah (lihat sql/washup.sql);
   // berlaku untuk semua kendaraan di nomor antrean ini.
   $db->prepare("UPDATE antrean SET status_antrean = ?,
                   waktu_mulai   = CASE WHEN ?::text = 'Sedang Dicuci' THEN LOCALTIME(0) ELSE waktu_mulai END,
