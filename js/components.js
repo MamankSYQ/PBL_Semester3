@@ -55,41 +55,41 @@ function mountIcons(root = document) {
 
 const WASHUP_MENUS = {
   Admin: [
-    { page: "dashboard", href: "dashboard-admin.html", label: "Dashboard", icon: renderIcon("home", "nav-icon-svg") },
-    { page: "services", href: "layanan-tarif.html", label: "Layanan & Tarif", icon: renderIcon("rupiah", "nav-icon-rp") },
-    { page: "shifts", href: "data-shift.html", label: "Data Shift", icon: renderIcon("calendar", "nav-icon-svg") },
-    { page: "verification", href: "verifikasi-absensi.html", label: "Verifikasi Absensi", icon: renderIcon("clipboard-check", "nav-icon-svg") },
-    { page: "users", href: "akun-pengguna.html", label: "Akun Pengguna", icon: renderIcon("user", "nav-icon-svg") }
+    { page: "dashboard", href: "dashboard-admin.php", label: "Dashboard", icon: renderIcon("home", "nav-icon-svg") },
+    { page: "services", href: "layanan-tarif.php", label: "Layanan & Tarif", icon: renderIcon("rupiah", "nav-icon-rp") },
+    { page: "shifts", href: "data-shift.php", label: "Data Shift", icon: renderIcon("calendar", "nav-icon-svg") },
+    { page: "verification", href: "verifikasi-absensi.php", label: "Verifikasi Absensi", icon: renderIcon("clipboard-check", "nav-icon-svg") },
+    { page: "users", href: "akun-pengguna.php", label: "Akun Pengguna", icon: renderIcon("user", "nav-icon-svg") }
   ],
   Owner: [
-    { page: "dashboard", href: "dashboard-owner.html", label: "Dashboard", icon: renderIcon("home", "nav-icon-svg") },
-    { page: "transactions", href: "laporan-transaksi.html", label: "Laporan Transaksi", icon: renderIcon("receipt", "nav-icon-svg") },
-    { page: "finance", href: "laporan-keuangan.html", label: "Laporan Keuangan", icon: renderIcon("rupiah", "nav-icon-rp") },
-    { page: "employees", href: "laporan-karyawan.html", label: "Laporan Karyawan", icon: renderIcon("users", "nav-icon-svg") },
-    { page: "schedule", href: "jadwal-shift.html", label: "Jadwal Shift", icon: renderIcon("calendar", "nav-icon-svg") },
-    { page: "stats", href: "statistik-layanan.html", label: "Statistik Layanan", icon: renderIcon("chart", "nav-icon-svg") }
+    { page: "dashboard", href: "dashboard-owner.php", label: "Dashboard", icon: renderIcon("home", "nav-icon-svg") },
+    { page: "transactions", href: "laporan-transaksi.php", label: "Laporan Transaksi", icon: renderIcon("receipt", "nav-icon-svg") },
+    { page: "finance", href: "laporan-keuangan.php", label: "Laporan Keuangan", icon: renderIcon("rupiah", "nav-icon-rp") },
+    { page: "employees", href: "laporan-karyawan.php", label: "Laporan Karyawan", icon: renderIcon("users", "nav-icon-svg") },
+    { page: "schedule", href: "jadwal-shift.php", label: "Jadwal Shift", icon: renderIcon("calendar", "nav-icon-svg") },
+    { page: "stats", href: "statistik-layanan.php", label: "Statistik Layanan", icon: renderIcon("chart", "nav-icon-svg") }
   ],
   Kasir: [
-    { page: "dashboard", href: "dashboard-kasir.html", label: "Dashboard", icon: renderIcon("home", "nav-icon-svg") },
-    { page: "new-transaction", href: "transaksi-baru.html", label: "Transaksi Baru", icon: renderIcon("plus", "nav-icon-svg") },
-    { page: "queue", href: "antrean.html", label: "Antrean", icon: renderIcon("list", "nav-icon-svg") },
-    { page: "payment", href: "pembayaran.html", label: "Pembayaran", icon: renderIcon("credit-card", "nav-icon-svg") },
-    { page: "history", href: "riwayat-transaksi.html", label: "Riwayat Transaksi", icon: renderIcon("history", "nav-icon-svg") },
-    { page: "expenses", href: "pengeluaran.html", label: "Pengeluaran", icon: renderIcon("file-text", "nav-icon-svg") }
+    { page: "dashboard", href: "dashboard-kasir.php", label: "Dashboard", icon: renderIcon("home", "nav-icon-svg") },
+    { page: "new-transaction", href: "transaksi-baru.php", label: "Transaksi Baru", icon: renderIcon("plus", "nav-icon-svg") },
+    { page: "queue", href: "antrean.php", label: "Antrean", icon: renderIcon("list", "nav-icon-svg") },
+    { page: "payment", href: "pembayaran.php", label: "Pembayaran", icon: renderIcon("credit-card", "nav-icon-svg") },
+    { page: "history", href: "riwayat-transaksi.php", label: "Riwayat Transaksi", icon: renderIcon("history", "nav-icon-svg") },
+    { page: "expenses", href: "pengeluaran.php", label: "Pengeluaran", icon: renderIcon("file-text", "nav-icon-svg") }
   ],
   Petugas: [
-    { page: "dashboard", href: "dashboard-petugas.html", label: "Dashboard", icon: renderIcon("home", "nav-icon-svg") },
-    { page: "checkin", href: "absensi-masuk.html", label: "Absensi Masuk", icon: renderIcon("log-in", "nav-icon-svg") },
-    { page: "checkout", href: "absensi-keluar.html", label: "Absensi Keluar", icon: renderIcon("log-out", "nav-icon-svg") },
-    { page: "recap", href: "rekap-absensi.html", label: "Rekap Absensi", icon: renderIcon("calendar-check", "nav-icon-svg") }
+    { page: "dashboard", href: "dashboard-petugas.php", label: "Dashboard", icon: renderIcon("home", "nav-icon-svg") },
+    { page: "checkin", href: "absensi-masuk.php", label: "Absensi Masuk", icon: renderIcon("log-in", "nav-icon-svg") },
+    { page: "checkout", href: "absensi-keluar.php", label: "Absensi Keluar", icon: renderIcon("log-out", "nav-icon-svg") },
+    { page: "recap", href: "rekap-absensi.php", label: "Rekap Absensi", icon: renderIcon("calendar-check", "nav-icon-svg") }
   ]
 };
 
 const WASHUP_ROLE_META = {
-  Admin: { menuLabel: "MENU ADMIN", note: "Area Monitoring Admin", home: "dashboard-admin.html", sidebarLabel: "Navigasi Admin", brandLabel: "WASHUP Dashboard Admin" },
-  Owner: { menuLabel: "MENU OWNER", note: "Area Monitoring Owner", home: "dashboard-owner.html", sidebarLabel: "Navigasi Owner", brandLabel: "WASHUP Dashboard Owner" },
-  Kasir: { menuLabel: "MENU KASIR", note: "Area Kerja Kasir", home: "dashboard-kasir.html", sidebarLabel: "Navigasi Kasir", brandLabel: "WASHUP Dashboard Kasir" },
-  Petugas: { menuLabel: "MENU PETUGAS", note: "Area Monitoring Petugas", home: "dashboard-petugas.html", sidebarLabel: "Navigasi Petugas", brandLabel: "WASHUP Dashboard Petugas" }
+  Admin: { menuLabel: "MENU ADMIN", note: "Area Monitoring Admin", home: "dashboard-admin.php", sidebarLabel: "Navigasi Admin", brandLabel: "WASHUP Dashboard Admin" },
+  Owner: { menuLabel: "MENU OWNER", note: "Area Monitoring Owner", home: "dashboard-owner.php", sidebarLabel: "Navigasi Owner", brandLabel: "WASHUP Dashboard Owner" },
+  Kasir: { menuLabel: "MENU KASIR", note: "Area Kerja Kasir", home: "dashboard-kasir.php", sidebarLabel: "Navigasi Kasir", brandLabel: "WASHUP Dashboard Kasir" },
+  Petugas: { menuLabel: "MENU PETUGAS", note: "Area Monitoring Petugas", home: "dashboard-petugas.php", sidebarLabel: "Navigasi Petugas", brandLabel: "WASHUP Dashboard Petugas" }
 };
 
 // Mengamankan teks dinamis sebelum dimasukkan ke markup HTML.

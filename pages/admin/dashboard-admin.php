@@ -1,0 +1,187 @@
+<?php
+require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../includes/hydrate.php';
+$u = require_role('Admin');
+?>
+<!doctype html>
+<html lang="id">
+  <head>
+    <?php washup_bootstrap($u); ?>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Dashboard Admin WASHUP - Sistem Informasi Car Wash" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Dashboard Admin | WASHUP</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="../../css/tokens.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/base.css" />
+    <link rel="stylesheet" href="../../css/admin.css" />
+    <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
+    <link rel="stylesheet" href="../../css/compact.css" />
+  </head>
+  <body class="admin-dashboard-page" data-role="Admin" data-page="dashboard" data-title="Dashboard Admin" data-logout-id="admin-logout">
+    <div class="dashboard-shell">
+      <!-- A. SIDEBAR ADMIN -->
+      <div data-component="sidebar"></div>
+
+      <!-- KONTEN DASHBOARD -->
+      <div class="dashboard-content">
+        <!-- B. HEADER TOPBAR -->
+        <div data-component="topbar"></div>
+
+        <!-- C. KONTEN UTAMA -->
+        <main class="dashboard-main admin-main">
+          <section class="dashboard-welcome" aria-labelledby="admin-welcome-title">
+            <div>
+              <p class="eyebrow">RINGKASAN ADMINISTRASI</p>
+              <h2 id="admin-welcome-title">Monitoring data operasional WASHUP</h2>
+              <span class="admin-date-chip" id="admin-date">17 Agustus 2026</span>
+            </div>
+          </section>
+
+          <section class="summary-grid admin-summary-grid" aria-label="Ringkasan data WASHUP">
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" data-icon="users" aria-hidden="true"></div>
+              </div>
+              <p>Total Pelanggan</p>
+              <strong id="admin-customer-count">0</strong>
+            </article>
+
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" data-icon="car" aria-hidden="true"></div>
+              </div>
+              <p>Total Kendaraan</p>
+              <strong id="admin-vehicle-count">0</strong>
+            </article>
+
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" data-icon="receipt" aria-hidden="true"></div>
+              </div>
+              <p>Total Layanan</p>
+              <strong id="admin-service-count">0</strong>
+            </article>
+
+            <article class="summary-card">
+              <div class="summary-card-top">
+                <div class="summary-icon-box" data-icon="user" aria-hidden="true"></div>
+              </div>
+              <p>Total Karyawan</p>
+              <strong id="admin-employee-count">0</strong>
+            </article>
+          </section>
+
+          <section class="admin-overview-grid" aria-label="Ringkasan operasional">
+            <article class="admin-panel">
+              <div class="admin-panel-heading">
+                <h2>Ringkasan Operasional Hari Ini</h2>
+                <span class="admin-badge admin-badge-green" id="admin-active-badge">0 aktif</span>
+              </div>
+              <div class="admin-stat-columns">
+                <div><span>Transaksi</span><strong id="admin-today-transactions">0</strong></div>
+                <div><span>Pendapatan</span><strong id="admin-today-revenue">Rp 0</strong></div>
+                <div><span>Antrean</span><strong id="admin-active-queue">0</strong></div>
+              </div>
+            </article>
+
+            <article class="admin-panel">
+              <div class="admin-panel-heading">
+                <h2>Layanan Terpopuler</h2>
+                <span class="admin-badge admin-badge-blue">Hari ini</span>
+              </div>
+              <div class="admin-stat-columns admin-popular-services" id="admin-popular-services">
+                <div><span>-</span><strong>0</strong></div>
+                <div><span>-</span><strong>0</strong></div>
+                <div><span>-</span><strong>0</strong></div>
+              </div>
+            </article>
+          </section>
+
+          <section class="admin-detail-grid" aria-label="Monitoring dan transaksi">
+            <article class="admin-panel admin-monitoring-panel">
+              <div class="admin-panel-heading">
+                <h2>Monitoring Operasional</h2>
+                <span class="admin-badge admin-badge-blue">Hari ini</span>
+              </div>
+
+              <div class="admin-monitoring-stats">
+                <div class="admin-monitoring-stat">
+                  <span>Antrean aktif</span>
+                  <strong id="admin-monitoring-queue">0</strong>
+                  <small><span id="admin-waiting-cashier">0</span> menunggu kasir</small>
+                </div>
+                <div class="admin-monitoring-stat">
+                  <span>Karyawan aktif</span>
+                  <strong id="admin-monitoring-employees">0</strong>
+                  <small><span id="admin-check-in-count">0</span> sudah absen hari ini</small>
+                </div>
+              </div>
+
+              <div class="admin-shift-row">
+                <strong id="admin-current-shift">Tidak ada shift berjalan</strong>
+                <span id="admin-current-shift-time">-</span>
+              </div>
+
+              <div class="admin-target">
+                <div class="admin-progress-track" role="progressbar" aria-label="Transaksi dibanding target harian" aria-valuemin="0" aria-valuemax="100">
+                  <span id="admin-target-progress"></span>
+                </div>
+                <div class="admin-target-labels">
+                  <span id="admin-target-percent">0% target tercapai</span>
+                  <strong id="admin-target-count">0 / 160</strong>
+                </div>
+              </div>
+
+              <div class="admin-activity">
+                <h3>Aktivitas terbaru</h3>
+                <div class="admin-activity-list" id="admin-activity-list">
+                  <p class="admin-activity-empty">Belum ada aktivitas hari ini.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="admin-panel admin-transactions-panel">
+              <div class="admin-panel-heading">
+                <h2 id="admin-recent-title">Transaksi Terbaru</h2>
+                <span class="admin-badge admin-badge-blue" id="admin-recent-count" hidden></span>
+              </div>
+              <div class="table-wrap" tabindex="0">
+                <table class="queue-table">
+                  <caption class="sr-only">Daftar transaksi terbaru</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">NO. TRANSAKSI</th>
+                      <th scope="col">PELANGGAN</th>
+                      <th scope="col">PLAT</th>
+                      <th scope="col">LAYANAN</th>
+                      <th scope="col">TOTAL</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-recent-body"></tbody>
+                </table>
+              </div>
+              <div class="queue-empty" id="admin-recent-empty">
+                <p>Belum ada transaksi.</p>
+              </div>
+            </article>
+          </section>
+
+          <p class="admin-notice" id="admin-notice" role="status" aria-live="polite"></p>
+        </main>
+
+        <!-- F. FOOTER -->
+        <div data-component="footer"></div>
+      </div>
+    </div>
+
+    <script src="../../js/components.js"></script>
+    <script src="../../js/app.js"></script>
+  </body>
+</html>

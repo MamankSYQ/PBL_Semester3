@@ -1,0 +1,136 @@
+<?php
+require __DIR__ . '/includes/auth.php';
+$user = current_user();   // sudah login: tombol menuju dashboard role-nya
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <meta name="description" content="WASHUP, sistem administrasi Maju Bersama Car Wash 2 Kota Malang untuk mengelola antrean, transaksi, absensi, dan laporan usaha." />
+    <meta property="og:title" content="WASHUP - Sistem Administrasi Car Wash" />
+    <meta property="og:description" content="Sistem administrasi Maju Bersama Car Wash 2: antrean, transaksi, absensi, dan laporan usaha." />
+    <meta property="og:image" content="assets/logo-washup.png" />
+    <meta property="og:type" content="website" />
+    <title>WASHUP - Sistem Administrasi Car Wash</title>
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/landing.css?v=20261112-4">
+    <link href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="landing-page">
+    <div class="container">
+        <header class="top-header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <img
+                        src="assets/logo-washup.png"
+                        alt="Logo mobil cuci WASHUP"
+                        width="55"
+                        height="45"
+                    >
+                </div>
+                <div class="logo-text">
+                    <h1>WASHUP</h1>
+                    <p>Web Administrasi Sistem Hasil Usaha Pelayanan</p>
+                </div>
+            </div>
+
+            <div class="partner-pill">
+                <span class="partner-dot" aria-hidden="true"></span>
+                <span>Maju Bersama Car Wash 2</span>
+            </div>
+        </header>
+
+        <main class="landing-main">
+            <section class="hero" aria-labelledby="landing-title">
+                <div class="hero-eyebrow">
+                    <span class="eyebrow-dot" aria-hidden="true"></span>
+                    <span>Sistem Operasional WASHUP</span>
+                </div>
+
+                <h2 id="landing-title">
+                    <span>Pusat Operasional</span>
+                    <span class="hero-highlight">Maju Bersama Car Wash 2</span>
+                </h2>
+                <p>WASHUP akan membantu menghubungkan pelayanan pelanggan, antrean pencucian, dan pemantauan usaha dalam sistem</p>
+
+                <?php $dest = $user ? 'pages/' . HOME_BY_ROLE[$user['role']] : 'login.php'; ?>
+                <a href="<?= htmlspecialchars($dest) ?>" class="btn-login">
+                    <span><?= $user ? 'Buka Dashboard ' . htmlspecialchars($user['role']) : 'Login WASHUP' ?></span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M4.5 12h14m-6-6 6 6-6 6" />
+                    </svg>
+                </a>
+            </section>
+
+            <section class="main-white-card" aria-labelledby="partner-section-title">
+                <div class="section-heading">
+                    <h3 class="card-main-title" id="partner-section-title">Maju Bersama Car Wash 2</h3>
+                    <span class="section-caption">Mitra · Layanan · Sistem</span>
+                </div>
+
+                <div class="card-grid">
+                    <article class="grid-item" tabindex="0" role="button" aria-pressed="true" aria-label="Pilih kartu Tentang Mitra">
+                        <span class="grid-num">01</span>
+                        <span class="grid-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <path d="m3 10 9-7 9 7M5.5 9.5V21h13V9.5M9.5 21v-7h5v7" />
+                            </svg>
+                        </span>
+                        <h4>Tentang Mitra</h4>
+                        <p>Usaha jasa pencucian kendaraan yang berlokasi di Kota Malang.</p>
+                    </article>
+
+                    <article class="grid-item" tabindex="0" role="button" aria-pressed="false" aria-label="Pilih kartu Layanan">
+                        <span class="grid-num">02</span>
+                        <span class="grid-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <path d="m5 11 1.7-5.1A2 2 0 0 1 8.6 4.5h6.8a2 2 0 0 1 1.9 1.4L19 11M4 11h16l1 3v5H3v-5l1-3Zm2 8v2m12-2v2M6.5 14.5h.01M17.5 14.5h.01" />
+                            </svg>
+                        </span>
+                        <h4>Layanan</h4>
+                        <p>Melayani jasa pencucian kendaraan untuk mobil dan sepeda motor dengan beberapa pilihan layanan.</p>
+                    </article>
+
+                    <article class="grid-item" tabindex="0" role="button" aria-pressed="false" aria-label="Pilih kartu WASHUP">
+                        <span class="grid-num">03</span>
+                        <span class="grid-icon grid-icon-grid" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <rect x="3" y="3" width="7" height="7" rx="1" />
+                                <rect x="14" y="3" width="7" height="7" rx="1" />
+                                <rect x="3" y="14" width="7" height="7" rx="1" />
+                                <rect x="14" y="14" width="7" height="7" rx="1" />
+                            </svg>
+                        </span>
+                        <h4>WASHUP</h4>
+                        <p>Sistem untuk membantu pengelolaan operasional secara lebih terstruktur.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="footer-info" aria-label="Status sistem">
+                <div class="info-left">
+                    <span class="status-indicator" aria-hidden="true"><span></span></span>
+                    <div class="status-copy">
+                        <span class="status-label">Status Sistem</span>
+                        <p>WASHUP siap mendukung operasional<br class="desktop-break"> Maju Bersama Car Wash 2</p>
+                    </div>
+                </div>
+                <div class="info-right">
+                    <p>Akses sistem tersedia sesuai peran pengguna untuk membantu pengelolaan operasional, mulai dari pelayanan, antrean, transaksi, hingga pemantauan usaha.</p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="bottom-footer">
+            <div class="copyright">&copy; <span id="current-year">2026</span> WASHUP</div>
+            <div class="footer-partner">Maju Bersama Car Wash 2 <span aria-hidden="true">·</span> Kota Malang</div>
+        </footer>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/landing-cards.js?v=20261112-3"></script>
+</body>
+</html>
