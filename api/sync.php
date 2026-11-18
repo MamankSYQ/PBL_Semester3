@@ -43,7 +43,8 @@ function need_text(?string $v, string $label): string {
   return trim($v);
 }
 function hhmm_ok(?string $v, string $label): string {
-  if (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', (string)$v)) throw new UserError("$label tidak valid.");
+  $v = str_replace('.', ':', trim((string)$v));   // locale id-ID menulis jam dengan titik (08.30)
+  if (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $v)) throw new UserError("$label tidak valid.");
   return $v;
 }
 function res(array $op, array $record, array $extra = []): array { return ['id' => $op['id'] ?? null, 'record' => $record] + $extra; }

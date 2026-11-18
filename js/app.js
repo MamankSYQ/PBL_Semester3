@@ -3269,7 +3269,8 @@ function setupPetugasAttendance() {
       notice.textContent = "Bukti foto wajib digunakan sebelum melakukan absensi.";
       return;
     }
-    const now = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+    const nowDate = new Date();
+    const now = `${String(nowDate.getHours()).padStart(2, "0")}:${String(nowDate.getMinutes()).padStart(2, "0")}`;
     if (!isCheckOutPage && !attendance.checkIn) {
       attendance.shift = activeShift?.name || attendance.shift;
       attendance.checkIn = now;
