@@ -60,7 +60,7 @@ function hy_attendance(PDO $db, ?int $id = null, ?int $karyawan = null): array {
   $st->execute([$id, $id, $karyawan, $karyawan]);
   return array_map(function ($r) {
     $o = ['id' => (string)$r['id_absensi'], 'employeeId' => $r['username'], 'employeeName' => $r['nama_karyawan'],
-      'date' => $r['tanggal_absensi'], 'shift' => (string)$r['nama_shift'], 'status' => $r['status_absensi']];
+    'date' => str_replace('-', '', $r['tanggal_absensi']), 'shift' => (string)$r['nama_shift'], 'status' => $r['status_absensi']];
     foreach (['In' => 'masuk', 'Out' => 'keluar'] as $k => $col) {
       if ($r["jam_$col"]) $o["check$k"] = hhmm($r["jam_$col"]);
       if ($r["foto_$col"]) $o["check{$k}Photo"] = file_url($r["foto_$col"]);

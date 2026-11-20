@@ -43,7 +43,7 @@ function need_text(?string $v, string $label): string {
   return trim($v);
 }
 function hhmm_ok(?string $v, string $label): string {
-  $v = str_replace('.', ':', trim((string)$v));   // locale id-ID menulis jam dengan titik (08.30)
+  $v = str_replace('.', ':', trim((string)$v));   
   if (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $v)) throw new UserError("$label tidak valid.");
   return $v;
 }
