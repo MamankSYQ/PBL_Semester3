@@ -1469,7 +1469,7 @@ tbody > tr[hidden] { display: none !important; }
   line-height: 1.55 !important;
 }
 
-:root:root body.petugas-page button:not(:disabled) {
+:root:root body.petugas-page button:not(.profile-password-toggle):not(:disabled) {
   transform: translateY(0) !important;
   box-shadow: 0 2px 4px rgba(16, 47, 59, .10) !important;
   transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease, background-color 180ms ease !important;
@@ -1477,14 +1477,14 @@ tbody > tr[hidden] { display: none !important; }
 }
 
 @media (hover: hover) and (pointer: fine) {
-  :root:root body.petugas-page button:not(:disabled):hover {
+  :root:root body.petugas-page button:not(.profile-password-toggle):not(:disabled):hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 7px 14px rgba(16, 47, 59, .18) !important;
     filter: brightness(1.025);
   }
 }
 
-:root:root body.petugas-page button:not(:disabled):active {
+:root:root body.petugas-page button:not(.profile-password-toggle):not(:disabled):active {
   transform: translateY(0) scale(.985) !important;
   box-shadow: 0 2px 5px rgba(16, 47, 59, .12) !important;
   filter: none;
@@ -1507,11 +1507,65 @@ tbody > tr[hidden] { display: none !important; }
     transition: none !important;
     will-change: auto;
   }
-  :root:root body.petugas-page button:is(:hover, :active) {
+  :root:root body.petugas-page button:not(.profile-password-toggle):is(:hover, :active) {
     transform: none !important;
   }
 }
 
+
+
+/* Tombol mata password: tidak ikut animasi umum tombol Petugas/Kasir.
+   Posisinya tetap tepat di tengah field pada semua role dan ukuran layar. */
+:root:root body .profile-edit-dialog .profile-password-control {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+:root:root body .profile-edit-dialog .profile-password-control > input {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  padding-right: 46px !important;
+}
+:root:root body .profile-edit-dialog .profile-password-toggle {
+  position: absolute !important;
+  top: 50% !important;
+  right: 6px !important;
+  z-index: 2 !important;
+  display: grid !important;
+  place-items: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: translateY(-50%) !important;
+  border: 0 !important;
+  border-radius: 7px !important;
+  background: transparent !important;
+  color: #648697 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  cursor: pointer !important;
+  will-change: auto !important;
+}
+:root:root body .profile-edit-dialog .profile-password-toggle:hover,
+:root:root body .profile-edit-dialog .profile-password-toggle:active {
+  transform: translateY(-50%) !important;
+  background: #EDF5F8 !important;
+  color: #1B5265 !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+:root:root body .profile-edit-dialog .profile-password-toggle svg {
+  display: block !important;
+  width: 18px !important;
+  height: 18px !important;
+  pointer-events: none !important;
+}
 
 /* =========================================================
    PAGINATION — ukuran lebih ringkas untuk seluruh role
@@ -1705,5 +1759,373 @@ tbody > tr[hidden] { display: none !important; }
   }
   :root:root body.kasir-expense-page .expense-proof-dialog .expense-proof-image {
     max-height: calc(100vh - 170px) !important;
+  }
+}
+
+
+/* =========================================================
+   TOMBOL AJUKAN IZIN / SAKIT — seragam dengan tombol absensi
+   Berlaku untuk role Petugas dan Kasir.
+   ========================================================= */
+:root:root body.petugas-attendance-page .attendance-card > .attendance-leave-trigger {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 42px !important;
+  margin: 8px 0 0 !important;
+  padding: 10px 18px !important;
+  font-family: "Open Sans", sans-serif !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0.03em !important;
+  text-align: center !important;
+  white-space: normal !important;
+}
+
+/* =========================================================
+   PATCH TERBATAS v5 — koreksi tampilan tanpa mengubah struktur fitur
+   1) ikon mata Edit Profil tampil satu per keadaan
+   2) jarak tombol Ajukan Izin/Sakit sama dengan jarak tombol foto → absen
+   3) tabel rekap absensi membagi lebar untuk seluruh 7 kolom
+   4) modal izin/sakit mengikuti gaya modal Tambah Layanan & Tarif
+   ========================================================= */
+
+/* Edit Profil: tampilkan satu ikon saja, seperti kontrol password pada halaman Login. */
+:root:root body .profile-edit-dialog .profile-password-toggle .password-eye-show {
+  display: block !important;
+}
+:root:root body .profile-edit-dialog .profile-password-toggle .password-eye-hide {
+  display: none !important;
+}
+:root:root body .profile-edit-dialog .profile-password-toggle[aria-pressed="true"] .password-eye-show {
+  display: none !important;
+}
+:root:root body .profile-edit-dialog .profile-password-toggle[aria-pressed="true"] .password-eye-hide {
+  display: block !important;
+}
+
+/* Spasi antar tombol foto, absen, dan pengajuan dibuat konsisten (14px). */
+:root:root body.petugas-attendance-page .attendance-card > .attendance-button,
+:root:root body.petugas-attendance-page .attendance-card > .attendance-leave-trigger {
+  margin: 14px 0 0 !important;
+}
+
+/* Rekap: tujuh kolom dibagi penuh 100%; status tidak lagi terdorong keluar tabel. */
+@media (min-width: 769px) {
+  :root:root body.petugas-recap-page .attendance-recap-table-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+  :root:root body.petugas-recap-page .attendance-recap-table {
+    display: table !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+  }
+  :root:root body.petugas-recap-page .attendance-recap-table th,
+  :root:root body.petugas-recap-page .attendance-recap-table td {
+    box-sizing: border-box !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    vertical-align: middle !important;
+  }
+  :root:root body.petugas-recap-page .attendance-recap-table th:nth-child(1),
+  :root:root body.petugas-recap-page .attendance-recap-table td:nth-child(1) { width: 17% !important; }
+  :root:root body.petugas-recap-page .attendance-recap-table th:nth-child(2),
+  :root:root body.petugas-recap-page .attendance-recap-table td:nth-child(2) { width: 12% !important; }
+  :root:root body.petugas-recap-page .attendance-recap-table th:nth-child(3),
+  :root:root body.petugas-recap-page .attendance-recap-table td:nth-child(3) { width: 11% !important; }
+  :root:root body.petugas-recap-page .attendance-recap-table th:nth-child(4),
+  :root:root body.petugas-recap-page .attendance-recap-table td:nth-child(4) { width: 11% !important; }
+  :root:root body.petugas-recap-page .attendance-recap-table th:nth-child(5),
+  :root:root body.petugas-recap-page .attendance-recap-table td:nth-child(5) { width: 14% !important; }
+  :root:root body.petugas-recap-page .attendance-recap-table th:nth-child(6),
+  :root:root body.petugas-recap-page .attendance-recap-table td:nth-child(6) { width: 18% !important; }
+  :root:root body.petugas-recap-page .attendance-recap-table th:nth-child(7),
+  :root:root body.petugas-recap-page .attendance-recap-table td:nth-child(7) { width: 17% !important; }
+  :root:root body.petugas-recap-page .attendance-recap-table td:last-child {
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
+  }
+}
+
+/* Modal Izin/Sakit: satu bahasa visual dengan modal Tambah Layanan & Tarif. */
+:root:root body.petugas-attendance-page dialog.attendance-leave-dialog[open] {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(610px, calc(100vw - 32px)) !important;
+  max-width: calc(100vw - 32px) !important;
+  max-height: calc(100vh - 28px) !important;
+  max-height: calc(100dvh - 28px) !important;
+  overflow-y: auto !important;
+  margin: 0 !important;
+  padding: 30px 44px 26px !important;
+  box-sizing: border-box !important;
+  border: 1px solid var(--wu-accent, #70a9bd) !important;
+  border-radius: 20px !important;
+  background: #fff !important;
+  color: var(--wu-text, #1d4a5a) !important;
+  box-shadow: 0 14px 42px rgba(14, 47, 60, .16) !important;
+  font-family: "Open Sans", sans-serif !important;
+}
+:root:root body.petugas-attendance-page dialog.attendance-leave-dialog::backdrop {
+  background: rgba(0, 0, 0, .33) !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-dialog > form {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 8px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  font-family: "Open Sans", sans-serif !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-heading {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  margin: 0 0 8px !important;
+  padding: 0 0 12px !important;
+  border: 0 !important;
+  border-bottom: 1px solid #76a8ba !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-heading .eyebrow {
+  margin: 0 0 8px !important;
+  color: var(--wu-accent-text, #1680a2) !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1.3 !important;
+  letter-spacing: .05em !important;
+  text-transform: uppercase !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-heading h2 {
+  margin: 0 !important;
+  color: var(--wu-text, #1d4a5a) !important;
+  font-family: "Open Sans", sans-serif !important;
+  font-size: 21px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  letter-spacing: .035em !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-close {
+  flex: 0 0 auto !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--wu-text, #1d4a5a) !important;
+  box-shadow: none !important;
+  font-family: "Open Sans", sans-serif !important;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-close:hover,
+:root:root body.petugas-attendance-page .attendance-leave-close:active {
+  transform: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-note {
+  margin: 4px 0 12px !important;
+  padding: 12px 14px !important;
+  border: 1px solid #d8e9ef !important;
+  border-radius: 8px !important;
+  background: #f4f9fb !important;
+  color: #55798a !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1.55 !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-dialog > form > label {
+  display: block !important;
+  margin: 7px 0 0 !important;
+  color: var(--wu-text, #1d4a5a) !important;
+  font-family: "Open Sans", sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  letter-spacing: .025em !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-dialog > form > select,
+:root:root body.petugas-attendance-page .attendance-leave-dialog > form > textarea {
+  display: block !important;
+  width: min(100%, 420px) !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 11px 13px !important;
+  border: 1px solid #acbfc7 !important;
+  border-radius: 8px !important;
+  background-color: #fff !important;
+  color: var(--wu-text, #1d4a5a) !important;
+  font-family: "Open Sans", sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  line-height: 1.45 !important;
+  letter-spacing: .02em !important;
+  box-shadow: none !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-dialog > form > select {
+  height: 47px !important;
+  min-height: 47px !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-dialog > form > textarea {
+  min-height: 100px !important;
+  resize: vertical !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-dialog > form > select:focus-visible,
+:root:root body.petugas-attendance-page .attendance-leave-dialog > form > textarea:focus-visible {
+  outline: 2px solid #4395f7 !important;
+  outline-offset: 2px !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-error {
+  min-height: 0 !important;
+  margin: 2px 0 0 !important;
+  color: #b3261e !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 28px !important;
+  margin: 20px 0 0 !important;
+  padding: 18px 0 0 !important;
+  border: 0 !important;
+  border-top: 1px solid #76a8ba !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-actions button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 159px !important;
+  max-width: calc((100% - 28px) / 2) !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  margin: 0 !important;
+  padding: 0 10px !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  font-family: "Open Sans", sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  letter-spacing: .035em !important;
+  line-height: 1.2 !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-actions .secondary-dashboard-button {
+  border: 1px solid var(--wu-text, #1d4a5a) !important;
+  background: #fff !important;
+  color: var(--wu-text, #1d4a5a) !important;
+}
+:root:root body.petugas-attendance-page .attendance-leave-actions .primary-button {
+  border: 1px solid var(--wu-text, #1d4a5a) !important;
+  background: var(--wu-text, #1d4a5a) !important;
+  color: #d6f0ff !important;
+}
+@media (max-width: 480px) {
+  :root:root body.petugas-attendance-page dialog.attendance-leave-dialog[open] {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100dvh - 24px) !important;
+    padding: 22px 18px 20px !important;
+  }
+  :root:root body.petugas-attendance-page .attendance-leave-actions {
+    gap: 12px !important;
+    margin-top: 14px !important;
+    padding-top: 14px !important;
+  }
+  :root:root body.petugas-attendance-page .attendance-leave-actions button {
+    width: auto !important;
+    max-width: calc((100% - 12px) / 2) !important;
+    flex: 1 1 calc((100% - 12px) / 2) !important;
+    font-size: 14px !important;
+  }
+}
+
+/* =========================================================
+   PATCH v7 — samakan jarak vertikal kontrol absensi
+   Hilangkan ruang kosong dari grid foto tersimpan saat belum ada foto.
+   Saat foto tersimpan ditampilkan, jarak visualnya tetap dipertahankan.
+   ========================================================= */
+:root:root body.petugas-attendance-page .attendance-photo-section > .saved-photo-grid {
+  margin-top: 0 !important;
+}
+:root:root body.petugas-attendance-page .attendance-photo-section > .saved-photo-grid:has(.saved-photo:not([hidden])) {
+  margin-top: 12px !important;
+}
+
+
+/* Revisi rekap v8: tujuh kolom header dan isi harus sejajar sampai Status. */
+@media (min-width: 769px) {
+  :root:root body.petugas-recap-page .attendance-recap-table-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+  }
+  :root:root body.petugas-recap-page table.attendance-recap-table {
+    display: table !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+  }
+  :root:root body.petugas-recap-page .attendance-recap-table thead {
+    display: table-header-group !important;
+  }
+  :root:root body.petugas-recap-page .attendance-recap-table tbody {
+    display: table-row-group !important;
+  }
+  :root:root body.petugas-recap-page .attendance-recap-table tr {
+    display: table-row !important;
+  }
+  :root:root body.petugas-recap-page .attendance-recap-table th,
+  :root:root body.petugas-recap-page .attendance-recap-table td {
+    display: table-cell !important;
+    box-sizing: border-box !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    vertical-align: middle !important;
+  }
+  :root:root body.petugas-recap-page .attendance-recap-table th:nth-child(1),
+  :root:root body.petugas-recap-page .attendance-recap-table td:nth-child(1) { width: 16% !important; }
+  :root:root body.petugas-recap-page .attendance-recap-table th:nth-child(2),
+  :root:root body.petugas-recap-page .attendance-recap-table td:nth-child(2) { width: 11% !important; }
+  :root:root body.petugas-recap-page .attendance-recap-table th:nth-child(3),
+  :root:root body.petugas-recap-page .attendance-recap-table td:nth-child(3) { width: 11% !important; }
+  :root:root body.petugas-recap-page .attendance-recap-table th:nth-child(4),
+  :root:root body.petugas-recap-page .attendance-recap-table td:nth-child(4) { width: 11% !important; }
+  :root:root body.petugas-recap-page .attendance-recap-table th:nth-child(5),
+  :root:root body.petugas-recap-page .attendance-recap-table td:nth-child(5) { width: 14% !important; }
+  :root:root body.petugas-recap-page .attendance-recap-table th:nth-child(6),
+  :root:root body.petugas-recap-page .attendance-recap-table td:nth-child(6) { width: 19% !important; }
+  :root:root body.petugas-recap-page .attendance-recap-table th:nth-child(7),
+  :root:root body.petugas-recap-page .attendance-recap-table td:nth-child(7) { width: 18% !important; }
+  :root:root body.petugas-recap-page .attendance-recap-table td:last-child {
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
   }
 }

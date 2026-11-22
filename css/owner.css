@@ -13,40 +13,25 @@
 }
 
 /* Ikon Kotak Biru Muda: width 34px, height 31px, radius 5px, background var(--wu-background), icon #0D6BA4 */
-
 /* Subtitle/Trend Kecil di Atas: 10px, 700, color #88AFC7 */
-
 /* Nama Statistik: 12px, 600, color #88AFC7 */
-
 /* Angka Besar: 24px, 700, line-height 33px, color var(--wu-accent) */
-
 /* =========================================================
    E. PANEL TRANSAKSI TERBARU (Frame 31: width 936px, height 425px)
    background: #FFFFFF; border-radius: 15px;
    ========================================================= */
-
 /* Eyebrow Tabel: MONITORING TRANSAKSI 15px, 400, color #238EB6 */
-
 /* Title Tabel: Transaksi Terbaru 24px, 700, color var(--wu-text) */
-
 /* Counter Badge JS */
-
 /* Tabel Transaksi */
-
 /* Header Kolom (Rectangle 97): height 42px, background rgba(232, 232, 232, 0.57), border-bottom 1px solid #ACACAC */
-
 /* Proporsi Kolom Presisi Berdasarkan Koordinat Horizontal Figma */
-
 /* Baris Isi Tabel */
-
 /* Badge Status */
-
 /* Empty State: box 75x70px, icon 47x47 #0D6BA4, h3 24px var(--wu-text), p 16px #88AFC7 */
-
 /* =========================================================
    F. FOOTER (Frame 11: width 932px, border-top 1px solid var(--wu-accent), color var(--wu-accent))
    ========================================================= */
-
 /* =========================================================
    RESPONSIVITAS BREAKPOINTS
    ========================================================= */
@@ -1235,4 +1220,69 @@
   .owner-service-stats-page #owner-stats-apply { transition: none; }
   .owner-service-stats-page #owner-stats-apply:not(:disabled):is(:hover, :active) { transform: none; box-shadow: none; }
   .owner-service-stats-page #owner-stats-chart .owner-chart-bar { transform: none; opacity: 1; animation: none !important; }
+}
+
+
+.owner-employee-detail-section { min-height: 280px !important; }
+.owner-employee-detail-table { min-width: 900px !important; }
+.owner-employee-detail-wrap { overflow-x: auto !important; }
+.owner-payroll-note { margin: 12px 0 0; color: #5d7b89; font-size: 10px; line-height: 1.6; }
+.owner-employee-page .owner-employee-detail-table td:nth-child(4),
+.owner-employee-page .owner-employee-detail-table td:nth-child(5) { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+
+/* Rekap kehadiran Owner: kolom Keterangan dan nilai insentif terbaca jelas. */
+.owner-employee-page .owner-employee-table:not(.owner-employee-detail-table) {
+  min-width: 760px;
+}
+.owner-employee-page .owner-employee-table:not(.owner-employee-detail-table) td:nth-child(4) {
+  min-width: 145px;
+  white-space: normal;
+}
+.owner-employee-page .owner-employee-table:not(.owner-employee-detail-table) td:nth-child(5),
+.owner-employee-page .owner-employee-table:not(.owner-employee-detail-table) td:nth-child(6) {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.owner-employee-page .owner-payroll-note {
+  margin-top: 12px;
+  line-height: 1.65;
+}
+
+
+/* Filter bulan/tahun pada menu Owner: mengikuti tampilan Statistik Layanan. */
+.owner-period-toolbar {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 0 20px !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 176px !important;
+  gap: 24px !important;
+}
+.owner-period-toolbar .owner-stats-filter select {
+  height: 42px !important;
+  font-size: 14px !important;
+}
+.owner-period-toolbar button {
+  width: 100% !important;
+  height: 42px !important;
+  font-size: 14px !important;
+}
+.owner-schedule-period-toolbar {
+  margin-bottom: 16px !important;
+}
+@media (max-width: 768px) {
+  .owner-period-toolbar {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+  .owner-period-toolbar button {
+    grid-column: 1 / -1 !important;
+    justify-self: stretch !important;
+  }
+}
+@media (max-width: 480px) {
+  .owner-period-toolbar {
+    grid-template-columns: 1fr !important;
+    padding: 16px !important;
+  }
 }
