@@ -9,10 +9,47 @@ $u = api_guard(['Admin', 'Kasir', 'Petugas'], true);
 $in = body(); $key = (string)($in['key'] ?? ''); $ops = is_array($in['ops'] ?? null) ? $in['ops'] : [];
 $WRITE = ['washupUsers' => ['Admin'], 'washupServices' => ['Admin'], 'washupShifts' => ['Admin'],
   'washupShiftSchedule' => ['Admin'], 'washupShiftSchedulePublished' => ['Admin'], 'washupShiftSchedulePublishedAt' => ['Admin'],
-  'washupTransactions' => ['Kasir'], 'washupExpenses' => ['Kasir'], 'washupPetugasAttendance' => ['Petugas', 'Admin', 'Kasir']];
+  'washupTransactions' => ['Kasir'], 'washupExpenses' => ['Kasir'], 'washupPetugasAttendance' => ['Petugas', 'Kasir', 'Admin']];
 if (!isset($WRITE[$key])) json_out(['error' => 'Kunci data tidak dikenal'], 400);
 if (!in_array($u['role'], $WRITE[$key], true)) json_out(['error' => 'Anda tidak punya akses untuk mengubah data ini.'], 403);
 if (count($ops) > 200) json_out(['error' => 'Terlalu banyak perubahan sekaligus'], 413);
+$scheduleLeafKeys = ['washupShiftSchedule', 'washupShiftSchedulePublished'];
+$isScheduleLeaf = in_array($key, $scheduleLeafKeys, true);
+$isSchedulePublishedAt = $key === 'washupShiftSchedulePublishedAt';
+foreach ($ops as $operation) {
+  if (!is_array($operation)) {
+    json_out(['error' => 'Format perubahan tidak valid.'], 400);
+  }
+
+  // Jadwal dikirim sebagai {date, username, value}; waktu publikasi sebagai {week, value}.
+  // Keduanya bukan operasi CRUD {op, id, record} seperti data master.
+  if ($isScheduleLeaf) {
+    $date = (string)($operation['date'] ?? '');
+    $username = trim((string)($operation['username'] ?? ''));
+    $value = $operation['value'] ?? null;
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) || !checkdate((int)substr($date, 5, 2), (int)substr($date, 8, 2), (int)substr($date, 0, 4)) || $username === '') {
+      json_out(['error' => 'Data jadwal tidak valid.'], 400);
+    }
+    if ($value !== null && $value !== 'libur' && (!preg_match('/^\d+$/', (string)$value) || (int)$value < 1)) {
+      json_out(['error' => 'Pilihan shift tidak valid.'], 400);
+    }
+    continue;
+  }
+  if ($isSchedulePublishedAt) {
+    $week = (string)($operation['week'] ?? '');
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $week) || !checkdate((int)substr($week, 5, 2), (int)substr($week, 8, 2), (int)substr($week, 0, 4))) {
+      json_out(['error' => 'Tanggal minggu tidak valid.'], 400);
+    }
+    continue;
+  }
+
+  if (!in_array($operation['op'] ?? '', ['create', 'update', 'delete'], true)) {
+    json_out(['error' => 'Jenis operasi tidak valid.'], 400);
+  }
+  if (($operation['op'] === 'create' || $operation['op'] === 'update') && !is_array($operation['record'] ?? null)) {
+    json_out(['error' => 'Data perubahan tidak valid.'], 400);
+  }
+}
 
 // ---------- helper ----------
 // PostgreSQL: ambil ID baru lewat RETURNING (pengganti lastInsertId()).
@@ -42,9 +79,18 @@ function need_text(?string $v, string $label): string {
   if ($v === null || trim($v) === '') throw new UserError("$label wajib diisi.");
   return trim($v);
 }
+function valid_daily_wage($value, bool $requiredForEmployee = false): int {
+  if ($value === '' || !is_numeric($value)) throw new UserError('Gaji harian harus berupa angka yang valid.');
+  $number = (float)$value;
+  if (!is_finite($number) || floor($number) !== $number || $number < 0 || $number > 2147483647) {
+    throw new UserError('Gaji harian harus berupa bilangan bulat mulai dari 0.');
+  }
+  $wage = (int)$number;
+  if ($requiredForEmployee && $wage < 1) throw new UserError('Gaji harian Kasir/Petugas wajib diisi dan harus lebih dari 0.');
+  return $wage;
+}
 function hhmm_ok(?string $v, string $label): string {
-  $v = str_replace('.', ':', trim((string)$v));   
-  if (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $v)) throw new UserError("$label tidak valid.");
+  if (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', (string)$v)) throw new UserError("$label tidak valid.");
   return $v;
 }
 function res(array $op, array $record, array $extra = []): array { return ['id' => $op['id'] ?? null, 'record' => $record] + $extra; }
@@ -57,37 +103,58 @@ function find_shift_id(PDO $db, ?string $name): ?int {
 // ---------- Akun pengguna (Admin) ----------
 function sync_users(PDO $db, array $u, array $ops): array {
   $out = []; $roles = ['Admin', 'Kasir', 'Petugas', 'Owner'];
-  $map = ['fullName' => 'nama_karyawan', 'username' => 'username', 'phone' => 'no_telepon', 'role' => 'role', 'status' => 'status_akun'];
-  $protected = (int)$db->query("SELECT MIN(id_karyawan) FROM karyawan WHERE role='Admin' AND deleted_at IS NULL")->fetchColumn();
+  $map = ['fullName' => 'nama_karyawan', 'username' => 'username', 'phone' => 'no_telepon', 'role' => 'role', 'dailyWage' => 'gaji_harian', 'status' => 'status_akun'];
   try {
     foreach ($ops as $op) {
       if ($op['op'] === 'create') {
         $r = $op['record'];
         $role = $r['role'] ?? ''; if (!in_array($role, $roles, true)) throw new UserError('Role tidak valid.');
-        $pw = (string)($r['password'] ?? ''); if (strlen($pw) < 6) throw new UserError('Password minimal 6 karakter.');
+        $username = strtolower(need_text($r['username'] ?? null, 'Username'));
+        if (!preg_match('/^[a-z0-9._-]{3,40}$/', $username)) throw new UserError('Username harus 3–40 karakter dan hanya berisi huruf, angka, titik, garis bawah, atau tanda hubung.');
+        $status = $r['status'] ?? 'Aktif';
+        if (!in_array($status, ['Aktif', 'Nonaktif'], true)) throw new UserError('Status akun tidak valid.');
+        $pw = (string)($r['password'] ?? ''); if (strlen($pw) < 8) throw new UserError('Password minimal 8 karakter.');
+        $dailyWage = valid_daily_wage($r['dailyWage'] ?? 0, in_array($role, ['Kasir', 'Petugas'], true));
         $newId = ins_id($db,
-          'INSERT INTO karyawan (nama_karyawan, username, no_telepon, role, status_akun, password) VALUES (?,?,?,?,?,?)',
-          [need_text($r['fullName'] ?? null, 'Nama lengkap'), strtolower(need_text($r['username'] ?? null, 'Username')), trim($r['phone'] ?? ''),
-           $role, ($r['status'] ?? 'Aktif') === 'Nonaktif' ? 'Nonaktif' : 'Aktif', password_hash($pw, PASSWORD_DEFAULT)],
+          'INSERT INTO karyawan (nama_karyawan, username, no_telepon, role, gaji_harian, status_akun, password) VALUES (?,?,?,?,?,?,?)',
+          [need_text($r['fullName'] ?? null, 'Nama lengkap'), $username, trim((string)($r['phone'] ?? '')),
+           $role, $dailyWage, $status, password_hash($pw, PASSWORD_DEFAULT)],
           'id_karyawan');
         $out[] = res($op, hy_users($db, $newId)[0]);
       } elseif ($op['op'] === 'update') {
         $id = real_id($op['id']); $cols = pick($op, $map);
-        if (isset($cols['username'])) $cols['username'] = strtolower(need_text($cols['username'], 'Username'));
+        if (isset($cols['username'])) {
+          $cols['username'] = strtolower(need_text($cols['username'], 'Username'));
+          if (!preg_match('/^[a-z0-9._-]{3,40}$/', $cols['username'])) throw new UserError('Username harus 3–40 karakter dan hanya berisi huruf, angka, titik, garis bawah, atau tanda hubung.');
+        }
         if (isset($cols['role']) && !in_array($cols['role'], $roles, true)) throw new UserError('Role tidak valid.');
-        if ($id === $protected && ((isset($cols['role']) && $cols['role'] !== 'Admin') || (isset($cols['status_akun']) && $cols['status_akun'] !== 'Aktif')))
-          throw new UserError('Akun Admin utama tidak boleh dinonaktifkan atau diubah rolenya.');
+        if (isset($cols['status_akun']) && !in_array($cols['status_akun'], ['Aktif', 'Nonaktif'], true)) throw new UserError('Status akun tidak valid.');
+        if (isset($cols['gaji_harian'])) $cols['gaji_harian'] = valid_daily_wage($cols['gaji_harian']);
+        $check = $db->prepare('SELECT id_karyawan, is_system_account, role, gaji_harian FROM karyawan WHERE id_karyawan = ? AND deleted_at IS NULL FOR UPDATE');
+        $check->execute([$id]);
+        $accountRow = $check->fetch();
+        if (!$accountRow) throw new UserError('Akun tidak ditemukan.');
+        $effectiveRole = $cols['role'] ?? $accountRow['role'];
+        $effectiveWage = $cols['gaji_harian'] ?? (int)$accountRow['gaji_harian'];
+        if (in_array($effectiveRole, ['Kasir', 'Petugas'], true) && (int)$effectiveWage < 1) {
+          throw new UserError('Gaji harian Kasir/Petugas wajib diisi dan harus lebih dari 0.');
+        }
+        $isSystemAccount = pg_true($accountRow['is_system_account']);
+        if ($isSystemAccount) throw new UserError('Akun Admin utama tidak dapat diedit melalui menu Akun Pengguna. Gunakan Edit Profil untuk mengganti password.');
         if ($id === $u['id'] && isset($cols['status_akun']) && $cols['status_akun'] !== 'Aktif') throw new UserError('Anda tidak bisa menonaktifkan akun sendiri.');
         $pw = (string)($op['record']['password'] ?? '');
         if (in_array('password', $op['changed'] ?? [], true) && $pw !== '') {
-          if (strlen($pw) < 6) throw new UserError('Password minimal 6 karakter.');
+          if (strlen($pw) < 8) throw new UserError('Password minimal 8 karakter.');
           $cols['password'] = password_hash($pw, PASSWORD_DEFAULT);
         }
         upd($db, 'karyawan', 'id_karyawan', $id, $cols);
         $out[] = res($op, hy_users($db, $id)[0]);
       } elseif ($op['op'] === 'delete') {
         $id = real_id($op['id']);
-        if ($id === $protected || $id === $u['id']) throw new UserError('Akun ini tidak boleh dihapus.');
+        $check = $db->prepare('SELECT id_karyawan, is_system_account FROM karyawan WHERE id_karyawan = ? AND deleted_at IS NULL FOR UPDATE');
+        $check->execute([$id]);
+        $accountRow = $check->fetch();
+        if ($id === $u['id'] || ($accountRow && pg_true($accountRow['is_system_account']))) throw new UserError('Akun ini tidak boleh dihapus.');
         soft($db, 'karyawan', 'id_karyawan', $id); $out[] = ['id' => $op['id']];
       }
     }
@@ -149,7 +216,7 @@ function antrean_set_status(PDO $db, int $idAntrean, string $to): void {
   if ($i === false || $j === false) throw new UserError('Status pengerjaan tidak valid.');
   if ($j === $i) return;
   if ($j !== $i + 1) throw new UserError("Status tidak bisa diubah dari $from ke $to.");
-  // waktu_perubahan_terakhir diisi otomatis oleh trigger trg_antrean_ubah (lihat washup_pg.sql);
+  // waktu_perubahan_terakhir diisi otomatis oleh trigger trg_antrean_ubah (lihat sql/washup.sql);
   // berlaku untuk semua kendaraan di nomor antrean ini.
   $db->prepare("UPDATE antrean SET status_antrean = ?,
                   waktu_mulai   = CASE WHEN ?::text = 'Sedang Dicuci' THEN LOCALTIME(0) ELSE waktu_mulai END,
@@ -263,7 +330,7 @@ function sync_expenses(PDO $db, array $u, array $ops): array {
   return $out;
 }
 
-// ---------- Absensi (Petugas: absen sendiri; Admin: verifikasi) ----------
+// ---------- Absensi (Petugas/Kasir: absen sendiri; Admin: verifikasi) ----------
 function sync_petugasattendance(PDO $db, array $u, array $ops): array {
   $out = [];
   foreach ($ops as $op) {
@@ -279,16 +346,33 @@ function sync_petugasattendance(PDO $db, array $u, array $ops): array {
     foreach (['checkInPhoto' => 'foto_masuk', 'checkOutPhoto' => 'foto_keluar'] as $f => $col)
       if (in_array($f, $ch, true) && str_starts_with((string)($r[$f] ?? ''), 'data:')) $c[$col] = save_upload($r[$f], 'absensi');
     if (in_array('status', $ch, true) && isset($r['status'])) $c['status_absensi'] = need_text($r['status'], 'Status');
+    if (in_array('reason', $ch, true) && array_key_exists('reason', $r)) {
+      $reason = trim((string)$r['reason']);
+      $c['keterangan'] = $reason !== '' ? $reason : null;
+    }
     if (in_array('shift', $ch, true)) $c['id_shift'] = find_shift_id($db, $r['shift'] ?? null);
-    $cur = null;
-    if ($op['op'] === 'update') { $id = real_id($op['id']); $s = $db->prepare('SELECT id_karyawan FROM absensi WHERE id_absensi = ? AND deleted_at IS NULL'); $s->execute([$id]); $cur = $s->fetchColumn(); }
-    else { $s = $db->prepare('SELECT id_absensi FROM absensi WHERE id_karyawan = ? AND tanggal_absensi = CURRENT_DATE AND deleted_at IS NULL'); $s->execute([$u['id']]); $id = $s->fetchColumn() ?: 0; $cur = $id ? $u['id'] : null; }
-    if ($op['op'] === 'update' && (int)$cur !== $u['id']) throw new UserError('Anda hanya bisa mengubah absensi sendiri.');
+    $id = 0; $existing = null;
+    if ($op['op'] === 'update') {
+      $id = real_id($op['id']);
+      $s = $db->prepare('SELECT id_karyawan, status_absensi, keterangan FROM absensi WHERE id_absensi = ? AND deleted_at IS NULL FOR UPDATE');
+      $s->execute([$id]); $existing = $s->fetch() ?: null;
+      $cur = $existing['id_karyawan'] ?? null;
+    } else {
+      $s = $db->prepare('SELECT id_absensi, id_karyawan, status_absensi, keterangan FROM absensi WHERE id_karyawan = ? AND tanggal_absensi = CURRENT_DATE AND deleted_at IS NULL FOR UPDATE');
+      $s->execute([$u['id']]); $existing = $s->fetch() ?: null;
+      $id = (int)($existing['id_absensi'] ?? 0); $cur = $existing['id_karyawan'] ?? null;
+    }
+    if ($op['op'] === 'update' && (int)$cur !== $u['id']) throw new UserError('Anda hanya boleh mengubah absensi sendiri.');
+    $nextStatus = $c['status_absensi'] ?? ($existing['status_absensi'] ?? 'Hadir');
+    $nextReason = array_key_exists('keterangan', $c) ? $c['keterangan'] : ($existing['keterangan'] ?? null);
+    if (in_array($nextStatus, ['Izin', 'Sakit'], true) && trim((string)$nextReason) === '') {
+      throw new UserError('Keterangan wajib diisi untuk pengajuan Izin/Sakit.');
+    }
     if ($id) upd($db, 'absensi', 'id_absensi', (int)$id, $c);
     else {   // absensi hanya untuk hari ini; tanggal tidak diambil dari browser
       $id = ins_id($db,
-        'INSERT INTO absensi (id_karyawan, tanggal_absensi, id_shift, jam_masuk, jam_keluar, foto_masuk, foto_keluar, status_absensi) VALUES (?,CURRENT_DATE,?,?,?,?,?,?)',
-        [$u['id'], $c['id_shift'] ?? null, $c['jam_masuk'] ?? null, $c['jam_keluar'] ?? null, $c['foto_masuk'] ?? null, $c['foto_keluar'] ?? null, $c['status_absensi'] ?? 'Hadir'],
+        'INSERT INTO absensi (id_karyawan, tanggal_absensi, id_shift, jam_masuk, jam_keluar, foto_masuk, foto_keluar, status_absensi, keterangan) VALUES (?,CURRENT_DATE,?,?,?,?,?,?,?)',
+        [$u['id'], $c['id_shift'] ?? null, $c['jam_masuk'] ?? null, $c['jam_keluar'] ?? null, $c['foto_masuk'] ?? null, $c['foto_keluar'] ?? null, $c['status_absensi'] ?? 'Hadir', $c['keterangan'] ?? null],
         'id_absensi');
     }
     $out[] = res($op, hy_attendance($db, (int)$id)[0]);
@@ -303,7 +387,11 @@ function upsert_schedule(PDO $db, string $table, array $ops): array {
     $k = $db->prepare("SELECT id_karyawan FROM karyawan WHERE username = ? AND role IN ('Kasir','Petugas') AND deleted_at IS NULL"); $k->execute([$op['username'] ?? '']);
     if (($kid = $k->fetchColumn()) === false) continue;   // karyawan sudah dihapus: abaikan
     $c = $db->prepare("SELECT id_jadwal FROM $table WHERE id_karyawan = ? AND tanggal = ? AND deleted_at IS NULL"); $c->execute([$kid, $date]); $cur = $c->fetchColumn();
-    $v = $op['value'] ?? null;
+    $dateObject = DateTimeImmutable::createFromFormat('!Y-m-d', $date);
+    $isSunday = $dateObject && (int)$dateObject->format('N') === 7;
+    // Aturan operasional: hari Minggu selalu libur untuk semua karyawan.
+    // Nilai dari browser tidak boleh mengubah Minggu menjadi shift kerja.
+    $v = $isSunday ? 'libur' : ($op['value'] ?? null);
     if ($v === null) { if ($cur) soft($db, $table, 'id_jadwal', (int)$cur); continue; }
     $sid = $v === 'libur' ? null : real_id($v);
     if ($sid !== null && !find_shift_by_id($db, $sid)) throw new UserError('Shift tidak ditemukan.');
