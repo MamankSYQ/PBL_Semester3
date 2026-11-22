@@ -6,10 +6,7 @@ require __DIR__ . '/../includes/auth.php';
 $u = api_guard(['Kasir'], true);
 $in = body(); $db = db();
 $nama = trim($in['nama'] ?? ''); $plat = strtoupper(trim($in['plat'] ?? ''));
-if ($nama === '' || $plat === '' || !filter_var($in['id_layanan'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
-  json_out(['error' => 'Nama pelanggan, nomor plat, dan layanan wajib diisi.'], 422);
-}
-if (!in_array($in['jenis'] ?? '', ['Mobil', 'Motor'], true)) json_out(['error' => 'Jenis kendaraan tidak valid.'], 422);
+if ($nama === '' || $plat === '' || empty($in['id_layanan'])) json_out(['error' => 'Data belum lengkap'], 422);
 
 // PostgreSQL: ambil ID baru lewat RETURNING (pengganti lastInsertId()).
 function ins_id(PDO $db, string $sql, array $params, string $pk): int {
@@ -22,12 +19,12 @@ $db->beginTransaction();
 try {
   $lay = $db->prepare("SELECT * FROM layanan WHERE id_layanan = ? AND status_layanan = 'Aktif' AND deleted_at IS NULL");
   $lay->execute([(int)$in['id_layanan']]); $layanan = $lay->fetch();
-  if (!$layanan || $layanan['jenis_kendaraan'] !== ($in['jenis'] ?? '')) throw new UserError('Layanan tidak sesuai jenis kendaraan.');
+  if (!$layanan || $layanan['jenis_kendaraan'] !== ($in['jenis'] ?? '')) throw new RuntimeException('Layanan tidak sesuai jenis kendaraan');
 
   $idAntrean = (int)($in['id_antrean'] ?? 0);
   if ($idAntrean) {
     $c = $db->prepare('SELECT id_antrean FROM antrean WHERE id_antrean = ? AND deleted_at IS NULL AND tanggal_antrean = CURRENT_DATE FOR UPDATE');
-    $c->execute([$idAntrean]); if (!$c->fetch()) throw new UserError('Nomor antrean tidak ditemukan.');
+    $c->execute([$idAntrean]); if (!$c->fetch()) throw new RuntimeException('Nomor antrean tidak ditemukan');
   } else {
     // PostgreSQL tidak mengizinkan FOR UPDATE bersama MAX(); pakai advisory lock per hari agar nomor tidak kembar.
     $db->query("SELECT pg_advisory_xact_lock(hashtext('antrean_' || CURRENT_DATE::text))");
@@ -55,11 +52,8 @@ try {
      ->execute([$idAntrean, $u['id']]);
   $db->commit();
   json_out(['ok' => true, 'id_transaksi' => $idTrx, 'no_transaksi' => $noTrx, 'id_antrean' => $idAntrean], 201);
-} catch (UserError $e) {
-  if ($db->inTransaction()) $db->rollBack();
-  json_out(['error' => $e->getMessage()], 422);
 } catch (Throwable $e) {
   if ($db->inTransaction()) $db->rollBack();
-  error_log('[washup transaksi] ' . $e);
-  json_out(['error' => 'Gagal menyimpan transaksi. Silakan coba lagi.'], 500);
+  if (!($e instanceof RuntimeException)) error_log('[washup transaksi] ' . $e);
+  json_out(['error' => $e instanceof RuntimeException ? $e->getMessage() : 'Gagal menyimpan transaksi'], 422);
 }

@@ -623,7 +623,7 @@ if (document.querySelector(".admin-dashboard-page") && sessionStorage.getItem("w
   window.location.replace(appUrl("logout.php"));
 }
 
-if (document.querySelector(".petugas-page") && sessionStorage.getItem("washupRole") !== "Petugas") {
+if (document.querySelector(".petugas-page") && !["Petugas", "Kasir"].includes(sessionStorage.getItem("washupRole"))) {
   window.location.replace(appUrl("logout.php"));
 }
 
@@ -3297,7 +3297,7 @@ function setupPetugasAttendance() {
 }
 
 if (document.querySelector(".petugas-page")) {
-  if (sessionStorage.getItem("washupRole") !== "Petugas") window.location.replace(appUrl("logout.php"));
+  if (!["Petugas", "Kasir"].includes(sessionStorage.getItem("washupRole"))) window.location.replace(appUrl("logout.php"));
 }
 if (document.querySelector(".petugas-dashboard-page")) setupPetugasDashboard();
 if (document.querySelector(".petugas-attendance-page, .petugas-recap-page")) setupPetugasAttendance();

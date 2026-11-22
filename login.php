@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $okPass = password_verify($_POST['password'] ?? '', $u['password'] ?? '$2y$10$usesomesillystringforsalt.invalidhashxxxxxxxxxxxxxxxxxxxx');
   if ($u && $okPass) {
     session_regenerate_id(true);
-    $_SESSION['user'] = ['id' => (int)$u['id_karyawan'], 'nama' => $u['nama_karyawan'], 'username' => $u['username'], 'role' => $u['role'], 'is_system_account' => ($u['is_system_account'] === true || $u['is_system_account'] === 1 || $u['is_system_account'] === '1' || $u['is_system_account'] === 't' || $u['is_system_account'] === 'true')];
+    $_SESSION['user'] = ['id' => (int)$u['id_karyawan'], 'nama' => $u['nama_karyawan'], 'username' => $u['username'], 'role' => $u['role']];
     header('Location: pages/' . HOME_BY_ROLE[$u['role']]); exit;
   }
   $error = 'Username, password, atau role tidak sesuai.';

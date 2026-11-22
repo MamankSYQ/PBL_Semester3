@@ -9,7 +9,7 @@ $u = api_guard(['Admin', 'Kasir', 'Petugas'], true);
 $in = body(); $key = (string)($in['key'] ?? ''); $ops = is_array($in['ops'] ?? null) ? $in['ops'] : [];
 $WRITE = ['washupUsers' => ['Admin'], 'washupServices' => ['Admin'], 'washupShifts' => ['Admin'],
   'washupShiftSchedule' => ['Admin'], 'washupShiftSchedulePublished' => ['Admin'], 'washupShiftSchedulePublishedAt' => ['Admin'],
-  'washupTransactions' => ['Kasir'], 'washupExpenses' => ['Kasir'], 'washupPetugasAttendance' => ['Petugas', 'Admin']];
+  'washupTransactions' => ['Kasir'], 'washupExpenses' => ['Kasir'], 'washupPetugasAttendance' => ['Petugas', 'Admin', 'Kasir']];
 if (!isset($WRITE[$key])) json_out(['error' => 'Kunci data tidak dikenal'], 400);
 if (!in_array($u['role'], $WRITE[$key], true)) json_out(['error' => 'Anda tidak punya akses untuk mengubah data ini.'], 403);
 if (count($ops) > 200) json_out(['error' => 'Terlalu banyak perubahan sekaligus'], 413);

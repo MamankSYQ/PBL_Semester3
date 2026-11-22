@@ -28,21 +28,10 @@ function api_guard(array $roles, bool $write = false): array {
   $u = current_user();
   if (!$u) json_out(['error' => 'Belum login'], 401);
   if (!in_array($u['role'], $roles, true)) json_out(['error' => 'Tidak punya akses'], 403);
-  if ($write) {
-    $expectedToken = $_SESSION['csrf'] ?? '';
-    $providedToken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
-    if ($expectedToken === '' || $providedToken === '' || !hash_equals($expectedToken, $providedToken)) {
-      json_out(['error' => 'Token tidak valid'], 419);
-    }
-  }
+  if ($write && !hash_equals($_SESSION['csrf'] ?? '', $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '')) json_out(['error' => 'Token tidak valid'], 419);
   return $u;
 }
 function json_out($data, int $code = 200): never { http_response_code($code); echo json_encode($data, JSON_UNESCAPED_UNICODE); exit; }
-function body(): array {
-  $raw = file_get_contents('php://input');
-  $decoded = json_decode($raw === false ? '' : $raw, true);
-  if (!is_array($decoded)) json_out(['error' => 'Format JSON tidak valid.'], 400);
-  return $decoded;
-}
+function body(): array { return json_decode(file_get_contents('php://input'), true) ?: []; }
 
 class UserError extends RuntimeException {}

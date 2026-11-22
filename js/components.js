@@ -75,7 +75,10 @@ const WASHUP_MENUS = {
     { page: "queue", href: "antrean.php", label: "Antrean", icon: renderIcon("list", "nav-icon-svg") },
     { page: "payment", href: "pembayaran.php", label: "Pembayaran", icon: renderIcon("credit-card", "nav-icon-svg") },
     { page: "history", href: "riwayat-transaksi.php", label: "Riwayat Transaksi", icon: renderIcon("history", "nav-icon-svg") },
-    { page: "expenses", href: "pengeluaran.php", label: "Pengeluaran", icon: renderIcon("file-text", "nav-icon-svg") }
+    { page: "expenses", href: "pengeluaran.php", label: "Pengeluaran", icon: renderIcon("file-text", "nav-icon-svg") },
+    { page: "checkin", href: "absensi-masuk.php", label: "Absensi Masuk", icon: renderIcon("log-in", "nav-icon-svg") },
+    { page: "checkout", href: "absensi-keluar.php", label: "Absensi Keluar", icon: renderIcon("log-out", "nav-icon-svg") },
+    { page: "recap", href: "rekap-absensi.php", label: "Rekap Absensi", icon: renderIcon("calendar-check", "nav-icon-svg") }
   ],
   Petugas: [
     { page: "dashboard", href: "dashboard-petugas.php", label: "Dashboard", icon: renderIcon("home", "nav-icon-svg") },
