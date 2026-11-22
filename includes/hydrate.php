@@ -9,15 +9,15 @@ function iso(?string $date, ?string $time = null): ?string {
   return $date ? date('c', strtotime($date . ($time ? " $time" : ''))) : null;
 }
 function hhmm(?string $t): ?string { return $t ? substr($t, 0, 5) : null; }
+function pg_true($value): bool { return $value === true || $value === 1 || $value === '1' || $value === 't' || $value === 'true'; }
 function file_url(?string $path): string { return $path ? root_url() . '/' . $path : ''; }
 
 function hy_users(PDO $db, ?int $id = null): array {
-  $adminId = (int)$db->query("SELECT MIN(id_karyawan) FROM karyawan WHERE role='Admin' AND deleted_at IS NULL")->fetchColumn();
   $st = $db->prepare('SELECT * FROM karyawan WHERE deleted_at IS NULL AND (?::int IS NULL OR id_karyawan = ?) ORDER BY id_karyawan');
   $st->execute([$id, $id]);
   return array_map(fn($r) => ['id' => (string)$r['id_karyawan'], 'fullName' => $r['nama_karyawan'], 'username' => $r['username'],
     'phone' => (string)$r['no_telepon'], 'password' => '', 'role' => $r['role'], 'status' => $r['status_akun'],
-    'protected' => (int)$r['id_karyawan'] === $adminId], $st->fetchAll());
+    'dailyWage' => (int)($r['gaji_harian'] ?? 0), 'protected' => pg_true($r['is_system_account'])], $st->fetchAll());
 }
 function hy_services(PDO $db, ?int $id = null): array {
   $st = $db->prepare('SELECT * FROM layanan WHERE deleted_at IS NULL AND (?::int IS NULL OR id_layanan = ?) ORDER BY id_layanan');
@@ -60,7 +60,8 @@ function hy_attendance(PDO $db, ?int $id = null, ?int $karyawan = null): array {
   $st->execute([$id, $id, $karyawan, $karyawan]);
   return array_map(function ($r) {
     $o = ['id' => (string)$r['id_absensi'], 'employeeId' => $r['username'], 'employeeName' => $r['nama_karyawan'],
-    'date' => str_replace('-', '', $r['tanggal_absensi']), 'shift' => (string)$r['nama_shift'], 'status' => $r['status_absensi']];
+      'date' => $r['tanggal_absensi'], 'shift' => (string)$r['nama_shift'], 'status' => $r['status_absensi']];
+    if (!empty($r['keterangan'])) $o['reason'] = $r['keterangan'];
     foreach (['In' => 'masuk', 'Out' => 'keluar'] as $k => $col) {
       if ($r["jam_$col"]) $o["check$k"] = hhmm($r["jam_$col"]);
       if ($r["foto_$col"]) $o["check{$k}Photo"] = file_url($r["foto_$col"]);
@@ -103,7 +104,7 @@ function hydrate_all(array $u): array {
     'washupShifts' => hy_shifts($db),
     'washupTransactions' => hy_transactions($db),
     'washupExpenses' => ($isAdmin || $isOwner || $isKasir) ? hy_expenses($db) : [],
-    'washupPetugasAttendance' => ($isPetugas || $isKasir)? hy_attendance($db, null, $u['id']): (($isAdmin || $isOwner) ? hy_attendance($db) : []),
+    'washupPetugasAttendance' => ($isPetugas || $isKasir) ? hy_attendance($db, null, $u['id']) : (($isAdmin || $isOwner) ? hy_attendance($db) : []),
     'washupShiftSchedule' => $isAdmin ? hy_schedule($db, 'jadwal_shift') : (object)[],
     'washupShiftSchedulePublished' => hy_schedule($db, 'jadwal_shift_terbit'),
     'washupShiftSchedulePublishedAt' => hy_published_at($db),
@@ -116,10 +117,11 @@ function hydrate_all(array $u): array {
 function washup_bootstrap(array $u): void {
   $flags = JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
   $root = root_url();
-  echo '<meta name="csrf-token" content="' . csrf_token() . "\" />\n<script nonce=\"" . csp_nonce() . "\">\n";
+  $csrf = csrf_token();
+  echo '<meta name="csrf-token" content="' . $csrf . "\" />\n<script nonce=\"" . csp_nonce() . "\">\n";
   echo 'sessionStorage.setItem("washupRole", ' . json_encode($u['role'], $flags) . ");\n";
   echo 'sessionStorage.setItem("washupUsername", ' . json_encode($u['username'], $flags) . ");\n";
-  echo 'window.WASHUP_ROOT = ' . json_encode($root, $flags) . ";\nwindow.WASHUP_CSRF = " . json_encode(csrf_token(), $flags) . ";\n";
+  echo 'window.WASHUP_ROOT = ' . json_encode($root, $flags) . ";\nwindow.WASHUP_CSRF = " . json_encode($csrf, $flags) . ";\n";
   echo 'window.__WASHUP_DATA = ' . json_encode(hydrate_all($u), $flags) . ";\n</script>\n";
-  echo '<script src="' . $root . '/js/store.js"></script>' . "\n";
+  echo '<script src="' . $root . '/js/store.js?v=20261122-attendance-sync-v1"></script>' . "\n";
 }
