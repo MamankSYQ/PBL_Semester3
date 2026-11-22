@@ -9,15 +9,15 @@ function iso(?string $date, ?string $time = null): ?string {
   return $date ? date('c', strtotime($date . ($time ? " $time" : ''))) : null;
 }
 function hhmm(?string $t): ?string { return $t ? substr($t, 0, 5) : null; }
+function pg_true($value): bool { return $value === true || $value === 1 || $value === '1' || $value === 't' || $value === 'true'; }
 function file_url(?string $path): string { return $path ? root_url() . '/' . $path : ''; }
 
 function hy_users(PDO $db, ?int $id = null): array {
-  $adminId = (int)$db->query("SELECT MIN(id_karyawan) FROM karyawan WHERE role='Admin' AND deleted_at IS NULL")->fetchColumn();
   $st = $db->prepare('SELECT * FROM karyawan WHERE deleted_at IS NULL AND (?::int IS NULL OR id_karyawan = ?) ORDER BY id_karyawan');
   $st->execute([$id, $id]);
   return array_map(fn($r) => ['id' => (string)$r['id_karyawan'], 'fullName' => $r['nama_karyawan'], 'username' => $r['username'],
     'phone' => (string)$r['no_telepon'], 'password' => '', 'role' => $r['role'], 'status' => $r['status_akun'],
-    'protected' => (int)$r['id_karyawan'] === $adminId], $st->fetchAll());
+    'protected' => pg_true($r['is_system_account'])], $st->fetchAll());
 }
 function hy_services(PDO $db, ?int $id = null): array {
   $st = $db->prepare('SELECT * FROM layanan WHERE deleted_at IS NULL AND (?::int IS NULL OR id_layanan = ?) ORDER BY id_layanan');
