@@ -20,11 +20,11 @@ $u = require_role('Kasir');
     <link rel="stylesheet" href="../../css/tokens.css" />
     <link rel="stylesheet" href="../../css/style.css" />
     <link rel="stylesheet" href="../../css/base.css" />
-    <link rel="stylesheet" href="../../css/petugas.css?v=20261114-photo-recap-v2" />
+    <link rel="stylesheet" href="../../css/petugas.css?v=20261122-recap-seven-columns-v8" />
     <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
-    <link rel="stylesheet" href="../../css/compact.css?v=20261114-petugas-readonly-hover-v1" />
+    <link rel="stylesheet" href="../../css/compact.css?v=20261122-recap-seven-columns-v8" />
   </head>
-  <body class="petugas-page petugas-recap-page kasir-page" data-role="Kasir" data-page="recap" data-title="Rekap Absensi" data-logout-id="attendance-logout">
+  <body class="petugas-page kasir-page kasir-recap-page petugas-recap-page" data-role="Kasir" data-page="recap" data-title="Rekap Absensi" data-logout-id="attendance-logout">
     <div class="dashboard-shell">
       <div data-component="sidebar"></div>
       <div class="dashboard-content">
@@ -75,10 +75,14 @@ $u = require_role('Kasir');
             <div class="table-wrap attendance-recap-table-wrap" tabindex="0">
               <table class="queue-table attendance-recap-table">
                 <caption class="sr-only">Riwayat absensi Kasir</caption>
+                <colgroup>
+                  <col style="width:16%" /><col style="width:11%" /><col style="width:11%" />
+                  <col style="width:11%" /><col style="width:14%" /><col style="width:19%" /><col style="width:18%" />
+                </colgroup>
                 <thead>
                   <tr>
                     <th scope="col">Tanggal</th><th scope="col">Shift</th><th scope="col">Jam Masuk</th>
-                    <th scope="col">Jam Keluar</th><th scope="col">Durasi Kerja</th><th scope="col">Status</th>
+                    <th scope="col">Jam Keluar</th><th scope="col">Durasi Kerja</th><th scope="col">Keterangan</th><th scope="col">Status</th>
                   </tr>
                 </thead>
                 <tbody id="petugas-attendance-history-body"></tbody>
@@ -93,7 +97,7 @@ $u = require_role('Kasir');
         <div data-component="footer"></div>
       </div>
     </div>
-    <script src="../../js/components.js"></script>
-    <script src="../../js/app.js"></script>
+    <script src="../../js/components.js?v=20261122-profile-markup-v1"></script>
+    <script src="../../js/app.js?v=20261122-recap-four-cards-v9"></script>
   </body>
 </html>

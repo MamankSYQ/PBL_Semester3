@@ -22,9 +22,9 @@ $u = require_role('Kasir');
     <link rel="stylesheet" href="../../css/base.css" />
     <link rel="stylesheet" href="../../css/petugas.css?v=20261114-photo-recap-v2" />
     <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
-    <link rel="stylesheet" href="../../css/compact.css?v=20261114-petugas-readonly-hover-v1" />
+    <link rel="stylesheet" href="../../css/compact.css?v=20261122-attendance-gap-v6" />
   </head>
-  <body class="petugas-page petugas-attendance-page kasir-page" data-role="Kasir" data-page="checkout" data-attendance-mode="out" data-title="Absensi Keluar" data-logout-id="attendance-logout">
+  <body class="petugas-page kasir-page kasir-attendance-page petugas-attendance-page" data-role="Kasir" data-page="checkout" data-attendance-mode="out" data-title="Absensi Keluar" data-logout-id="attendance-logout">
     <div class="dashboard-shell">
       <div data-component="sidebar"></div>
       <div class="dashboard-content">
@@ -36,7 +36,7 @@ $u = require_role('Kasir');
           <section class="attendance-card" aria-labelledby="attendance-title">
             <div class="attendance-card-heading"><span class="role-icon" aria-hidden="true">P</span><div><p class="eyebrow">DATA ABSENSI</p><h2 id="attendance-title">Kasir</h2></div></div>
             <dl class="attendance-list">
-              <div><dt>Nama</dt><dd id="attendance-name">Kasir</dd></div><div><dt>Tanggal</dt><dd id="attendance-date">-</dd></div>
+              <div><dt>Nama</dt><dd id="attendance-name">Petugas</dd></div><div><dt>Tanggal</dt><dd id="attendance-date">-</dd></div>
               <div><dt>Shift</dt><dd id="attendance-shift">-</dd></div><div><dt>Jam Masuk</dt><dd id="check-in-time">--</dd></div>
               <div><dt>Jam Keluar</dt><dd id="check-out-time">--</dd></div><div><dt>Status</dt><dd id="attendance-status">Belum Absen</dd></div>
             </dl>
@@ -62,7 +62,7 @@ $u = require_role('Kasir');
         <div data-component="footer"></div>
       </div>
     </div>
-    <script src="../../js/components.js"></script>
-    <script src="../../js/app.js"></script>
+    <script src="../../js/components.js?v=20261122-profile-markup-v1"></script>
+    <script src="../../js/app.js?v=20261122-attendance-profile-fix-v1"></script>
   </body>
 </html>

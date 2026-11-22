@@ -20,11 +20,11 @@ $u = require_role('Kasir');
     <link rel="stylesheet" href="../../css/tokens.css" />
     <link rel="stylesheet" href="../../css/style.css" />
     <link rel="stylesheet" href="../../css/base.css" />
-    <link rel="stylesheet" href="../../css/petugas.css?v=20261114-photo-recap-v2" />
+    <link rel="stylesheet" href="../../css/petugas.css?v=20261122-attendance-modal-recap-eye-v5" />
     <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
-    <link rel="stylesheet" href="../../css/compact.css?v=20261114-petugas-readonly-hover-v1" />
+    <link rel="stylesheet" href="../../css/compact.css?v=20261122-attendance-gap-v6" />
   </head>
-  <body class="petugas-page petugas-attendance-page kasir-page" data-role="Kasir" data-page="checkin" data-attendance-mode="in" data-title="Absensi Masuk" data-logout-id="attendance-logout">
+  <body class="petugas-page kasir-page kasir-attendance-page petugas-attendance-page" data-role="Kasir" data-page="checkin" data-attendance-mode="in" data-title="Absensi Masuk" data-logout-id="attendance-logout">
     <div class="dashboard-shell">
       <div data-component="sidebar"></div>
       <div class="dashboard-content">
@@ -36,7 +36,7 @@ $u = require_role('Kasir');
           <section class="attendance-card" aria-labelledby="attendance-title">
             <div class="attendance-card-heading"><span class="role-icon" aria-hidden="true">P</span><div><p class="eyebrow">DATA ABSENSI</p><h2 id="attendance-title">Kasir</h2></div></div>
             <dl class="attendance-list">
-              <div><dt>Nama</dt><dd id="attendance-name">Kasir</dd></div><div><dt>Tanggal</dt><dd id="attendance-date">-</dd></div>
+              <div><dt>Nama</dt><dd id="attendance-name">Petugas</dd></div><div><dt>Tanggal</dt><dd id="attendance-date">-</dd></div>
               <div><dt>Shift</dt><dd id="attendance-shift">-</dd></div><div><dt>Jam Masuk</dt><dd id="check-in-time">--</dd></div>
               <div><dt>Jam Keluar</dt><dd id="check-out-time">--</dd></div><div><dt>Status</dt><dd id="attendance-status">Belum Absen</dd></div>
             </dl>
@@ -56,13 +56,29 @@ $u = require_role('Kasir');
               </div>
             </section>
             <button class="primary-button dashboard-action attendance-button" id="attendance-action" type="button">Absen Masuk</button>
+            <button class="secondary-dashboard-button attendance-leave-trigger" id="attendance-leave-trigger" type="button">Ajukan Izin / Sakit</button>
             <p class="attendance-notice" id="attendance-notice" role="status" aria-live="polite"></p>
           </section>
+          <dialog class="attendance-leave-dialog" id="attendance-leave-dialog" aria-labelledby="attendance-leave-title">
+            <form id="attendance-leave-form" method="dialog">
+              <div class="attendance-leave-heading">
+                <div><p class="eyebrow">PELAPORAN KETIDAKHADIRAN</p><h2 id="attendance-leave-title">Ajukan Izin / Sakit</h2></div>
+                <button class="attendance-leave-close" id="attendance-leave-close" type="button" aria-label="Tutup">×</button>
+              </div>
+              <p class="attendance-leave-note">Pengajuan Izin atau Sakit akan langsung tercatat pada rekap Owner dan tidak dihitung sebagai hari kerja bergaji.</p>
+              <label for="attendance-leave-type">Jenis ketidakhadiran</label>
+              <select id="attendance-leave-type" name="status" required><option value="Izin">Izin</option><option value="Sakit">Sakit</option></select>
+              <label for="attendance-leave-reason">Keterangan</label>
+              <textarea id="attendance-leave-reason" name="reason" rows="3" maxlength="255" required placeholder="Tuliskan alasan izin..."></textarea>
+              <p class="attendance-leave-error" id="attendance-leave-error" role="alert"></p>
+              <div class="attendance-leave-actions"><button class="secondary-dashboard-button" id="attendance-leave-cancel" type="button">Batal</button><button class="primary-button dashboard-action" type="submit">Kirim Pengajuan</button></div>
+            </form>
+          </dialog>
         </main>
         <div data-component="footer"></div>
       </div>
     </div>
-    <script src="../../js/components.js"></script>
-    <script src="../../js/app.js"></script>
+    <script src="../../js/components.js?v=20261122-profile-markup-v1"></script>
+    <script src="../../js/app.js?v=20261122-attendance-profile-fix-v1"></script>
   </body>
 </html>

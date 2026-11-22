@@ -22,7 +22,7 @@ $u = require_role('Petugas');
     <link rel="stylesheet" href="../../css/base.css" />
     <link rel="stylesheet" href="../../css/petugas.css?v=20261114-photo-recap-v2" />
     <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
-    <link rel="stylesheet" href="../../css/compact.css?v=20261114-petugas-readonly-hover-v1" />
+    <link rel="stylesheet" href="../../css/compact.css?v=20261122-attendance-gap-v6" />
   </head>
   <body class="petugas-page petugas-attendance-page" data-role="Petugas" data-page="checkout" data-attendance-mode="out" data-title="Absensi Keluar" data-logout-id="attendance-logout">
     <div class="dashboard-shell">
@@ -62,7 +62,7 @@ $u = require_role('Petugas');
         <div data-component="footer"></div>
       </div>
     </div>
-    <script src="../../js/components.js"></script>
-    <script src="../../js/app.js"></script>
+    <script src="../../js/components.js?v=20261122-profile-markup-v1"></script>
+    <script src="../../js/app.js?v=20261122-attendance-profile-fix-v1"></script>
   </body>
 </html>

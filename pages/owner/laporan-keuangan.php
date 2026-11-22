@@ -20,9 +20,9 @@ $u = require_role('Owner');
     <link rel="stylesheet" href="../../css/tokens.css" />
     <link rel="stylesheet" href="../../css/style.css" />
     <link rel="stylesheet" href="../../css/base.css" />
-    <link rel="stylesheet" href="../../css/owner.css" />
+    <link rel="stylesheet" href="../../css/owner.css?v=20261122-owner-period-filters-v8" />
     <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
-    <link rel="stylesheet" href="../../css/compact.css" />
+    <link rel="stylesheet" href="../../css/compact.css?v=20261122-owner-period-filters-v8" />
   </head>
   <body class="owner-page owner-finance-page" data-role="Owner" data-page="finance" data-title="Laporan Keuangan" data-logout-id="owner-logout">
     <div class="dashboard-shell">
@@ -35,6 +35,17 @@ $u = require_role('Owner');
               <p class="eyebrow">RINGKASAN KEUANGAN</p>
               <h2 id="owner-finance-title">Laporan Keuangan</h2>
             </div>
+          </section>
+          <section class="owner-stats-toolbar owner-period-toolbar" aria-label="Filter periode laporan keuangan">
+            <div class="owner-stats-filter">
+              <label for="owner-finance-month">Periode Bulan</label>
+              <select id="owner-finance-month"><option value="">Pilih periode bulan</option></select>
+            </div>
+            <div class="owner-stats-filter">
+              <label for="owner-finance-year">Periode Tahun</label>
+              <select id="owner-finance-year"><option value="">Pilih periode tahun</option></select>
+            </div>
+            <button id="owner-finance-apply" type="button">Terapkan</button>
           </section>
           <section class="summary-grid owner-finance-summary-grid" aria-label="Ringkasan keuangan">
             <article class="summary-card">
@@ -134,7 +145,7 @@ $u = require_role('Owner');
         <div data-component="footer"></div>
       </div>
     </div>
-    <script src="../../js/components.js"></script>
-    <script src="../../js/app.js"></script>
+    <script src="../../js/components.js?v=20261122-profile-markup-v1"></script>
+    <script src="../../js/app.js?v=20261122-owner-period-filters-v8"></script>
   </body>
 </html>

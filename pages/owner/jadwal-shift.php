@@ -20,9 +20,9 @@ $u = require_role('Owner');
     <link rel="stylesheet" href="../../css/tokens.css" />
     <link rel="stylesheet" href="../../css/style.css" />
     <link rel="stylesheet" href="../../css/base.css" />
-    <link rel="stylesheet" href="../../css/owner.css" />
+    <link rel="stylesheet" href="../../css/owner.css?v=20261122-schedule-spacing-v9" />
     <link rel="stylesheet" href="../../css/sidebar-collapse.css" />
-    <link rel="stylesheet" href="../../css/compact.css?v=20261113-footer-columns" />
+    <link rel="stylesheet" href="../../css/compact.css?v=20261122-owner-period-filters-v8" />
     <link rel="stylesheet" href="../../css/shift-schedule-owner.css?v=20261113-owner-shift-type-v2" />
   </head>
   <body class="owner-page owner-schedule-page" data-role="Owner" data-page="schedule" data-title="Jadwal Shift Karyawan" data-logout-id="owner-logout">
@@ -39,6 +39,17 @@ $u = require_role('Owner');
             </div>
           </section>
 
+          <section class="owner-stats-toolbar owner-period-toolbar owner-schedule-period-toolbar" aria-label="Filter bulan dan tahun jadwal">
+            <div class="owner-stats-filter">
+              <label for="owner-sched-month">Periode Bulan</label>
+              <select id="owner-sched-month"><option value="">Pilih periode bulan</option></select>
+            </div>
+            <div class="owner-stats-filter">
+              <label for="owner-sched-year">Periode Tahun</label>
+              <select id="owner-sched-year"><option value="">Pilih periode tahun</option></select>
+            </div>
+            <button id="owner-sched-period-apply" type="button">Terapkan</button>
+          </section>
           <section class="queue-panel sched-filters" aria-label="Filter jadwal">
             <label>Periode minggu<select id="owner-sched-week"></select></label>
             <label>Cari karyawan<input id="owner-sched-search" type="search" placeholder="Cari nama karyawan..." /></label>
@@ -80,8 +91,8 @@ $u = require_role('Owner');
         <div data-component="footer"></div>
       </div>
     </div>
-    <script src="../../js/components.js"></script>
-    <script src="../../js/app.js"></script>
-    <script src="../../js/shift-schedule-owner.js"></script>
+    <script src="../../js/components.js?v=20261122-profile-markup-v1"></script>
+    <script src="../../js/app.js?v=20261122-owner-period-filters-v8"></script>
+    <script src="../../js/shift-schedule-owner.js?v=20261122-owner-period-filters-v8"></script>
   </body>
 </html>

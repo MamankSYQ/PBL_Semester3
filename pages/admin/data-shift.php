@@ -147,7 +147,7 @@ $u = require_role('Admin');
     </dialog>
     <script src="../../js/components.js"></script>
     <script src="../../js/app.js?v=20261114-shift-delete-action"></script>
-    <script src="../../js/shift-schedule.js"></script>
-    <script src="../../js/shift-schedule-day.js"></script>
+    <script src="../../js/shift-schedule.js?v=20261122-sunday-default-off-v1"></script>
+    <script src="../../js/shift-schedule-day.js?v=20261122-sunday-default-off-v1"></script>
   </body>
 </html>
