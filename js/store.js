@@ -9,10 +9,11 @@
   const cache = JSON.parse(JSON.stringify(window.__WASHUP_DATA || {}));
   const idMap = new Map();   // id sementara dari browser -> id asli dari database
   const rev = new Map();     // id asli dari database -> id sementara yang masih dipakai halaman (arah baca)
-  let chain = Promise.resolve(), pending = 0, failed = false;
+  let chain = Promise.resolve(), pending = 0, failed = false, lastError = null;
   const proto = Storage.prototype, rawGet = proto.getItem, rawSet = proto.setItem, rawRemove = proto.removeItem;
   const managed = (store, key) => store === window.localStorage && (LISTS.has(key) || key in MAPS || LOCAL.has(key));
   const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  const csrfToken = () => window.WASHUP_CSRF || document.querySelector('meta[name="csrf-token"]')?.content || "";
 
   // Data yang dibaca halaman: akun/baris yang baru dibuat tetap memakai id sementara,
   // supaya tombol Edit/Detail yang sudah tergambar masih menemukan barisnya.
@@ -72,7 +73,7 @@
     const body = JSON.stringify({ key, ops: sent });
     const res = await fetch((window.WASHUP_ROOT || "") + "/api/sync.php", {
       method: "POST", credentials: "same-origin", keepalive: body.length < 60000,
-      headers: { "Content-Type": "application/json", "X-CSRF-Token": window.WASHUP_CSRF || "" }, body,
+      headers: { "Content-Type": "application/json", "X-CSRF-Token": csrfToken() }, body,
     });
     let data = {}; try { data = await res.json(); } catch {}
     if (!res.ok) throw new Error(data.error || "Gagal menyimpan ke server (" + res.status + ").");
@@ -94,11 +95,22 @@
     }
   }
   function fail(err) {
+    lastError = err instanceof Error ? err : new Error("Gagal menyimpan ke server.");
     if (failed) return;
     failed = true;
-    alert((err && err.message ? err.message : "Gagal menyimpan ke server.") + "\nHalaman akan dimuat ulang dengan data terbaru.");
+    alert((lastError.message || "Gagal menyimpan ke server.") + "\nHalaman akan dimuat ulang dengan data terbaru.");
     location.reload();
   }
   window.addEventListener("beforeunload", (e) => { if (pending > 0) { e.preventDefault(); e.returnValue = ""; } });
-  window.WashupStore = { flush: () => chain, cache, idMap, rev };
+  window.WashupStore = {
+    flush: async () => {
+      await chain;
+      if (lastError) {
+        const error = lastError;
+        lastError = null;
+        throw error;
+      }
+    },
+    cache, idMap, rev,
+  };
 })();

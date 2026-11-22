@@ -191,27 +191,27 @@ function renderProfileEditor() {
           <input id="profile-username" name="username" type="text" maxlength="40" autocomplete="username" required placeholder="Masukkan username" />
           <small id="profile-username-note" hidden>Akun admin dilindungi dan username tidak dapat diubah.</small>
         </label>
-        <label class="profile-form-field profile-password-field-label" for="profile-current-password">
-          Password Lama
+        <div class="profile-form-field profile-password-field-label">
+          <label for="profile-current-password">Password Lama</label>
           <span class="profile-password-control">
-            <input id="profile-current-password" name="profile-current-password" type="password" autocomplete="current-password" readonly aria-readonly="true" placeholder="••••••••" />
+            <input id="profile-current-password" name="profile-current-password" type="password" autocomplete="current-password" required placeholder="Masukkan password lama" />
             <button class="profile-password-toggle" type="button" data-password-toggle="profile-current-password" aria-label="Tampilkan password lama" aria-pressed="false">
               <svg class="password-eye-show" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-6.2 9.5-6.2 9.5 6.2 9.5 6.2-3.4 6.2-9.5 6.2S2.5 12 2.5 12Z" /><circle cx="12" cy="12" r="2.7" /></svg>
               <svg class="password-eye-hide" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3 21 21M10.6 6a9.7 9.7 0 0 1 1.4-.1c6.1 0 9.5 6.1 9.5 6.1s-1.1 2-3.1 3.7M6.2 6.3C3.8 7.8 2.5 12 2.5 12s3.4 6.2 9.5 6.2c1.2 0 2.3-.3 3.2-.7" /><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" /></svg>
             </button>
           </span>
-        </label>
-        <label class="profile-form-field profile-password-field-label" for="profile-password">
-          Password Baru
+        </div>
+        <div class="profile-form-field profile-password-field-label">
+          <label for="profile-password">Password Baru</label>
           <span class="profile-password-control">
-            <input id="profile-password" name="profile-password" type="password" autocomplete="new-password" minlength="6" placeholder="Masukkan password baru" />
+            <input id="profile-password" name="profile-password" type="password" autocomplete="new-password" minlength="8" placeholder="Masukkan password baru" />
             <button class="profile-password-toggle" type="button" data-password-toggle="profile-password" aria-label="Tampilkan password baru" aria-pressed="false">
               <svg class="password-eye-show" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-6.2 9.5-6.2 9.5 6.2 9.5 6.2-3.4 6.2-9.5 6.2S2.5 12 2.5 12Z" /><circle cx="12" cy="12" r="2.7" /></svg>
               <svg class="password-eye-hide" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3 21 21M10.6 6a9.7 9.7 0 0 1 1.4-.1c6.1 0 9.5 6.1 9.5 6.1s-1.1 2-3.1 3.7M6.2 6.3C3.8 7.8 2.5 12 2.5 12s3.4 6.2 9.5 6.2c1.2 0 2.3-.3 3.2-.7" /><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" /></svg>
             </button>
           </span>
           <small>Kosongkan jika tidak ingin mengubah password.</small>
-        </label>
+        </div>
         <p class="profile-form-message" id="profile-form-message" role="status" aria-live="polite"></p>
         <footer class="profile-edit-actions">
           <button class="profile-button-secondary" id="profile-edit-cancel" type="button">Batal</button>
