@@ -116,11 +116,12 @@ const masterDefinitions = {
       { key: "phone", label: "Nomor Telepon", type: "tel", placeholder: "Masukkan nomor telepon", required: false },
       { key: "password", label: "Password", type: "password", placeholder: "Masukkan password", required: true },
       { key: "role", label: "Role", type: "select", options: ["Admin", "Kasir", "Petugas", "Owner"], required: true },
+      { key: "dailyWage", label: "Gaji Harian (Rp)", type: "number", min: 0, step: 1000, placeholder: "Contoh: 100000", required: false },
       { key: "status", label: "Status", type: "select", options: ["Aktif", "Nonaktif"], required: true },
     ],
     columns: ["fullName", "username", "role", "status"],
     searchColumns: ["fullName", "username", "role", "status"],
-    labels: { fullName: "Nama Lengkap", username: "Username", phone: "Nomor Telepon", role: "Role", status: "Status" },
+    labels: { fullName: "Nama Lengkap", username: "Username", phone: "Nomor Telepon", role: "Role", dailyWage: "Gaji Harian", status: "Status" },
     detailTitle: "Detail Akun",
     deleteMessage: "Perhatian apakah anda yakin ingin menghapus data ini?",
   },
@@ -271,6 +272,7 @@ function getActiveEmployees() {
       name: String(account.username || "").trim(),
       displayName: String(account.fullName || account.username || "").trim(),
       role: account.role,
+      dailyWage: Number(account.dailyWage || 0),
     }));
 }
 
@@ -382,14 +384,26 @@ function getAttendanceRecords() {
   }
 }
 
+// Normalisasi tanggal absensi agar format dari PostgreSQL (YYYY-MM-DD)
+// dan format tanggal yang dibuat JavaScript (YYYYMMDD) selalu bisa dibandingkan.
+function normalizeAttendanceDate(value) {
+  const digits = String(value || "").replace(/\D/g, "");
+  return digits.length >= 8 ? digits.slice(0, 8) : "";
+}
+
 function getAttendance(employeeId = "petugas") {
   const records = getAttendanceRecords();
-  const today = getTodayKey();
-  const exactMatch = records.find((attendance) => attendance && attendance.employeeId === employeeId && attendance.date === today);
+  const today = normalizeAttendanceDate(getTodayKey());
+  const exactMatch = records.find((attendance) =>
+    attendance && attendance.employeeId === employeeId && normalizeAttendanceDate(attendance.date) === today
+  );
   if (exactMatch) return exactMatch;
 
   if (employeeId === "petugas") {
-    const legacyMatch = records.find((attendance) => attendance && !attendance.employeeId && attendance.employeeName === "Petugas" && attendance.date === today);
+    const legacyMatch = records.find((attendance) =>
+      attendance && !attendance.employeeId && attendance.employeeName === "Petugas" &&
+      normalizeAttendanceDate(attendance.date) === today
+    );
     if (legacyMatch) {
       legacyMatch.employeeId = "petugas";
       return legacyMatch;
@@ -399,14 +413,20 @@ function getAttendance(employeeId = "petugas") {
   return null;
 }
 
-function saveAttendance(attendance) {
+async function saveAttendance(attendance) {
   try {
     const records = getAttendanceRecords();
     if (!attendance.employeeId && attendance.employeeName === "Petugas") {
       attendance.employeeId = "petugas";
     }
+    // Setiap catatan baru harus punya ID sementara yang unik agar js/store.js
+    // dapat membedakan operasi create dan memetakan ID PostgreSQL dengan benar.
+    if (!attendance.id) {
+      attendance.id = `attendance-local-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    }
+    const targetDate = normalizeAttendanceDate(attendance.date);
     const existingIndex = records.findIndex((record) => {
-      if (!record || record.date !== attendance.date) return false;
+      if (!record || normalizeAttendanceDate(record.date) !== targetDate) return false;
       if (record.employeeId && attendance.employeeId) {
         return record.employeeId === attendance.employeeId;
       }
@@ -417,13 +437,18 @@ function saveAttendance(attendance) {
     });
 
     if (existingIndex >= 0) {
-      records[existingIndex] = { ...records[existingIndex], ...attendance };
+      // Pertahankan ID database/ID sementara milik baris yang sudah ada.
+      records[existingIndex] = { ...records[existingIndex], ...attendance, id: records[existingIndex].id || attendance.id };
     } else {
       records.push(attendance);
     }
     localStorage.setItem(attendanceStorageKey, JSON.stringify(records));
+
+    // Jangan menampilkan pesan berhasil sebelum API sync selesai menyimpan ke PostgreSQL.
+    if (window.WashupStore?.flush) await window.WashupStore.flush();
     return true;
-  } catch {
+  } catch (error) {
+    console.error("[WASHUP] Gagal menyimpan absensi ke server:", error);
     return false;
   }
 }
@@ -623,7 +648,7 @@ if (document.querySelector(".admin-dashboard-page") && sessionStorage.getItem("w
   window.location.replace(appUrl("logout.php"));
 }
 
-if (document.querySelector(".petugas-page") && !["Petugas", "Kasir"].includes(sessionStorage.getItem("washupRole"))) {
+if (document.querySelector(".petugas-page") && document.body.dataset.role === "Petugas" && sessionStorage.getItem("washupRole") !== "Petugas") {
   window.location.replace(appUrl("logout.php"));
 }
 
@@ -1968,6 +1993,9 @@ function setupOwnerLogout() {
 }
 
 function setupOwnerFinanceReport() {
+  const monthSelect = document.querySelector("#owner-finance-month");
+  const yearSelect = document.querySelector("#owner-finance-year");
+  const applyButton = document.querySelector("#owner-finance-apply");
   const incomeTotal = document.querySelector("#owner-finance-income");
   const expenseTotal = document.querySelector("#owner-finance-expense");
   const netBalance = document.querySelector("#owner-finance-balance");
@@ -1976,8 +2004,10 @@ function setupOwnerFinanceReport() {
   const incomeEmpty = document.querySelector("#owner-income-empty");
   const expenseBody = document.querySelector("#owner-expense-body");
   const expenseEmpty = document.querySelector("#owner-expense-empty");
-  if (!incomeTotal || !expenseTotal || !netBalance || !transactionCount || !incomeBody || !incomeEmpty || !expenseBody || !expenseEmpty) return;
+  if (!monthSelect || !yearSelect || !applyButton || !incomeTotal || !expenseTotal || !netBalance || !transactionCount || !incomeBody || !incomeEmpty || !expenseBody || !expenseEmpty) return;
 
+  const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+  const now = new Date();
   const readExpenses = () => {
     try {
       const expenses = JSON.parse(localStorage.getItem("washupExpenses") || "[]");
@@ -1987,118 +2017,158 @@ function setupOwnerFinanceReport() {
       return [];
     }
   };
-  const formatDate = (value) => {
-    if (/^\d{4}-\d{2}-\d{2}$/.test(String(value || ""))) {
-      const [year, month, day] = value.split("-").map(Number);
-      return new Date(year, month - 1, day).toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric" });
-    }
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? "-" : date.toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric" });
+  const toLocalDate = (value) => {
+    const raw = String(value || "").trim();
+    const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (match) return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
   };
-  const paidTransactions = getTransactions().filter((transaction) => transaction.paymentStatus === "Lunas");
-  const incomeGroups = new Map();
-  paidTransactions.forEach((transaction) => {
-    const date = new Date(transaction.createdAt);
-    const dateKey = Number.isNaN(date.getTime()) ? "-" : formatDateKey(date);
-    const service = String(transaction.service || "-");
-    const key = `${dateKey}\u0000${service}`;
-    const group = incomeGroups.get(key) || {
-      dateKey,
-      date: Number.isNaN(date.getTime()) ? "-" : formatDate(date),
-      service,
-      count: 0,
-      total: 0,
-    };
-    group.count += 1;
-    group.total += Number(transaction.price || 0);
-    incomeGroups.set(key, group);
+  const allTransactions = getTransactions();
+  const allExpenses = readExpenses();
+  const years = new Set([now.getFullYear()]);
+  allTransactions.forEach((transaction) => {
+    const date = toLocalDate(transaction.createdAt);
+    if (date) years.add(date.getFullYear());
   });
-  const incomeRecords = [...incomeGroups.values()].sort((first, second) => second.dateKey.localeCompare(first.dateKey) || first.service.localeCompare(second.service));
-  const expenses = readExpenses()
-    .filter((expense) => expense && typeof expense === "object" && !Array.isArray(expense))
-    .map((expense) => {
-      // Halaman Pengeluaran Kasir menyimpan total di field "amount" (jumlah barang opsional);
-      // data lama memakai quantity x price. Keduanya didukung.
-      const rawQuantity = Number(expense.quantity);
-      const amount = Number(expense.amount);
-      const hasAmount = expense.amount !== undefined && expense.amount !== null && expense.amount !== "" && Number.isFinite(amount);
-      const quantity = Number.isFinite(rawQuantity) && rawQuantity > 0 ? rawQuantity : (hasAmount ? 1 : 0);
-      const price = hasAmount ? (quantity > 0 ? amount / quantity : amount) : Number(expense.price);
-      return {
-        date: formatDate(expense.date),
-        description: String(expense.description || "-"),
-        quantity,
-        price: Number.isFinite(price) ? price : 0,
-      };
-    });
-  const totalIncome = paidTransactions.reduce((total, transaction) => total + Number(transaction.price || 0), 0);
-  const totalExpenses = expenses.reduce((total, expense) => total + expense.quantity * expense.price, 0);
-  incomeTotal.textContent = formatCurrency(totalIncome);
-  expenseTotal.textContent = formatCurrency(totalExpenses);
-  netBalance.textContent = formatCurrency(totalIncome - totalExpenses);
-  transactionCount.textContent = String(paidTransactions.length);
+  allExpenses.forEach((expense) => {
+    const date = toLocalDate(expense?.date);
+    if (date) years.add(date.getFullYear());
+  });
+  yearSelect.replaceChildren();
+  const yearPlaceholder = document.createElement("option");
+  yearPlaceholder.value = "";
+  yearPlaceholder.textContent = "Pilih periode tahun";
+  yearSelect.append(yearPlaceholder);
+  [...years].sort((a, b) => b - a).forEach((year) => {
+    const option = document.createElement("option");
+    option.value = String(year);
+    option.textContent = String(year);
+    yearSelect.append(option);
+  });
+  monthSelect.replaceChildren();
+  const monthPlaceholder = document.createElement("option");
+  monthPlaceholder.value = "";
+  monthPlaceholder.textContent = "Pilih periode bulan";
+  monthSelect.append(monthPlaceholder);
+  monthNames.forEach((month, index) => {
+    const option = document.createElement("option");
+    option.value = String(index + 1);
+    option.textContent = month;
+    monthSelect.append(option);
+  });
+  monthSelect.value = String(now.getMonth() + 1);
+  yearSelect.value = String(now.getFullYear());
 
+  const formatDate = (date) => date
+    ? date.toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric" })
+    : "—";
+  const formatDateKey = (date) => date
+    ? `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getDate()).padStart(2, "0")}`
+    : "";
   const appendCell = (row, value) => {
     const cell = document.createElement("td");
     cell.textContent = String(value);
     row.append(cell);
   };
-  incomeBody.replaceChildren();
-  incomeEmpty.hidden = incomeRecords.length > 0;
-  incomeRecords.forEach((record) => {
-    const row = document.createElement("tr");
-    appendCell(row, record.date);
-    appendCell(row, record.service);
-    appendCell(row, record.count);
-    appendCell(row, formatCurrency(record.total / record.count));
-    appendCell(row, formatCurrency(record.total));
-    incomeBody.append(row);
-  });
-  expenseBody.replaceChildren();
-  expenseEmpty.hidden = expenses.length > 0;
-  expenses.forEach((expense) => {
-    const row = document.createElement("tr");
-    appendCell(row, expense.date);
-    appendCell(row, expense.description);
-    appendCell(row, expense.quantity);
-    appendCell(row, formatCurrency(expense.price));
-    appendCell(row, formatCurrency(expense.quantity * expense.price));
-    expenseBody.append(row);
-  });
+
+  const render = () => {
+    const selectedMonth = Number(monthSelect.value) || now.getMonth() + 1;
+    const selectedYear = Number(yearSelect.value) || now.getFullYear();
+    const inPeriod = (date) => date && date.getMonth() + 1 === selectedMonth && date.getFullYear() === selectedYear;
+    const paidTransactions = getTransactions().filter((transaction) => {
+      if (transaction.paymentStatus !== "Lunas") return false;
+      return inPeriod(toLocalDate(transaction.createdAt));
+    });
+    const incomeGroups = new Map();
+    paidTransactions.forEach((transaction) => {
+      const date = toLocalDate(transaction.createdAt);
+      if (!date) return;
+      const dateKey = formatDateKey(date);
+      const service = String(transaction.service || "-");
+      const key = `${dateKey}\u0000${service}`;
+      const group = incomeGroups.get(key) || { dateKey, date: formatDate(date), service, count: 0, total: 0 };
+      group.count += 1;
+      group.total += Number(transaction.price || 0);
+      incomeGroups.set(key, group);
+    });
+    const incomeRecords = [...incomeGroups.values()].sort((first, second) =>
+      second.dateKey.localeCompare(first.dateKey) || first.service.localeCompare(second.service));
+    const expenses = readExpenses()
+      .filter((expense) => expense && typeof expense === "object" && !Array.isArray(expense))
+      .map((expense) => {
+        const date = toLocalDate(expense.date);
+        const rawQuantity = Number(expense.quantity);
+        const amount = Number(expense.amount);
+        const hasAmount = expense.amount !== undefined && expense.amount !== null && expense.amount !== "" && Number.isFinite(amount);
+        const quantity = Number.isFinite(rawQuantity) && rawQuantity > 0 ? rawQuantity : (hasAmount ? 1 : 0);
+        const price = hasAmount ? (quantity > 0 ? amount / quantity : amount) : Number(expense.price);
+        return { dateObject: date, date: formatDate(date), description: String(expense.description || "-"), quantity, price: Number.isFinite(price) ? price : 0 };
+      })
+      .filter((expense) => inPeriod(expense.dateObject));
+
+    const totalIncome = paidTransactions.reduce((total, transaction) => total + Number(transaction.price || 0), 0);
+    const totalExpenses = expenses.reduce((total, expense) => total + expense.quantity * expense.price, 0);
+    incomeTotal.textContent = formatCurrency(totalIncome);
+    expenseTotal.textContent = formatCurrency(totalExpenses);
+    netBalance.textContent = formatCurrency(totalIncome - totalExpenses);
+    transactionCount.textContent = String(paidTransactions.length);
+
+    incomeBody.replaceChildren();
+    incomeEmpty.hidden = incomeRecords.length > 0;
+    incomeRecords.forEach((record) => {
+      const row = document.createElement("tr");
+      appendCell(row, record.date);
+      appendCell(row, record.service);
+      appendCell(row, record.count);
+      appendCell(row, formatCurrency(record.total / record.count));
+      appendCell(row, formatCurrency(record.total));
+      incomeBody.append(row);
+    });
+    expenseBody.replaceChildren();
+    expenseEmpty.hidden = expenses.length > 0;
+    expenses.forEach((expense) => {
+      const row = document.createElement("tr");
+      appendCell(row, expense.date);
+      appendCell(row, expense.description);
+      appendCell(row, expense.quantity);
+      appendCell(row, formatCurrency(expense.price));
+      appendCell(row, formatCurrency(expense.quantity * expense.price));
+      expenseBody.append(row);
+    });
+  };
+  applyButton.addEventListener("click", render);
+  render();
   setupOwnerLogout();
 }
 
 function setupOwnerEmployeeReport() {
+  const monthSelect = document.querySelector("#owner-employee-month");
+  const yearSelect = document.querySelector("#owner-employee-year");
+  const applyButton = document.querySelector("#owner-employee-apply");
   const totalEmployees = document.querySelector("#owner-employee-total");
   const presentTotal = document.querySelector("#owner-employee-present");
   const absentTotal = document.querySelector("#owner-employee-absent");
   const lateTotal = document.querySelector("#owner-employee-late");
   const attendanceBody = document.querySelector("#owner-attendance-body");
   const attendanceEmpty = document.querySelector("#owner-attendance-empty");
-  const attendanceTableWrap = document.querySelector(".owner-employee-table-wrap");
-  if (!totalEmployees || !presentTotal || !absentTotal || !lateTotal || !attendanceBody || !attendanceEmpty || !attendanceTableWrap) return;
+  const attendanceTableWrap = document.querySelector(".owner-employee-table-wrap:not(.owner-employee-detail-wrap)");
+  const detailBody = document.querySelector("#owner-attendance-detail-body");
+  const detailEmpty = document.querySelector("#owner-attendance-detail-empty");
+  const detailTableWrap = document.querySelector(".owner-employee-detail-wrap");
+  if (!monthSelect || !yearSelect || !applyButton || !totalEmployees || !presentTotal || !absentTotal || !lateTotal || !attendanceBody || !attendanceEmpty || !attendanceTableWrap || !detailBody || !detailEmpty || !detailTableWrap) return;
 
-  const readRecords = (key) => {
-    try {
-      const records = JSON.parse(localStorage.getItem(key) || "[]");
-      return Array.isArray(records) ? records.filter((record) => record && typeof record === "object") : [];
-    } catch (error) {
-      console.error(`Tidak dapat membaca ${key} untuk laporan owner.`, error);
-      return [];
-    }
-  };
   const now = new Date();
-  const monthKey = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
   const dateKey = (value) => String(value || "").replace(/\D/g, "").slice(0, 8);
   const normalizeName = (name) => String(name || "").trim().toLocaleLowerCase("id-ID");
   const activeEmployees = getActiveEmployees();
-  const employeeKeys = new Set(activeEmployees.map((employee) => normalizeName(employee.name)));
-  const shifts = readRecords("washupShifts");
+  const employeeByKey = new Map(activeEmployees.map((employee) => [normalizeName(employee.name), employee]));
+  const employeeKeys = new Set(employeeByKey.keys());
+  const shifts = readMasterRecords(masterDefinitions.shifts);
   const attendance = getAttendanceRecords();
-  const attendanceEmployeeKey = (record) => [record.employeeName, record.employeeId]
-    .map(normalizeName)
-    .find((key) => employeeKeys.has(key));
-  const todayKey = getTodayKey();
+  const attendanceEmployeeKey = (record) => [record.employeeId, record.employeeName]
+    .map(normalizeName).find((key) => employeeKeys.has(key));
   const shiftByName = new Map(shifts.map((shift) => [normalizeName(shift.name), shift]));
   const toMinutes = (time) => {
     const match = String(time || "").trim().match(/^(\d{1,2})[.:](\d{2})$/);
@@ -2114,50 +2184,155 @@ function setupOwnerEmployeeReport() {
     const shiftStartMinutes = toMinutes(shift.start);
     return checkInMinutes !== null && shiftStartMinutes !== null && checkInMinutes > shiftStartMinutes;
   };
-  const todayAttendance = attendance.filter((record) => dateKey(record.date) === todayKey && record.checkIn);
-  const checkedInNames = new Set(todayAttendance.map(attendanceEmployeeKey).filter(Boolean));
-  const lateNamesToday = new Set(todayAttendance
-    .filter(isLate)
-    .map(attendanceEmployeeKey)
-    .filter(Boolean));
-  totalEmployees.textContent = String(activeEmployees.length);
-  presentTotal.textContent = String(checkedInNames.size);
-  absentTotal.textContent = String(activeEmployees.filter((employee) => !checkedInNames.has(normalizeName(employee.name))).length);
-  lateTotal.textContent = String(lateNamesToday.size);
-
+  const shiftDurationMinutes = (shift) => {
+    const start = toMinutes(shift?.start);
+    const end = toMinutes(shift?.end);
+    if (start === null || end === null) return null;
+    const adjustedEnd = end <= start ? end + 1440 : end;
+    const duration = adjustedEnd - start;
+    return duration > 0 ? duration : null;
+  };
+  const overtimeIncentive = (record, dailyWage) => {
+    if (!record.checkIn || !record.checkOut || dailyWage <= 0 || ["Izin", "Sakit"].includes(record.status)) return 0;
+    const shift = shiftByName.get(normalizeName(record.shift));
+    const start = toMinutes(shift?.start);
+    const end = toMinutes(shift?.end);
+    const duration = shiftDurationMinutes(shift);
+    let checkout = toMinutes(record.checkOut);
+    if (start === null || end === null || duration === null || checkout === null) return 0;
+    if (end <= start && checkout < start) checkout += 1440;
+    const scheduledEnd = end <= start ? end + 1440 : end;
+    const overtimeMinutes = Math.max(0, checkout - scheduledEnd);
+    if (!overtimeMinutes) return 0;
+    const hourlyWage = dailyWage / (duration / 60);
+    return Math.round(hourlyWage * 0.015 * (overtimeMinutes / 60));
+  };
+  const formatDay = (value) => {
+    const digits = dateKey(value);
+    if (digits.length !== 8) return "—";
+    const date = new Date(Number(digits.slice(0, 4)), Number(digits.slice(4, 6)) - 1, Number(digits.slice(6, 8)));
+    return date.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+  };
+  const formatPayroll = (value) => formatCurrency(Math.max(0, Math.round(Number(value) || 0)));
   const appendCell = (row, value) => {
     const cell = document.createElement("td");
-    cell.textContent = String(value);
+    cell.textContent = String(value ?? "—");
     row.append(cell);
   };
-  const monthlyAttendance = attendance.filter((record) => dateKey(record.date).startsWith(monthKey));
-  const monthlySummaries = new Map();
-  activeEmployees.forEach((employee) => {
-    const key = normalizeName(employee.name);
-    monthlySummaries.set(key, { presentDates: new Set(), lateDates: new Set() });
+
+  const years = new Set([now.getFullYear()]);
+  attendance.forEach((record) => {
+    const digits = dateKey(record.date);
+    if (digits.length === 8) years.add(Number(digits.slice(0, 4)));
   });
-  monthlyAttendance.forEach((record) => {
-    const key = attendanceEmployeeKey(record);
-    if (!key) return;
-    if (!record.checkIn) return;
-    const summary = monthlySummaries.get(key) || { presentDates: new Set(), lateDates: new Set() };
-    const recordDateKey = dateKey(record.date);
-    summary.presentDates.add(recordDateKey);
-    if (isLate(record)) summary.lateDates.add(recordDateKey);
-    monthlySummaries.set(key, summary);
+  yearSelect.replaceChildren();
+  const yearPlaceholder = document.createElement("option");
+  yearPlaceholder.value = "";
+  yearPlaceholder.textContent = "Pilih periode tahun";
+  yearSelect.append(yearPlaceholder);
+  [...years].sort((a, b) => b - a).forEach((year) => {
+    const option = document.createElement("option");
+    option.value = String(year);
+    option.textContent = String(year);
+    yearSelect.append(option);
   });
-  attendanceBody.replaceChildren();
-  const sortedEmployees = [...activeEmployees].sort((first, second) => first.displayName.localeCompare(second.displayName, "id-ID"));
-  attendanceEmpty.hidden = sortedEmployees.length > 0;
-  attendanceTableWrap.hidden = sortedEmployees.length === 0;
-  sortedEmployees.forEach((employee) => {
-    const key = normalizeName(employee.name);
-    const summary = monthlySummaries.get(key) || { presentDates: new Set(), lateDates: new Set() };
-    const row = document.createElement("tr");
-    // Izin dan insentif belum memiliki sumber data yang dapat dipercaya.
-    [employee.displayName, summary.presentDates.size, summary.lateDates.size, "-", "-"].forEach((value) => appendCell(row, value));
-    attendanceBody.append(row);
+  monthSelect.replaceChildren();
+  const monthPlaceholder = document.createElement("option");
+  monthPlaceholder.value = "";
+  monthPlaceholder.textContent = "Pilih periode bulan";
+  monthSelect.append(monthPlaceholder);
+  monthNames.forEach((month, index) => {
+    const option = document.createElement("option");
+    option.value = String(index + 1);
+    option.textContent = month;
+    monthSelect.append(option);
   });
+  monthSelect.value = String(now.getMonth() + 1);
+  yearSelect.value = String(now.getFullYear());
+
+  function render() {
+    const selectedMonth = Number(monthSelect.value) || now.getMonth() + 1;
+    const selectedYear = Number(yearSelect.value) || now.getFullYear();
+    const monthPrefix = `${selectedYear}${String(selectedMonth).padStart(2, "0")}`;
+    const monthlyAttendance = attendance.filter((record) => dateKey(record.date).startsWith(monthPrefix));
+
+    const monthlyPresentEmployees = new Set();
+    const monthlyLateEmployees = new Set();
+    monthlyAttendance.forEach((record) => {
+      const key = attendanceEmployeeKey(record);
+      if (!key || !record.checkIn || ["Izin", "Sakit"].includes(record.status)) return;
+      monthlyPresentEmployees.add(key);
+      if (isLate(record)) monthlyLateEmployees.add(key);
+    });
+    totalEmployees.textContent = String(activeEmployees.length);
+    presentTotal.textContent = String(monthlyPresentEmployees.size);
+    absentTotal.textContent = String(Math.max(0, activeEmployees.length - monthlyPresentEmployees.size));
+    lateTotal.textContent = String(monthlyLateEmployees.size);
+
+    const monthlySummaries = new Map();
+    activeEmployees.forEach((employee) => {
+      monthlySummaries.set(normalizeName(employee.name), {
+        presentDates: new Set(),
+        lateDates: new Set(),
+        leaveDates: { Izin: new Set(), Sakit: new Set() },
+        incentive: 0,
+      });
+    });
+    monthlyAttendance.forEach((record) => {
+      const key = attendanceEmployeeKey(record);
+      if (!key) return;
+      const summary = monthlySummaries.get(key);
+      if (!summary) return;
+      const dayKey = dateKey(record.date);
+      if (["Izin", "Sakit"].includes(record.status)) {
+        summary.leaveDates[record.status].add(dayKey);
+        return;
+      }
+      if (!record.checkIn) return;
+      summary.presentDates.add(dayKey);
+      if (isLate(record)) summary.lateDates.add(dayKey);
+      const employee = employeeByKey.get(key);
+      summary.incentive += overtimeIncentive(record, Number(employee?.dailyWage || 0));
+    });
+
+    attendanceBody.replaceChildren();
+    const sortedEmployees = [...activeEmployees].sort((first, second) => first.displayName.localeCompare(second.displayName, "id-ID"));
+    attendanceEmpty.hidden = sortedEmployees.length > 0;
+    attendanceTableWrap.hidden = sortedEmployees.length === 0;
+    sortedEmployees.forEach((employee) => {
+      const key = normalizeName(employee.name);
+      const summary = monthlySummaries.get(key) || {
+        presentDates: new Set(), lateDates: new Set(),
+        leaveDates: { Izin: new Set(), Sakit: new Set() }, incentive: 0,
+      };
+      const dailyWage = Number(employee.dailyWage || 0);
+      const paidDays = summary.presentDates.size;
+      const paidAmount = paidDays * dailyWage;
+      const leaveSummary = [
+        summary.leaveDates.Izin.size ? `Izin: ${summary.leaveDates.Izin.size} hari` : "",
+        summary.leaveDates.Sakit.size ? `Sakit: ${summary.leaveDates.Sakit.size} hari` : "",
+      ].filter(Boolean).join(" · ") || "—";
+      const row = document.createElement("tr");
+      [employee.displayName, paidDays, summary.lateDates.size, leaveSummary, formatPayroll(paidAmount), formatPayroll(summary.incentive)]
+        .forEach((value) => appendCell(row, value));
+      attendanceBody.append(row);
+    });
+
+    detailBody.replaceChildren();
+    const employeeAttendance = monthlyAttendance
+      .filter((record) => attendanceEmployeeKey(record))
+      .sort((first, second) => dateKey(second.date).localeCompare(dateKey(first.date)) || String(first.employeeName || "").localeCompare(String(second.employeeName || ""), "id-ID"));
+    detailEmpty.hidden = employeeAttendance.length > 0;
+    detailTableWrap.hidden = employeeAttendance.length === 0;
+    employeeAttendance.forEach((record) => {
+      const row = document.createElement("tr");
+      [formatDay(record.date), record.employeeName || record.employeeId, record.shift || "—", record.checkIn || "—", record.checkOut || "—", record.status || (record.checkIn ? "Hadir" : "Tanpa Keterangan"), record.reason || "—"]
+        .forEach((value) => appendCell(row, value));
+      detailBody.append(row);
+    });
+  }
+  applyButton.addEventListener("click", render);
+  render();
   setupOwnerLogout();
 }
 
@@ -2703,6 +2878,20 @@ function setupAdminVerificationPage() {
     }
 
     filteredRecords.forEach(({ record, recordIndex }) => {
+      if (["Izin", "Sakit"].includes(record.status)) {
+        const row = document.createElement("tr");
+        [String(record.employeeName || "Karyawan"), formatDate(record.date), "—", record.status, String(record.reason || "Keterangan tidak tersedia")].forEach((value) => {
+          const cell = document.createElement("td"); cell.textContent = value; row.append(cell);
+        });
+        const statusCell = document.createElement("td");
+        const statusBadge = document.createElement("span");
+        statusBadge.className = "verification-status verification-status-pending";
+        statusBadge.textContent = "Tercatat";
+        statusCell.append(statusBadge); row.append(statusCell);
+        const actionCell = document.createElement("td"); actionCell.textContent = "—"; row.append(actionCell);
+        tableBody.append(row);
+        return;
+      }
       ["checkIn", "checkOut"].forEach((kind) => {
         const status = statusFor(record, kind);
         const row = document.createElement("tr");
@@ -2949,6 +3138,17 @@ function setupPetugasAttendance() {
   const getShifts = () => shifts;
   const findShiftForTime = (date = new Date()) => {
     const activeShifts = getActiveShifts();
+    const scheduledDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    try {
+      const publishedSchedule = JSON.parse(localStorage.getItem("washupShiftSchedulePublished") || "{}");
+      const assignedShiftId = publishedSchedule?.[scheduledDate]?.[employeeId];
+      if (assignedShiftId && assignedShiftId !== "libur") {
+        const assignedShift = getShifts().find((item) => String(item.id) === String(assignedShiftId));
+        if (assignedShift) return assignedShift;
+      }
+    } catch {
+      // Bila jadwal belum tersedia, gunakan shift yang sedang berjalan.
+    }
     const now = date.getHours() * 60 + date.getMinutes();
     const runningShift = activeShifts.find((shift) => {
       const start = timeToMinutes(shift.start);
@@ -3061,9 +3261,8 @@ function setupPetugasAttendance() {
 
       const attendedRecords = monthRecords.filter((record) => Boolean(record.checkIn));
       const lateCount = attendedRecords.filter(isLateAttendance).length;
-      // Form izin dan sakit belum tersedia; kedua jumlah tetap nol sampai ada sumber data resmi.
-      const izinCount = 0;
-      const sakitCount = 0;
+      const izinCount = rows.filter((row) => row.status === "Izin").length;
+      const sakitCount = rows.filter((row) => row.status === "Sakit").length;
       const absentCount = rows.filter((row) => row.status === "Tanpa Keterangan").length;
       const setDayCount = (id, count) => {
         const element = document.querySelector(id);
@@ -3096,6 +3295,7 @@ function setupPetugasAttendance() {
           makeCell("Jam Masuk", record?.checkIn || "—"),
           makeCell("Jam Keluar", record?.checkOut || "—"),
           makeCell("Durasi Kerja", record ? formatDuration(record) : "—"),
+          makeCell("Keterangan", record?.reason || "—"),
         );
         const statusCell = document.createElement("td");
         statusCell.dataset.label = "Status";
@@ -3132,6 +3332,61 @@ function setupPetugasAttendance() {
   const action = document.querySelector("#attendance-action");
   if (!action) return;
   const isCheckOutPage = document.body.dataset.attendanceMode === "out";
+  const leaveTrigger = document.querySelector("#attendance-leave-trigger");
+  const leaveDialog = document.querySelector("#attendance-leave-dialog");
+  const leaveForm = document.querySelector("#attendance-leave-form");
+  const leaveType = document.querySelector("#attendance-leave-type");
+  const leaveReason = document.querySelector("#attendance-leave-reason");
+  const leaveError = document.querySelector("#attendance-leave-error");
+  const closeLeaveDialog = () => { if (leaveDialog?.open) leaveDialog.close(); };
+  leaveTrigger?.addEventListener("click", () => {
+    if (typeof leaveDialog?.showModal === "function") leaveDialog.showModal();
+    else leaveDialog?.setAttribute("open", "");
+  });
+  document.querySelector("#attendance-leave-close")?.addEventListener("click", closeLeaveDialog);
+  document.querySelector("#attendance-leave-cancel")?.addEventListener("click", closeLeaveDialog);
+  leaveDialog?.addEventListener("click", (event) => { if (event.target === leaveDialog) closeLeaveDialog(); });
+  leaveForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const submitButton = leaveForm.querySelector('button[type="submit"]');
+    if (submitButton?.disabled) return;
+    const existing = getAttendance(employeeId);
+    if (existing?.checkIn || existing?.checkOut) {
+      if (leaveError) leaveError.textContent = "Izin/Sakit tidak dapat dicatat setelah absensi masuk.";
+      return;
+    }
+    const reason = String(leaveReason?.value || "").trim();
+    if (!reason) { if (leaveError) leaveError.textContent = "Keterangan wajib diisi."; return; }
+    const type = leaveType?.value === "Sakit" ? "Sakit" : "Izin";
+    const leaveRecord = {
+      ...(existing || {}),
+      employeeId,
+      employeeName,
+      date: getTodayKey(),
+      shift: "",
+      checkIn: null,
+      checkInPhoto: null,
+      checkOut: null,
+      checkOutPhoto: null,
+      status: type,
+      reason,
+      checkInVerified: false,
+      checkOutVerified: false,
+    };
+    if (submitButton) submitButton.disabled = true;
+    const saved = await saveAttendance(leaveRecord);
+    if (!saved) {
+      if (leaveError) leaveError.textContent = "Pengajuan belum tersimpan ke database. Periksa koneksi lalu coba lagi.";
+      if (submitButton) submitButton.disabled = false;
+      return;
+    }
+    if (submitButton) submitButton.disabled = false;
+    leaveForm.reset();
+    if (leaveError) leaveError.textContent = "";
+    closeLeaveDialog();
+    notice.textContent = `Keterangan ${type.toLowerCase()} berhasil dicatat. Hari ini tidak dihitung sebagai hari kerja bergaji.`;
+    render();
+  });
   const date = document.querySelector("#attendance-date");
   const name = document.querySelector("#attendance-name");
   const shift = document.querySelector("#attendance-shift");
@@ -3164,16 +3419,18 @@ function setupPetugasAttendance() {
     const attendance = getAttendance(employeeId);
     date.textContent = getTodayLabel();
     name.textContent = employeeName;
-    shift.textContent = attendance?.shift || findShiftForTime()?.name || "—";
+    const isLeaveDay = ["Izin", "Sakit"].includes(attendance?.status);
+    shift.textContent = isLeaveDay ? "—" : attendance?.shift || findShiftForTime()?.name || "—";
     checkIn.textContent = attendance?.checkIn || "--";
     checkOut.textContent = attendance?.checkOut || "--";
     const hasCheckedIn = Boolean(attendance?.checkIn);
     const hasCheckedOut = Boolean(attendance?.checkOut);
-    status.textContent = hasCheckedOut ? "Selesai"
+    status.textContent = isLeaveDay ? attendance.status : hasCheckedOut ? "Selesai"
       : hasCheckedIn ? isLateAttendance(attendance) ? "Terlambat" : "Hadir"
         : "Belum Absen";
     action.textContent = isCheckOutPage ? "Absen Keluar" : "Absen Masuk";
-    action.disabled = isCheckOutPage ? !hasCheckedIn || hasCheckedOut : hasCheckedIn;
+    action.disabled = isLeaveDay || (isCheckOutPage ? !hasCheckedIn || hasCheckedOut : hasCheckedIn);
+    if (leaveTrigger) leaveTrigger.disabled = isLeaveDay || hasCheckedIn || hasCheckedOut;
     photoConfirmedIndicator.hidden = !confirmedPhoto;
     photoPreview.classList.toggle("photo-preview-confirmed", Boolean(confirmedPhoto));
     usePhoto.disabled = !selectedPhoto || Boolean(confirmedPhoto);
@@ -3183,7 +3440,12 @@ function setupPetugasAttendance() {
         : hasCheckedOut ? "Absen Keluar sudah tercatat." : ""
       : hasCheckedOut ? "Absensi hari ini sudah selesai."
         : hasCheckedIn ? "Absen Masuk sudah tercatat." : "";
-    if (stateNotice) notice.textContent = stateNotice;
+    if (isLeaveDay) {
+      const reasonText = attendance.reason ? ` Keterangan: ${attendance.reason}.` : "";
+      notice.textContent = `Hari ini tercatat ${attendance.status.toLowerCase()}.${reasonText} Absensi tidak dapat dilanjutkan.`;
+    } else if (stateNotice) {
+      notice.textContent = stateNotice;
+    }
     checkInPhotoCard.hidden = !attendance?.checkInPhoto;
     checkOutPhotoCard.hidden = !attendance?.checkOutPhoto;
     if (attendance?.checkInPhoto) checkInPhoto.src = attendance.checkInPhoto;
@@ -3245,7 +3507,8 @@ function setupPetugasAttendance() {
     render();
   });
 
-  action.addEventListener("click", () => {
+  action.addEventListener("click", async () => {
+    if (action.disabled) return;
     const activeShift = findShiftForTime();
     const attendance = getAttendance(employeeId) || {
       employeeId, employeeName, date: getTodayKey(), shift: activeShift?.name || "Shift Pagi",
@@ -3253,6 +3516,10 @@ function setupPetugasAttendance() {
     };
     if (!attendance.employeeId) attendance.employeeId = employeeId;
     if (!attendance.employeeName) attendance.employeeName = employeeName;
+    if (["Izin", "Sakit"].includes(attendance.status)) {
+      notice.textContent = `Hari ini sudah tercatat ${attendance.status.toLowerCase()}. Absensi masuk/keluar tidak dapat dilakukan lagi.`;
+      return;
+    }
     if (attendance.checkOut) {
       notice.textContent = "Absensi hari ini sudah selesai.";
       return;
@@ -3285,8 +3552,11 @@ function setupPetugasAttendance() {
       attendance.checkOutPhoto = confirmedPhoto;
       attendance.status = "Selesai";
     }
-    if (!saveAttendance(attendance)) {
-      notice.textContent = "Absensi tidak dapat disimpan. Coba lagi.";
+    action.disabled = true;
+    const saved = await saveAttendance(attendance);
+    if (!saved) {
+      action.disabled = false;
+      notice.textContent = "Absensi belum tersimpan ke database. Periksa koneksi lalu coba lagi.";
       return;
     }
     resetPhotoSelection();
@@ -3296,11 +3566,18 @@ function setupPetugasAttendance() {
   render();
 }
 
-if (document.querySelector(".petugas-page")) {
-  if (!["Petugas", "Kasir"].includes(sessionStorage.getItem("washupRole"))) window.location.replace(appUrl("logout.php"));
+const attendanceRolePage = document.querySelector(".petugas-attendance-page, .petugas-recap-page");
+if (attendanceRolePage) {
+  const requiredAttendanceRole = document.body.dataset.role;
+  if (!(["Petugas", "Kasir"].includes(requiredAttendanceRole) && sessionStorage.getItem("washupRole") === requiredAttendanceRole)) {
+    window.location.replace(appUrl("logout.php"));
+  }
 }
-if (document.querySelector(".petugas-dashboard-page")) setupPetugasDashboard();
-if (document.querySelector(".petugas-attendance-page, .petugas-recap-page")) setupPetugasAttendance();
+if (document.querySelector(".petugas-dashboard-page")) {
+  if (sessionStorage.getItem("washupRole") !== "Petugas") window.location.replace(appUrl("logout.php"));
+  else setupPetugasDashboard();
+}
+if (attendanceRolePage) setupPetugasAttendance();
 
 // Dropdown kustom untuk form data master.
 // <select> asli tetap ada tetapi disembunyikan, jadi nilai form dan validasi tetap bekerja seperti biasa.
@@ -3465,7 +3742,7 @@ function setupMasterPage() {
   // Jam shift ditampilkan dengan titik seperti Figma (08.00); jam selesai 00:00 berarti tengah malam (24.00).
   const formatShiftTime = (key, value) => (key === "end" && value === "00:00" ? "24.00" : String(value).replace(":", "."));
   const valueForDisplay = (key, value) => {
-    if (key === "price") return formatCurrency(value);
+    if (key === "price" || key === "dailyWage") return formatCurrency(value);
     if (type === "shifts" && (key === "start" || key === "end") && value) return formatShiftTime(key, value);
     if (type === "users" && key === "fullName" && !String(value || "").trim()) return "-";
     return (customSelectTypes.includes(type) && customSelectLabels[value]) || String(value || "-");
@@ -3575,15 +3852,56 @@ function setupMasterPage() {
         });
       }
       input.value = record[field.key] ?? (field.type === "select" ? (field.options[0] ?? "") : "");
-      // Password lama tidak diisikan kembali saat Edit; kosong berarti password tidak diubah.
-      if (field.type === "password" && record.id) {
-        input.value = "";
-        input.required = false;
-        input.placeholder = "Kosongkan jika tidak diubah";
+      if (type === "users" && field.key === "dailyWage") {
+        wrapper.dataset.employeeSalaryField = "true";
+        input.inputMode = "numeric";
+        input.placeholder = field.placeholder || "Masukkan gaji harian";
       }
-      wrapper.append(input);
+      // Password akun baru dapat ditampilkan/disembunyikan; akun yang sudah ada
+      // tetap tidak menampilkan kolom password di menu pengelolaan akun.
+      if (field.type === "password") {
+        input.autocomplete = "new-password";
+        input.minLength = 8;
+        input.placeholder = record.id ? "Kosongkan jika tidak diubah" : "Masukkan password";
+        if (record.id) {
+          input.value = "";
+          input.required = false;
+        }
+        const passwordControl = document.createElement("span");
+        passwordControl.className = "profile-password-control master-password-control";
+        const toggle = document.createElement("button");
+        toggle.type = "button";
+        toggle.className = "profile-password-toggle";
+        toggle.dataset.passwordToggle = inputId;
+        toggle.setAttribute("aria-label", "Tampilkan password");
+        toggle.setAttribute("aria-pressed", "false");
+        toggle.innerHTML = `
+          <svg class="password-eye-show" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-6.2 9.5-6.2 9.5 6.2 9.5 6.2-3.4 6.2-9.5 6.2S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.7"/></svg>
+          <svg class="password-eye-hide" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3 21 21M10.6 6a9.7 9.7 0 0 1 1.4-.1c6.1 0 9.5 6.1 9.5 6.1s-1.1 2-3.1 3.7M6.2 6.3C3.8 7.8 2.5 12 2.5 12s3.4 6.2 9.5 6.2c1.2 0 2.3-.3 3.2-.7"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>`;
+        passwordControl.append(input, toggle);
+        wrapper.append(passwordControl);
+      } else {
+        wrapper.append(input);
+      }
       formFields.append(wrapper);
     });
+    if (type === "users") {
+      const roleInput = formFields.querySelector('[data-field="role"]');
+      const salaryWrapper = formFields.querySelector('[data-employee-salary-field="true"]');
+      const salaryInput = salaryWrapper?.querySelector('[data-field="dailyWage"]');
+      const updateSalaryVisibility = () => {
+        const isEmployee = ["Kasir", "Petugas"].includes(roleInput?.value || record.role || "");
+        if (salaryWrapper) salaryWrapper.hidden = !isEmployee;
+        if (salaryInput) {
+          salaryInput.disabled = !isEmployee;
+          salaryInput.required = isEmployee;
+          if (!isEmployee) salaryInput.value = "0";
+          else if (salaryInput.value === "0" && Number(record.dailyWage || 0) > 0) salaryInput.value = String(record.dailyWage);
+        }
+      };
+      roleInput?.addEventListener("change", updateSalaryVisibility);
+      updateSalaryVisibility();
+    }
     if (type === "users" && record.id) {
       const note = document.createElement("p");
       note.className = "master-admin-account-note";
@@ -3609,7 +3927,7 @@ function setupMasterPage() {
     if (detailTitle && definition.detailTitle) detailTitle.textContent = definition.detailTitle;
     detailContent.replaceChildren();
     const detailColumns = type === "users"
-      ? ["fullName", "username", "phone", "role", "status"]
+      ? ["fullName", "username", "phone", "role", "dailyWage", "status"]
       : definition.columns;
     detailColumns.forEach((column) => {
       const wrapper = document.createElement("div");
@@ -3655,6 +3973,8 @@ function setupMasterPage() {
     }
     const invalidPhone = definition.fields.find((field) => field.type === "tel" && record[field.key] && !/^\+?\d{8,15}$/.test(record[field.key]));
     if (invalidPhone) return `${invalidPhone.label} hanya boleh berisi angka (8–15 digit).`;
+    if (type === "users" && !editingId && String(record.password || "").length < 8) return "Password minimal 8 karakter.";
+    if (type === "users" && ["Kasir", "Petugas"].includes(record.role) && (!Number.isInteger(Number(record.dailyWage)) || Number(record.dailyWage) < 1)) return "Gaji harian Kasir/Petugas wajib diisi dan harus lebih dari 0.";
     if (type === "services" && (!Number.isFinite(Number(record.price)) || Number(record.price) <= 0)) return "Harga harus lebih besar dari 0.";
     if (type === "shifts" && record.end !== "00:00" && record.start >= record.end) return "Jam selesai harus setelah jam mulai.";
     const duplicate = records.some((existing) => existing.id !== editingId && (
@@ -3718,6 +4038,17 @@ function setupMasterPage() {
     }
   });
 
+  formFields.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-password-toggle]");
+    if (!button || !formFields.contains(button)) return;
+    const target = document.getElementById(button.dataset.passwordToggle);
+    if (!target) return;
+    const shouldShow = target.type === "password";
+    target.type = shouldShow ? "text" : "password";
+    button.setAttribute("aria-pressed", String(shouldShow));
+    button.setAttribute("aria-label", `${shouldShow ? "Sembunyikan" : "Tampilkan"} password`);
+  });
+
   addButton.addEventListener("click", () => openForm());
   searchInput.addEventListener("input", render);
   document.querySelector("#master-dialog-close")?.addEventListener("click", () => closeDialog(dialog));
@@ -3749,6 +4080,7 @@ function setupMasterPage() {
     if (type === "users" && editingId && !record.password) delete record.password;
     if (type === "users") record.username = record.username.trim().toLowerCase();
     if (type === "services") record.price = Number(record.price);
+    if (type === "users") record.dailyWage = ["Kasir", "Petugas"].includes(record.role) ? Number(record.dailyWage || 0) : 0;
     const records = getRecords();
     const error = validate(record, records);
     notice.textContent = error;
@@ -4583,8 +4915,8 @@ function setupProfileEditor() {
       currentPasswordInput.focus();
       return;
     }
-    if (newPassword && newPassword.length < 6) {
-      message.textContent = "Password baru minimal 6 karakter.";
+    if (newPassword && newPassword.length < 8) {
+      message.textContent = "Password baru minimal 8 karakter.";
       newPasswordInput.focus();
       return;
     }
@@ -4595,7 +4927,7 @@ function setupProfileEditor() {
       const response = await fetch((window.WASHUP_ROOT || "") + "/api/profil.php", {
         method: "POST",
         credentials: "same-origin",
-        headers: { "Content-Type": "application/json", "X-CSRF-Token": window.WASHUP_CSRF || "" },
+        headers: { "Content-Type": "application/json", "X-CSRF-Token": window.WASHUP_CSRF || document.querySelector('meta[name="csrf-token"]')?.content || "" },
         body: JSON.stringify({ username: usernameInput.value, passwordLama: oldPassword, passwordBaru: newPassword }),
       });
       let data = {};
