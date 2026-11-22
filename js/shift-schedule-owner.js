@@ -16,6 +16,9 @@
 
   const $ = (selector) => document.querySelector(selector);
   const ui = {
+    month: $("#owner-sched-month"),
+    year: $("#owner-sched-year"),
+    periodApply: $("#owner-sched-period-apply"),
     week: $("#owner-sched-week"),
     search: $("#owner-sched-search"),
     filter: $("#owner-sched-filter"),
@@ -95,18 +98,63 @@
   };
 
   // ---------- Pilihan filter ----------
+  function fillPeriodFilters() {
+    const publishedAt = readJson(PUBLISHED_AT_KEY);
+    const currentDate = new Date();
+    const years = new Set([currentDate.getFullYear()]);
+    Object.keys(publishedAt).forEach((weekKey) => {
+      const date = fromKey(weekKey);
+      if (!Number.isNaN(date.getTime())) years.add(date.getFullYear());
+    });
+
+    ui.month.replaceChildren(make("option", "", "Pilih periode bulan"));
+    MONTHS.forEach((month, index) => {
+      const option = make("option", "", month);
+      option.value = String(index + 1);
+      ui.month.append(option);
+    });
+    ui.year.replaceChildren(make("option", "", "Pilih periode tahun"));
+    [...years].sort((a, b) => b - a).forEach((year) => {
+      const option = make("option", "", String(year));
+      option.value = String(year);
+      ui.year.append(option);
+    });
+    ui.month.value = String(currentDate.getMonth() + 1);
+    ui.year.value = String(currentDate.getFullYear());
+  }
+
   function fillWeeks() {
     const published = readJson(PUBLISHED_KEY);
     const publishedAt = readJson(PUBLISHED_AT_KEY);
+    const selectedMonth = Number(ui.month.value) || new Date().getMonth() + 1;
+    const selectedYear = Number(ui.year.value) || new Date().getFullYear();
+    const previous = ui.week.value;
+    const firstDay = new Date(selectedYear, selectedMonth - 1, 1);
+    const lastDay = new Date(selectedYear, selectedMonth, 0);
+    let cursor = startOfWeek(firstDay);
+    const monthWeeks = [];
+    while (cursor <= lastDay) {
+      monthWeeks.push(toKey(cursor));
+      cursor = addDays(cursor, 7);
+    }
+    // Keep any published week whose seven days overlap the selected month,
+    // even if its Monday falls in the previous month/year.
+    const publishedWeeks = Object.keys(publishedAt).filter((weekKey) =>
+      weekDates(weekKey).some((date) => date.getFullYear() === selectedYear && date.getMonth() + 1 === selectedMonth)
+    );
+    const all = [...new Set([...monthWeeks, ...publishedWeeks])].sort();
     const current = toKey(startOfWeek(new Date()));
-    const keys = Object.keys(publishedAt).filter((key) => weekHasData(published, key));
-    const all = [...new Set([...keys, current])].sort();
+    const availablePublished = all.filter((key) => Boolean(publishedAt[key]) && weekHasData(published, key));
     ui.week.replaceChildren(...all.map((key) => {
-      const option = make("option", "", `${formatRange(key)}${keys.includes(key) ? "" : " (belum ditampilkan)"}`);
+      const isPublished = Boolean(publishedAt[key]) && weekHasData(published, key);
+      const option = make("option", "", `${formatRange(key)}${isPublished ? "" : " (belum ditampilkan)"}`);
       option.value = key;
       return option;
     }));
-    ui.week.value = keys.includes(current) || !keys.length ? current : keys[keys.length - 1];
+    const selected = all.includes(previous) ? previous
+      : all.includes(current) ? current
+        : availablePublished[availablePublished.length - 1] || all[0];
+    ui.week.value = selected || "";
   }
   function fillShiftFilter() {
     ui.filter.replaceChildren(make("option", "", "Semua shift"), ...getShiftOptions().map((shift) => {
@@ -203,11 +251,17 @@
     renderDuty(hasData ? published : {});
   }
 
+  ui.periodApply.addEventListener("click", () => {
+    fillWeeks();
+    fillDays();
+    render();
+  });
   ui.week.addEventListener("change", () => { fillDays(); render(); });
   ui.search.addEventListener("input", render);
   ui.filter.addEventListener("change", render);
   ui.day.addEventListener("change", () => renderDuty(readJson(PUBLISHED_AT_KEY)[ui.week.value] ? readJson(PUBLISHED_KEY) : {}));
 
+  fillPeriodFilters();
   fillWeeks();
   fillShiftFilter();
   fillDays();
