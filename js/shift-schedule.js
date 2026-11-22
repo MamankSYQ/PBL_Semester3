@@ -130,7 +130,8 @@
       return {};
     }
   }
-  const weekSnapshot = (schedule) => JSON.stringify(weekDates().map((date) => schedule[toKey(date)] || {}));
+  // Snapshot status hanya menilai Senin–Sabtu; Minggu adalah libur baku, bukan jadwal yang perlu diisi.
+  const weekSnapshot = (schedule) => JSON.stringify(weekDates().slice(0, 6).map((date) => schedule[toKey(date)] || {}));
   // "empty" = draf kosong & belum pernah tampil, "draft" = belum tampil, "changed" = ada perubahan, "published" = sama.
   function weekStatus() {
     const draft = weekSnapshot(readSchedule());
@@ -155,13 +156,19 @@
   }
   function publishWeek() {
     const draft = readSchedule();
+    const employees = getEmployees();
+    const dates = weekDates();
+    if (ensureSundayOff(draft, employees, dates)) saveSchedule(draft);
     const published = readJson(PUBLISHED_KEY);
     const publishedAt = readJson(PUBLISHED_AT_KEY);
-    weekDates().forEach((date) => {
+    dates.forEach((date) => {
       const key = toKey(date);
       if (draft[key] && Object.keys(draft[key]).length) published[key] = { ...draft[key] };
       else delete published[key];
     });
+    const sundayKey = toKey(dates[6]);
+    published[sundayKey] ||= {};
+    employees.forEach((employee) => { published[sundayKey][employee.name] = OFF; });
     publishedAt[toKey(weekStart)] = new Date().toISOString();
     try {
       localStorage.setItem(PUBLISHED_KEY, JSON.stringify(published));
@@ -186,6 +193,21 @@
     }
     schedule[dateKey] ||= {};
     schedule[dateKey][employeeName] = value;
+  }
+
+  // Hari Minggu otomatis libur untuk semua karyawan dan tidak perlu diatur Admin.
+  function ensureSundayOff(schedule, employees, dates = weekDates()) {
+    const sunday = dates.find((date) => date.getDay() === 0);
+    if (!sunday) return false;
+    const dateKey = toKey(sunday);
+    let changed = false;
+    employees.forEach((employee) => {
+      if (getValue(schedule, dateKey, employee.name) !== OFF) {
+        setValue(schedule, dateKey, employee.name, OFF);
+        changed = true;
+      }
+    });
+    return changed;
   }
 
   // Label dan keterangan jam untuk satu nilai jadwal.
@@ -233,7 +255,7 @@
   });
 
   // ---------- Grid mingguan ----------
-  function buildSelect(value, shiftOptions, ariaLabel) {
+  function buildSelect(value, shiftOptions, ariaLabel, isFixedSunday = false) {
     const select = document.createElement("select");
     select.className = "ss-cell-select";
     select.setAttribute("aria-label", ariaLabel);
@@ -243,6 +265,13 @@
       option.textContent = text;
       select.append(option);
     };
+    if (isFixedSunday) {
+      add(OFF, "Libur (otomatis)");
+      select.value = OFF;
+      select.disabled = true;
+      select.title = "Hari Minggu otomatis libur.";
+      return select;
+    }
     add("", "Pilih");
     shiftOptions.forEach((shift) => add(shift.id, shift.label));
     add(OFF, "Libur");
@@ -256,6 +285,12 @@
     const employees = getEmployees();
     const schedule = readSchedule();
     const dates = weekDates();
+    if (ensureSundayOff(schedule, employees, dates)) saveSchedule(schedule);
+    // Jadwal yang sudah pernah ditampilkan ke Owner juga mengikuti aturan Minggu libur.
+    const published = readJson(PUBLISHED_KEY);
+    if (ensureSundayOff(published, employees, dates)) {
+      localStorage.setItem(PUBLISHED_KEY, JSON.stringify(published));
+    }
     const todayKey = toKey(new Date());
     const isCurrentWeek = toKey(weekStart) === toKey(startOfWeek(new Date()));
 
@@ -297,14 +332,15 @@
 
       dates.forEach((date, index) => {
         const dateKey = toKey(date);
-        const value = getValue(schedule, dateKey, employee.name);
+        const isSunday = date.getDay() === 0;
+        const value = isSunday ? OFF : getValue(schedule, dateKey, employee.name);
         const info = describe(value, shiftOptions);
-        if (value) filled += 1;
+        if (!isSunday && value) filled += 1;
 
         const cell = document.createElement("td");
         cell.dataset.kind = info.kind;
         if (dateKey === todayKey) cell.classList.add("is-today");
-        const select = buildSelect(value, shiftOptions, `${employee.name}, ${DAY_NAMES[index]} ${shortDate(date)}`);
+        const select = buildSelect(value, shiftOptions, `${employee.name}, ${DAY_NAMES[index]} ${shortDate(date)}`, isSunday);
         select.dataset.date = dateKey;
         select.dataset.employee = employee.name;
         const time = document.createElement("small");
@@ -315,7 +351,8 @@
       el.body.append(row);
     });
 
-    const total = employees.length * 7;
+    // Indikator hanya menghitung enam hari kerja; Minggu merupakan libur otomatis.
+    const total = employees.length * 6;
     el.filled.textContent = total ? `${filled}/${total} terisi` : "0 karyawan";
     renderPublishState();
     el.empty.hidden = employees.length > 0;
@@ -335,6 +372,8 @@
   el.body.addEventListener("change", (event) => {
     const select = event.target.closest(".ss-cell-select");
     if (!select) return;
+    const selectedDate = new Date(`${select.dataset.date}T00:00:00`);
+    if (selectedDate.getDay() === 0) return render();
     const schedule = readSchedule();
     setValue(schedule, select.dataset.date, select.dataset.employee, select.value);
     if (!saveSchedule(schedule)) return render();
@@ -369,6 +408,7 @@
       if (previous && Object.keys(previous).length) schedule[key] = { ...previous };
       else delete schedule[key];
     });
+    ensureSundayOff(schedule, getEmployees(), weekDates());
     if (saveSchedule(schedule)) {
       render();
       showNotice("Jadwal minggu sebelumnya disalin ke draf.");
@@ -378,12 +418,12 @@
   el.copyWeek.addEventListener("click", () => {
     const schedule = readSchedule();
     const dates = weekDates();
-    const previousHasData = dates.some((date) => Object.keys(schedule[toKey(addDays(date, -7))] || {}).length);
+    const previousHasData = dates.slice(0, 6).some((date) => Object.keys(schedule[toKey(addDays(date, -7))] || {}).length);
     if (!previousHasData) {
       showNotice("Minggu sebelumnya belum punya jadwal untuk disalin.", true);
       return;
     }
-    const currentHasData = dates.some((date) => Object.keys(schedule[toKey(date)] || {}).length);
+    const currentHasData = dates.slice(0, 6).some((date) => Object.keys(schedule[toKey(date)] || {}).length);
     if (!currentHasData) {
       copyPreviousWeek();
       return;
@@ -421,10 +461,12 @@
       input.type = "checkbox";
       input.name = "days";
       input.value = toKey(date);
+      const isSunday = date.getDay() === 0;
+      input.disabled = isSunday;
       const name = document.createElement("strong");
       name.textContent = DAY_NAMES[index];
       const day = document.createElement("small");
-      day.textContent = shortDate(date);
+      day.textContent = isSunday ? `${shortDate(date)} · Libur otomatis` : shortDate(date);
       label.append(input, name, day);
       el.bulkDays.append(label);
     });
@@ -464,8 +506,10 @@
     el.previewList.replaceChildren();
     dates.forEach((date, index) => {
       const dateKey = toKey(date);
-      const isSelected = selectedDays.includes(dateKey) && shiftValue;
-      const info = isSelected ? newInfo : describe(getValue(schedule, dateKey, employeeName), shiftOptions);
+      const isSunday = date.getDay() === 0;
+      const isSelected = !isSunday && selectedDays.includes(dateKey) && shiftValue;
+      const info = isSunday ? describe(OFF, shiftOptions)
+        : isSelected ? newInfo : describe(getValue(schedule, dateKey, employeeName), shiftOptions);
       const item = document.createElement("li");
       item.classList.toggle("is-changed", Boolean(isSelected));
       const day = document.createElement("span");
@@ -489,12 +533,12 @@
       el.bulkSummaryText.textContent = "Ringkasan perubahan akan tampil di sini.";
       return;
     }
-    const chosen = dates.map((date, index) => (selectedDays.includes(toKey(date)) ? DAY_NAMES[index] : null)).filter(Boolean);
-    const unchanged = DAY_NAMES.filter((name) => !chosen.includes(name));
+    const chosen = dates.map((date, index) => (date.getDay() !== 0 && selectedDays.includes(toKey(date)) ? DAY_NAMES[index] : null)).filter(Boolean);
+    const unchanged = DAY_NAMES.slice(0, 6).filter((name) => !chosen.includes(name));
     el.bulkSummaryTitle.textContent = `${employeeName} · ${chosen.join(", ")} → ${newInfo.label}`;
     el.bulkSummaryText.textContent = unchanged.length
-      ? `Hanya ${chosen.length} hari terpilih yang diubah. ${unchanged.join(", ")} tidak berubah.`
-      : "Semua hari dalam minggu ini akan diubah.";
+      ? `Hanya ${chosen.length} hari kerja terpilih yang diubah. ${unchanged.join(", ")} belum diubah. Minggu libur otomatis.`
+      : "Semua hari kerja dalam minggu ini akan diubah. Minggu libur otomatis.";
   }
 
   el.openBulk.addEventListener("click", () => {
@@ -530,6 +574,7 @@
     }
     const schedule = readSchedule();
     selectedDays.forEach((dateKey) => setValue(schedule, dateKey, employeeName, shiftValue));
+    ensureSundayOff(schedule, getEmployees(), weekDates());
     if (!saveSchedule(schedule)) {
       el.bulkNotice.textContent = "Jadwal tidak dapat disimpan. Penyimpanan browser penuh atau tidak tersedia.";
       return;

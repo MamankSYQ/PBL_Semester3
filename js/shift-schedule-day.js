@@ -94,13 +94,29 @@
       return [];
     }
   }
+
+  function ensureSundayOff(schedule, employees, weekKey) {
+    const sunday = weekDates(weekKey).find((date) => date.getDay() === 0);
+    if (!sunday) return false;
+    const dateKey = toKey(sunday);
+    schedule[dateKey] ||= {};
+    let changed = false;
+    employees.forEach((employee) => {
+      if (schedule[dateKey][employee.name] !== OFF) {
+        schedule[dateKey][employee.name] = OFF;
+        changed = true;
+      }
+    });
+    return changed;
+  }
   const make = (tag, className, text) => {
     const node = document.createElement(tag);
     if (className) node.className = className;
     if (text != null) node.textContent = text;
     return node;
   };
-  const weekSnapshot = (schedule, weekKey) => JSON.stringify(weekDates(weekKey).map((date) => schedule[toKey(date)] || {}));
+  // Minggu selalu libur; perbandingan status draf hanya memakai enam hari kerja.
+  const weekSnapshot = (schedule, weekKey) => JSON.stringify(weekDates(weekKey).slice(0, 6).map((date) => schedule[toKey(date)] || {}));
 
   // ---------- Pilihan minggu ----------
   // Minggu lalu sampai 4 minggu ke depan, ditambah minggu lain yang sudah punya jadwal.
@@ -128,6 +144,7 @@
     const schedule = readJson(STORAGE_KEY);
     const options = getShiftOptions();
     const employees = getEmployees();
+    if (ensureSundayOff(schedule, employees, weekKey)) localStorage.setItem(STORAGE_KEY, JSON.stringify(schedule));
     const query = ui.search.value.trim().toLocaleLowerCase("id-ID");
     const todayKey = toKey(new Date());
 
@@ -220,17 +237,20 @@
       const group = make("div", "sd-segment");
       group.setAttribute("role", "radiogroup");
       group.setAttribute("aria-labelledby", label.id);
+      const isSunday = date.getDay() === 0;
       options.forEach((shift) => {
-        const option = make("label", "sd-segment-option");
+        const option = make("label", `sd-segment-option${isSunday ? " is-fixed-off" : ""}`);
         const input = make("input");
         input.type = "radio";
         input.name = `sd-day-${index}`;
         input.value = shift.id;
         input.dataset.date = dateKey;
-        input.checked = value === shift.id;
+        input.checked = isSunday ? shift.id === OFF : value === shift.id;
+        input.disabled = isSunday;
         option.append(input, make("span", "", shift.label));
         group.append(option);
       });
+      if (isSunday) row.title = "Hari Minggu otomatis libur dan tidak perlu diatur.";
       const time = make("span", "sd-day-time");
       row.append(label, group, time);
       return row;
@@ -290,8 +310,10 @@
     const schedule = readJson(STORAGE_KEY);
     picked.forEach((input) => {
       schedule[input.dataset.date] ||= {};
-      schedule[input.dataset.date][employeeName] = input.value;
+      const selectedDate = fromKey(input.dataset.date);
+      schedule[input.dataset.date][employeeName] = selectedDate.getDay() === 0 ? OFF : input.value;
     });
+    ensureSundayOff(schedule, getEmployees(), ui.formWeek.value);
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(schedule));
     } catch {
