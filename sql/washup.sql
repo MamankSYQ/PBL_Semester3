@@ -16,6 +16,7 @@ CREATE TABLE karyawan (
   username        VARCHAR(100) NOT NULL,
   password        VARCHAR(255) NOT NULL,   -- hash password_hash(), bukan teks asli
   status_akun     VARCHAR(20) NOT NULL DEFAULT 'Aktif' CHECK (status_akun IN ('Aktif','Nonaktif')),
+  is_system_account BOOLEAN NOT NULL DEFAULT FALSE, -- akun sistem utama (misalnya Admin utama)
   deleted_at      TIMESTAMP NULL
 );
 -- username bisa dipakai lagi setelah akun lama di-soft-delete

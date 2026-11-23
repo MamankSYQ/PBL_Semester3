@@ -131,6 +131,6 @@ $user = current_user();   // sudah login: tombol menuju dashboard role-nya
     </div>
 
     <script src="js/app.js"></script>
-    <script src="js/landing-cards.js?v=20261112-3"></script>
+    <script src="js/landing-cards.js?v=20261123-1"></script>
 </body>
 </html>

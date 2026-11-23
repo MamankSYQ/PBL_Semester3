@@ -1,0 +1,9 @@
+{
+    "name": "washup/app",
+    "description": "WASHUP - Sistem Administrasi dan Operasional Layanan",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "aws/aws-sdk-php": "^3.0"
+    }
+}

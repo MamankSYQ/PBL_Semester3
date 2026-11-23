@@ -3,6 +3,20 @@
 // - Tulis: setItem() dibandingkan dengan data sebelumnya, selisihnya (tambah/ubah/hapus) dikirim ke api/sync.php.
 // app.js tidak perlu diubah untuk membaca/menulis data; kunci lain (mis. preferensi sidebar) tetap di localStorage biasa.
 (() => {
+  // Fallback base URL: ambil dari lokasi store.js sendiri jika bootstrap PHP gagal.
+  const storeScript = document.currentScript;
+  let rootFromScript = '';
+  try {
+    if (storeScript && storeScript.src) {
+      rootFromScript = new URL('../', storeScript.src).pathname.replace(/\/+$/, '');
+    }
+  } catch (e) {
+    console.error('[WASHUP] Tidak dapat menentukan base URL dari store.js:', e);
+  }
+  if (typeof window.WASHUP_ROOT !== 'string' || !window.WASHUP_ROOT) {
+    window.WASHUP_ROOT = rootFromScript;
+  }
+
   const LISTS = new Set(["washupUsers", "washupServices", "washupShifts", "washupTransactions", "washupExpenses", "washupPetugasAttendance"]);
   const MAPS = { washupShiftSchedule: "leaf", washupShiftSchedulePublished: "leaf", washupShiftSchedulePublishedAt: "flat" };
   const LOCAL = new Set(["washupDeletedServiceIds", "washupDeletedShiftIds"]);   // penanda client-side, tidak disinkronkan

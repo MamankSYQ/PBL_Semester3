@@ -1,0 +1,17 @@
+.git
+.gitignore
+.env
+.env.*
+config/config.local.php
+*.zip
+*.log
+.vscode/
+.idea/
+uploads/**
+/vendor/
+# Local Neon test credentials and temporary test endpoints
+/config/config.neon-test.php
+/test-neon.php
+/test-storage.php
+/test-app-db.php
+/sql/seed.php

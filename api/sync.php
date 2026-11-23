@@ -2,9 +2,9 @@
 // Satu pintu penulisan data dari js/store.js.  (Versi PostgreSQL)
 // POST { key: "washupTransactions", ops: [ {op:"create"|"update"|"delete", id, record, changed:[...]} ] }
 // Semua penghapusan = soft delete (deleted_at). Aturan bisnis dan hak akses divalidasi di sini, bukan di browser.
-require __DIR__ . '/../includes/auth.php';
-require __DIR__ . '/../includes/hydrate.php';
-require __DIR__ . '/../includes/files.php';
+require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/hydrate.php';
+require_once __DIR__ . '/../includes/files.php';
 $u = api_guard(['Admin', 'Kasir', 'Petugas'], true);
 $in = body(); $key = (string)($in['key'] ?? ''); $ops = is_array($in['ops'] ?? null) ? $in['ops'] : [];
 $WRITE = ['washupUsers' => ['Admin'], 'washupServices' => ['Admin'], 'washupShifts' => ['Admin'],

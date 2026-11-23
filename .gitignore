@@ -1,24 +1,31 @@
-# Editor
+# Editor and operating system files
 .vscode/
 .idea/
-
-# OS
 .DS_Store
 Thumbs.db
 
-# Rahasia dan konfigurasi lokal
+# Local secrets and environment files
 .env
 .env.*
 !.env.example
+/config/config.local.php
+/config/config.neon-test.php
 
-# Dependensi dan hasil build (jika nanti dipakai)
-node_modules/
-dist/
-build/
+# Composer / frontend dependencies and build output
+/vendor/
+/node_modules/
+/dist/
+/build/
 
-# Log dan arsip sementara
+# Logs and temporary archives
 *.log
 *.zip
-config/config.local.php
+
+# Local upload files (Object Storage is used in production)
 uploads/*/*
 !uploads/*/.gitkeep
+
+# Local-only test endpoints
+/test-neon.php
+/test-storage.php
+/test-app-db.php
