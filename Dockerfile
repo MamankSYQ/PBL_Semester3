@@ -1,7 +1,9 @@
 FROM php:8.3-apache
 
-# Install kebutuhan PostgreSQL, ZIP, dan unzip
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
     libpq-dev \
     libzip-dev \
     unzip \
@@ -9,33 +11,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && a2enmod rewrite headers \
     && rm -rf /var/lib/apt/lists/*
 
-# Atur Apache menggunakan port Render
-RUN sed -i 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf \
-    && sed -i 's/<VirtualHost \*:80>/<VirtualHost *:10000>/' \
-    /etc/apache2/sites-available/000-default.conf
-
 WORKDIR /var/www/html
 
-# Salin Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Instal dependensi PHP
-COPY composer.json composer.lock ./
+COPY composer.json composer.lock* ./
+RUN composer install --no-dev --no-scripts --prefer-dist --no-interaction --no-progress
 
-RUN composer install \
-    --no-dev \
-    --prefer-dist \
-    --no-interaction \
-    --no-progress \
-    --optimize-autoloader
-
-# Salin seluruh file aplikasi
 COPY . .
+RUN composer dump-autoload --optimize
 
-# Siapkan folder penyimpanan
 RUN mkdir -p uploads/absensi uploads/nota \
-    && chown -R www-data:www-data /var/www/html
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 uploads
 
-EXPOSE 10000
+EXPOSE 80
 
 CMD ["apache2-foreground"]

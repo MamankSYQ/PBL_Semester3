@@ -1,4 +1,3 @@
-
 <?php
 
 function env_value(string $key, string $default = ''): string {
